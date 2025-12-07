@@ -1,0 +1,23 @@
+# System
+.DS_Store
+.vscode/
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*.class
+venv/
+.env
+db.sqlite3
+
+# Flutter / Frontend
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+ios/.generated/
+.pub-cache/
+pubspec.lock
+
+# Monorepo Specific
+openapi-generator/
