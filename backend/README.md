@@ -2,7 +2,7 @@
 
 This service handles the Computer Vision processing and API endpoints.
 
-## 📂 Structure (Service-Repository Pattern)
+## 🗂️ Structure (Service-Repository Pattern)
 
 * **api/**: Route controllers (Endpoints).
 * **services/**: Business logic. `ai_service.py` contains the YOLOv8 logic.
@@ -12,9 +12,89 @@ This service handles the Computer Vision processing and API endpoints.
 
 ## Setup
 
-1. **Env Setup**: Ensure `venv` is active.
-2. **Environment Variables**: Check `.env` for DB credentials.
-3. **Run**: `uvicorn app.main:app --reload`
+### Without Docker (Windows)
+
+1. **Install Python**: Ensure Python 3.10+ is installed.
+2. **Create Virtual Environment**:
+
+   ```powershell
+   python -m venv venv
+   .\venv\Scripts\activate
+   ```
+
+3. **Install Dependencies**:
+
+   ```powershell
+   pip install -r requirements.txt
+   ```
+
+4. **Set Environment Variables**:
+   Create a `.env` file with the following:
+
+   ```env
+   DATABASE_URL=postgresql://user:password@localhost:5432/parkflow
+   ```
+
+5. **Run the Application**:
+
+   ```powershell
+   uvicorn app.main:app --reload
+   ```
+
+### With Docker
+
+1. **Navigate to Backend Directory**:
+
+   ```powershell
+   cd backend
+   ```
+
+2. **Install Docker Desktop**: Ensure Docker is installed and running.
+3. **Build and Start Containers**:
+
+   ```powershell
+   docker build -t parkflow-backend:dev .
+   docker-compose up -d
+   ```
+
+4. **Access the Application**:
+   * Backend: <http://localhost:8000>
+   * Swagger Docs: <http://localhost:8000/docs>
+
+### Updating Containers When Files Change
+
+1. **Rebuild the Containers**:
+   If you make changes to the code or dependencies, rebuild the containers:
+
+   ```powershell
+   docker build -t parkflow-backend:dev .
+   docker-compose up -d
+   ```
+
+2. **Using `docker-compose watch`**:
+   Install the `docker-compose-watch` tool to automatically rebuild containers when files change:
+
+   ```powershell
+   pip install docker-compose-watch
+   docker-compose-watch
+   ```
+
+### Tagging Containers
+
+1. **Build with a Tag**:
+   You can tag the backend container during the build process:
+
+   ```powershell
+   docker build -t parkflow-backend:dev .
+   ```
+
+2. **Push Tagged Images**:
+   Push the tagged image to a container registry:
+
+   ```powershell
+   docker tag parkflow-backend:dev your-repo/backend:v1.0
+   docker push your-repo/backend:v1.0
+   ```
 
 ## AI Logic
 
