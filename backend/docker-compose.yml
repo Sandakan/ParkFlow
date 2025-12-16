@@ -6,6 +6,12 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --reload
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app/app
     env_file:
       - ./.env
     environment:
@@ -14,7 +20,7 @@ services:
       - db
 
   db:
-    image: postgres:latest
+    image: postgres:18
     container_name: parkflow_db
     restart: always
     environment:
@@ -24,7 +30,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
 
 volumes:
   postgres_data:
