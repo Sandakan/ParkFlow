@@ -23,8 +23,8 @@ def check_database_connection():
 
     if not DATABASE_URL:
         raise ValueError("DATABASE_URL environment variable is not set")
-    else:
-        print("DATABASE_URL found in environment variables.")
+
+    print("DATABASE_URL found in environment variables.")
 
     try:
         engine = create_engine(DATABASE_URL)
@@ -35,7 +35,9 @@ def check_database_connection():
         return {"connected": False, "status": f"Database connection failed: {str(e)}"}
 
 
+db_status = check_database_connection()
+
+
 @app.get("/")
 def read_root():
-    db_status = check_database_connection()
     return {"message": "Welcome to ParkFlow AI Core", "database": db_status}
