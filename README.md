@@ -1,14 +1,14 @@
 # ParkFlow - Intelligent Parking Management System
 
-ParkFlow is a final-year implementation of a Smart Parking System integrating Computer Vision (YOLOv8) with a real-time mobile dashboard.
+ParkFlow is a final-year implementation of a Smart Parking System integrating Computer Vision (YOLOv26) with a real-time mobile dashboard.
 
 ## Architecture
 
 **Monorepo Structure:**
 
-* **backend/**: Python FastAPI + YOLOv8 (AI Inference & Business Logic)
-* **frontend/**: Flutter Mobile/Web App (Driver & Admin Interfaces)
-* **Infrastructure**: PostgreSQL + Redis (via Docker, backend-specific)
+- **backend/**: Python FastAPI + YOLOv8 (AI Inference & Business Logic)
+- **frontend/**: Flutter Mobile/Web App (Driver & Admin Interfaces)
+- **Infrastructure**: PostgreSQL + Redis (via Docker, backend-specific)
 
 ## Quick Start
 
@@ -41,7 +41,7 @@ ParkFlow is a final-year implementation of a Smart Parking System integrating Co
    uvicorn app.main:app --reload
    ```
 
-*Docs available at: <http://localhost:8000/docs>*
+_Docs available at: <http://localhost:8000/docs>_
 
 #### 2. Start Frontend (Terminal B)
 
@@ -76,8 +76,8 @@ ParkFlow is a final-year implementation of a Smart Parking System integrating Co
    ```
 
 4. **Access the Application**:
-   * Backend: <http://localhost:8000>
-   * Swagger Docs: <http://localhost:8000/docs>
+   - Backend: <http://localhost:8000>
+   - Swagger Docs: <http://localhost:8000/docs>
 
 #### 2. Start Frontend (Terminal B)
 
@@ -130,7 +130,7 @@ ParkFlow is a final-year implementation of a Smart Parking System integrating Co
 
 ## Tech Stack
 
-* **AI:** YOLOv8, OpenCV
-* **Backend:** FastAPI, SQLAlchemy, AsyncPG
-* **Frontend:** Flutter, Riverpod, Flutter Map
-* **Database:** PostgreSQL (JSONB support for coordinates)
+- **AI:** YOLOv26, OpenCV
+- **Backend:** FastAPI, Motor, Redis
+- **Frontend:** Flutter, Riverpod, Flutter Map
+- **Database:** MongoDB
