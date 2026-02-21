@@ -2,50 +2,25 @@ import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
-from redis.asyncio import Redis
-
-# Database and Redis clients
-mongodb_client = None
-redis_client = None
-
-MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017/parkflow")
-REDIS_URL = os.getenv("REDIS_URL", "redis://redis:6379")
+from app.core.config import settings
+from app.core.database import connect_to_mongo, close_mongo_connection, db
+from app.core.redis import connect_to_redis, close_redis_connection, redis_cache
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global mongodb_client, redis_client
+    await connect_to_mongo()
 
-    # Initialize MongoDB client
-    try:
-        mongodb_client = AsyncIOMotorClient(MONGODB_URL)
-        # Send a ping to confirm a successful connection
-        await mongodb_client.admin.command("ping")
-        print("Successfully connected to MongoDB.")
-    except Exception as e:
-        print(f"Error connecting to MongoDB: {e}")
-
-    # Initialize Redis client
-    try:
-        redis_client = Redis.from_url(REDIS_URL)
-        await redis_client.ping()
-        print("Successfully connected to Redis.")
-    except Exception as e:
-        print(f"Error connecting to Redis: {e}")
+    await connect_to_redis()
 
     yield
 
-    # Disconnect
-    if mongodb_client:
-        mongodb_client.close()
-    if redis_client:
-        await redis_client.aclose()
+    await close_mongo_connection()
+    await close_redis_connection()
 
 
-app = FastAPI(title="ParkFlow API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title=settings.PROJECT_NAME, version=settings.VERSION, lifespan=lifespan)
 
-# CORS (Allow Flutter to talk to Backend)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -57,20 +32,19 @@ app.add_middleware(
 
 @app.get("/")
 async def read_root():
-    # Check current status
-    mongo_status = "Connected" if mongodb_client else "Disconnected"
-    redis_status = "Connected" if redis_client else "Disconnected"
+    mongo_status = "Connected" if db.client else "Disconnected"
+    redis_status = "Connected" if redis_cache.client else "Disconnected"
 
     try:
-        if mongodb_client:
-            await mongodb_client.admin.command("ping")
-    except:
+        if db.client:
+            await db.client.admin.command("ping")
+    except Exception:
         mongo_status = "Error"
 
     try:
-        if redis_client:
-            await redis_client.ping()
-    except:
+        if redis_cache.client:
+            await redis_cache.client.ping()
+    except Exception:
         redis_status = "Error"
 
     return {
