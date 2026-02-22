@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.api.deps import get_current_user, get_current_admin
 from app.models.user import UserInDB
 from app.schemas.user import UserCreate, UserUpdate, UserResponse
+from app.schemas.response import APIResponse, ResponseCode
 from app.services.user_service import user_service
 
 router = APIRouter()
@@ -10,7 +11,7 @@ router = APIRouter()
 
 @router.post(
     "/",
-    response_model=UserResponse,
+    response_model=APIResponse[dict],
     description="Register a new user in the system with their vehicle details.",
 )
 async def create_user(
@@ -21,12 +22,17 @@ async def create_user(
     Create new user without logging in. (Registration)
     """
     user = await user_service.create_user(user_in=user_in)
-    return user
+    return APIResponse.success_response(
+        message="User created successfully",
+        code=ResponseCode.USER_CREATED,
+        status_code=201,
+        data={"users": [user.model_dump()]},
+    )
 
 
 @router.get(
     "/me",
-    response_model=UserResponse,
+    response_model=APIResponse[UserResponse],
     description="Retrieve the profile information of the currently authenticated user.",
 )
 async def read_user_me(
@@ -35,12 +41,16 @@ async def read_user_me(
     """
     Get current user.
     """
-    return current_user
+    return APIResponse.success_response(
+        message="User profile retrieved",
+        code=ResponseCode.USER_FETCHED,
+        data=UserResponse(**current_user.model_dump()),
+    )
 
 
 @router.put(
     "/{user_id}",
-    response_model=UserResponse,
+    response_model=APIResponse[UserResponse],
     description="Update user profile details. Users can update their own profile; admins can update any user.",
 )
 async def update_user(
@@ -59,12 +69,14 @@ async def update_user(
             detail="Not enough permissions to update other users",
         )
     user = await user_service.update_user(user_id=user_id, user_in=user_in)
-    return user
+    return APIResponse.success_response(
+        message="User updated successfully", code=ResponseCode.USER_UPDATED, data=user
+    )
 
 
 @router.delete(
     "/{user_id}",
-    response_model=dict,
+    response_model=APIResponse[dict],
     description="Permanently delete a user from the system. (Admin only)",
 )
 async def delete_user(
@@ -79,5 +91,9 @@ async def delete_user(
 
     success = await user_repository.delete(user_id=user_id)
     if not success:
-        raise HTTPException(status_code=404, detail="User not found")
-    return {"message": "User deleted successfully"}
+        return APIResponse.error_response(
+            message="User not found", code=ResponseCode.USER_NOT_FOUND, status_code=404
+        )
+    return APIResponse.success_response(
+        message="User deleted successfully", code=ResponseCode.USER_DELETED, data={}
+    )
