@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 class VehicleDetails(BaseModel):
     plate_number: str
-    type: Literal["car", "tuk-tuk", "bike"]
+    type: Literal["car", "three-wheeler", "bike"]
 
 
 class UserInDB(BaseModel):

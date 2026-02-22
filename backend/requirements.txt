@@ -3,9 +3,11 @@ uvicorn[standard]>=0.23.0
 motor>=3.3.0
 redis>=5.0.0
 pydantic>=2.0.0
+email-validator>=2.1.0.post1
 pydantic-settings>=2.0.0
 python-multipart>=0.0.6
 python-jose[cryptography]>=3.3.0
+bcrypt==4.0.1
 passlib[bcrypt]>=1.7.4
 websockets>=11.0
 debugpy>=1.8.0
