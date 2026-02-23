@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Generic, TypeVar, Optional, Any
 from pydantic import BaseModel, ConfigDict
+from fastapi.responses import JSONResponse
 
 T = TypeVar("T")
 
@@ -40,17 +41,20 @@ class APIResponse(BaseModel, Generic[T]):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
+    def to_json_response(self) -> JSONResponse:
+        return JSONResponse(status_code=self.status_code, content=self.model_dump())
+
     @classmethod
     def success_response(
         cls,
         message: str = "Success",
-        data: Optional[T] = None,
+        data: Optional[Any] = None,
         code: ResponseCode = ResponseCode.SUCCESS,
         status_code: int = 200,
-    ) -> "APIResponse[T]":
+    ) -> JSONResponse:
         return cls(
             success=True, message=message, code=code, status_code=status_code, data=data
-        )
+        ).to_json_response()
 
     @classmethod
     def error_response(
@@ -58,11 +62,11 @@ class APIResponse(BaseModel, Generic[T]):
         message: str = "An error occurred",
         code: ResponseCode = ResponseCode.ERROR,
         status_code: int = 400,
-    ) -> "APIResponse[Any]":
+    ) -> JSONResponse:
         return cls(
             success=False,
             message=message,
             code=code,
             status_code=status_code,
             data=None,
-        )
+        ).to_json_response()

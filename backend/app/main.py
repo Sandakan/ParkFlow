@@ -8,6 +8,7 @@ from app.core.redis import connect_to_redis, close_redis_connection, redis_cache
 from app.api.routers import auth, users
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.schemas.response import APIResponse, ResponseCode
 
 
@@ -26,24 +27,39 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title=settings.PROJECT_NAME, version=settings.VERSION, lifespan=lifespan)
 
 
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    code = ResponseCode.ERROR
+    if exc.status_code == 404:
+        code = ResponseCode.NOT_FOUND
+    elif exc.status_code == 401:
+        code = ResponseCode.UNAUTHORIZED
+    elif exc.status_code == 403:
+        code = ResponseCode.FORBIDDEN
+
+    return APIResponse.error_response(
+        code=code,
+        message=str(exc.detail),
+        status_code=exc.status_code,
+    )
+
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    response = APIResponse.error_response(
+    return APIResponse.error_response(
         code=ResponseCode.VALIDATION_ERROR,
         message=f"Validation Error: {str(exc.errors())}",
         status_code=422,
     )
-    return JSONResponse(status_code=422, content=response.model_dump())
 
 
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
-    response = APIResponse.error_response(
+    return APIResponse.error_response(
         code=ResponseCode.INTERNAL_SERVER_ERROR,
         message="An unexpected error occurred.",
         status_code=500,
     )
-    return JSONResponse(status_code=500, content=response.model_dump())
 
 
 app.add_middleware(
