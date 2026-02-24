@@ -98,4 +98,17 @@ This service handles the Computer Vision processing and API endpoints.
 
 ## AI Logic
 
-The YOLOv8 model is initialized in `services/ai_service.py` as a singleton to prevent memory overhead. Do not initialize the model inside a route function.
+The YOLOv26 model is initialized in `ai/loader.py` dynamically per parking lot to prevent memory overhead. Do not initialize the model inside a route function.
+
+### Testing AI Inference Locally
+
+To verify that the AI inference logic is correctly processing RTSP URLs without spinning up the frontend:
+
+1. Start the `mock-rtsp` Docker container from the root project folder (ensure it's attached to the `backend_default` network as discussed in its README).
+2. Execute the inference test script directly inside the backend container:
+
+   ```bash
+   docker exec parkflow-backend python /app/test_inference.py
+   ```
+
+3. The script will pull real-time frames from the RTSP server, apply dynamic bounding boxes using YOLO, and save annotated outputs as JPEG frames in the `backend/tmp_frames/` directory for visual verification.

@@ -12,7 +12,7 @@ docker build -t mock-rtsp .
 
 ## How to Use
 
-The server is designed to stream everything inside its internal `/assets` folder. Therefore, any files you place in the local `assets/` folder will automatically act as distinct RTSP streams when the container starts.
+The server streams your media files based on the definitions in the `stream_config.json` file. If no configuration file is found, it will safely fall back to streaming everything inside the internal `/assets/` directory automatically.
 
 ### 1. Starting with your Assets folder
 
@@ -20,10 +20,13 @@ To mount your local files, ensure you map your local directory to `/assets` insi
 
 ```bash
 docker run -d --name my-mock-rtsp \
+  --network backend_default \
   -v "C:\absolute\path\to\your\mock_rtsp\assets:/assets" \
   -p 8554:8554 \
   mock-rtsp
 ```
+
+_Note: The `--network backend_default` flag connects the mock server to your existing ParkFlow backend network, allowing your API to resolve it by its container name `my-mock-rtsp`._
 
 If the folder contains files like `test_image.png` and `vid1.mp4`, the server will start the following streams automatically:
 
@@ -34,18 +37,18 @@ If the folder contains files like `test_image.png` and `vid1.mp4`, the server wi
 
 If you want to control exactly which files are streamed, or if you want to give them custom RTSP URLs (like `/cam1` instead of `/vid1`), you can use the `stream_config.json` file located in the root directory.
 
-Edit `stream_config.json` before building your docker image:
+You can mount your configuration file live into the container:
 
-```json
-{
-  "streams": [
-    { "name": "front_gate_camera", "file": "vid1.mp4" },
-    { "name": "parking_lot_a", "file": "test_image.png" }
-  ]
-}
+```bash
+docker run -d --name my-mock-rtsp \
+  --network backend_default \
+  -v "C:\absolute\path\to\your\mock_rtsp\assets:/assets" \
+  -v "C:\absolute\path\to\your\mock_rtsp\stream_config.json:/stream_config.json" \
+  -p 8554:8554 \
+  mock-rtsp
 ```
 
-If a valid configuration file exists, the server will **only** stream the files configured inside it. If the file is deleted or disabled, it falls back to streaming everything inside `/assets/`.
+If a valid configuration file over `/stream_config.json` exists, the server will **only** stream the files configured inside it. If the file is deleted or disabled, it falls back to streaming everything inside `/assets/`.
 
 ### 3. Starting without any files (Test Pattern)
 
