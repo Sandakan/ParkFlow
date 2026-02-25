@@ -6,9 +6,10 @@ ParkFlow is a final-year implementation of a Smart Parking System integrating Co
 
 **Monorepo Structure:**
 
-- **backend/**: Python FastAPI + YOLOv8 (AI Inference & Business Logic)
+- **backend/**: Python FastAPI + YOLOv8/YOLOv26 (AI Inference & Business Logic)
 - **frontend/**: Flutter Mobile/Web App (Driver & Admin Interfaces)
-- **Infrastructure**: PostgreSQL + Redis (via Docker, backend-specific)
+- **mock_rtsp/**: Lightweight Dockerized MediaMTX server to simulate live RTSP streams
+- **Infrastructure**: MongoDB + Redis (via Docker, backend-specific)
 
 ## Quick Start
 
@@ -79,7 +80,7 @@ _Docs available at: <http://localhost:8000/docs>_
    - Backend: <http://localhost:8000>
    - Swagger Docs: <http://localhost:8000/docs>
 
-#### 2. Start Frontend (Terminal B)
+#### 2. Run Frontend Connected to Docker
 
 1. **Navigate to Frontend Directory**:
 
