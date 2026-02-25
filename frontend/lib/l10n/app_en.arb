@@ -1,0 +1,87 @@
+{
+	"@@locale": "en",
+	"appTitle": "ParkFlow",
+	"@appTitle": {
+		"description": "The title of the application"
+	},
+	"loginTitle": "ParkFlow",
+	"@loginTitle": {
+		"description": "The title displayed on the login screen"
+	},
+	"signInToContinue": "Sign in to continue",
+	"@signInToContinue": {
+		"description": "The subtitle displayed on the login screen"
+	},
+	"emailLabel": "Email",
+	"@emailLabel": {
+		"description": "The label for the email input field"
+	},
+	"passwordLabel": "Password",
+	"@passwordLabel": {
+		"description": "The label for the password input field"
+	},
+	"loginButton": "Login",
+	"@loginButton": {
+		"description": "The text for the login button"
+	},
+	"liveDashboard": "ParkFlow Live Dashboard",
+	"@liveDashboard": {
+		"description": "The title for the live dashboard page"
+	},
+	"liveFeed": "Live Feed",
+	"@liveFeed": {
+		"description": "The title for the live video feed section"
+	},
+	"occupied": "Occupied",
+	"@occupied": {
+		"description": "Label indicating a parking slot is occupied"
+	},
+	"available": "Available",
+	"@available": {
+		"description": "Label indicating a parking slot is available"
+	},
+	"checkInternetConnection": "Please check your internet connection and try again.",
+	"@checkInternetConnection": {
+		"description": "Error message when there is no internet connection"
+	},
+	"somethingWrongDescription": "Something went wrong. Please try again later.",
+	"@somethingWrongDescription": {
+		"description": "Generic error message for unknown errors"
+	},
+	"authTokenExpiredError": "Your session has expired. Please log in again.",
+	"@authTokenExpiredError": {
+		"description": "Error message when the authentication token has expired"
+	},
+	"sessionExpired": "Session expired",
+	"@sessionExpired": {
+		"description": "Title or short description for session expired error"
+	},
+	"invalidPageNumber": "Invalid page number",
+	"@invalidPageNumber": {
+		"description": "Error message for invalid page number"
+	},
+	"currentPasswordInvalid": "Current password is not valid",
+	"@currentPasswordInvalid": {
+		"description": "Error message for invalid current password"
+	},
+	"changePasswordFailed": "Failed to change password",
+	"@changePasswordFailed": {
+		"description": "Error message when changing password fails"
+	},
+	"emailRequired": "The email must not be empty",
+	"@emailRequired": {
+		"description": "Validation message when email is empty"
+	},
+	"emailInvalid": "The email value must be a valid email",
+	"@emailInvalid": {
+		"description": "Validation message when email format is invalid"
+	},
+	"passwordRequired": "The password must not be empty",
+	"@passwordRequired": {
+		"description": "Validation message when password is empty"
+	},
+	"passwordMinLength": "The password must be at least 6 characters long",
+	"@passwordMinLength": {
+		"description": "Validation message when password is too short"
+	}
+}
