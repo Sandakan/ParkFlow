@@ -3,6 +3,7 @@ import 'package:parkflow/repositories/interfaces/secure_storage_repository_inter
 import 'package:parkflow/models/auth/user_model.dart';
 import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
 import 'package:parkflow/core/network/entities/login_request_entity.dart';
+import 'package:parkflow/core/network/entities/register_request_entity.dart';
 import 'package:parkflow/utils/handlers/error_handler.dart';
 
 class AuthRepository implements AuthRepositoryInterface {
@@ -27,6 +28,20 @@ class AuthRepository implements AuthRepositoryInterface {
         name: userResponse.name,
         role: userResponse.role,
       );
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  @override
+  Future<void> register(String name, String email, String password) async {
+    try {
+      final request = RegisterRequestEntity(
+        name: name,
+        email: email,
+        password: password,
+      );
+      await remote.register(request);
     } catch (e) {
       throw ErrorHandler.handle(e);
     }

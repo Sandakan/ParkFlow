@@ -8,24 +8,39 @@ import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/widgets/forms/custom_reactive_text_field.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
-import 'package:parkflow/routes/parts/auth_routes.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends ConsumerStatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final form = FormGroup({
-    'email': FormControl<String>(
-      validators: [Validators.required, Validators.email],
-    ),
-    'password': FormControl<String>(
-      validators: [Validators.required, Validators.minLength(6)],
-    ),
-  });
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+  late final FormGroup form;
+
+  @override
+  void initState() {
+    super.initState();
+    form = FormGroup(
+      {
+        'name': FormControl<String>(validators: [Validators.required]),
+        'email': FormControl<String>(
+          validators: [Validators.required, Validators.email],
+        ),
+        'password': FormControl<String>(
+          validators: [Validators.required, Validators.minLength(6)],
+        ),
+        'passwordConfirmation': FormControl<String>(
+          validators: [Validators.required],
+        ),
+      },
+      validators: [
+        const MustMatchValidator('password', 'passwordConfirmation', true),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +59,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () => context.pop(),
+        ),
+      ),
       body: SafeArea(
         child: ReactiveForm(
           formGroup: form,
@@ -56,18 +79,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 32.h),
+                      SizedBox(height: 12.h),
 
                       // Logo — left aligned
                       Assets.images.logoWhite.image(height: 48.h),
 
-                      SizedBox(height: 40.h),
+                      SizedBox(height: 32.h),
 
                       // Title
                       Text(
-                        context.l10n.loginTitle,
+                        'Create Account',
                         style: theme.textTheme.displaySmall?.copyWith(
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w900,
                           color: Colors.black87,
                           letterSpacing: -0.5,
                         ),
@@ -77,14 +100,46 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                       // Subtitle
                       Text(
-                        'Welcome back! Sign in to your account.',
+                        'Sign up to get started!',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: Colors.grey.shade600,
                           height: 1.5,
                         ),
                       ),
 
-                      SizedBox(height: 40.h),
+                      SizedBox(height: 32.h),
+
+                      // Name label
+                      Text(
+                        'Full Name',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+
+                      // Name field
+                      CustomReactiveTextField<String>(
+                        formControlName: 'name',
+                        hintText: 'John Doe',
+                        keyboardType: TextInputType.name,
+                        textInputAction: TextInputAction.next,
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        border: inputBorder,
+                        focusedBorder: focusedBorder,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
+                        ),
+                        validationMessages: {
+                          ValidationMessage.required: (error) =>
+                              'Name is required',
+                        },
+                      ),
+
+                      SizedBox(height: 24.h),
 
                       // Email label
                       Text(
@@ -97,28 +152,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       SizedBox(height: 8.h),
 
                       // Email field
-                      _buildTextField(
-                        child: CustomReactiveTextField<String>(
-                          formControlName: 'email',
-                          hintText: 'you@example.com',
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          filled: true,
-                          fillColor: Colors.grey.shade50,
-                          border: inputBorder,
-                          focusedBorder: focusedBorder,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.w,
-                            vertical: 16.h,
-                          ),
-                          validationMessages: {
-                            ValidationMessage.required: (error) =>
-                                context.l10n.emailRequired,
-                            ValidationMessage.email: (error) =>
-                                context.l10n.emailInvalid,
-                          },
-                        ),
+                      CustomReactiveTextField<String>(
+                        formControlName: 'email',
+                        hintText: 'you@example.com',
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        border: inputBorder,
                         focusedBorder: focusedBorder,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
+                        ),
+                        validationMessages: {
+                          ValidationMessage.required: (error) =>
+                              context.l10n.emailRequired,
+                          ValidationMessage.email: (error) =>
+                              context.l10n.emailInvalid,
+                        },
                       ),
 
                       SizedBox(height: 24.h),
@@ -134,59 +186,64 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       SizedBox(height: 8.h),
 
                       // Password field
-                      _buildTextField(
-                        child: CustomReactiveTextField<String>(
-                          formControlName: 'password',
-                          hintText: '••••••••',
-                          obscureText: true,
-                          filled: true,
-                          fillColor: Colors.grey.shade50,
-                          border: inputBorder,
-                          focusedBorder: focusedBorder,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.w,
-                            vertical: 16.h,
-                          ),
-                          onSubmitted: (_) => _submit(),
-                          validationMessages: {
-                            ValidationMessage.required: (error) =>
-                                context.l10n.passwordRequired,
-                            ValidationMessage.minLength: (error) =>
-                                context.l10n.passwordMinLength,
-                          },
-                        ),
+                      CustomReactiveTextField<String>(
+                        formControlName: 'password',
+                        hintText: '••••••••',
+                        obscureText: true,
+                        textInputAction: TextInputAction.next,
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        border: inputBorder,
                         focusedBorder: focusedBorder,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
+                        ),
+                        validationMessages: {
+                          ValidationMessage.required: (error) =>
+                              context.l10n.passwordRequired,
+                          ValidationMessage.minLength: (error) =>
+                              context.l10n.passwordMinLength,
+                        },
                       ),
 
-                      // Forgot password — right aligned, tight to the field
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            // TODO: Implement forgot password
-                          },
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 0,
-                              vertical: 6.h,
-                            ),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13.sp,
-                            ),
-                          ),
+                      SizedBox(height: 24.h),
+
+                      // Confirm Password label
+                      Text(
+                        'Confirm Password',
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
                         ),
+                      ),
+                      SizedBox(height: 8.h),
+
+                      // Confirm Password field
+                      CustomReactiveTextField<String>(
+                        formControlName: 'passwordConfirmation',
+                        hintText: '••••••••',
+                        obscureText: true,
+                        filled: true,
+                        fillColor: Colors.grey.shade50,
+                        border: inputBorder,
+                        focusedBorder: focusedBorder,
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 16.h,
+                        ),
+                        onSubmitted: (_) => _submit(),
+                        validationMessages: {
+                          ValidationMessage.required: (error) =>
+                              'Confirm Password is required',
+                          ValidationMessage.mustMatch: (error) =>
+                              'Passwords must match',
+                        },
                       ),
 
                       // Error message
                       if (authState.error != null) ...[
-                        SizedBox(height: 12.h),
+                        SizedBox(height: 24.h),
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 16.w,
@@ -213,7 +270,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                       SizedBox(height: 32.h),
 
-                      // Login button — full width
+                      // Register button — full width
                       ReactiveFormConsumer(
                         builder: (context, form, child) {
                           final enabled = form.valid && !authState.isLoading;
@@ -242,7 +299,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       ),
                                     )
                                   : Text(
-                                      'Sign In',
+                                      'Sign Up',
                                       style: TextStyle(
                                         fontSize: 15.sp,
                                         fontWeight: FontWeight.w700,
@@ -254,23 +311,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         },
                       ),
 
-                      SizedBox(height: 32.h),
+                      SizedBox(height: 24.h),
 
-                      // Don't have an account? Sign up
+                      // Already have an account? Sign in
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Don't have an account? ",
+                            "Already have an account? ",
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               fontSize: 14.sp,
                             ),
                           ),
                           GestureDetector(
-                            onTap: () => const RegisterRoute().push(context),
+                            onTap: () => context.pop(),
                             child: Text(
-                              'Sign up',
+                              'Sign in',
                               style: TextStyle(
                                 color: theme.colorScheme.primary,
                                 fontWeight: FontWeight.w700,
@@ -293,24 +350,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  /// Wraps a [CustomReactiveTextField] and overrides the focused border
-  /// since [CustomReactiveTextField] doesn't expose a separate focusedBorder param.
-  Widget _buildTextField({
-    required Widget child,
-    required InputBorder focusedBorder,
-  }) {
-    // The focused border is already wired through the decoration inside
-    // CustomReactiveTextField — we pass it via the `border` param for now.
-    // If you later add a focusedBorder param to CustomReactiveTextField,
-    // this wrapper can be removed.
-    return child;
-  }
-
   void _submit() {
     if (form.valid) {
       ref
           .read(authProvider.notifier)
-          .login(form.control('email').value, form.control('password').value);
+          .register(
+            form.control('name').value,
+            form.control('email').value,
+            form.control('password').value,
+          );
     } else {
       form.markAllAsTouched();
     }

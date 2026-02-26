@@ -22,6 +22,17 @@ class AuthService {
     }
   }
 
+  Future<void> register(String name, String email, String password) async {
+    try {
+      if (name.isEmpty || email.isEmpty || password.isEmpty) {
+        throw const AppException(AppErrorCode.invalidResponse);
+      }
+      await _authRepo.register(name, email, password);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
   Future<void> logout() async {
     await _authRepo.logout();
   }

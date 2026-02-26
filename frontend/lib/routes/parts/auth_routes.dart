@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parkflow/presentation/screens/auth/login_screen.dart';
+import 'package:parkflow/presentation/screens/auth/register_screen.dart';
 
 part 'auth_routes.g.dart';
 
@@ -13,5 +14,17 @@ class LoginRoute extends GoRouteData with $LoginRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const LoginScreen();
+  }
+}
+
+@TypedGoRoute<RegisterRoute>(path: '/register')
+class RegisterRoute extends GoRouteData with $RegisterRoute {
+  const RegisterRoute();
+
+  static const path = '/register';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const RegisterScreen();
   }
 }

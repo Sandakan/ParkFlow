@@ -38,6 +38,18 @@ class AuthNotifier extends _$AuthNotifier {
     }
   }
 
+  Future<void> register(String name, String email, String password) async {
+    state = const AuthState.loading();
+    try {
+      await ref.read(authServiceProvider).register(name, email, password);
+      // Auto-login after successful registration
+      final user = await ref.read(authServiceProvider).login(email, password);
+      state = AuthState.authenticated(user);
+    } catch (e) {
+      state = AuthState.error(ErrorHandler.handle(e));
+    }
+  }
+
   Future<void> logout() async {
     state = const AuthState.loading();
 

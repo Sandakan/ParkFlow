@@ -4,6 +4,7 @@ import 'package:parkflow/core/network/entities/login_request_entity.dart';
 import 'package:parkflow/core/network/entities/login_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_user_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_parking_slots_response_entity.dart';
+import 'package:parkflow/core/network/entities/register_request_entity.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/repositories/interfaces/env_repository_interface.dart';
 import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
@@ -79,6 +80,18 @@ class RemoteRepository implements RemoteRepositoryInterface {
         stackTrace: stackTrace,
       );
     }
+  }
+
+  @override
+  Future<void> register(RegisterRequestEntity request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      '/users/',
+      data: request.toJson(),
+      isAuthProcess: false, // Don't logout on 401 for registration
+    );
+
+    validateResponse(response);
   }
 
   @override

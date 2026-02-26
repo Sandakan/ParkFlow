@@ -26,17 +26,18 @@ GoRouter router(Ref ref) {
 
       final isAuth = authState.user != null;
       final isGoingToLogin = state.matchedLocation == '/login';
+      final isGoingToRegister = state.matchedLocation == '/register';
 
-      if (!isAuth && !isGoingToLogin) {
+      if (!isAuth && !isGoingToLogin && !isGoingToRegister) {
         return '/login';
       }
 
-      if (isAuth && isGoingToLogin) {
+      if (isAuth && (isGoingToLogin || isGoingToRegister)) {
         return '/home';
       }
 
       return null;
     },
-    routes: [$homeRoute, $loginRoute, $videoFeedRoute],
+    routes: [$homeRoute, $loginRoute, $registerRoute, $videoFeedRoute],
   );
 }
