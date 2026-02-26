@@ -44,6 +44,8 @@ async def login_access_token(form_data: OAuth2PasswordRequestForm = Depends()) -
             user.user_id, expires_delta=refresh_token_expires
         ),
         token_type="bearer",
+        access_token_expires_at=int(access_token_expires.total_seconds() * 1000),
+        refresh_token_expires_at=int(refresh_token_expires.total_seconds() * 1000),
     )
 
     return APIResponse.success_response(
@@ -89,6 +91,8 @@ async def refresh_token(refresh_token: str = Body(..., embed=True)) -> Any:
             user.user_id, expires_delta=refresh_token_expires
         ),
         token_type="bearer",
+        access_token_expires_at=int(access_token_expires.total_seconds() * 1000),
+        refresh_token_expires_at=int(refresh_token_expires.total_seconds() * 1000),
     )
 
     return APIResponse.success_response(
