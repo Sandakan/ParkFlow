@@ -42,7 +42,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  build_runner: ^2.10.4
+  build_runner: ^2.11.1
   riverpod_generator: ^4.0.0+1
   json_serializable: ^6.11.2
   freezed: ^3.2.3
@@ -52,12 +52,19 @@ dev_dependencies:
   freezed_lint: ^0.0.12
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.7
+  flutter_gen_runner: ^5.12.0
 
 flutter:
   generate: true
   uses-material-design: true
   assets:
+    - assets/images/
     - .development.env
     - .production.env
     - .staging.env
+
+flutter_gen:
+  output: lib/gen/
+  line_length: 80
+
 scripts: derry.yaml
