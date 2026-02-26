@@ -6,8 +6,9 @@ from app.core.config import settings
 from app.core.database import connect_to_mongo, close_mongo_connection, db
 from app.core.redis import connect_to_redis, close_redis_connection, redis_cache
 from app.api.routers import auth, users, inference
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.schemas.response import APIResponse, ResponseCode
 
 
@@ -36,6 +37,24 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
     return JSONResponse(status_code=422, content=response.model_dump())
 
 
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException):
+    code = ResponseCode.ERROR
+    if exc.status_code == 404:
+        code = ResponseCode.NOT_FOUND
+    elif exc.status_code == 401:
+        code = ResponseCode.UNAUTHORIZED
+    elif exc.status_code == 403:
+        code = ResponseCode.FORBIDDEN
+
+    response = APIResponse.error_response(
+        code=code,
+        message=str(exc.detail),
+        status_code=exc.status_code,
+    )
+    return JSONResponse(status_code=exc.status_code, content=response.model_dump())
+
+
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
     response = APIResponse.error_response(
@@ -57,6 +76,11 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(inference.router, prefix="/api/v1/inference", tags=["AI Inference"])
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    return FileResponse(os.path.join("app", "static", "favicon.ico"))
 
 
 @app.get("/", response_model=APIResponse[dict])

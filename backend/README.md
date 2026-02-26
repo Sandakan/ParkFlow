@@ -53,8 +53,7 @@ This service handles the Computer Vision processing and API endpoints.
 3. **Build and Start Containers**:
 
    ```powershell
-   docker build -t parkflow-backend:dev .
-   docker-compose up -d
+   docker compose up -d --build
    ```
 
 4. **Access the Application**:
@@ -67,8 +66,7 @@ This service handles the Computer Vision processing and API endpoints.
    If you make changes to the code or dependencies, rebuild the containers:
 
    ```powershell
-   docker build -t parkflow-backend:dev .
-   docker-compose up -d
+   docker compose up -d --build
    ```
 
 2. **Using `docker-compose watch`**:
@@ -76,7 +74,7 @@ This service handles the Computer Vision processing and API endpoints.
 
    ```powershell
    pip install docker-compose-watch
-   docker-compose-watch
+   docker compose watch
    ```
 
 ### Tagging Containers
