@@ -26,8 +26,11 @@ async def create_user(
         message="User created successfully",
         code=ResponseCode.USER_CREATED,
         status_code=201,
-        data={"users": [user.model_dump()]},
+        data={
+            "users": [UserResponse(**user.model_dump(), id=user.user_id).model_dump()]
+        },
     )
+
 
 
 @router.get(
@@ -41,10 +44,11 @@ async def read_user_me(
     """
     Get current user.
     """
+    user_data = current_user.model_dump()
     return APIResponse.success_response(
         message="User profile retrieved",
         code=ResponseCode.USER_FETCHED,
-        data=UserResponse(**current_user.model_dump()),
+        data=UserResponse(**user_data, id=current_user.user_id),
     )
 
 
@@ -70,7 +74,9 @@ async def update_user(
         )
     user = await user_service.update_user(user_id=user_id, user_in=user_in)
     return APIResponse.success_response(
-        message="User updated successfully", code=ResponseCode.USER_UPDATED, data=user
+        message="User updated successfully",
+        code=ResponseCode.USER_UPDATED,
+        data=UserResponse(**user.model_dump(), id=user.user_id),
     )
 
 

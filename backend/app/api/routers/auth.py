@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 from fastapi import APIRouter, Body, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -8,6 +8,7 @@ from app.core.config import settings
 from app.core.security import create_access_token, create_refresh_token
 from app.schemas.token import Token, TokenPayload
 from app.schemas.response import APIResponse, ResponseCode
+from app.schemas.user import UserResponse
 from app.models.user import UserInDB
 from app.services.user_service import user_service
 from app.api.deps import get_current_user
@@ -33,19 +34,19 @@ async def login_access_token(form_data: OAuth2PasswordRequestForm = Depends()) -
             code=ResponseCode.INVALID_CREDENTIALS,
             status_code=status.HTTP_400_BAD_REQUEST,
         )
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    refresh_token_expires = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    refresh_token_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
 
     token_data = Token(
         access_token=create_access_token(
-            user.user_id, expires_delta=access_token_expires
+            user.user_id, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         ),
         refresh_token=create_refresh_token(
-            user.user_id, expires_delta=refresh_token_expires
+            user.user_id, expires_delta=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
         ),
         token_type="bearer",
-        access_token_expires_at=int(access_token_expires.total_seconds() * 1000),
-        refresh_token_expires_at=int(refresh_token_expires.total_seconds() * 1000),
+        access_token_expires_at=access_token_expires.isoformat(),
+        refresh_token_expires_at=refresh_token_expires.isoformat(),
     )
 
     return APIResponse.success_response(
@@ -80,19 +81,19 @@ async def refresh_token(refresh_token: str = Body(..., embed=True)) -> Any:
             message="User not found", code=ResponseCode.USER_NOT_FOUND, status_code=404
         )
 
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    refresh_token_expires = timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    refresh_token_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
 
     new_token = Token(
         access_token=create_access_token(
-            user.user_id, expires_delta=access_token_expires
+            user.user_id, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
         ),
         refresh_token=create_refresh_token(
-            user.user_id, expires_delta=refresh_token_expires
+            user.user_id, expires_delta=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
         ),
         token_type="bearer",
-        access_token_expires_at=int(access_token_expires.total_seconds() * 1000),
-        refresh_token_expires_at=int(refresh_token_expires.total_seconds() * 1000),
+        access_token_expires_at=access_token_expires.isoformat(),
+        refresh_token_expires_at=refresh_token_expires.isoformat(),
     )
 
     return APIResponse.success_response(
@@ -104,7 +105,7 @@ async def refresh_token(refresh_token: str = Body(..., embed=True)) -> Any:
 
 @router.post(
     "/test-token",
-    response_model=APIResponse[UserInDB],
+    response_model=APIResponse[UserResponse],
     description="Validate the current access token and return the associated user profile.",
 )
 async def test_token(current_user: UserInDB = Depends(get_current_user)) -> Any:
@@ -112,5 +113,8 @@ async def test_token(current_user: UserInDB = Depends(get_current_user)) -> Any:
     Test access token
     """
     return APIResponse.success_response(
-        message="Token is valid", code=ResponseCode.SUCCESS, data=current_user
+        message="Token is valid",
+        code=ResponseCode.SUCCESS,
+        data=UserResponse(**current_user.model_dump(), id=current_user.user_id),
     )
+

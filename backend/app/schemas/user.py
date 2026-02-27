@@ -25,4 +25,6 @@ class UserUpdate(BaseModel):
 
 class UserResponse(UserBase):
     user_id: str
+    id: str
     created_at: datetime
+
