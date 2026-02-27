@@ -7,6 +7,8 @@ import 'package:parkflow/core/network/entities/get_parking_slots_response_entity
 import 'package:parkflow/core/network/entities/get_parking_lots_response_entity.dart';
 import 'package:parkflow/core/network/entities/register_request_entity.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
+import 'package:parkflow/core/network/entities/get_cameras_response_entity.dart';
+import 'package:parkflow/repositories/entities/parking/create_camera_request.dart';
 
 abstract class RemoteRepositoryInterface {
   Future<LoginResponseEntity> login(LoginRequestEntity request);
@@ -20,4 +22,7 @@ abstract class RemoteRepositoryInterface {
   Future<void> createParkingLot(CreateParkingLotRequest request);
   Future<void> updateParkingLot(String lotId, UpdateParkingLotRequest request);
   Future<void> deleteParkingLot(String lotId);
+
+  Future<GetCamerasResponseEntity> getCameras();
+  Future<void> createCamera(CreateCameraRequest request);
 }

@@ -275,4 +275,40 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get lotDeletedSuccess => 'Parking lot deleted successfully';
+
+  @override
+  String get camerasTabLabel => 'Cameras';
+
+  @override
+  String get searchCameraHint => 'Search cameras...';
+
+  @override
+  String get createNewCamera => 'Create Camera';
+
+  @override
+  String get noCamerasFound => 'No cameras found';
+
+  @override
+  String get errorLoadingCameras => 'Error loading cameras';
+
+  @override
+  String get rtspHealth => 'Health';
+
+  @override
+  String get statusConnected => 'Connected';
+
+  @override
+  String get statusDisconnected => 'Disconnected';
+
+  @override
+  String get createCameraTitle => 'Create New Camera';
+
+  @override
+  String get cameraNameLabel => 'Camera Name';
+
+  @override
+  String get cameraNameHint => 'Front Gate';
+
+  @override
+  String get cameraCreatedSuccess => 'Camera created successfully';
 }

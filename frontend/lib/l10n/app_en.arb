@@ -317,5 +317,17 @@
 	"deleteLotConfirmMessage": "Are you sure you want to delete this parking lot? This action cannot be undone.",
 	"deleteButton": "Delete",
 	"cancelButton": "Cancel",
-	"lotDeletedSuccess": "Parking lot deleted successfully"
+	"lotDeletedSuccess": "Parking lot deleted successfully",
+	"camerasTabLabel": "Cameras",
+	"searchCameraHint": "Search cameras...",
+	"createNewCamera": "Create Camera",
+	"noCamerasFound": "No cameras found",
+	"errorLoadingCameras": "Error loading cameras",
+	"rtspHealth": "Health",
+	"statusConnected": "Connected",
+	"statusDisconnected": "Disconnected",
+	"createCameraTitle": "Create New Camera",
+	"cameraNameLabel": "Camera Name",
+	"cameraNameHint": "Front Gate",
+	"cameraCreatedSuccess": "Camera created successfully"
 }

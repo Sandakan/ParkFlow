@@ -1,5 +1,7 @@
 # ParkFlow - Intelligent Parking Management System
 
+![ParkFlow Banner Image](other/banner.jpg)
+
 ParkFlow is a final-year implementation of a Smart Parking System integrating Computer Vision (YOLOv26) with a real-time mobile dashboard.
 
 ## Architecture

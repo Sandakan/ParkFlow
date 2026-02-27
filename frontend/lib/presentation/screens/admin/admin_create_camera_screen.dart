@@ -2,44 +2,40 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
-import 'package:parkflow/services/parking_service.dart';
+import 'package:parkflow/repositories/entities/parking/create_camera_request.dart';
+import 'package:parkflow/services/camera_service.dart';
+import 'package:parkflow/presentation/notifiers/cameras/cameras_notifier.dart';
 import 'package:parkflow/presentation/notifiers/parking_lots/parking_lots_notifier.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 
-class AdminCreateParkingLotScreen extends ConsumerStatefulWidget {
-  const AdminCreateParkingLotScreen({super.key});
+class AdminCreateCameraScreen extends ConsumerStatefulWidget {
+  const AdminCreateCameraScreen({super.key});
 
   @override
-  ConsumerState<AdminCreateParkingLotScreen> createState() =>
-      _AdminCreateParkingLotScreenState();
+  ConsumerState<AdminCreateCameraScreen> createState() =>
+      _AdminCreateCameraScreenState();
 }
 
-class _AdminCreateParkingLotScreenState
-    extends ConsumerState<AdminCreateParkingLotScreen> {
+class _AdminCreateCameraScreenState
+    extends ConsumerState<AdminCreateCameraScreen> {
   bool _isLoading = false;
 
   late final FormGroup form = fb.group({
     'name': FormControl<String>(validators: [Validators.required]),
-    'address': FormControl<String>(validators: [Validators.required]),
-    'latitude': FormControl<String>(
-      validators: [
-        Validators.required,
-        Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
-      ],
-    ),
-    'longitude': FormControl<String>(
-      validators: [
-        Validators.required,
-        Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
-      ],
-    ),
-    'totalSlots': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
+    'rtspUrl': FormControl<String>(validators: [Validators.required]),
+    'lotId': FormControl<String>(validators: [Validators.required]),
   });
+
+  @override
+  void initState() {
+    super.initState();
+    // Ensure parking lots are fetched so we can populate the dropdown
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(parkingLotsProvider.notifier).fetchLots();
+    });
+  }
 
   Future<void> _submit() async {
     if (form.invalid) {
@@ -50,21 +46,19 @@ class _AdminCreateParkingLotScreenState
     setState(() => _isLoading = true);
 
     try {
-      final request = CreateParkingLotRequest(
+      final request = CreateCameraRequest(
         name: form.control('name').value as String,
-        address: form.control('address').value as String,
-        latitude: double.parse(form.control('latitude').value as String),
-        longitude: double.parse(form.control('longitude').value as String),
-        totalSlots: int.parse(form.control('totalSlots').value as String),
+        rtspUrl: form.control('rtspUrl').value as String,
+        lotId: form.control('lotId').value as String,
       );
 
-      await ref.read(parkingServiceProvider).createParkingLot(request);
-      await ref.read(parkingLotsProvider.notifier).fetchLots();
+      await ref.read(cameraServiceProvider).createCamera(request);
+      await ref.read(camerasProvider.notifier).refresh();
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(context.l10n.lotCreatedSuccess),
+            content: Text(context.l10n.cameraCreatedSuccess),
             backgroundColor: Colors.green,
           ),
         );
@@ -90,10 +84,12 @@ class _AdminCreateParkingLotScreenState
 
   @override
   Widget build(BuildContext context) {
+    final parkingLotsState = ref.watch(parkingLotsProvider);
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(context.l10n.createLotTitle),
+        title: Text(context.l10n.createCameraTitle),
         backgroundColor: AppColors.white,
         scrolledUnderElevation: 0,
       ),
@@ -110,58 +106,85 @@ class _AdminCreateParkingLotScreenState
                   children: [
                     _buildTextField(
                       formControlName: 'name',
-                      label: context.l10n.lotNameLabel,
-                      hint: context.l10n.lotNameHint,
-                      icon: Icons.local_parking,
+                      label: context.l10n.cameraNameLabel,
+                      hint: context.l10n.cameraNameHint,
+                      icon: Icons.videocam,
                     ),
                     const SizedBox(height: 16),
                     _buildTextField(
-                      formControlName: 'address',
-                      label: context.l10n.lotAddressLabel,
-                      hint: context.l10n.lotAddressHint,
-                      icon: Icons.location_on_outlined,
+                      formControlName: 'rtspUrl',
+                      label: context.l10n.rtspUrlLabel,
+                      hint: context.l10n.rtspUrlHint,
+                      icon: Icons.link,
                     ),
                     const SizedBox(height: 16),
-                    Row(
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: _buildTextField(
-                            formControlName: 'latitude',
-                            label: context.l10n.latitudeLabel,
-                            hint: context.l10n.latitudeHint,
-                            icon: Icons.explore_outlined,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                              signed: true,
-                            ),
+                        Text(
+                          context.l10n.parkingLots, // Use "Lots" as label
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.black87,
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _buildTextField(
-                            formControlName: 'longitude',
-                            label: context.l10n.longitudeLabel,
-                            hint: context.l10n.longitudeHint,
-                            icon: Icons.explore_outlined,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                              signed: true,
+                        const SizedBox(height: 8),
+                        ReactiveDropdownField<String>(
+                          formControlName: 'lotId',
+                          validationMessages: {
+                            ValidationMessage.required: (error) =>
+                                context.l10n.fieldRequired,
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Select Parking Lot',
+                            prefixIcon: Icon(
+                              Icons.local_parking,
+                              color: AppColors.textSecondary,
+                            ),
+                            filled: true,
+                            fillColor: AppColors.surfaceVariant.withValues(
+                              alpha: 0.5,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: BorderSide.none,
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                color: AppColors.error,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                color: AppColors.error,
+                                width: 2,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 16,
                             ),
                           ),
+                          items: parkingLotsState.lots.map((lot) {
+                            return DropdownMenuItem(
+                              value: lot.id,
+                              child: Text(lot.name),
+                            );
+                          }).toList(),
+                          hint: parkingLotsState.isLoading
+                              ? const Text('Loading...')
+                              : const Text('Select Parking Lot'),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    _buildTextField(
-                      formControlName: 'totalSlots',
-                      label: context.l10n.totalSlotsLabel,
-                      hint: context.l10n.totalSlotsHint,
-                      icon: Icons.format_list_numbered,
-                      keyboardType: TextInputType.number,
-                    ),
                     const SizedBox(height: 32),
                     ElevatedButton(
-                      onPressed: _isLoading ? null : _submit,
+                      onPressed: _isLoading || parkingLotsState.lots.isEmpty
+                          ? null
+                          : _submit,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.white,
@@ -222,7 +245,6 @@ class _AdminCreateParkingLotScreenState
           keyboardType: keyboardType,
           validationMessages: {
             ValidationMessage.required: (error) => context.l10n.fieldRequired,
-            ValidationMessage.pattern: (error) => context.l10n.invalidNumber,
           },
           decoration: InputDecoration(
             hintText: hint,

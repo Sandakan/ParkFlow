@@ -15,6 +15,8 @@ import 'package:parkflow/repositories/interfaces/secure_storage_repository_inter
 import 'package:parkflow/core/network/entities/get_parking_lot_response_entity.dart';
 import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
+import 'package:parkflow/core/network/entities/get_cameras_response_entity.dart';
+import 'package:parkflow/repositories/entities/parking/create_camera_request.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -315,6 +317,40 @@ class RemoteRepository implements RemoteRepositoryInterface {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.delete,
       'parking/lots/$lotId',
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<GetCamerasResponseEntity> getCameras() async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'cameras/',
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      final data = GetCamerasResponseEntity.fromJson(validatedResponse.data);
+      return data;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<void> createCamera(CreateCameraRequest request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'cameras/',
+      data: request.toJson(),
       accessToken: await _getToken(),
     );
 

@@ -18,7 +18,7 @@ class AdminParkingLotsScreen extends ConsumerWidget {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 500),
+            constraints: const BoxConstraints(maxWidth: 700),
             child: Column(
               children: [
                 // Search Bar Area

@@ -621,6 +621,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Parking lot deleted successfully'**
   String get lotDeletedSuccess;
+
+  /// No description provided for @camerasTabLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cameras'**
+  String get camerasTabLabel;
+
+  /// No description provided for @searchCameraHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search cameras...'**
+  String get searchCameraHint;
+
+  /// No description provided for @createNewCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Camera'**
+  String get createNewCamera;
+
+  /// No description provided for @noCamerasFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No cameras found'**
+  String get noCamerasFound;
+
+  /// No description provided for @errorLoadingCameras.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading cameras'**
+  String get errorLoadingCameras;
+
+  /// No description provided for @rtspHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health'**
+  String get rtspHealth;
+
+  /// No description provided for @statusConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get statusConnected;
+
+  /// No description provided for @statusDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get statusDisconnected;
+
+  /// No description provided for @createCameraTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Camera'**
+  String get createCameraTitle;
+
+  /// No description provided for @cameraNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera Name'**
+  String get cameraNameLabel;
+
+  /// No description provided for @cameraNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Front Gate'**
+  String get cameraNameHint;
+
+  /// No description provided for @cameraCreatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera created successfully'**
+  String get cameraCreatedSuccess;
 }
 
 class _AppLocalizationsDelegate

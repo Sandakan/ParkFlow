@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import connect_to_mongo, close_mongo_connection, db
 from app.core.redis import connect_to_redis, close_redis_connection, redis_cache
-from app.api.routers import auth, users, inference, parking
+from app.api.routers import auth, users, inference, parking, cameras
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -77,6 +77,7 @@ app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(inference.router, prefix="/api/v1/inference", tags=["AI Inference"])
 app.include_router(parking.router, prefix="/api/v1/parking", tags=["Parking"])
+app.include_router(cameras.router, prefix="/api/v1/cameras", tags=["Cameras"])
 
 
 @app.get("/favicon.ico", include_in_schema=False)

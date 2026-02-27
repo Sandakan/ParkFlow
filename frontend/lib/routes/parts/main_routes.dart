@@ -20,7 +20,10 @@ part of '../router_provider.dart';
     ),
     TypedStatefulShellBranch<AdminCamerasBranch>(
       routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<AdminCamerasRoute>(path: AdminCamerasRoute.path),
+        TypedGoRoute<AdminCamerasRoute>(
+          path: AdminCamerasRoute.path,
+          routes: [TypedGoRoute<AdminCreateCameraRoute>(path: 'create')],
+        ),
       ],
     ),
     TypedStatefulShellBranch<AdminAnalyticsBranch>(

@@ -205,7 +205,7 @@ class _AdminEditParkingLotScreenState
                 padding: const EdgeInsets.all(24.0),
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 500),
+                    constraints: const BoxConstraints(maxWidth: 700),
                     child: ReactiveForm(
                       formGroup: form,
                       child: Column(
