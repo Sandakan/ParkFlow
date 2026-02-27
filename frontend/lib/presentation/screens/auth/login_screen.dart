@@ -186,13 +186,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           if (authState.error != null) ...[
                             SizedBox(height: 12.0),
                             Container(
+                              width: double.infinity,
                               padding: EdgeInsets.symmetric(
                                 horizontal: 16.0,
                                 vertical: 12.0,
                               ),
                               decoration: BoxDecoration(
                                 color: theme.colorScheme.errorContainer
-                                    .withValues(alpha: 0.15),
+                                    .withValues(alpha: 0.5),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: Text(

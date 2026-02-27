@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:parkflow/utils/constants/enums/app_level.dart';
@@ -42,6 +43,10 @@ class EnvRepository implements EnvRepositoryInterface {
   String getWebSocketUrl() => webSocketUrl;
 
   static String _optimizeUrl(String url, {bool isWebSocket = false}) {
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      url = url.replaceAll('localhost', '10.0.2.2');
+    }
+
     if (!isWebSocket) {
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
         url = 'https://$url';
