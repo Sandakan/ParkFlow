@@ -129,4 +129,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get invalidCredentials =>
       'The email or password you entered is incorrect';
+
+  @override
+  String get adminDashboard => 'Admin Dashboard';
+
+  @override
+  String get adminWelcome => 'Welcome, Administrator';
 }

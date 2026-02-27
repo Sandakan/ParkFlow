@@ -11,6 +11,7 @@ List<RouteBase> get $appRoutes => [
   $loginRoute,
   $registerRoute,
   $homeRoute,
+  $adminDashboardRoute,
   $videoFeedRoute,
 ];
 
@@ -91,6 +92,32 @@ mixin $HomeRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/home');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $adminDashboardRoute => GoRouteData.$route(
+  path: '/admin',
+  factory: $AdminDashboardRoute._fromState,
+);
+
+mixin $AdminDashboardRoute on GoRouteData {
+  static AdminDashboardRoute _fromState(GoRouterState state) =>
+      const AdminDashboardRoute();
+
+  @override
+  String get location => GoRouteData.$location('/admin');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -230,4 +257,4 @@ final class RouterProvider
   }
 }
 
-String _$routerHash() => r'82024d7c7f9dcde3a54269a922557dc018151efa';
+String _$routerHash() => r'ba43c63a03c0b2fc5f2d7012af2f5036ba04baa3';

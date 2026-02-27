@@ -333,6 +333,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The email or password you entered is incorrect'**
   String get invalidCredentials;
+
+  /// Title for the admin dashboard screen
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Dashboard'**
+  String get adminDashboard;
+
+  /// Welcome message for admin users
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, Administrator'**
+  String get adminWelcome;
 }
 
 class _AppLocalizationsDelegate

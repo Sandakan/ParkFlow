@@ -155,5 +155,13 @@
 	"invalidCredentials": "The email or password you entered is incorrect",
 	"@invalidCredentials": {
 		"description": "Error message for invalid login credentials"
+	},
+	"adminDashboard": "Admin Dashboard",
+	"@adminDashboard": {
+		"description": "Title for the admin dashboard screen"
+	},
+	"adminWelcome": "Welcome, Administrator",
+	"@adminWelcome": {
+		"description": "Welcome message for admin users"
 	}
 }

@@ -130,4 +130,10 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get invalidCredentials =>
       'நீங்கள் உள்ளிட்ட மின்னஞ்சல் அல்லது கடவுச்சொல் தவறானது';
+
+  @override
+  String get adminDashboard => 'நிர்வாக முகப்புப்பலகம்';
+
+  @override
+  String get adminWelcome => 'வருக, நிர்வாகி';
 }

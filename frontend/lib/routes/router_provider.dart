@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/states/auth/auth_state.dart';
 import 'package:parkflow/presentation/screens/boot/boot_screen.dart';
+import 'package:parkflow/presentation/screens/dashboard/admin_dashboard_screen.dart';
 import 'package:parkflow/presentation/screens/home/home_screen.dart';
 import 'package:parkflow/presentation/screens/auth/login_screen.dart';
 import 'package:parkflow/presentation/screens/auth/register_screen.dart';
@@ -15,6 +16,7 @@ part 'router_provider.g.dart';
 part 'parts/boot_routes.dart';
 part 'parts/auth_routes.dart';
 part 'parts/home_routes.dart';
+part 'parts/admin_routes.dart';
 part 'parts/video_routes.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
@@ -47,24 +49,38 @@ GoRouter router(Ref ref) {
       final isGoingToRegister = state.matchedLocation == RegisterRoute.path;
       final isBooting = state.matchedLocation == BootRoute.path;
 
+      final isAuth = authState.user != null;
+      final isAdmin = authState.isAdmin;
+
       if (isBooting) {
-        if (authState.isAuthenticated) return HomeRoute.path;
-        if (authState.user == null &&
-            !authState.isLoading &&
-            authState != const AuthState.initial()) {
+        if (isAuth) {
+          return isAdmin ? AdminDashboardRoute.path : HomeRoute.path;
+        }
+        if (!authState.isLoading && authState != const AuthState.initial()) {
           return LoginRoute.path;
         }
         return null;
       }
 
-      final isAuth = authState.user != null;
-
       if (!isAuth && !isGoingToLogin && !isGoingToRegister) {
         return LoginRoute.path;
       }
 
-      if (isAuth && (isGoingToLogin || isGoingToRegister)) {
-        return HomeRoute.path;
+      if (isAuth) {
+        if (isGoingToLogin || isGoingToRegister) {
+          return isAdmin ? AdminDashboardRoute.path : HomeRoute.path;
+        }
+
+        final isGoingToAdmin =
+            state.matchedLocation == AdminDashboardRoute.path;
+        final isGoingToHome = state.matchedLocation == HomeRoute.path;
+
+        if (isAdmin && isGoingToHome) {
+          return AdminDashboardRoute.path;
+        }
+        if (!isAdmin && isGoingToAdmin) {
+          return HomeRoute.path;
+        }
       }
 
       return null;

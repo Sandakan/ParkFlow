@@ -129,4 +129,10 @@ class AppLocalizationsSi extends AppLocalizations {
   @override
   String get invalidCredentials =>
       'ඔබ ඇතුළත් කළ විද්‍යුත් තැපෑල හෝ මුරපදය වැරදියි';
+
+  @override
+  String get adminDashboard => 'පරිපාලක උපකරණ පුවරුව';
+
+  @override
+  String get adminWelcome => 'සාදරයෙන් පිළිගනිමු, පරිපාලක';
 }

@@ -21,4 +21,5 @@ sealed class AuthState with _$AuthState {
       this is AuthError ? (this as AuthError).error : null;
   UserModel? get user =>
       this is Authenticated ? (this as Authenticated).user : null;
+  bool get isAdmin => user?.role == 'admin';
 }
