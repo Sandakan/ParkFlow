@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
-import 'package:parkflow/utils/constants/app_colors.dart';
 
 class VideoFeedScreen extends ConsumerStatefulWidget {
   const VideoFeedScreen({super.key});
@@ -46,7 +45,7 @@ class _VideoFeedScreenState extends ConsumerState<VideoFeedScreen> {
             ? AspectRatio(
                 aspectRatio: 16 / 9,
                 child: Container(
-                  decoration: const BoxDecoration(color: AppColors.black),
+                  decoration: const BoxDecoration(color: Colors.black),
                   child: RTCVideoView(
                     _localRenderer,
                     objectFit: RTCVideoViewObjectFit.RTCVideoViewObjectFitCover,

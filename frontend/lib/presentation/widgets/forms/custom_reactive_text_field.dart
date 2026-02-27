@@ -50,9 +50,9 @@ class CustomReactiveTextField<T> extends StatelessWidget {
         filled: filled,
         fillColor: fillColor,
         contentPadding: contentPadding,
-        border: border,
+        border: border ?? const OutlineInputBorder(),
         enabledBorder: border,
-        focusedBorder: focusedBorder,
+        focusedBorder: focusedBorder ?? border,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
       ),
     );

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/gen/assets.gen.dart';
 import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/widgets/forms/custom_reactive_text_field.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:go_router/go_router.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -48,12 +48,23 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authState = ref.watch(authProvider);
     final theme = Theme.of(context);
 
+    final inputBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.inputBorder),
+      borderRadius: BorderRadius.circular(12.0),
+    );
+
+    final focusedBorder = OutlineInputBorder(
+      borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
+      borderRadius: BorderRadius.circular(12.0),
+    );
+
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
         backgroundColor: AppColors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: AppColors.black87),
           onPressed: () {
             ref.read(authProvider.notifier).clearError();
             context.pop();
@@ -71,48 +82,49 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      padding: EdgeInsets.symmetric(horizontal: 24.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 12.0),
+                          SizedBox(height: 12.0),
 
                           // Logo — left aligned
                           Assets.images.logoWhite.image(height: 48.0),
 
-                          const SizedBox(height: 32.0),
+                          SizedBox(height: 32.0),
 
                           // Title
                           Text(
                             context.l10n.createAccountTitle,
                             style: theme.textTheme.displaySmall?.copyWith(
                               fontWeight: FontWeight.w900,
+                              color: AppColors.black87,
                               letterSpacing: -0.5,
                             ),
                           ),
 
-                          const SizedBox(height: 8.0),
+                          SizedBox(height: 8.0),
 
                           // Subtitle
                           Text(
                             context.l10n.signUpSubtitle,
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.textTheme.bodyMedium?.color
-                                  ?.withValues(alpha: 0.7),
+                              color: AppColors.textSecondary,
                               height: 1.5,
                             ),
                           ),
 
-                          const SizedBox(height: 32.0),
+                          SizedBox(height: 32.0),
 
                           // Name label
                           Text(
                             context.l10n.fullNameLabel,
                             style: theme.textTheme.labelLarge?.copyWith(
                               fontWeight: FontWeight.w600,
+                              color: AppColors.black87,
                             ),
                           ),
-                          const SizedBox(height: 8.0),
+                          SizedBox(height: 8.0),
 
                           // Name field
                           CustomReactiveTextField<String>(
@@ -120,22 +132,31 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             hintText: context.l10n.fullNameHint,
                             keyboardType: TextInputType.name,
                             textInputAction: TextInputAction.next,
+                            filled: true,
+                            fillColor: AppColors.inputFill,
+                            border: inputBorder,
+                            focusedBorder: focusedBorder,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.nameRequired,
                             },
                           ),
 
-                          const SizedBox(height: 24.0),
+                          SizedBox(height: 24.0),
 
                           // Email label
                           Text(
                             'Email',
                             style: theme.textTheme.labelLarge?.copyWith(
                               fontWeight: FontWeight.w600,
+                              color: AppColors.black87,
                             ),
                           ),
-                          const SizedBox(height: 8.0),
+                          SizedBox(height: 8.0),
 
                           // Email field
                           CustomReactiveTextField<String>(
@@ -143,6 +164,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             hintText: 'you@example.com',
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
+                            filled: true,
+                            fillColor: AppColors.inputFill,
+                            border: inputBorder,
+                            focusedBorder: focusedBorder,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.emailRequired,
@@ -151,16 +180,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             },
                           ),
 
-                          const SizedBox(height: 24.0),
+                          SizedBox(height: 24.0),
 
                           // Password label
                           Text(
                             'Password',
                             style: theme.textTheme.labelLarge?.copyWith(
                               fontWeight: FontWeight.w600,
+                              color: AppColors.black87,
                             ),
                           ),
-                          const SizedBox(height: 8.0),
+                          SizedBox(height: 8.0),
 
                           // Password field
                           CustomReactiveTextField<String>(
@@ -168,6 +198,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             hintText: '••••••••',
                             obscureText: true,
                             textInputAction: TextInputAction.next,
+                            filled: true,
+                            fillColor: AppColors.inputFill,
+                            border: inputBorder,
+                            focusedBorder: focusedBorder,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.passwordRequired,
@@ -176,22 +214,31 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             },
                           ),
 
-                          const SizedBox(height: 24.0),
+                          SizedBox(height: 24.0),
 
                           // Confirm Password label
                           Text(
                             context.l10n.confirmPasswordLabel,
                             style: theme.textTheme.labelLarge?.copyWith(
                               fontWeight: FontWeight.w600,
+                              color: AppColors.black87,
                             ),
                           ),
-                          const SizedBox(height: 8.0),
+                          SizedBox(height: 8.0),
 
                           // Confirm Password field
                           CustomReactiveTextField<String>(
                             formControlName: 'passwordConfirmation',
                             hintText: '••••••••',
                             obscureText: true,
+                            filled: true,
+                            fillColor: AppColors.inputFill,
+                            border: inputBorder,
+                            focusedBorder: focusedBorder,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 16.0,
+                            ),
                             onSubmitted: (_) => _submit(),
                             validationMessages: {
                               ValidationMessage.required: (error) =>
@@ -203,9 +250,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                           // Error message
                           if (authState.error != null) ...[
-                            const SizedBox(height: 24.0),
+                            SizedBox(height: 24.0),
                             Container(
-                              padding: const EdgeInsets.symmetric(
+                              padding: EdgeInsets.symmetric(
                                 horizontal: 16.0,
                                 vertical: 12.0,
                               ),
@@ -227,7 +274,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             ),
                           ],
 
-                          const SizedBox(height: 32.0),
+                          SizedBox(height: 32.0),
 
                           // Register button — full width
                           ReactiveFormConsumer(
@@ -239,22 +286,40 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 height: 54.0,
                                 child: ElevatedButton(
                                   onPressed: enabled ? _submit : null,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: enabled
+                                        ? theme.colorScheme.primary
+                                        : AppColors.buttonDisabled,
+                                    foregroundColor: AppColors.white,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(14.0),
+                                    ),
+                                  ),
                                   child: authState.isLoading
-                                      ? const SizedBox(
+                                      ? SizedBox(
                                           width: 22.0,
                                           height: 22.0,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            color: AppColors.white,
-                                          ),
+                                          child:
+                                              const CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: AppColors.white,
+                                              ),
                                         )
-                                      : Text(context.l10n.signUpButton),
+                                      : Text(
+                                          context.l10n.signUpButton,
+                                          style: TextStyle(
+                                            fontSize: 15.0,
+                                            fontWeight: FontWeight.w700,
+                                            letterSpacing: 0.3,
+                                          ),
+                                        ),
                                 ),
                               );
                             },
                           ),
 
-                          const SizedBox(height: 24.0),
+                          SizedBox(height: 24.0),
 
                           // Already have an account? Sign in
                           Row(
@@ -262,9 +327,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             children: [
                               Text(
                                 context.l10n.alreadyHaveAccount,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  color: theme.textTheme.bodyMedium?.color
-                                      ?.withValues(alpha: 0.6),
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
                                   fontSize: 14.0,
                                 ),
                               ),
@@ -285,7 +349,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             ],
                           ),
 
-                          const SizedBox(height: 32.0),
+                          SizedBox(height: 32.0),
                         ],
                       ),
                     ),

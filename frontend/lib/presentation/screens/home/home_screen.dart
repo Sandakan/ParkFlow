@@ -7,7 +7,7 @@ import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
-import 'package:parkflow/utils/theme/app_theme.dart';
+import 'package:parkflow/utils/constants/app_colors.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -15,8 +15,6 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parkingState = ref.watch(parkingProvider);
-    final theme = Theme.of(context);
-    final parkingColors = theme.parkingColors;
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
                   parkingState.error,
                   AppLocalizations.of(context),
                 ),
-                style: TextStyle(color: theme.colorScheme.error),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             )
           : RefreshIndicator(
@@ -70,14 +68,14 @@ class HomeScreen extends ConsumerWidget {
                   final slot = parkingState.slots[index];
                   return Card(
                     color: slot.isOccupied
-                        ? parkingColors.occupiedBackground
-                        : parkingColors.availableBackground,
+                        ? AppColors.occupiedBackground
+                        : AppColors.availableBackground,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.0),
                       side: BorderSide(
                         color: slot.isOccupied
-                            ? parkingColors.occupiedBorder
-                            : parkingColors.availableBorder,
+                            ? AppColors.occupiedBorder
+                            : AppColors.availableBorder,
                         width: 1.5,
                       ),
                     ),
@@ -91,25 +89,25 @@ class HomeScreen extends ConsumerWidget {
                               : Icons.local_parking,
                           size: 36.0,
                           color: slot.isOccupied
-                              ? parkingColors.occupiedText
-                              : parkingColors.availableText,
+                              ? AppColors.occupiedText
+                              : AppColors.availableText,
                         ),
                         Text(
                           slot.name,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: slot.isOccupied
-                                ? parkingColors.occupiedTextDark
-                                : parkingColors.availableTextDark,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: slot.isOccupied
+                                    ? AppColors.occupiedTextDark
+                                    : AppColors.availableTextDark,
+                              ),
                         ),
                         Text(
                           slot.isOccupied
                               ? context.l10n.occupied
                               : context.l10n.available,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
