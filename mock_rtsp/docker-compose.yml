@@ -1,0 +1,27 @@
+services:
+  mock-rtsp:
+    build: .
+    container_name: mock-rtsp
+    ports:
+      - "8554:8554" # RTSP
+      - "1935:1935" # RTMP
+      - "8888:8888" # HLS
+      - "8889:8889" # WebRTC
+    volumes:
+      - ./assets:/assets
+      - ./stream_config.json:/stream_config.json
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: rebuild
+          path: ./rtsp_server.py
+        - action: rebuild
+          path: ./Dockerfile
+        - action: sync
+          path: ./stream_config.json
+          target: /stream_config.json
+        - action: sync
+          path: ./assets/
+          target: /assets/

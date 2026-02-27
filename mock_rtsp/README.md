@@ -22,7 +22,46 @@ docker build -t mock-rtsp .
 
 ---
 
-## 2. Configuration (`stream_config.json`)
+## 2. Docker Compose (Recommended)
+
+The easiest way to run the mock server is using Docker Compose.
+
+### Start the Server & Watch for Changes
+
+Builds the image and starts the container. This command will keep the terminal open, showing live logs and automatically rebuilding/syncing when you change files:
+
+```bash
+docker compose up --build --watch
+```
+
+> [!NOTE]
+> The RTSP URLs for the streams will be printed in the terminal logs as soon as the container starts. Look for lines starting with `URL: rtsp://...`.
+
+### Background Mode (No Watch)
+
+If you just want to run it in the background:
+
+```bash
+docker compose up -d
+```
+
+### Watch Logs
+
+To monitor the streams and see live FFmpeg logs:
+
+```bash
+docker compose logs -f
+```
+
+### Stop and Remove
+
+```bash
+docker compose down
+```
+
+---
+
+## 3. Configuration (`stream_config.json`)
 
 Use the `stream_config.json` in the root of this folder to define your cameras. This allows you to map specific files in the `assets/` folder to unique RTSP URL paths.
 
@@ -39,15 +78,14 @@ Use the `stream_config.json` in the root of this folder to define your cameras. 
 
 ---
 
-## 3. Usage
+## 4. Manual Usage (Docker Run)
 
-To run the mock server so that it can communicate with your ParkFlow backend, you should attach it to the same Docker network:
+To run the mock server manually (without Compose):
 
 ```bash
-docker run -d --name my-mock-rtsp \
-  --network backend_default \
-  -v "C:\absolute\path\to\mock_rtsp\assets:/assets" \
-  -v "C:\absolute\path\to\mock_rtsp\stream_config.json:/stream_config.json" \
+docker run -d --name mock-rtsp \
+  -v "./assets:/assets" \
+  -v "./stream_config.json:/stream_config.json" \
   -p 8554:8554 \
   mock-rtsp
 ```
@@ -57,7 +95,7 @@ docker run -d --name my-mock-rtsp \
 Once the container is running, the streams are available at the following URLs:
 
 - **Localhost (for VLC/FFplay):** `rtsp://localhost:8554/front_gate`
-- **Container-to-Container (for the Backend):** `rtsp://my-mock-rtsp:8554/front_gate`
+- **Container-to-Container (for the Backend):** `rtsp://mock-rtsp:8554/front_gate`
 
 ---
 
