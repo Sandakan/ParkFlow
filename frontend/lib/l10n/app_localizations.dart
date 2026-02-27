@@ -349,7 +349,7 @@ abstract class AppLocalizations {
   /// Title for the admin dashboard screen
   ///
   /// In en, this message translates to:
-  /// **'Admin Dashboard'**
+  /// **'Home'**
   String get adminDashboard;
 
   /// Welcome message for admin users
@@ -399,6 +399,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage Slots feature coming soon!'**
   String get featureComingSoon;
+
+  /// Label for the parking lots navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Lots'**
+  String get parkingLots;
+
+  /// Label for the cameras navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Cameras'**
+  String get cameras;
+
+  /// Label for the analytics navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get analytics;
+
+  /// Label for the settings navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
 }
 
 class _AppLocalizationsDelegate

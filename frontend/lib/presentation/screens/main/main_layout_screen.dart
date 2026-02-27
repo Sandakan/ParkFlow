@@ -27,6 +27,25 @@ class MainLayoutScreen extends ConsumerWidget {
           children: [
             NavigationRail(
               extended: size.width >= 800,
+              labelType: size.width >= 800 ? null : NavigationRailLabelType.all,
+              selectedLabelTextStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              unselectedLabelTextStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              selectedIconTheme: IconThemeData(
+                color: Theme.of(context).colorScheme.primary,
+                size: 28,
+              ),
+              unselectedIconTheme: IconThemeData(
+                color: Theme.of(
+                  context,
+                ).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                size: 24,
+              ),
               destinations: destinations
                   .map(
                     (d) => NavigationRailDestination(
@@ -49,6 +68,21 @@ class MainLayoutScreen extends ConsumerWidget {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+        selectedIconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.primary,
+          size: 28,
+        ),
+        unselectedIconTheme: IconThemeData(
+          color: Theme.of(
+            context,
+          ).colorScheme.onSurfaceVariant.withOpacity(0.6),
+          size: 24,
+        ),
         items: destinations
             .map(
               (d) => BottomNavigationBarItem(
@@ -76,9 +110,24 @@ class MainLayoutScreen extends ConsumerWidget {
           label: context.l10n.adminDashboard,
         ),
         NavigationDestinationData(
+          icon: Icons.local_parking_outlined,
+          selectedIcon: Icons.local_parking,
+          label: context.l10n.parkingLots,
+        ),
+        NavigationDestinationData(
           icon: Icons.videocam_outlined,
           selectedIcon: Icons.videocam,
-          label: context.l10n.liveFeed,
+          label: context.l10n.cameras,
+        ),
+        NavigationDestinationData(
+          icon: Icons.bar_chart_outlined,
+          selectedIcon: Icons.bar_chart,
+          label: context.l10n.analytics,
+        ),
+        NavigationDestinationData(
+          icon: Icons.settings_outlined,
+          selectedIcon: Icons.settings,
+          label: context.l10n.settings,
         ),
       ];
     } else if (authState.isDriver) {

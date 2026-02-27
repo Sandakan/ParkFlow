@@ -97,8 +97,32 @@ RouteBase get $adminShellRoute => StatefulShellRouteData.$route(
     StatefulShellBranchData.$branch(
       routes: [
         GoRouteData.$route(
-          path: '/video-feed',
-          factory: $VideoFeedRoute._fromState,
+          path: '/admin/parking-lots',
+          factory: $AdminParkingLotsRoute._fromState,
+        ),
+      ],
+    ),
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
+          path: '/admin/cameras',
+          factory: $AdminCamerasRoute._fromState,
+        ),
+      ],
+    ),
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
+          path: '/admin/analytics',
+          factory: $AdminAnalyticsRoute._fromState,
+        ),
+      ],
+    ),
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
+          path: '/admin/settings',
+          factory: $AdminSettingsRoute._fromState,
         ),
       ],
     ),
@@ -131,12 +155,75 @@ mixin $AdminDashboardRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-mixin $VideoFeedRoute on GoRouteData {
-  static VideoFeedRoute _fromState(GoRouterState state) =>
-      const VideoFeedRoute();
+mixin $AdminParkingLotsRoute on GoRouteData {
+  static AdminParkingLotsRoute _fromState(GoRouterState state) =>
+      const AdminParkingLotsRoute();
 
   @override
-  String get location => GoRouteData.$location('/video-feed');
+  String get location => GoRouteData.$location('/admin/parking-lots');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AdminCamerasRoute on GoRouteData {
+  static AdminCamerasRoute _fromState(GoRouterState state) =>
+      const AdminCamerasRoute();
+
+  @override
+  String get location => GoRouteData.$location('/admin/cameras');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AdminAnalyticsRoute on GoRouteData {
+  static AdminAnalyticsRoute _fromState(GoRouterState state) =>
+      const AdminAnalyticsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/admin/analytics');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AdminSettingsRoute on GoRouteData {
+  static AdminSettingsRoute _fromState(GoRouterState state) =>
+      const AdminSettingsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/admin/settings');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -252,7 +339,7 @@ final class RouterListenableProvider
   }
 }
 
-String _$routerListenableHash() => r'5b0f077d93a147f5b3b46e171d62d46a3b9d56b4';
+String _$routerListenableHash() => r'a742137be6ab5831444d4971a01f6aadd09a3f0f';
 
 abstract class _$RouterListenable extends $Notifier<void> {
   void build();
@@ -311,4 +398,4 @@ final class RouterProvider
   }
 }
 
-String _$routerHash() => r'800159853e9eed9c150f8222bf76d23d77255a92';
+String _$routerHash() => r'951caa693bcc086138761b466f23c2a1bdd55308';

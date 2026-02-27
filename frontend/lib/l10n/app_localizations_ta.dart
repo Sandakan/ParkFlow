@@ -163,4 +163,16 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get featureComingSoon => 'Manage Slots feature coming soon!';
+
+  @override
+  String get parkingLots => 'Lots';
+
+  @override
+  String get cameras => 'Cameras';
+
+  @override
+  String get analytics => 'Analytics';
+
+  @override
+  String get settings => 'Settings';
 }

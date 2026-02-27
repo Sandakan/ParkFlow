@@ -24,6 +24,14 @@
 	"@passwordLabel": {
 		"description": "The label for the password input field"
 	},
+	"emailHint": "you@example.com",
+	"@emailHint": {
+		"description": "The hint for the email input field"
+	},
+	"passwordHint": "••••••••",
+	"@passwordHint": {
+		"description": "The hint for the password input field"
+	},
 	"forgotPassword": "Forgot Password?",
 	"@forgotPassword": {
 		"description": "Forgot password button text"
@@ -156,12 +164,56 @@
 	"@invalidCredentials": {
 		"description": "Error message for invalid login credentials"
 	},
-	"adminDashboard": "Admin Dashboard",
+	"adminDashboard": "Home",
 	"@adminDashboard": {
 		"description": "Title for the admin dashboard screen"
 	},
 	"adminWelcome": "Welcome, Administrator",
 	"@adminWelcome": {
 		"description": "Welcome message for admin users"
+	},
+	"home": "Home",
+	"@home": {
+		"description": "Label for the home/dashboard navigation"
+	},
+	"profile": "Profile",
+	"@profile": {
+		"description": "Label for the profile navigation/screen"
+	},
+	"guest": "Guest",
+	"@guest": {
+		"description": "Placeholder for unknown user name"
+	},
+	"logout": "Logout",
+	"@logout": {
+		"description": "Text for the logout button/label"
+	},
+	"adminConsoleSubtitle": "ParkFlow Administration Console",
+	"@adminConsoleSubtitle": {
+		"description": "Subtitle for the admin dashboard"
+	},
+	"manageSlots": "Manage Parking Slots",
+	"@manageSlots": {
+		"description": "Button text for managing parking slots"
+	},
+	"featureComingSoon": "Manage Slots feature coming soon!",
+	"@featureComingSoon": {
+		"description": "Flash message for unimplemented features"
+	},
+	"parkingLots": "Lots",
+	"@parkingLots": {
+		"description": "Label for the parking lots navigation"
+	},
+	"cameras": "Cameras",
+	"@cameras": {
+		"description": "Label for the cameras navigation"
+	},
+	"analytics": "Analytics",
+	"@analytics": {
+		"description": "Label for the analytics navigation"
+	},
+	"settings": "Settings",
+	"@settings": {
+		"description": "Label for the settings navigation"
 	}
 }

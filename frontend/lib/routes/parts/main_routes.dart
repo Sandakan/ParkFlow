@@ -7,9 +7,24 @@ part of '../router_provider.dart';
         TypedGoRoute<AdminDashboardRoute>(path: AdminDashboardRoute.path),
       ],
     ),
-    TypedStatefulShellBranch<VideoFeedBranch>(
+    TypedStatefulShellBranch<AdminParkingLotsBranch>(
       routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<VideoFeedRoute>(path: VideoFeedRoute.path),
+        TypedGoRoute<AdminParkingLotsRoute>(path: AdminParkingLotsRoute.path),
+      ],
+    ),
+    TypedStatefulShellBranch<AdminCamerasBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<AdminCamerasRoute>(path: AdminCamerasRoute.path),
+      ],
+    ),
+    TypedStatefulShellBranch<AdminAnalyticsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<AdminAnalyticsRoute>(path: AdminAnalyticsRoute.path),
+      ],
+    ),
+    TypedStatefulShellBranch<AdminSettingsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<AdminSettingsRoute>(path: AdminSettingsRoute.path),
       ],
     ),
   ],
@@ -31,8 +46,20 @@ class AdminDashboardBranch extends StatefulShellBranchData {
   const AdminDashboardBranch();
 }
 
-class VideoFeedBranch extends StatefulShellBranchData {
-  const VideoFeedBranch();
+class AdminParkingLotsBranch extends StatefulShellBranchData {
+  const AdminParkingLotsBranch();
+}
+
+class AdminCamerasBranch extends StatefulShellBranchData {
+  const AdminCamerasBranch();
+}
+
+class AdminAnalyticsBranch extends StatefulShellBranchData {
+  const AdminAnalyticsBranch();
+}
+
+class AdminSettingsBranch extends StatefulShellBranchData {
+  const AdminSettingsBranch();
 }
 
 @TypedStatefulShellRoute<DriverShellRoute>(

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
-import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
@@ -30,11 +29,7 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => const VideoFeedRoute().push(context),
-        icon: const Icon(Icons.videocam),
-        label: Text(context.l10n.liveFeed),
-      ),
+
       body: parkingState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : parkingState.error != null

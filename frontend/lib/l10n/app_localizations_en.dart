@@ -137,7 +137,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The email or password you entered is incorrect';
 
   @override
-  String get adminDashboard => 'Admin Dashboard';
+  String get adminDashboard => 'Home';
 
   @override
   String get adminWelcome => 'Welcome, Administrator';
@@ -162,4 +162,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get featureComingSoon => 'Manage Slots feature coming soon!';
+
+  @override
+  String get parkingLots => 'Lots';
+
+  @override
+  String get cameras => 'Cameras';
+
+  @override
+  String get analytics => 'Analytics';
+
+  @override
+  String get settings => 'Settings';
 }

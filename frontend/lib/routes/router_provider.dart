@@ -9,9 +9,12 @@ import 'package:parkflow/presentation/screens/dashboard/admin_dashboard_screen.d
 import 'package:parkflow/presentation/screens/home/home_screen.dart';
 import 'package:parkflow/presentation/screens/auth/login_screen.dart';
 import 'package:parkflow/presentation/screens/auth/register_screen.dart';
-import 'package:parkflow/presentation/screens/video_feed/video_feed_screen.dart';
 import 'package:parkflow/presentation/screens/home/profile_screen.dart';
 import 'package:parkflow/presentation/screens/main/main_layout_screen.dart';
+import 'package:parkflow/presentation/screens/admin/admin_parking_lots_screen.dart';
+import 'package:parkflow/presentation/screens/admin/admin_cameras_screen.dart';
+import 'package:parkflow/presentation/screens/admin/admin_analytics_screen.dart';
+import 'package:parkflow/presentation/screens/admin/admin_settings_screen.dart';
 
 part 'router_provider.g.dart';
 
@@ -19,7 +22,6 @@ part 'parts/boot_routes.dart';
 part 'parts/auth_routes.dart';
 part 'parts/home_routes.dart';
 part 'parts/admin_routes.dart';
-part 'parts/video_routes.dart';
 part 'parts/main_routes.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
