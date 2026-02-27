@@ -8,6 +8,10 @@
 	"@loginTitle": {
 		"description": "The title displayed on the login screen"
 	},
+	"welcomeBackSubtitle": "Welcome back! Sign in to your account.",
+	"@welcomeBackSubtitle": {
+		"description": "The subtitle displayed on the login screen"
+	},
 	"signInToContinue": "Sign in to continue",
 	"@signInToContinue": {
 		"description": "The subtitle displayed on the login screen"
@@ -20,9 +24,69 @@
 	"@passwordLabel": {
 		"description": "The label for the password input field"
 	},
+	"forgotPassword": "Forgot Password?",
+	"@forgotPassword": {
+		"description": "Forgot password button text"
+	},
 	"loginButton": "Login",
 	"@loginButton": {
 		"description": "The text for the login button"
+	},
+	"signInButton": "Sign In",
+	"@signInButton": {
+		"description": "The text for the sign in button"
+	},
+	"dontHaveAccount": "Don't have an account? ",
+	"@dontHaveAccount": {
+		"description": "Text asking if the user doesn't have an account"
+	},
+	"signUp": "Sign up",
+	"@signUp": {
+		"description": "Sign up link text"
+	},
+	"createAccountTitle": "Create Account",
+	"@createAccountTitle": {
+		"description": "Title for the registration screen"
+	},
+	"signUpSubtitle": "Sign up to get started!",
+	"@signUpSubtitle": {
+		"description": "Subtitle for the registration screen"
+	},
+	"fullNameLabel": "Full Name",
+	"@fullNameLabel": {
+		"description": "Label for the full name input field"
+	},
+	"fullNameHint": "John Doe",
+	"@fullNameHint": {
+		"description": "Hint text for the full name input field"
+	},
+	"nameRequired": "Name is required",
+	"@nameRequired": {
+		"description": "Validation message when name is empty"
+	},
+	"confirmPasswordLabel": "Confirm Password",
+	"@confirmPasswordLabel": {
+		"description": "Label for the confirm password input field"
+	},
+	"confirmPasswordRequired": "Confirm Password is required",
+	"@confirmPasswordRequired": {
+		"description": "Validation message when confirm password is empty"
+	},
+	"passwordsMustMatch": "Passwords must match",
+	"@passwordsMustMatch": {
+		"description": "Validation message when passwords do not match"
+	},
+	"signUpButton": "Sign Up",
+	"@signUpButton": {
+		"description": "Text for the sign up button"
+	},
+	"alreadyHaveAccount": "Already have an account? ",
+	"@alreadyHaveAccount": {
+		"description": "Text asking if the user already has an account"
+	},
+	"signIn": "Sign in",
+	"@signIn": {
+		"description": "Sign in link text"
 	},
 	"liveDashboard": "ParkFlow Live Dashboard",
 	"@liveDashboard": {
@@ -39,6 +103,10 @@
 	"available": "Available",
 	"@available": {
 		"description": "Label indicating a parking slot is available"
+	},
+	"logoutTooltip": "Logout",
+	"@logoutTooltip": {
+		"description": "Tooltip for the logout button"
 	},
 	"checkInternetConnection": "Please check your internet connection and try again.",
 	"@checkInternetConnection": {
@@ -83,5 +151,9 @@
 	"passwordMinLength": "The password must be at least 6 characters long",
 	"@passwordMinLength": {
 		"description": "Validation message when password is too short"
+	},
+	"invalidCredentials": "The email or password you entered is incorrect",
+	"@invalidCredentials": {
+		"description": "Error message for invalid login credentials"
 	}
 }

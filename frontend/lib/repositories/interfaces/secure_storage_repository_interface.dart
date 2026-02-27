@@ -6,9 +6,9 @@ abstract class SecureStorageRepositoryInterface {
   Future<void> setAccessToken(String accessToken);
   Future<void> setRefreshToken(String refreshToken);
   Future<void> logout();
-  Future<void> setAccessTokenExpiry(int seconds);
-  Future<void> setRefreshTokenExpiry(int milliseconds);
-  Future<int?> getRefreshTokenExpiry();
+  Future<void> setAccessTokenExpiry(String expiry);
+  Future<void> setRefreshTokenExpiry(String expiry);
+  Future<String?> getRefreshTokenExpiry();
   Future<bool> isAccessTokenExpired();
   Future<bool> isRefreshTokenExpired();
   Future<LanguageEnum?> getLocale();

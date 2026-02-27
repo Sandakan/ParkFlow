@@ -115,6 +115,12 @@ abstract class AppLocalizations {
   /// The subtitle displayed on the login screen
   ///
   /// In en, this message translates to:
+  /// **'Welcome back! Sign in to your account.'**
+  String get welcomeBackSubtitle;
+
+  /// The subtitle displayed on the login screen
+  ///
+  /// In en, this message translates to:
   /// **'Sign in to continue'**
   String get signInToContinue;
 
@@ -130,11 +136,101 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get passwordLabel;
 
+  /// Forgot password button text
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
   /// The text for the login button
   ///
   /// In en, this message translates to:
   /// **'Login'**
   String get loginButton;
+
+  /// The text for the sign in button
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signInButton;
+
+  /// Text asking if the user doesn't have an account
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? '**
+  String get dontHaveAccount;
+
+  /// Sign up link text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up'**
+  String get signUp;
+
+  /// Title for the registration screen
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccountTitle;
+
+  /// Subtitle for the registration screen
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up to get started!'**
+  String get signUpSubtitle;
+
+  /// Label for the full name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullNameLabel;
+
+  /// Hint text for the full name input field
+  ///
+  /// In en, this message translates to:
+  /// **'John Doe'**
+  String get fullNameHint;
+
+  /// Validation message when name is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get nameRequired;
+
+  /// Label for the confirm password input field
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPasswordLabel;
+
+  /// Validation message when confirm password is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password is required'**
+  String get confirmPasswordRequired;
+
+  /// Validation message when passwords do not match
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords must match'**
+  String get passwordsMustMatch;
+
+  /// Text for the sign up button
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUpButton;
+
+  /// Text asking if the user already has an account
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get alreadyHaveAccount;
+
+  /// Sign in link text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signIn;
 
   /// The title for the live dashboard page
   ///
@@ -159,6 +255,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Available'**
   String get available;
+
+  /// Tooltip for the logout button
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logoutTooltip;
 
   /// Error message when there is no internet connection
   ///
@@ -225,6 +327,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The password must be at least 6 characters long'**
   String get passwordMinLength;
+
+  /// Error message for invalid login credentials
+  ///
+  /// In en, this message translates to:
+  /// **'The email or password you entered is incorrect'**
+  String get invalidCredentials;
 }
 
 class _AppLocalizationsDelegate

@@ -1,8 +1,8 @@
 import 'package:parkflow/l10n/app_localizations.dart';
-import 'package:parkflow/utils/constants/enums/app_error_code.dart';
+import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 
 class AppException implements Exception {
-  final AppErrorCode code;
+  final AppStatusCode code;
   final Object? cause;
   final StackTrace? stackTrace;
 
@@ -16,6 +16,6 @@ class AppException implements Exception {
 
   static String getLocalizedErrorMessage(Object? e, AppLocalizations l10n) {
     if (e is AppException) return e.toLocalizedString(l10n);
-    return AppErrorCode.unknownError.toLocalizedString(l10n);
+    return AppStatusCode.unknownError.toLocalizedString(l10n);
   }
 }

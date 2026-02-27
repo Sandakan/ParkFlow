@@ -9,4 +9,6 @@ abstract class RemoteRepositoryInterface {
   Future<void> register(RegisterRequestEntity request);
   Future<GetUserResponseEntity> getCurrentUser(String token);
   Future<GetParkingSlotsResponseEntity> getParkingSlots();
+  Future<GetUserResponseEntity> testToken(String token);
+  Future<LoginResponseEntity> refreshToken(String refreshToken);
 }

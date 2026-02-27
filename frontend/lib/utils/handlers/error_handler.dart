@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:parkflow/utils/helpers/talker.dart';
 import 'package:parkflow/core/app_exception.dart';
-import 'package:parkflow/utils/constants/enums/app_error_code.dart';
+import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 
 class ErrorHandler {
   static AppException handle(dynamic error) {
@@ -12,17 +12,17 @@ class ErrorHandler {
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
           return AppException(
-            AppErrorCode.networkError,
+            AppStatusCode.networkError,
             cause: error,
             stackTrace: error.stackTrace,
           );
         case DioExceptionType.badResponse:
           final data = error.response?.data;
-          AppErrorCode errorCode = AppErrorCode.serverError;
+          AppStatusCode errorCode = AppStatusCode.serverError;
           if (data is Map<String, dynamic> && data['code'] != null) {
-            errorCode = AppErrorCode.fromBackendCode(data['code'].toString());
+            errorCode = AppStatusCode.fromString(data['code'].toString());
           } else if (error.response?.statusCode == 401) {
-            errorCode = AppErrorCode.sessionExpired;
+            errorCode = AppStatusCode.sessionExpired;
           }
           return AppException(
             errorCode,
@@ -31,7 +31,7 @@ class ErrorHandler {
           );
         default:
           return AppException(
-            AppErrorCode.unknownError,
+            AppStatusCode.unknownError,
             cause: error,
             stackTrace: error.stackTrace,
           );
@@ -44,6 +44,6 @@ class ErrorHandler {
     }
 
     talker.error('Unknown Error', error);
-    return AppException(AppErrorCode.unknownError, cause: error);
+    return AppException(AppStatusCode.unknownError, cause: error);
   }
 }

@@ -8,7 +8,7 @@ import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/repositories/interfaces/env_repository_interface.dart';
 import 'package:parkflow/repositories/interfaces/secure_storage_repository_interface.dart';
-import 'package:parkflow/utils/constants/enums/app_error_code.dart';
+import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
 import 'package:parkflow/utils/handlers/error_handler.dart';
@@ -27,7 +27,9 @@ class HttpApi {
     required this.ref,
   }) {
     dio.options = BaseOptions(
-      baseUrl: '${envRepository.getBaseUrl()}/api/v1',
+      baseUrl: envRepository.getBaseUrl().endsWith('/')
+          ? envRepository.getBaseUrl()
+          : '${envRepository.getBaseUrl()}/',
       connectTimeout: const Duration(seconds: 15),
       receiveTimeout: const Duration(seconds: 15),
     );
@@ -59,13 +61,16 @@ class HttpApi {
   }) async {
     try {
       if (!await _checkInternet()) {
-        throw const AppException(AppErrorCode.noInternetConnection);
+        throw const AppException(AppStatusCode.noInternetConnection);
       }
 
-      dio.options.extra = {'withCredentials': true};
+      final requestOptions = options ?? Options();
+      requestOptions.extra ??= {};
+      requestOptions.extra!['withCredentials'] = true;
 
       if (accessToken != null) {
-        dio.options.headers['Authorization'] = 'Bearer $accessToken';
+        requestOptions.headers ??= {};
+        requestOptions.headers!['Authorization'] = 'Bearer $accessToken';
       }
 
       dynamic sendData = data;
@@ -76,19 +81,21 @@ class HttpApi {
             sendData = FormData.fromMap(data!);
             break;
           case RequestTypeEnum.urlencoded:
-            dio.options.contentType = 'application/x-www-form-urlencoded';
+            requestOptions.contentType = 'application/x-www-form-urlencoded';
             break;
           default:
-            dio.options.contentType = 'application/json';
+            requestOptions.contentType = 'application/json';
         }
       }
 
       if (customHeaders != null && customHeaders.isNotEmpty) {
-        customHeaders.forEach((key, value) => dio.options.headers[key] = value);
+        requestOptions.headers ??= {};
+        requestOptions.headers!.addAll(customHeaders);
       }
 
       if (cookie != null && !kIsWeb) {
-        dio.options.headers['Cookie'] = cookie;
+        requestOptions.headers ??= {};
+        requestOptions.headers!['Cookie'] = cookie;
       }
 
       Response? response;
@@ -99,7 +106,7 @@ class HttpApi {
             url,
             data: sendData,
             queryParameters: queryParameters,
-            options: options,
+            options: requestOptions,
           );
           break;
         case HttpMethodEnum.delete:
@@ -107,7 +114,7 @@ class HttpApi {
             url,
             data: sendData,
             queryParameters: queryParameters,
-            options: options,
+            options: requestOptions,
           );
           break;
         case HttpMethodEnum.put:
@@ -115,7 +122,7 @@ class HttpApi {
             url,
             data: sendData,
             queryParameters: queryParameters,
-            options: options,
+            options: requestOptions,
           );
           break;
         case HttpMethodEnum.patch:
@@ -123,7 +130,7 @@ class HttpApi {
             url,
             data: sendData,
             queryParameters: queryParameters,
-            options: options,
+            options: requestOptions,
           );
           break;
         default:
@@ -131,7 +138,7 @@ class HttpApi {
             url,
             data: sendData,
             queryParameters: queryParameters,
-            options: options,
+            options: requestOptions,
           );
       }
 
@@ -143,7 +150,7 @@ class HttpApi {
             if (signoutWhenInvalidated) {
               await ref.read(authProvider.notifier).logout();
             }
-            throw const AppException(AppErrorCode.sessionExpired);
+            throw const AppException(AppStatusCode.sessionExpired);
           }
           return e.response;
         }
@@ -162,7 +169,7 @@ class HttpApi {
   Future<Uint8List?> downloadAsBytes(String url) async {
     try {
       if (!await _checkInternet()) {
-        throw const AppException(AppErrorCode.noInternetConnection);
+        throw const AppException(AppStatusCode.noInternetConnection);
       }
 
       final response = await dio.get(

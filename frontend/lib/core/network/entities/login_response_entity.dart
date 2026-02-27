@@ -13,6 +13,10 @@ abstract class LoginResponseEntity with _$LoginResponseEntity {
     @JsonKey(name: "access_token") required String accessToken,
     @JsonKey(name: "refresh_token") required String refreshToken,
     @JsonKey(name: "token_type") required String tokenType,
+    @JsonKey(name: "access_token_expires_at")
+    required String accessTokenExpiresAt,
+    @JsonKey(name: "refresh_token_expires_at")
+    required String refreshTokenExpiresAt,
   }) = _LoginResponseEntity;
 
   factory LoginResponseEntity.fromJson(Map<String, dynamic> json) =>

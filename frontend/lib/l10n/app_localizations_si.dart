@@ -15,6 +15,9 @@ class AppLocalizationsSi extends AppLocalizations {
   String get loginTitle => 'ParkFlow';
 
   @override
+  String get welcomeBackSubtitle => 'Welcome back! Sign in to your account.';
+
+  @override
   String get signInToContinue => 'ඉදිරියට යාමට පුරන්න';
 
   @override
@@ -24,7 +27,52 @@ class AppLocalizationsSi extends AppLocalizations {
   String get passwordLabel => 'මුරපදය';
 
   @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
   String get loginButton => 'පුරන්න';
+
+  @override
+  String get signInButton => 'Sign In';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account? ';
+
+  @override
+  String get signUp => 'Sign up';
+
+  @override
+  String get createAccountTitle => 'Create Account';
+
+  @override
+  String get signUpSubtitle => 'Sign up to get started!';
+
+  @override
+  String get fullNameLabel => 'Full Name';
+
+  @override
+  String get fullNameHint => 'John Doe';
+
+  @override
+  String get nameRequired => 'Name is required';
+
+  @override
+  String get confirmPasswordLabel => 'Confirm Password';
+
+  @override
+  String get confirmPasswordRequired => 'Confirm Password is required';
+
+  @override
+  String get passwordsMustMatch => 'Passwords must match';
+
+  @override
+  String get signUpButton => 'Sign Up';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account? ';
+
+  @override
+  String get signIn => 'Sign in';
 
   @override
   String get liveDashboard => 'ParkFlow සජීවී ඩෑෂ්බෝර්ඩ්';
@@ -37,6 +85,9 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get available => 'හිස්ව ඇත';
+
+  @override
+  String get logoutTooltip => 'Logout';
 
   @override
   String get checkInternetConnection =>
@@ -74,4 +125,8 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get passwordMinLength => 'මුරපදය අවම වශයෙන් අක්ෂර 6ක් දිග විය යුතුය';
+
+  @override
+  String get invalidCredentials =>
+      'ඔබ ඇතුළත් කළ විද්‍යුත් තැපෑල හෝ මුරපදය වැරදියි';
 }

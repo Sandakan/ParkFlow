@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:parkflow/presentation/screens/home/home_screen.dart';
-
-part 'home_routes.g.dart';
+part of '../router_provider.dart';
 
 @TypedGoRoute<HomeRoute>(path: '/home')
 class HomeRoute extends GoRouteData with $HomeRoute {

@@ -88,7 +88,7 @@ compose_down: cd ../backend && docker compose down
 compose_down_all: cd ../backend && docker compose down --volumes --remove-orphans
 
 # Docker Compose watch mode (auto-rebuild on file changes)
-compose_watch: cd ../backend && docker compose watch backend
-compose_watch_dev: cd ../backend && docker compose watch backend
-compose_watch_test: cd ../backend && docker compose watch backend
-compose_watch_prod: cd ../backend && docker compose watch backend
+compose_watch: cd ../backend && docker compose up --build --watch backend
+compose_watch_dev: cd ../backend && docker compose up --build --watch backend
+compose_watch_test: cd ../backend && docker compose up --build --watch backend
+compose_watch_prod: cd ../backend && docker compose up --build --watch backend

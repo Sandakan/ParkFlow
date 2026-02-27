@@ -26,7 +26,7 @@ class EnvRepository implements EnvRepositoryInterface {
     return EnvRepository._(
       level: level,
       baseUrl: _optimizeUrl(
-        dotenv.get('BASE_URL', fallback: 'http://localhost:8000'),
+        dotenv.get('BASE_URL', fallback: 'http://localhost:8000/api/v1'),
       ),
       webSocketUrl: _optimizeUrl(
         dotenv.get('WEB_SOCKET_URL', fallback: 'http://localhost:8000'),
@@ -55,8 +55,6 @@ class EnvRepository implements EnvRepositoryInterface {
       }
     }
 
-    // Some implementations prefer no trailing slash, but if needed we can add it here.
-    // For dio and socket.io standardizing without trailing slash is often safer unless specifically required.
     if (url.endsWith('/')) {
       url = url.substring(0, url.length - 1);
     }

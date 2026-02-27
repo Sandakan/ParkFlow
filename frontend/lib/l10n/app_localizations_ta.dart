@@ -15,6 +15,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get loginTitle => 'பார்க்ஃப்ளோ';
 
   @override
+  String get welcomeBackSubtitle => 'Welcome back! Sign in to your account.';
+
+  @override
   String get signInToContinue => 'தொடர உள்நுழையவும்';
 
   @override
@@ -24,7 +27,52 @@ class AppLocalizationsTa extends AppLocalizations {
   String get passwordLabel => 'கடவுச்சொல்';
 
   @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
   String get loginButton => 'உள்நுழை';
+
+  @override
+  String get signInButton => 'Sign In';
+
+  @override
+  String get dontHaveAccount => 'Don\'t have an account? ';
+
+  @override
+  String get signUp => 'Sign up';
+
+  @override
+  String get createAccountTitle => 'Create Account';
+
+  @override
+  String get signUpSubtitle => 'Sign up to get started!';
+
+  @override
+  String get fullNameLabel => 'Full Name';
+
+  @override
+  String get fullNameHint => 'John Doe';
+
+  @override
+  String get nameRequired => 'Name is required';
+
+  @override
+  String get confirmPasswordLabel => 'Confirm Password';
+
+  @override
+  String get confirmPasswordRequired => 'Confirm Password is required';
+
+  @override
+  String get passwordsMustMatch => 'Passwords must match';
+
+  @override
+  String get signUpButton => 'Sign Up';
+
+  @override
+  String get alreadyHaveAccount => 'Already have an account? ';
+
+  @override
+  String get signIn => 'Sign in';
 
   @override
   String get liveDashboard => 'பார்க்ஃப்ளோ நேரடி டாஷ்போர்டு';
@@ -37,6 +85,9 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get available => 'காலியாக உள்ளது';
+
+  @override
+  String get logoutTooltip => 'Logout';
 
   @override
   String get checkInternetConnection =>
@@ -75,4 +126,8 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get passwordMinLength =>
       'கடவுச்சொல் குறைந்தது 6 எழுத்துகள் நீளமாக இருக்க வேண்டும்';
+
+  @override
+  String get invalidCredentials =>
+      'நீங்கள் உள்ளிட்ட மின்னஞ்சல் அல்லது கடவுச்சொல் தவறானது';
 }

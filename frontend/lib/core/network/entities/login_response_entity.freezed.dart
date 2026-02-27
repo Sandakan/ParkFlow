@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginResponseEntity {
 
-@JsonKey(name: "access_token") String get accessToken;@JsonKey(name: "refresh_token") String get refreshToken;@JsonKey(name: "token_type") String get tokenType;
+@JsonKey(name: "access_token") String get accessToken;@JsonKey(name: "refresh_token") String get refreshToken;@JsonKey(name: "token_type") String get tokenType;@JsonKey(name: "access_token_expires_at") String get accessTokenExpiresAt;@JsonKey(name: "refresh_token_expires_at") String get refreshTokenExpiresAt;
 /// Create a copy of LoginResponseEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LoginResponseEntityCopyWith<LoginResponseEntity> get copyWith => _$LoginRespons
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginResponseEntity&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.tokenType, tokenType) || other.tokenType == tokenType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginResponseEntity&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.tokenType, tokenType) || other.tokenType == tokenType)&&(identical(other.accessTokenExpiresAt, accessTokenExpiresAt) || other.accessTokenExpiresAt == accessTokenExpiresAt)&&(identical(other.refreshTokenExpiresAt, refreshTokenExpiresAt) || other.refreshTokenExpiresAt == refreshTokenExpiresAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken,refreshToken,tokenType);
+int get hashCode => Object.hash(runtimeType,accessToken,refreshToken,tokenType,accessTokenExpiresAt,refreshTokenExpiresAt);
 
 @override
 String toString() {
-  return 'LoginResponseEntity(accessToken: $accessToken, refreshToken: $refreshToken, tokenType: $tokenType)';
+  return 'LoginResponseEntity(accessToken: $accessToken, refreshToken: $refreshToken, tokenType: $tokenType, accessTokenExpiresAt: $accessTokenExpiresAt, refreshTokenExpiresAt: $refreshTokenExpiresAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LoginResponseEntityCopyWith<$Res>  {
   factory $LoginResponseEntityCopyWith(LoginResponseEntity value, $Res Function(LoginResponseEntity) _then) = _$LoginResponseEntityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "access_token") String accessToken,@JsonKey(name: "refresh_token") String refreshToken,@JsonKey(name: "token_type") String tokenType
+@JsonKey(name: "access_token") String accessToken,@JsonKey(name: "refresh_token") String refreshToken,@JsonKey(name: "token_type") String tokenType,@JsonKey(name: "access_token_expires_at") String accessTokenExpiresAt,@JsonKey(name: "refresh_token_expires_at") String refreshTokenExpiresAt
 });
 
 
@@ -65,11 +65,13 @@ class _$LoginResponseEntityCopyWithImpl<$Res>
 
 /// Create a copy of LoginResponseEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,Object? refreshToken = null,Object? tokenType = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,Object? refreshToken = null,Object? tokenType = null,Object? accessTokenExpiresAt = null,Object? refreshTokenExpiresAt = null,}) {
   return _then(_self.copyWith(
 accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String,tokenType: null == tokenType ? _self.tokenType : tokenType // ignore: cast_nullable_to_non_nullable
+as String,accessTokenExpiresAt: null == accessTokenExpiresAt ? _self.accessTokenExpiresAt : accessTokenExpiresAt // ignore: cast_nullable_to_non_nullable
+as String,refreshTokenExpiresAt: null == refreshTokenExpiresAt ? _self.refreshTokenExpiresAt : refreshTokenExpiresAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "token_type")  String tokenType)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "token_type")  String tokenType, @JsonKey(name: "access_token_expires_at")  String accessTokenExpiresAt, @JsonKey(name: "refresh_token_expires_at")  String refreshTokenExpiresAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoginResponseEntity() when $default != null:
-return $default(_that.accessToken,_that.refreshToken,_that.tokenType);case _:
+return $default(_that.accessToken,_that.refreshToken,_that.tokenType,_that.accessTokenExpiresAt,_that.refreshTokenExpiresAt);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.accessToken,_that.refreshToken,_that.tokenType);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "token_type")  String tokenType)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "token_type")  String tokenType, @JsonKey(name: "access_token_expires_at")  String accessTokenExpiresAt, @JsonKey(name: "refresh_token_expires_at")  String refreshTokenExpiresAt)  $default,) {final _that = this;
 switch (_that) {
 case _LoginResponseEntity():
-return $default(_that.accessToken,_that.refreshToken,_that.tokenType);case _:
+return $default(_that.accessToken,_that.refreshToken,_that.tokenType,_that.accessTokenExpiresAt,_that.refreshTokenExpiresAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.accessToken,_that.refreshToken,_that.tokenType);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "token_type")  String tokenType)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "token_type")  String tokenType, @JsonKey(name: "access_token_expires_at")  String accessTokenExpiresAt, @JsonKey(name: "refresh_token_expires_at")  String refreshTokenExpiresAt)?  $default,) {final _that = this;
 switch (_that) {
 case _LoginResponseEntity() when $default != null:
-return $default(_that.accessToken,_that.refreshToken,_that.tokenType);case _:
+return $default(_that.accessToken,_that.refreshToken,_that.tokenType,_that.accessTokenExpiresAt,_that.refreshTokenExpiresAt);case _:
   return null;
 
 }
@@ -211,12 +213,14 @@ return $default(_that.accessToken,_that.refreshToken,_that.tokenType);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _LoginResponseEntity extends LoginResponseEntity {
-  const _LoginResponseEntity({@JsonKey(name: "access_token") required this.accessToken, @JsonKey(name: "refresh_token") required this.refreshToken, @JsonKey(name: "token_type") required this.tokenType}): super._();
+  const _LoginResponseEntity({@JsonKey(name: "access_token") required this.accessToken, @JsonKey(name: "refresh_token") required this.refreshToken, @JsonKey(name: "token_type") required this.tokenType, @JsonKey(name: "access_token_expires_at") required this.accessTokenExpiresAt, @JsonKey(name: "refresh_token_expires_at") required this.refreshTokenExpiresAt}): super._();
   factory _LoginResponseEntity.fromJson(Map<String, dynamic> json) => _$LoginResponseEntityFromJson(json);
 
 @override@JsonKey(name: "access_token") final  String accessToken;
 @override@JsonKey(name: "refresh_token") final  String refreshToken;
 @override@JsonKey(name: "token_type") final  String tokenType;
+@override@JsonKey(name: "access_token_expires_at") final  String accessTokenExpiresAt;
+@override@JsonKey(name: "refresh_token_expires_at") final  String refreshTokenExpiresAt;
 
 /// Create a copy of LoginResponseEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginResponseEntity&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.tokenType, tokenType) || other.tokenType == tokenType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginResponseEntity&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.tokenType, tokenType) || other.tokenType == tokenType)&&(identical(other.accessTokenExpiresAt, accessTokenExpiresAt) || other.accessTokenExpiresAt == accessTokenExpiresAt)&&(identical(other.refreshTokenExpiresAt, refreshTokenExpiresAt) || other.refreshTokenExpiresAt == refreshTokenExpiresAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken,refreshToken,tokenType);
+int get hashCode => Object.hash(runtimeType,accessToken,refreshToken,tokenType,accessTokenExpiresAt,refreshTokenExpiresAt);
 
 @override
 String toString() {
-  return 'LoginResponseEntity(accessToken: $accessToken, refreshToken: $refreshToken, tokenType: $tokenType)';
+  return 'LoginResponseEntity(accessToken: $accessToken, refreshToken: $refreshToken, tokenType: $tokenType, accessTokenExpiresAt: $accessTokenExpiresAt, refreshTokenExpiresAt: $refreshTokenExpiresAt)';
 }
 
 
@@ -251,7 +255,7 @@ abstract mixin class _$LoginResponseEntityCopyWith<$Res> implements $LoginRespon
   factory _$LoginResponseEntityCopyWith(_LoginResponseEntity value, $Res Function(_LoginResponseEntity) _then) = __$LoginResponseEntityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "access_token") String accessToken,@JsonKey(name: "refresh_token") String refreshToken,@JsonKey(name: "token_type") String tokenType
+@JsonKey(name: "access_token") String accessToken,@JsonKey(name: "refresh_token") String refreshToken,@JsonKey(name: "token_type") String tokenType,@JsonKey(name: "access_token_expires_at") String accessTokenExpiresAt,@JsonKey(name: "refresh_token_expires_at") String refreshTokenExpiresAt
 });
 
 
@@ -268,11 +272,13 @@ class __$LoginResponseEntityCopyWithImpl<$Res>
 
 /// Create a copy of LoginResponseEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = null,Object? refreshToken = null,Object? tokenType = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = null,Object? refreshToken = null,Object? tokenType = null,Object? accessTokenExpiresAt = null,Object? refreshTokenExpiresAt = null,}) {
   return _then(_LoginResponseEntity(
 accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String,tokenType: null == tokenType ? _self.tokenType : tokenType // ignore: cast_nullable_to_non_nullable
+as String,accessTokenExpiresAt: null == accessTokenExpiresAt ? _self.accessTokenExpiresAt : accessTokenExpiresAt // ignore: cast_nullable_to_non_nullable
+as String,refreshTokenExpiresAt: null == refreshTokenExpiresAt ? _self.refreshTokenExpiresAt : refreshTokenExpiresAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

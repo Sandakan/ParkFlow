@@ -17,11 +17,13 @@ class AuthRepository implements AuthRepositoryInterface {
     try {
       final request = LoginRequestEntity(username: email, password: password);
       final response = await remote.login(request);
-      final token = response.accessToken;
 
-      await storage.write(key: 'access_token', value: token);
+      await storage.setAccessToken(response.accessToken);
+      await storage.setRefreshToken(response.refreshToken);
+      await storage.setAccessTokenExpiry(response.accessTokenExpiresAt);
+      await storage.setRefreshTokenExpiry(response.refreshTokenExpiresAt);
 
-      final userResponse = await remote.getCurrentUser(token);
+      final userResponse = await remote.getCurrentUser(response.accessToken);
       return UserModel(
         id: userResponse.id,
         email: userResponse.email,
@@ -49,18 +51,18 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<void> logout() async {
-    await storage.delete(key: 'access_token');
+    await storage.clearAllAuthData();
   }
 
   @override
   Future<String?> getToken() async {
-    return await storage.read(key: 'access_token');
+    return await storage.getAccessToken();
   }
 
   @override
   Future<UserModel?> getCurrentUser() async {
     try {
-      final token = await storage.read(key: 'access_token');
+      final token = await storage.getAccessToken();
       if (token == null) return null;
 
       final userResponse = await remote.getCurrentUser(token);

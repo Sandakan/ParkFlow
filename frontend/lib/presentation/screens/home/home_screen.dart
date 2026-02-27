@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
-import 'package:parkflow/routes/parts/video_routes.dart';
+import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:parkflow/utils/theme/app_theme.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -14,6 +15,8 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final parkingState = ref.watch(parkingProvider);
+    final theme = Theme.of(context);
+    final parkingColors = theme.parkingColors;
 
     return Scaffold(
       appBar: AppBar(
@@ -22,7 +25,7 @@ class HomeScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
+            tooltip: context.l10n.logoutTooltip,
             onPressed: () {
               ref.read(authProvider.notifier).logout();
             },
@@ -43,7 +46,7 @@ class HomeScreen extends ConsumerWidget {
                   parkingState.error,
                   AppLocalizations.of(context),
                 ),
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+                style: TextStyle(color: theme.colorScheme.error),
               ),
             )
           : RefreshIndicator(
@@ -51,15 +54,15 @@ class HomeScreen extends ConsumerWidget {
                 ref.invalidate(parkingProvider);
               },
               child: GridView.builder(
-                padding: EdgeInsets.all(16.w),
+                padding: const EdgeInsets.all(16.0),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: MediaQuery.of(context).size.width > 800
                       ? 6
                       : MediaQuery.of(context).size.width > 600
                       ? 4
                       : 2,
-                  crossAxisSpacing: 16.w,
-                  mainAxisSpacing: 16.h,
+                  crossAxisSpacing: 16.0,
+                  mainAxisSpacing: 16.0,
                   childAspectRatio: 1.2,
                 ),
                 itemCount: parkingState.slots.length,
@@ -67,46 +70,46 @@ class HomeScreen extends ConsumerWidget {
                   final slot = parkingState.slots[index];
                   return Card(
                     color: slot.isOccupied
-                        ? Colors.red.shade50
-                        : Colors.green.shade50,
+                        ? parkingColors.occupiedBackground
+                        : parkingColors.availableBackground,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.r),
+                      borderRadius: BorderRadius.circular(16.0),
                       side: BorderSide(
                         color: slot.isOccupied
-                            ? Colors.red.shade300
-                            : Colors.green.shade300,
-                        width: 1.5.w,
+                            ? parkingColors.occupiedBorder
+                            : parkingColors.availableBorder,
+                        width: 1.5,
                       ),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 8.h,
+                      spacing: 8.0,
                       children: [
                         Icon(
                           slot.isOccupied
                               ? Icons.directions_car
                               : Icons.local_parking,
-                          size: 36.sp,
+                          size: 36.0,
                           color: slot.isOccupied
-                              ? Colors.red.shade700
-                              : Colors.green.shade700,
+                              ? parkingColors.occupiedText
+                              : parkingColors.availableText,
                         ),
                         Text(
                           slot.name,
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: slot.isOccupied
-                                    ? Colors.red.shade900
-                                    : Colors.green.shade900,
-                              ),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: slot.isOccupied
+                                ? parkingColors.occupiedTextDark
+                                : parkingColors.availableTextDark,
+                          ),
                         ),
                         Text(
                           slot.isOccupied
                               ? context.l10n.occupied
                               : context.l10n.available,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(fontWeight: FontWeight.w600),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ],
                     ),

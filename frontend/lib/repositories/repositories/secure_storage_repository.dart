@@ -91,36 +91,27 @@ class SecureStorageRepository implements SecureStorageRepositoryInterface {
   }
 
   @override
-  Future<void> setAccessTokenExpiry(int seconds) async {
+  Future<void> setAccessTokenExpiry(String expiry) async {
     try {
-      await _secureStorage.write(
-        key: _accessTokenExpiry,
-        value: seconds.toString(),
-      );
+      await _secureStorage.write(key: _accessTokenExpiry, value: expiry);
     } catch (e, stackTrace) {
       talker.error('Set Access Token Expiry failed', e, stackTrace);
     }
   }
 
   @override
-  Future<void> setRefreshTokenExpiry(int milliseconds) async {
+  Future<void> setRefreshTokenExpiry(String expiry) async {
     try {
-      await _secureStorage.write(
-        key: _refreshTokenExpiry,
-        value: milliseconds.toString(),
-      );
+      await _secureStorage.write(key: _refreshTokenExpiry, value: expiry);
     } catch (e, stackTrace) {
       talker.error('Set Refresh Token Expiry Date failed', e, stackTrace);
     }
   }
 
   @override
-  Future<int?> getRefreshTokenExpiry() async {
+  Future<String?> getRefreshTokenExpiry() async {
     try {
-      final String? expiryDate = await _secureStorage.read(
-        key: _refreshTokenExpiry,
-      );
-      return expiryDate != null ? int.parse(expiryDate) : null;
+      return await _secureStorage.read(key: _refreshTokenExpiry);
     } catch (e, stackTrace) {
       talker.error('Get Refresh Token Expiry Date failed', e, stackTrace);
       return null;
@@ -139,11 +130,11 @@ class SecureStorageRepository implements SecureStorageRepositoryInterface {
         return true;
       }
 
-      final expiryTime = int.parse(expire);
-      final now = DateTime.now().millisecondsSinceEpoch;
-      final isExpired = expiryTime < now;
+      final expiryTime = DateTime.parse(expire).toUtc();
+      final now = DateTime.now().toUtc();
+      final isExpired = expiryTime.isBefore(now);
       talker.info(
-        '🔑 [SecureStorage] Access token expired: $isExpired (expiry: ${DateTime.fromMillisecondsSinceEpoch(expiryTime)}, now: ${DateTime.fromMillisecondsSinceEpoch(now)})',
+        '🔑 [SecureStorage] Access token expired: $isExpired (expiry: $expiryTime, now: $now)',
       );
       return isExpired;
     } catch (e, stackTrace) {
@@ -166,11 +157,11 @@ class SecureStorageRepository implements SecureStorageRepositoryInterface {
         return true;
       }
 
-      final expiryTime = int.parse(expire);
-      final now = DateTime.now().millisecondsSinceEpoch;
-      final isExpired = expiryTime < now;
+      final expiryTime = DateTime.parse(expire).toUtc();
+      final now = DateTime.now().toUtc();
+      final isExpired = expiryTime.isBefore(now);
       talker.info(
-        '🔑 [SecureStorage] Refresh token expired: $isExpired (expiry: ${DateTime.fromMillisecondsSinceEpoch(expiryTime)}, now: ${DateTime.fromMillisecondsSinceEpoch(now)})',
+        '🔑 [SecureStorage] Refresh token expired: $isExpired (expiry: $expiryTime, now: $now)',
       );
       return isExpired;
     } catch (e, stackTrace) {
