@@ -215,5 +215,37 @@
 	"settings": "Settings",
 	"@settings": {
 		"description": "Label for the settings navigation"
+	},
+	"searchLotHint": "Search parking lots...",
+	"@searchLotHint": {
+		"description": "The hint for the search parking lots input field"
+	},
+	"createNewLot": "Create Parking Lot",
+	"@createNewLot": {
+		"description": "Text for the create parking lot button"
+	},
+	"statusOpen": "Open",
+	"@statusOpen": {
+		"description": "Label indicating a parking lot is open"
+	},
+	"statusClosed": "Closed",
+	"@statusClosed": {
+		"description": "Label indicating a parking lot is closed"
+	},
+	"totalSlotsLabel": "Total Slots",
+	"@totalSlotsLabel": {
+		"description": "Label for the total slots count"
+	},
+	"revenueToday": "Revenue Today",
+	"@revenueToday": {
+		"description": "Label for today's revenue"
+	},
+	"noLotsFound": "No parking lots found",
+	"@noLotsFound": {
+		"description": "Message displayed when no parking lots are found in search"
+	},
+	"errorLoadingLots": "Error loading lots",
+	"@errorLoadingLots": {
+		"description": "Message displayed when there is an error fetching parking lots"
 	}
 }

@@ -423,6 +423,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settings;
+
+  /// The hint for the search parking lots input field
+  ///
+  /// In en, this message translates to:
+  /// **'Search parking lots...'**
+  String get searchLotHint;
+
+  /// Text for the create parking lot button
+  ///
+  /// In en, this message translates to:
+  /// **'Create Parking Lot'**
+  String get createNewLot;
+
+  /// Label indicating a parking lot is open
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get statusOpen;
+
+  /// Label indicating a parking lot is closed
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get statusClosed;
+
+  /// Label for the total slots count
+  ///
+  /// In en, this message translates to:
+  /// **'Total Slots'**
+  String get totalSlotsLabel;
+
+  /// Label for today's revenue
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue Today'**
+  String get revenueToday;
+
+  /// Message displayed when no parking lots are found in search
+  ///
+  /// In en, this message translates to:
+  /// **'No parking lots found'**
+  String get noLotsFound;
+
+  /// Message displayed when there is an error fetching parking lots
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading lots'**
+  String get errorLoadingLots;
 }
 
 class _AppLocalizationsDelegate

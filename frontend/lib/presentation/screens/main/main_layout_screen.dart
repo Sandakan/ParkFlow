@@ -15,6 +15,7 @@ class MainLayoutScreen extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     final isWide = size.width >= 600;
     final authState = ref.watch(authProvider);
+    final colorScheme = Theme.of(context).colorScheme;
 
     final List<NavigationDestinationData> destinations = _getDestinations(
       context,
@@ -67,33 +68,41 @@ class MainLayoutScreen extends ConsumerWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        unselectedItemColor: Theme.of(context).colorScheme.onSurfaceVariant,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-        selectedIconTheme: IconThemeData(
-          color: Theme.of(context).colorScheme.primary,
-          size: 28,
-        ),
-        unselectedIconTheme: IconThemeData(
-          color: Theme.of(
-            context,
-          ).colorScheme.onSurfaceVariant.withOpacity(0.6),
-          size: 24,
-        ),
-        items: destinations
-            .map(
-              (d) => BottomNavigationBarItem(
-                icon: Icon(d.icon),
-                activeIcon: Icon(d.selectedIcon),
-                label: d.label,
-              ),
-            )
-            .toList(),
-        currentIndex: navigationShell.currentIndex,
-        onTap: (index) => _onTap(context, index),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Divider(
+            height: 1,
+            thickness: 1,
+            color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+          ),
+          BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: colorScheme.primary,
+            unselectedItemColor: colorScheme.onSurfaceVariant,
+            selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+            selectedIconTheme: IconThemeData(
+              color: colorScheme.primary,
+              size: 28,
+            ),
+            unselectedIconTheme: IconThemeData(
+              color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+              size: 24,
+            ),
+            items: destinations
+                .map(
+                  (d) => BottomNavigationBarItem(
+                    icon: Icon(d.icon),
+                    activeIcon: Icon(d.selectedIcon),
+                    label: d.label,
+                  ),
+                )
+                .toList(),
+            currentIndex: navigationShell.currentIndex,
+            onTap: (index) => _onTap(context, index),
+          ),
+        ],
       ),
     );
   }

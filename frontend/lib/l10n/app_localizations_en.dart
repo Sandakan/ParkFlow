@@ -174,4 +174,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settings => 'Settings';
+
+  @override
+  String get searchLotHint => 'Search parking lots...';
+
+  @override
+  String get createNewLot => 'Create Parking Lot';
+
+  @override
+  String get statusOpen => 'Open';
+
+  @override
+  String get statusClosed => 'Closed';
+
+  @override
+  String get totalSlotsLabel => 'Total Slots';
+
+  @override
+  String get revenueToday => 'Revenue Today';
+
+  @override
+  String get noLotsFound => 'No parking lots found';
+
+  @override
+  String get errorLoadingLots => 'Error loading lots';
 }

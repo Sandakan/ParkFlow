@@ -4,6 +4,7 @@ import 'package:parkflow/core/network/entities/login_request_entity.dart';
 import 'package:parkflow/core/network/entities/login_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_user_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_parking_slots_response_entity.dart';
+import 'package:parkflow/core/network/entities/get_parking_lots_response_entity.dart';
 import 'package:parkflow/core/network/entities/register_request_entity.dart';
 import 'package:parkflow/core/network/entities/base_response_entity.dart';
 import 'package:parkflow/core/app_exception.dart';
@@ -171,6 +172,36 @@ class RemoteRepository implements RemoteRepositoryInterface {
 
     try {
       final data = GetParkingSlotsResponseEntity.fromJson(
+        validatedResponse.data,
+      );
+      return data;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetParkingLotsResponseEntity> getParkingLots({String? search}) async {
+    final Map<String, dynamic> queryParameters = {};
+    if (search != null && search.isNotEmpty) {
+      queryParameters['search'] = search;
+    }
+
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'parking/lots',
+      queryParameters: queryParameters,
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      final data = GetParkingLotsResponseEntity.fromJson(
         validatedResponse.data,
       );
       return data;
