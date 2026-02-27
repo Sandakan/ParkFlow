@@ -39,7 +39,7 @@ class AdminDashboardScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'ParkFlow Administration Console',
+              context.l10n.adminConsoleSubtitle,
               style: Theme.of(
                 context,
               ).textTheme.bodyLarge?.copyWith(color: Colors.grey),
@@ -49,13 +49,11 @@ class AdminDashboardScreen extends ConsumerWidget {
               onPressed: () {
                 // Future: Navigate to slot management or other admin features
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Manage Slots feature coming soon!'),
-                  ),
+                  SnackBar(content: Text(context.l10n.featureComingSoon)),
                 );
               },
               icon: const Icon(Icons.edit_road),
-              label: const Text('Manage Parking Slots'),
+              label: Text(context.l10n.manageSlots),
             ),
           ],
         ),

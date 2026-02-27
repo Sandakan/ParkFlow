@@ -136,6 +136,18 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get passwordLabel;
 
+  /// The hint for the email input field
+  ///
+  /// In en, this message translates to:
+  /// **'you@example.com'**
+  String get emailHint;
+
+  /// The hint for the password input field
+  ///
+  /// In en, this message translates to:
+  /// **'••••••••'**
+  String get passwordHint;
+
   /// Forgot password button text
   ///
   /// In en, this message translates to:
@@ -345,6 +357,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Welcome, Administrator'**
   String get adminWelcome;
+
+  /// Label for the home/dashboard navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// Label for the profile navigation/screen
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// Placeholder for unknown user name
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get guest;
+
+  /// Text for the logout button/label
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// Subtitle for the admin dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'ParkFlow Administration Console'**
+  String get adminConsoleSubtitle;
+
+  /// Button text for managing parking slots
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Parking Slots'**
+  String get manageSlots;
+
+  /// Flash message for unimplemented features
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Slots feature coming soon!'**
+  String get featureComingSoon;
 }
 
 class _AppLocalizationsDelegate

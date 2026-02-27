@@ -150,7 +150,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                           // Email label
                           Text(
-                            'Email',
+                            context.l10n.emailLabel,
                             style: theme.textTheme.labelLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: AppColors.black87,
@@ -161,7 +161,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           // Email field
                           CustomReactiveTextField<String>(
                             formControlName: 'email',
-                            hintText: 'you@example.com',
+                            hintText: context.l10n.emailHint,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             filled: true,
@@ -184,7 +184,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                           // Password label
                           Text(
-                            'Password',
+                            context.l10n.passwordLabel,
                             style: theme.textTheme.labelLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: AppColors.black87,
@@ -195,7 +195,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           // Password field
                           CustomReactiveTextField<String>(
                             formControlName: 'password',
-                            hintText: '••••••••',
+                            hintText: context.l10n.passwordHint,
                             obscureText: true,
                             textInputAction: TextInputAction.next,
                             filled: true,
@@ -229,7 +229,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           // Confirm Password field
                           CustomReactiveTextField<String>(
                             formControlName: 'passwordConfirmation',
-                            hintText: '••••••••',
+                            hintText: context.l10n.passwordHint,
                             obscureText: true,
                             filled: true,
                             fillColor: AppColors.inputFill,

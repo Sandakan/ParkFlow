@@ -27,6 +27,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordLabel => 'Password';
 
   @override
+  String get emailHint => 'you@example.com';
+
+  @override
+  String get passwordHint => '••••••••';
+
+  @override
   String get forgotPassword => 'Forgot Password?';
 
   @override
@@ -135,4 +141,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adminWelcome => 'Welcome, Administrator';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get guest => 'Guest';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get adminConsoleSubtitle => 'ParkFlow Administration Console';
+
+  @override
+  String get manageSlots => 'Manage Parking Slots';
+
+  @override
+  String get featureComingSoon => 'Manage Slots feature coming soon!';
 }

@@ -1,6 +1,5 @@
 part of '../router_provider.dart';
 
-@TypedGoRoute<AdminDashboardRoute>(path: '/admin')
 class AdminDashboardRoute extends GoRouteData with $AdminDashboardRoute {
   const AdminDashboardRoute();
 

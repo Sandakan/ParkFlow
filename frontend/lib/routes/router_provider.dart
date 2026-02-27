@@ -10,6 +10,8 @@ import 'package:parkflow/presentation/screens/home/home_screen.dart';
 import 'package:parkflow/presentation/screens/auth/login_screen.dart';
 import 'package:parkflow/presentation/screens/auth/register_screen.dart';
 import 'package:parkflow/presentation/screens/video_feed/video_feed_screen.dart';
+import 'package:parkflow/presentation/screens/home/profile_screen.dart';
+import 'package:parkflow/presentation/screens/main/main_layout_screen.dart';
 
 part 'router_provider.g.dart';
 
@@ -18,6 +20,7 @@ part 'parts/auth_routes.dart';
 part 'parts/home_routes.dart';
 part 'parts/admin_routes.dart';
 part 'parts/video_routes.dart';
+part 'parts/main_routes.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(
   debugLabel: 'root',
@@ -54,7 +57,9 @@ GoRouter router(Ref ref) {
 
       if (isBooting) {
         if (isAuth) {
-          return isAdmin ? AdminDashboardRoute.path : HomeRoute.path;
+          if (isAdmin) return AdminDashboardRoute.path;
+          if (authState.isDriver) return HomeRoute.path;
+          return HomeRoute.path;
         }
         if (!authState.isLoading && authState != const AuthState.initial()) {
           return LoginRoute.path;
@@ -68,7 +73,9 @@ GoRouter router(Ref ref) {
 
       if (isAuth) {
         if (isGoingToLogin || isGoingToRegister) {
-          return isAdmin ? AdminDashboardRoute.path : HomeRoute.path;
+          if (isAdmin) return AdminDashboardRoute.path;
+          if (authState.isDriver) return HomeRoute.path;
+          return HomeRoute.path;
         }
 
         final isGoingToAdmin =

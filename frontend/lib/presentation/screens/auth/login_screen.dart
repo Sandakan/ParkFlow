@@ -103,7 +103,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           // Email field
                           CustomReactiveTextField<String>(
                             formControlName: 'email',
-                            hintText: 'you@example.com',
+                            hintText: context.l10n.emailHint,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             filled: true,
@@ -137,7 +137,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           // Password field
                           CustomReactiveTextField<String>(
                             formControlName: 'password',
-                            hintText: '••••••••',
+                            hintText: context.l10n.passwordHint,
                             obscureText: true,
                             filled: true,
                             fillColor: AppColors.inputFill,

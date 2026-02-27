@@ -10,9 +10,8 @@ List<RouteBase> get $appRoutes => [
   $bootRoute,
   $loginRoute,
   $registerRoute,
-  $homeRoute,
-  $adminDashboardRoute,
-  $videoFeedRoute,
+  $adminShellRoute,
+  $driverShellRoute,
 ];
 
 RouteBase get $bootRoute =>
@@ -84,33 +83,32 @@ mixin $RegisterRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $homeRoute =>
-    GoRouteData.$route(path: '/home', factory: $HomeRoute._fromState);
-
-mixin $HomeRoute on GoRouteData {
-  static HomeRoute _fromState(GoRouterState state) => const HomeRoute();
-
-  @override
-  String get location => GoRouteData.$location('/home');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-RouteBase get $adminDashboardRoute => GoRouteData.$route(
-  path: '/admin',
-  factory: $AdminDashboardRoute._fromState,
+RouteBase get $adminShellRoute => StatefulShellRouteData.$route(
+  factory: $AdminShellRouteExtension._fromState,
+  branches: [
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
+          path: '/admin',
+          factory: $AdminDashboardRoute._fromState,
+        ),
+      ],
+    ),
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
+          path: '/video-feed',
+          factory: $VideoFeedRoute._fromState,
+        ),
+      ],
+    ),
+  ],
 );
+
+extension $AdminShellRouteExtension on AdminShellRoute {
+  static AdminShellRoute _fromState(GoRouterState state) =>
+      const AdminShellRoute();
+}
 
 mixin $AdminDashboardRoute on GoRouteData {
   static AdminDashboardRoute _fromState(GoRouterState state) =>
@@ -133,17 +131,73 @@ mixin $AdminDashboardRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $videoFeedRoute => GoRouteData.$route(
-  path: '/video-feed',
-  factory: $VideoFeedRoute._fromState,
-);
-
 mixin $VideoFeedRoute on GoRouteData {
   static VideoFeedRoute _fromState(GoRouterState state) =>
       const VideoFeedRoute();
 
   @override
   String get location => GoRouteData.$location('/video-feed');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $driverShellRoute => StatefulShellRouteData.$route(
+  factory: $DriverShellRouteExtension._fromState,
+  branches: [
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(path: '/home', factory: $HomeRoute._fromState),
+      ],
+    ),
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(path: '/profile', factory: $ProfileRoute._fromState),
+      ],
+    ),
+  ],
+);
+
+extension $DriverShellRouteExtension on DriverShellRoute {
+  static DriverShellRoute _fromState(GoRouterState state) =>
+      const DriverShellRoute();
+}
+
+mixin $HomeRoute on GoRouteData {
+  static HomeRoute _fromState(GoRouterState state) => const HomeRoute();
+
+  @override
+  String get location => GoRouteData.$location('/home');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $ProfileRoute on GoRouteData {
+  static ProfileRoute _fromState(GoRouterState state) => const ProfileRoute();
+
+  @override
+  String get location => GoRouteData.$location('/profile');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -198,7 +252,7 @@ final class RouterListenableProvider
   }
 }
 
-String _$routerListenableHash() => r'a742137be6ab5831444d4971a01f6aadd09a3f0f';
+String _$routerListenableHash() => r'5b0f077d93a147f5b3b46e171d62d46a3b9d56b4';
 
 abstract class _$RouterListenable extends $Notifier<void> {
   void build();
@@ -257,4 +311,4 @@ final class RouterProvider
   }
 }
 
-String _$routerHash() => r'ba43c63a03c0b2fc5f2d7012af2f5036ba04baa3';
+String _$routerHash() => r'800159853e9eed9c150f8222bf76d23d77255a92';
