@@ -99,6 +99,16 @@ RouteBase get $adminShellRoute => StatefulShellRouteData.$route(
         GoRouteData.$route(
           path: '/admin/parking-lots',
           factory: $AdminParkingLotsRoute._fromState,
+          routes: [
+            GoRouteData.$route(
+              path: 'create',
+              factory: $AdminCreateParkingLotRoute._fromState,
+            ),
+            GoRouteData.$route(
+              path: 'edit/:lotId',
+              factory: $AdminEditParkingLotRoute._fromState,
+            ),
+          ],
         ),
       ],
     ),
@@ -161,6 +171,52 @@ mixin $AdminParkingLotsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/admin/parking-lots');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AdminCreateParkingLotRoute on GoRouteData {
+  static AdminCreateParkingLotRoute _fromState(GoRouterState state) =>
+      const AdminCreateParkingLotRoute();
+
+  @override
+  String get location => GoRouteData.$location('/admin/parking-lots/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AdminEditParkingLotRoute on GoRouteData {
+  static AdminEditParkingLotRoute _fromState(GoRouterState state) =>
+      AdminEditParkingLotRoute(state.pathParameters['lotId']!);
+
+  AdminEditParkingLotRoute get _self => this as AdminEditParkingLotRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/admin/parking-lots/edit/${Uri.encodeComponent(_self.lotId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

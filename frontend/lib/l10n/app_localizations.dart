@@ -471,6 +471,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading lots'**
   String get errorLoadingLots;
+
+  /// The title displayed on the create new parking lot screen
+  ///
+  /// In en, this message translates to:
+  /// **'Create New Parking Lot'**
+  String get createLotTitle;
+
+  /// The label for the lot name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Lot Name'**
+  String get lotNameLabel;
+
+  /// The hint for the lot name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Downtown Parking'**
+  String get lotNameHint;
+
+  /// The label for the lot address input field
+  ///
+  /// In en, this message translates to:
+  /// **'Lot Address'**
+  String get lotAddressLabel;
+
+  /// The hint for the lot address input field
+  ///
+  /// In en, this message translates to:
+  /// **'123 Main St'**
+  String get lotAddressHint;
+
+  /// The label for the latitude input field
+  ///
+  /// In en, this message translates to:
+  /// **'Latitude'**
+  String get latitudeLabel;
+
+  /// The hint for the latitude input field
+  ///
+  /// In en, this message translates to:
+  /// **'0.000'**
+  String get latitudeHint;
+
+  /// The label for the longitude input field
+  ///
+  /// In en, this message translates to:
+  /// **'Longitude'**
+  String get longitudeLabel;
+
+  /// The hint for the longitude input field
+  ///
+  /// In en, this message translates to:
+  /// **'0.000'**
+  String get longitudeHint;
+
+  /// The hint for the total slots input field
+  ///
+  /// In en, this message translates to:
+  /// **'Number of slots'**
+  String get totalSlotsHint;
+
+  /// The label for the RTSP URL input field
+  ///
+  /// In en, this message translates to:
+  /// **'RTSP URL'**
+  String get rtspUrlLabel;
+
+  /// The hint for the RTSP URL input field
+  ///
+  /// In en, this message translates to:
+  /// **'rtsp://...'**
+  String get rtspUrlHint;
+
+  /// The text for the create button
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get createButton;
+
+  /// Success message when a lot is created
+  ///
+  /// In en, this message translates to:
+  /// **'Parking lot created successfully'**
+  String get lotCreatedSuccess;
+
+  /// Validation message when a field is required
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get fieldRequired;
+
+  /// No description provided for @invalidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid number'**
+  String get invalidNumber;
+
+  /// No description provided for @editLotTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Parking Lot'**
+  String get editLotTitle;
+
+  /// No description provided for @updateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateButton;
+
+  /// No description provided for @lotUpdatedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking lot updated successfully'**
+  String get lotUpdatedSuccess;
+
+  /// No description provided for @deleteLot.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Lot'**
+  String get deleteLot;
+
+  /// No description provided for @deleteLotConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Parking Lot?'**
+  String get deleteLotConfirmTitle;
+
+  /// No description provided for @deleteLotConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this parking lot? This action cannot be undone.'**
+  String get deleteLotConfirmMessage;
+
+  /// No description provided for @deleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButton;
+
+  /// No description provided for @cancelButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelButton;
+
+  /// No description provided for @lotDeletedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking lot deleted successfully'**
+  String get lotDeletedSuccess;
 }
 
 class _AppLocalizationsDelegate

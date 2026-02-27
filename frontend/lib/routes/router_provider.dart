@@ -12,8 +12,10 @@ import 'package:parkflow/presentation/screens/auth/register_screen.dart';
 import 'package:parkflow/presentation/screens/home/profile_screen.dart';
 import 'package:parkflow/presentation/screens/main/main_layout_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_parking_lots_screen.dart';
+import 'package:parkflow/presentation/screens/admin/admin_create_parking_lot_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_cameras_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_analytics_screen.dart';
+import 'package:parkflow/presentation/screens/admin/admin_edit_parking_lot_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_settings_screen.dart';
 
 part 'router_provider.g.dart';

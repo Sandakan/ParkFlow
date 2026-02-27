@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Literal
+from typing import List, Literal, Optional
 from datetime import datetime, timezone
 
 
@@ -15,7 +15,9 @@ class ParkingSlotInDB(BaseModel):
     status: Literal["vacant", "occupied", "reserved"] = "vacant"
     type_restriction: Literal["car", "tuk-tuk", "bike"] = "car"
     coordinates: List[Point2D]  # multiple points for virtual polygon
-    last_updated: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    deleted_at: Optional[datetime] = None
 
     model_config = ConfigDict(
         populate_by_name=True,

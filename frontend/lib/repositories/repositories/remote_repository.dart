@@ -12,6 +12,9 @@ import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/repositories/interfaces/env_repository_interface.dart';
 import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
 import 'package:parkflow/repositories/interfaces/secure_storage_repository_interface.dart';
+import 'package:parkflow/core/network/entities/get_parking_lot_response_entity.dart';
+import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
+import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -256,5 +259,65 @@ class RemoteRepository implements RemoteRepositoryInterface {
         stackTrace: stackTrace,
       );
     }
+  }
+
+  @override
+  Future<void> createParkingLot(CreateParkingLotRequest request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'parking/lots',
+      data: request.toJson(),
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<GetParkingLotResponseEntity> getParkingLot(String lotId) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'parking/lots/$lotId',
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      final data = GetParkingLotResponseEntity.fromJson(validatedResponse.data);
+      return data;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<void> updateParkingLot(
+    String lotId,
+    UpdateParkingLotRequest request,
+  ) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.put,
+      'parking/lots/$lotId',
+      data: request.toJson(),
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> deleteParkingLot(String lotId) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.delete,
+      'parking/lots/$lotId',
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
   }
 }

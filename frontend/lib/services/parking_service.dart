@@ -4,6 +4,9 @@ import 'package:parkflow/repositories/providers/remote_repository_provider.dart'
 import 'package:parkflow/repositories/providers/env_repository_provider.dart';
 import 'package:parkflow/models/parking/parking_slot_model.dart';
 import 'package:parkflow/models/parking/parking_lot_model.dart';
+import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
+import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
+import 'package:parkflow/core/network/entities/get_parking_lot_response_entity.dart';
 import 'package:parkflow/utils/handlers/error_handler.dart';
 import 'package:parkflow/utils/helpers/talker.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
@@ -31,6 +34,41 @@ class ParkingService {
     try {
       final response = await _remote.getParkingLots(search: search);
       return response.lots;
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> createParkingLot(CreateParkingLotRequest request) async {
+    try {
+      await _remote.createParkingLot(request);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<GetParkingLotResponseEntity> fetchParkingLot(String lotId) async {
+    try {
+      return await _remote.getParkingLot(lotId);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> updateParkingLot(
+    String lotId,
+    UpdateParkingLotRequest request,
+  ) async {
+    try {
+      await _remote.updateParkingLot(lotId, request);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> deleteParkingLot(String lotId) async {
+    try {
+      await _remote.deleteParkingLot(lotId);
     } catch (e) {
       throw ErrorHandler.handle(e);
     }

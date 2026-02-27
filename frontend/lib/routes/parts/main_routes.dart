@@ -9,7 +9,13 @@ part of '../router_provider.dart';
     ),
     TypedStatefulShellBranch<AdminParkingLotsBranch>(
       routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<AdminParkingLotsRoute>(path: AdminParkingLotsRoute.path),
+        TypedGoRoute<AdminParkingLotsRoute>(
+          path: AdminParkingLotsRoute.path,
+          routes: [
+            TypedGoRoute<AdminCreateParkingLotRoute>(path: 'create'),
+            TypedGoRoute<AdminEditParkingLotRoute>(path: 'edit/:lotId'),
+          ],
+        ),
       ],
     ),
     TypedStatefulShellBranch<AdminCamerasBranch>(

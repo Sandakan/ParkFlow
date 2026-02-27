@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/presentation/notifiers/parking_lots/parking_lots_notifier.dart';
 import 'package:parkflow/presentation/widgets/admin/lot_card.dart';
+import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 
@@ -59,9 +60,9 @@ class AdminParkingLotsScreen extends ConsumerWidget {
                               padding: const EdgeInsets.only(bottom: 12.0),
                               child: LotCard(
                                 lot: lot,
-                                onTap: () {
-                                  // Navigator to lot details
-                                },
+                                onTap: () => AdminEditParkingLotRoute(
+                                  lot.id,
+                                ).push(context),
                               ),
                             );
                           },
@@ -74,7 +75,7 @@ class AdminParkingLotsScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Open create lot dialog
+          const AdminCreateParkingLotRoute().push(context);
         },
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,

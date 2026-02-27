@@ -16,6 +16,8 @@ class UserInDB(BaseModel):
     role: Literal["driver", "admin"] = "driver"
     vehicle_details: Optional[VehicleDetails] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    deleted_at: Optional[datetime] = None
 
     model_config = ConfigDict(
         populate_by_name=True,

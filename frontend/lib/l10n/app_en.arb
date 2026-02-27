@@ -247,5 +247,75 @@
 	"errorLoadingLots": "Error loading lots",
 	"@errorLoadingLots": {
 		"description": "Message displayed when there is an error fetching parking lots"
-	}
+	},
+	"createLotTitle": "Create New Parking Lot",
+	"@createLotTitle": {
+		"description": "The title displayed on the create new parking lot screen"
+	},
+	"lotNameLabel": "Lot Name",
+	"@lotNameLabel": {
+		"description": "The label for the lot name input field"
+	},
+	"lotNameHint": "Downtown Parking",
+	"@lotNameHint": {
+		"description": "The hint for the lot name input field"
+	},
+	"lotAddressLabel": "Lot Address",
+	"@lotAddressLabel": {
+		"description": "The label for the lot address input field"
+	},
+	"lotAddressHint": "123 Main St",
+	"@lotAddressHint": {
+		"description": "The hint for the lot address input field"
+	},
+	"latitudeLabel": "Latitude",
+	"@latitudeLabel": {
+		"description": "The label for the latitude input field"
+	},
+	"latitudeHint": "0.000",
+	"@latitudeHint": {
+		"description": "The hint for the latitude input field"
+	},
+	"longitudeLabel": "Longitude",
+	"@longitudeLabel": {
+		"description": "The label for the longitude input field"
+	},
+	"longitudeHint": "0.000",
+	"@longitudeHint": {
+		"description": "The hint for the longitude input field"
+	},
+	"totalSlotsHint": "Number of slots",
+	"@totalSlotsHint": {
+		"description": "The hint for the total slots input field"
+	},
+	"rtspUrlLabel": "RTSP URL",
+	"@rtspUrlLabel": {
+		"description": "The label for the RTSP URL input field"
+	},
+	"rtspUrlHint": "rtsp://...",
+	"@rtspUrlHint": {
+		"description": "The hint for the RTSP URL input field"
+	},
+	"createButton": "Create",
+	"@createButton": {
+		"description": "The text for the create button"
+	},
+	"lotCreatedSuccess": "Parking lot created successfully",
+	"@lotCreatedSuccess": {
+		"description": "Success message when a lot is created"
+	},
+	"fieldRequired": "This field is required",
+	"@fieldRequired": {
+		"description": "Validation message when a field is required"
+	},
+	"invalidNumber": "Invalid number",
+	"editLotTitle": "Edit Parking Lot",
+	"updateButton": "Update",
+	"lotUpdatedSuccess": "Parking lot updated successfully",
+	"deleteLot": "Delete Lot",
+	"deleteLotConfirmTitle": "Delete Parking Lot?",
+	"deleteLotConfirmMessage": "Are you sure you want to delete this parking lot? This action cannot be undone.",
+	"deleteButton": "Delete",
+	"cancelButton": "Cancel",
+	"lotDeletedSuccess": "Parking lot deleted successfully"
 }

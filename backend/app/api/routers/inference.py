@@ -1,3 +1,4 @@
+from bson import ObjectId
 from fastapi import APIRouter, File, UploadFile, HTTPException, Depends
 from fastapi.responses import StreamingResponse
 from app.ai.inference import process_parking_image
@@ -28,8 +29,8 @@ async def process_image(
     # Read the image bytes
     image_bytes = await file.read()
 
-    # Fetch all parking slots (polygons) from the DB for this lot_id
-    cursor = db.client["parkflow"].parking_slots.find({"lot_id": lot_id})
+    # Fetch all parking slots (polygons) from the DB for this lot_id (not deleted)
+    cursor = db.client["parkflow"].parking_slots.find({"lot_id": lot_id, "deleted_at": None})
     slots = await cursor.to_list(length=1000)
 
     if not slots:
@@ -61,14 +62,14 @@ async def stream_raw(
     """
     Streams the raw (unprocessed) video feed for the specified lot_id.
     """
-    # Fetch the parking lot to get the RTSP URL
-    lot_doc = await db.client["parkflow"].parking_lots.find_one({"_id": lot_id})
-    if not lot_doc or "rtsp_url" not in lot_doc:
+    # Fetch the first camera for this lot to get the RTSP URL (not deleted)
+    camera = await db.client["parkflow"].cameras.find_one({"lot_id": lot_id, "deleted_at": None})
+    if not camera or "rtsp_url" not in camera:
         raise HTTPException(
-            status_code=404, detail="Parking lot or stream URL not found"
+            status_code=404, detail="No active camera or stream URL found for this lot"
         )
 
-    rtsp_url = lot_doc["rtsp_url"]
+    rtsp_url = camera["rtsp_url"]
 
     return StreamingResponse(
         ParkingStreamManager.stream_raw_video(rtsp_url),
@@ -83,17 +84,17 @@ async def stream_processed(
     """
     Streams the processed video feed (with YOLO bounding boxes) for the lot_id.
     """
-    # Fetch the parking lot to get the RTSP URL
-    lot_doc = await db.client["parkflow"].parking_lots.find_one({"_id": lot_id})
-    if not lot_doc or "rtsp_url" not in lot_doc:
+    # Fetch the first camera for this lot to get the RTSP URL (not deleted)
+    camera = await db.client["parkflow"].cameras.find_one({"lot_id": lot_id, "deleted_at": None})
+    if not camera or "rtsp_url" not in camera:
         raise HTTPException(
-            status_code=404, detail="Parking lot or stream URL not found"
+            status_code=404, detail="No active camera or stream URL found for this lot"
         )
 
-    rtsp_url = lot_doc["rtsp_url"]
+    rtsp_url = camera["rtsp_url"]
 
-    # Fetch the dynamic bounding boxes for inference
-    cursor = db.client["parkflow"].parking_slots.find({"lot_id": lot_id})
+    # Fetch the dynamic bounding boxes for inference (not deleted)
+    cursor = db.client["parkflow"].parking_slots.find({"lot_id": lot_id, "deleted_at": None})
     slots = await cursor.to_list(length=1000)
 
     if not slots:

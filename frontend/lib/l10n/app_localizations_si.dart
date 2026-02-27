@@ -198,4 +198,80 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get errorLoadingLots => 'Error loading lots';
+
+  @override
+  String get createLotTitle => 'Create New Parking Lot';
+
+  @override
+  String get lotNameLabel => 'Lot Name';
+
+  @override
+  String get lotNameHint => 'Downtown Parking';
+
+  @override
+  String get lotAddressLabel => 'Lot Address';
+
+  @override
+  String get lotAddressHint => '123 Main St';
+
+  @override
+  String get latitudeLabel => 'Latitude';
+
+  @override
+  String get latitudeHint => '0.000';
+
+  @override
+  String get longitudeLabel => 'Longitude';
+
+  @override
+  String get longitudeHint => '0.000';
+
+  @override
+  String get totalSlotsHint => 'Number of slots';
+
+  @override
+  String get rtspUrlLabel => 'RTSP URL';
+
+  @override
+  String get rtspUrlHint => 'rtsp://...';
+
+  @override
+  String get createButton => 'Create';
+
+  @override
+  String get lotCreatedSuccess => 'Parking lot created successfully';
+
+  @override
+  String get fieldRequired => 'This field is required';
+
+  @override
+  String get invalidNumber => 'Invalid number';
+
+  @override
+  String get editLotTitle => 'Edit Parking Lot';
+
+  @override
+  String get updateButton => 'Update';
+
+  @override
+  String get lotUpdatedSuccess => 'Parking lot updated successfully';
+
+  @override
+  String get deleteLot => 'Delete Lot';
+
+  @override
+  String get deleteLotConfirmTitle => 'Delete Parking Lot?';
+
+  @override
+  String get deleteLotConfirmMessage =>
+      'Are you sure you want to delete this parking lot? This action cannot be undone.';
+
+  @override
+  String get deleteButton => 'Delete';
+
+  @override
+  String get cancelButton => 'Cancel';
+
+  @override
+  String get lotDeletedSuccess => 'Parking lot deleted successfully';
 }
