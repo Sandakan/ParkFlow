@@ -11,6 +11,7 @@ bcrypt==4.0.1
 passlib[bcrypt]>=1.7.4
 websockets>=11.0
 debugpy>=1.8.0
+loguru>=0.7.0
 ultralytics>=8.4.14
 shapely>=2.0.0
 httpx>=0.24.0

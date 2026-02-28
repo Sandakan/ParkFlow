@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from typing import List, Dict, Any, Tuple
 from app.ai.loader import ai_loader
+from app.core.logging import logger
 
 
 def process_parking_image(
@@ -72,5 +73,5 @@ def process_parking_image(
         return occupancy_data, annotated_frame
 
     except Exception as e:
-        print(f"Inference error: {e}")
+        logger.exception("Inference error on frame")
         return {"error": str(e)}, im0

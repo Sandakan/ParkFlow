@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from typing import AsyncGenerator, List, Dict, Any, Optional
 from app.ai.loader import ai_loader
+from app.core.logging import logger
 
 
 class ParkingStreamManager:
@@ -70,7 +71,7 @@ class ParkingStreamManager:
                             annotated_frame = results.plot()
                     except Exception as e:
                         # Fallback to raw frame if model fails internally
-                        print(f"Frame processing error: {e}")
+                        logger.warning("Frame processing error, falling back to raw frame: {}", e)
                         annotated_frame = frame
                 else:
                     annotated_frame = frame

@@ -2,25 +2,33 @@ import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
-from app.core.database import connect_to_mongo, close_mongo_connection, db
-from app.core.redis import connect_to_redis, close_redis_connection, redis_cache
-from app.api.routers import auth, users, inference, parking, cameras
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+
+# Configure logging first so all subsequent imports route through loguru
+from app.core.logging import logger, setup_logging
+setup_logging()
+
+from app.core.config import settings
+from app.core.database import connect_to_mongo, close_mongo_connection, db
+from app.core.redis import connect_to_redis, close_redis_connection, redis_cache
 from app.core.exceptions import AppException
+from app.api.routers import auth, users, inference, parking, cameras
+
 from app.schemas.response import APIResponse, ResponseCode
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    logger.info("Starting ParkFlow API...")
     await connect_to_mongo()
-
     await connect_to_redis()
+    logger.info("ParkFlow API started successfully.")
 
     yield
 
+    logger.info("Shutting down ParkFlow API...")
     await close_mongo_connection()
     await close_redis_connection()
 
