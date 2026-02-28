@@ -52,7 +52,9 @@ class AdminParkingLotsScreen extends ConsumerWidget {
                       : state.lots.isEmpty
                       ? const _EmptyState()
                       : ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ).copyWith(bottom: 80),
                           itemCount: state.lots.length,
                           itemBuilder: (context, index) {
                             final lot = state.lots[index];

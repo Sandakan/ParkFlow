@@ -6,16 +6,16 @@ import signal
 import sys
 from pathlib import Path
 
+# We push to the central MediaMTX running on the host (or bridged via host.docker.internal)
+RTSP_HOST = os.getenv("RTSP_HOST", "host.docker.internal")
 RTSP_PORT = 8554
 ASSETS_DIR = Path("/assets")
 CONFIG_FILE = Path(os.getenv("CONFIG_FILE", "/stream_config.json"))
-MEDIAMTX_PATH = "/usr/local/bin/mediamtx"
-MEDIAMTX_CONFIG = "/mediamtx.yml"
 
 processes = []
 
 def signal_handler(sig, frame):
-    print("\nShutting down RTSP server...")
+    print("\nShutting down Mock Streamer...")
     for p in processes:
         p.terminate()
     sys.exit(0)
@@ -28,9 +28,9 @@ def stream_file(file_path, stream_name):
     ext = file_path.suffix.lower()
     is_image = ext in ['.jpg', '.jpeg', '.png', '.webp']
     
-    rtsp_url = f"rtsp://localhost:{RTSP_PORT}/{stream_name}"
-    print(f"--> Starting RTSP stream '{stream_name}' for {file_path}")
-    print(f"    URL: {rtsp_url}")
+    rtsp_url = f"rtsp://{RTSP_HOST}:{RTSP_PORT}/{stream_name}"
+    print(f"--> Pushing RTSP stream '{stream_name}' for {file_path}")
+    print(f"    Target: {rtsp_url}")
 
     # Build ffmpeg command
     cmd = ["ffmpeg", "-re"]
@@ -62,39 +62,11 @@ def stream_file(file_path, stream_name):
 
 def main():
     print("=================================================")
-    print("Mock RTSP Server (Python) starting...")
-    print(f"MediaMTX configurations loaded from {MEDIAMTX_CONFIG}")
+    print("Mock RTSP Streamer Starting...")
+    print(f"Targeting MediaMTX at {RTSP_HOST}:{RTSP_PORT}")
     print("=================================================")
 
-    # 1. Update MediaMTX config dynamically to enable WHEP & Control API
-    try:
-        with open(MEDIAMTX_CONFIG, "a") as f:
-            f.write("\napi: yes\n")
-            f.write("apiAddress: :9997\n")
-            f.write("webrtcICEHostNAT1To1IPs: [10.0.2.2, 127.0.0.1, 192.168.110.183]\n")
-            f.write("authMethod: internal\n")
-            f.write("authInternalUsers:\n")
-            f.write("- user: any\n")
-            f.write("  permissions:\n")
-            f.write("  - action: publish\n")
-            f.write("  - action: read\n")
-            f.write("  - action: playback\n")
-            f.write("  - action: api\n")
-        print("Successfully injected WebRTC & API configs into mediamtx.yml")
-    except Exception as e:
-        print(f"Warning: Failed to update mediamtx.yml: {e}")
-
-    # 1.5. Start MediaMTX
-    try:
-        mediamtx = subprocess.Popen([MEDIAMTX_PATH, MEDIAMTX_CONFIG])
-        processes.append(mediamtx)
-    except Exception as e:
-        print(f"Failed to start MediaMTX: {e}")
-        sys.exit(1)
-
-    time.sleep(2)
-
-    # 2. Determine what to stream
+    # 1. Determine what to stream
     streams_to_start = []
 
     if CONFIG_FILE.exists():
@@ -114,32 +86,28 @@ def main():
             print(f"Error parsing config file: {e}")
 
     if not streams_to_start:
-        if not CONFIG_FILE.exists():
-            print(f"No {CONFIG_FILE} found. Scanning {ASSETS_DIR} for media files...")
-        else:
-            print(f"No valid streams found in config. Scanning {ASSETS_DIR} as fallback...")
-            
         if ASSETS_DIR.exists():
             for file in ASSETS_DIR.iterdir():
-                if file.is_file():
+                if file.is_file() and file.suffix.lower() in ['.mp4', '.avi', '.mkv', '.mov', '.jpg', '.jpeg', '.png']:
                     streams_to_start.append((file, file.stem))
 
     if not streams_to_start:
         print("Warning: No files found to stream!")
         print("Falling back to generating a test pattern...")
         
+        test_pattern_url = f"rtsp://{RTSP_HOST}:{RTSP_PORT}/test_pattern"
         test_pattern_cmd = [
             "ffmpeg", "-re", "-f", "lavfi", "-i", "testsrc=size=1280x720:rate=30",
             "-f", "lavfi", "-i", "sine=frequency=1000:sample_rate=48000",
             "-c:v", "libx264", "-preset", "ultrafast", "-tune", "zerolatency",
-            "-c:a", "aac", "-f", "rtsp", "-rtsp_transport", "tcp", f"rtsp://localhost:{RTSP_PORT}/test_pattern"
+            "-c:a", "aac", "-f", "rtsp", "-rtsp_transport", "tcp", test_pattern_url
         ]
         test_pattern_proc = subprocess.Popen(test_pattern_cmd)
         processes.append(test_pattern_proc)
-        mediamtx.wait()
+        test_pattern_proc.wait()
         return
 
-    # 3. Start stream threads/processes
+    # 2. Start stream threads
     import threading
     for file_path, stream_name in streams_to_start:
         t = threading.Thread(target=stream_file, args=(file_path, stream_name), daemon=True)
@@ -147,11 +115,11 @@ def main():
 
     print("=================================================")
     print("All streams initialized successfully.")
-    print(f"MediaMTX is running on port {RTSP_PORT}")
     print("=================================================")
 
     # Keep main thread alive
-    mediamtx.wait()
+    while True:
+        time.sleep(1)
 
 if __name__ == "__main__":
     main()

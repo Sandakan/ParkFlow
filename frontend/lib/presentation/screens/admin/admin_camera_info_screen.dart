@@ -63,37 +63,83 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
             top: 0,
             left: 0,
             right: 0,
-            child: _buildHeader(context, state),
+            child: _buildHeader(context, state, notifier),
           ),
 
           // 4. Sidebar or Bottom Sheet Layer
           if (isWide)
-            Positioned(
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
               top: 80,
-              right: 0,
+              right: state.isSidebarCollapsed ? -260 : 0,
               bottom: 0,
               width: 300,
-              child: _buildSidebar(context, state, notifier),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: _buildSidebar(context, state, notifier),
+                  ),
+                  // Toggle Button for Wide Screen
+                  Positioned(
+                    left: 0,
+                    top: 20,
+                    child: GestureDetector(
+                      onTap: () => notifier.toggleSidebar(),
+                      child: Container(
+                        width: 32,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: const BorderRadius.horizontal(
+                            left: Radius.circular(8),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.1),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          state.isSidebarCollapsed
+                              ? Icons.chevron_left
+                              : Icons.chevron_right,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             )
           else
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 400,
-              child: _buildSidebar(
-                context,
-                state,
-                notifier,
-                isBottomSheet: true,
-              ),
+            DraggableScrollableSheet(
+              initialChildSize: 0.3,
+              minChildSize: 0.1,
+              maxChildSize: 0.9,
+              snapSizes: [0.1, 0.3, 0.5, 0.7, 0.9],
+              snap: true,
+              builder: (context, scrollController) {
+                return _buildSidebar(
+                  context,
+                  state,
+                  notifier,
+                  isBottomSheet: true,
+                  scrollController: scrollController,
+                );
+              },
             ),
         ],
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, CameraInfoState state) {
+  Widget _buildHeader(
+    BuildContext context,
+    CameraInfoState state,
+    CameraInfo notifier,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
@@ -153,6 +199,13 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 ],
               ),
             ),
+            if (state.isSidebarCollapsed) ...[
+              const SizedBox(width: 12),
+              IconButton(
+                icon: const Icon(Icons.menu_open, color: Colors.white),
+                onPressed: () => notifier.toggleSidebar(),
+              ),
+            ],
           ],
         ),
       ),
@@ -164,6 +217,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
     CameraInfoState state,
     CameraInfo notifier, {
     bool isBottomSheet = false,
+    ScrollController? scrollController,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -180,71 +234,103 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
         left: false,
         right: false,
         bottom: isBottomSheet,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Parking Slots',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  if (state.interactionMode == InteractionMode.inspection)
-                    IconButton(
-                      icon: const Icon(Icons.add_box_outlined),
-                      tooltip: 'Add Slot',
-                      onPressed: () =>
-                          notifier.setInteractionMode(InteractionMode.drawing),
-                    )
-                  else
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      tooltip: 'Cancel Drawing',
-                      onPressed: () {
-                        notifier.resetDrawing();
-                        notifier.setInteractionMode(InteractionMode.inspection);
-                      },
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: [
+            if (isBottomSheet)
+              SliverToBoxAdapter(
+                child: Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 8, bottom: 4),
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                ],
-              ),
-            ),
-
-            if (state.interactionMode == InteractionMode.drawing)
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  'Tap 4 points on the video to define the parking slot corners.',
-                  style: TextStyle(color: AppColors.primary, fontSize: 13),
+                  ),
                 ),
               ),
-
-            // AI Test Toggle
-            SwitchListTile(
-              title: const Text(
-                'Show AI Detections',
-                style: TextStyle(fontSize: 14),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Parking Slots',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (state.interactionMode ==
+                        InteractionMode.inspection) ...[
+                      IconButton(
+                        icon: const Icon(Icons.add_box_outlined),
+                        tooltip: 'Add Slot',
+                        onPressed: () => notifier.setInteractionMode(
+                          InteractionMode.drawing,
+                        ),
+                      ),
+                      if (!isBottomSheet)
+                        IconButton(
+                          icon: Icon(
+                            state.isSidebarCollapsed
+                                ? Icons.keyboard_arrow_right
+                                : Icons.keyboard_arrow_left,
+                          ),
+                          tooltip: 'Collapse',
+                          onPressed: () => notifier.toggleSidebar(),
+                        ),
+                    ] else
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        tooltip: 'Cancel Drawing',
+                        onPressed: () {
+                          notifier.resetDrawing();
+                          notifier.setInteractionMode(
+                            InteractionMode.inspection,
+                          );
+                        },
+                      ),
+                  ],
+                ),
               ),
-              value: state.showAiDetections,
-              onChanged: (val) => notifier.toggleAiDetections(),
-              activeTrackColor: AppColors.primary.withValues(alpha: 0.5),
-              activeThumbColor: AppColors.primary,
             ),
-
-            const Divider(),
-
-            // Slots List (Mocked)
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.zero,
+            if (state.interactionMode == InteractionMode.drawing)
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    'Tap 4 points on the video to define the parking slot corners.',
+                    style: TextStyle(color: AppColors.primary, fontSize: 13),
+                  ),
+                ),
+              ),
+            SliverToBoxAdapter(
+              child: Column(
                 children: [
-                  _buildSlotItem('Slot A1'),
-                  _buildSlotItem('Slot A2'),
-                  _buildSlotItem('Slot A3'),
+                  SwitchListTile(
+                    title: const Text(
+                      'Show AI Detections',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    value: state.showAiDetections,
+                    onChanged: (val) => notifier.toggleAiDetections(),
+                    activeTrackColor: AppColors.primary.withValues(alpha: 0.5),
+                    activeThumbColor: AppColors.primary,
+                  ),
+                  const Divider(),
                 ],
               ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate([
+                _buildSlotItem('Slot A1'),
+                _buildSlotItem('Slot A2'),
+                _buildSlotItem('Slot A3'),
+              ]),
             ),
           ],
         ),

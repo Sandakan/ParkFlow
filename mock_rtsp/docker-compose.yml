@@ -2,20 +2,14 @@ services:
   mock-rtsp:
     build: .
     container_name: mock-rtsp
-    ports:
-      - "8554:8554" # RTSP
-      - "1935:1935" # RTMP
-      - "8888:8888" # HLS
-      - "8889:8889" # WebRTC
-      - "8189:8189/udp" # WebRTC UDP ICE
-      - "9997:9997" # MediaMTX HTTP API
     volumes:
       - ./assets:/assets
       - ./stream_config.json:/stream_config.json
     environment:
       - PYTHONUNBUFFERED=1
-      - MTX_API=yes
-      - MTX_APIAUTH=no
+      - RTSP_HOST=mediamtx
+    networks:
+      - backend_default
     restart: unless-stopped
     develop:
       watch:
@@ -29,3 +23,7 @@ services:
         - action: sync
           path: ./assets/
           target: /assets/
+
+networks:
+  backend_default:
+    external: true

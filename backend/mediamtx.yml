@@ -1,0 +1,23 @@
+###############################################
+# Global settings -> Playback server
+api: yes
+apiAddress: :9997
+
+# WebRTC ICE Candidate IPs (Replace with your actual server IP in production)
+webrtcICEHostNAT1To1IPs: [10.0.2.2, 127.0.0.1, 192.168.110.183]
+
+# Disable API authentication for local backend proxy access
+authMethod: internal
+authInternalUsers:
+  - user: any
+    permissions:
+      - action: publish
+      - action: read
+      - action: playback
+      - action: api
+
+# Paths configuration
+# This allows any stream name to be published on the fly
+paths:
+  all:
+    source: publisher

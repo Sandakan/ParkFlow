@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CameraInfoState {
 
- bool get isLoading; CameraModel? get camera; InteractionMode get interactionMode; List<Offset> get currentDrawingPoints; bool get showAiDetections; String? get error;
+ bool get isLoading; CameraModel? get camera; InteractionMode get interactionMode; List<Offset> get currentDrawingPoints; bool get showAiDetections; bool get isSidebarCollapsed; String? get error;
 /// Create a copy of CameraInfoState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CameraInfoStateCopyWith<CameraInfoState> get copyWith => _$CameraInfoStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CameraInfoState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.camera, camera) || other.camera == camera)&&(identical(other.interactionMode, interactionMode) || other.interactionMode == interactionMode)&&const DeepCollectionEquality().equals(other.currentDrawingPoints, currentDrawingPoints)&&(identical(other.showAiDetections, showAiDetections) || other.showAiDetections == showAiDetections)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CameraInfoState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.camera, camera) || other.camera == camera)&&(identical(other.interactionMode, interactionMode) || other.interactionMode == interactionMode)&&const DeepCollectionEquality().equals(other.currentDrawingPoints, currentDrawingPoints)&&(identical(other.showAiDetections, showAiDetections) || other.showAiDetections == showAiDetections)&&(identical(other.isSidebarCollapsed, isSidebarCollapsed) || other.isSidebarCollapsed == isSidebarCollapsed)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,camera,interactionMode,const DeepCollectionEquality().hash(currentDrawingPoints),showAiDetections,error);
+int get hashCode => Object.hash(runtimeType,isLoading,camera,interactionMode,const DeepCollectionEquality().hash(currentDrawingPoints),showAiDetections,isSidebarCollapsed,error);
 
 @override
 String toString() {
-  return 'CameraInfoState(isLoading: $isLoading, camera: $camera, interactionMode: $interactionMode, currentDrawingPoints: $currentDrawingPoints, showAiDetections: $showAiDetections, error: $error)';
+  return 'CameraInfoState(isLoading: $isLoading, camera: $camera, interactionMode: $interactionMode, currentDrawingPoints: $currentDrawingPoints, showAiDetections: $showAiDetections, isSidebarCollapsed: $isSidebarCollapsed, error: $error)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CameraInfoStateCopyWith<$Res>  {
   factory $CameraInfoStateCopyWith(CameraInfoState value, $Res Function(CameraInfoState) _then) = _$CameraInfoStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, CameraModel? camera, InteractionMode interactionMode, List<Offset> currentDrawingPoints, bool showAiDetections, String? error
+ bool isLoading, CameraModel? camera, InteractionMode interactionMode, List<Offset> currentDrawingPoints, bool showAiDetections, bool isSidebarCollapsed, String? error
 });
 
 
@@ -62,13 +62,14 @@ class _$CameraInfoStateCopyWithImpl<$Res>
 
 /// Create a copy of CameraInfoState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? camera = freezed,Object? interactionMode = null,Object? currentDrawingPoints = null,Object? showAiDetections = null,Object? error = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? camera = freezed,Object? interactionMode = null,Object? currentDrawingPoints = null,Object? showAiDetections = null,Object? isSidebarCollapsed = null,Object? error = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,camera: freezed == camera ? _self.camera : camera // ignore: cast_nullable_to_non_nullable
 as CameraModel?,interactionMode: null == interactionMode ? _self.interactionMode : interactionMode // ignore: cast_nullable_to_non_nullable
 as InteractionMode,currentDrawingPoints: null == currentDrawingPoints ? _self.currentDrawingPoints : currentDrawingPoints // ignore: cast_nullable_to_non_nullable
 as List<Offset>,showAiDetections: null == showAiDetections ? _self.showAiDetections : showAiDetections // ignore: cast_nullable_to_non_nullable
+as bool,isSidebarCollapsed: null == isSidebarCollapsed ? _self.isSidebarCollapsed : isSidebarCollapsed // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -167,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  CameraModel? camera,  InteractionMode interactionMode,  List<Offset> currentDrawingPoints,  bool showAiDetections,  String? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  CameraModel? camera,  InteractionMode interactionMode,  List<Offset> currentDrawingPoints,  bool showAiDetections,  bool isSidebarCollapsed,  String? error)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CameraInfoState() when $default != null:
-return $default(_that.isLoading,_that.camera,_that.interactionMode,_that.currentDrawingPoints,_that.showAiDetections,_that.error);case _:
+return $default(_that.isLoading,_that.camera,_that.interactionMode,_that.currentDrawingPoints,_that.showAiDetections,_that.isSidebarCollapsed,_that.error);case _:
   return orElse();
 
 }
@@ -188,10 +189,10 @@ return $default(_that.isLoading,_that.camera,_that.interactionMode,_that.current
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  CameraModel? camera,  InteractionMode interactionMode,  List<Offset> currentDrawingPoints,  bool showAiDetections,  String? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  CameraModel? camera,  InteractionMode interactionMode,  List<Offset> currentDrawingPoints,  bool showAiDetections,  bool isSidebarCollapsed,  String? error)  $default,) {final _that = this;
 switch (_that) {
 case _CameraInfoState():
-return $default(_that.isLoading,_that.camera,_that.interactionMode,_that.currentDrawingPoints,_that.showAiDetections,_that.error);case _:
+return $default(_that.isLoading,_that.camera,_that.interactionMode,_that.currentDrawingPoints,_that.showAiDetections,_that.isSidebarCollapsed,_that.error);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -208,10 +209,10 @@ return $default(_that.isLoading,_that.camera,_that.interactionMode,_that.current
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  CameraModel? camera,  InteractionMode interactionMode,  List<Offset> currentDrawingPoints,  bool showAiDetections,  String? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  CameraModel? camera,  InteractionMode interactionMode,  List<Offset> currentDrawingPoints,  bool showAiDetections,  bool isSidebarCollapsed,  String? error)?  $default,) {final _that = this;
 switch (_that) {
 case _CameraInfoState() when $default != null:
-return $default(_that.isLoading,_that.camera,_that.interactionMode,_that.currentDrawingPoints,_that.showAiDetections,_that.error);case _:
+return $default(_that.isLoading,_that.camera,_that.interactionMode,_that.currentDrawingPoints,_that.showAiDetections,_that.isSidebarCollapsed,_that.error);case _:
   return null;
 
 }
@@ -223,7 +224,7 @@ return $default(_that.isLoading,_that.camera,_that.interactionMode,_that.current
 
 
 class _CameraInfoState implements CameraInfoState {
-  const _CameraInfoState({this.isLoading = true, this.camera, this.interactionMode = InteractionMode.inspection, final  List<Offset> currentDrawingPoints = const [], this.showAiDetections = false, this.error}): _currentDrawingPoints = currentDrawingPoints;
+  const _CameraInfoState({this.isLoading = true, this.camera, this.interactionMode = InteractionMode.inspection, final  List<Offset> currentDrawingPoints = const [], this.showAiDetections = false, this.isSidebarCollapsed = false, this.error}): _currentDrawingPoints = currentDrawingPoints;
   
 
 @override@JsonKey() final  bool isLoading;
@@ -237,6 +238,7 @@ class _CameraInfoState implements CameraInfoState {
 }
 
 @override@JsonKey() final  bool showAiDetections;
+@override@JsonKey() final  bool isSidebarCollapsed;
 @override final  String? error;
 
 /// Create a copy of CameraInfoState
@@ -249,16 +251,16 @@ _$CameraInfoStateCopyWith<_CameraInfoState> get copyWith => __$CameraInfoStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CameraInfoState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.camera, camera) || other.camera == camera)&&(identical(other.interactionMode, interactionMode) || other.interactionMode == interactionMode)&&const DeepCollectionEquality().equals(other._currentDrawingPoints, _currentDrawingPoints)&&(identical(other.showAiDetections, showAiDetections) || other.showAiDetections == showAiDetections)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CameraInfoState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.camera, camera) || other.camera == camera)&&(identical(other.interactionMode, interactionMode) || other.interactionMode == interactionMode)&&const DeepCollectionEquality().equals(other._currentDrawingPoints, _currentDrawingPoints)&&(identical(other.showAiDetections, showAiDetections) || other.showAiDetections == showAiDetections)&&(identical(other.isSidebarCollapsed, isSidebarCollapsed) || other.isSidebarCollapsed == isSidebarCollapsed)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,camera,interactionMode,const DeepCollectionEquality().hash(_currentDrawingPoints),showAiDetections,error);
+int get hashCode => Object.hash(runtimeType,isLoading,camera,interactionMode,const DeepCollectionEquality().hash(_currentDrawingPoints),showAiDetections,isSidebarCollapsed,error);
 
 @override
 String toString() {
-  return 'CameraInfoState(isLoading: $isLoading, camera: $camera, interactionMode: $interactionMode, currentDrawingPoints: $currentDrawingPoints, showAiDetections: $showAiDetections, error: $error)';
+  return 'CameraInfoState(isLoading: $isLoading, camera: $camera, interactionMode: $interactionMode, currentDrawingPoints: $currentDrawingPoints, showAiDetections: $showAiDetections, isSidebarCollapsed: $isSidebarCollapsed, error: $error)';
 }
 
 
@@ -269,7 +271,7 @@ abstract mixin class _$CameraInfoStateCopyWith<$Res> implements $CameraInfoState
   factory _$CameraInfoStateCopyWith(_CameraInfoState value, $Res Function(_CameraInfoState) _then) = __$CameraInfoStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, CameraModel? camera, InteractionMode interactionMode, List<Offset> currentDrawingPoints, bool showAiDetections, String? error
+ bool isLoading, CameraModel? camera, InteractionMode interactionMode, List<Offset> currentDrawingPoints, bool showAiDetections, bool isSidebarCollapsed, String? error
 });
 
 
@@ -286,13 +288,14 @@ class __$CameraInfoStateCopyWithImpl<$Res>
 
 /// Create a copy of CameraInfoState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? camera = freezed,Object? interactionMode = null,Object? currentDrawingPoints = null,Object? showAiDetections = null,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? camera = freezed,Object? interactionMode = null,Object? currentDrawingPoints = null,Object? showAiDetections = null,Object? isSidebarCollapsed = null,Object? error = freezed,}) {
   return _then(_CameraInfoState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,camera: freezed == camera ? _self.camera : camera // ignore: cast_nullable_to_non_nullable
 as CameraModel?,interactionMode: null == interactionMode ? _self.interactionMode : interactionMode // ignore: cast_nullable_to_non_nullable
 as InteractionMode,currentDrawingPoints: null == currentDrawingPoints ? _self._currentDrawingPoints : currentDrawingPoints // ignore: cast_nullable_to_non_nullable
 as List<Offset>,showAiDetections: null == showAiDetections ? _self.showAiDetections : showAiDetections // ignore: cast_nullable_to_non_nullable
+as bool,isSidebarCollapsed: null == isSidebarCollapsed ? _self.isSidebarCollapsed : isSidebarCollapsed // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

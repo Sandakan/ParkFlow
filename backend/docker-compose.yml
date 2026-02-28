@@ -7,6 +7,20 @@ services:
       - redis_data:/data
     restart: always
 
+  mediamtx:
+    image: bluenviron/mediamtx:1.6.0
+    container_name: parkflow-mediamtx
+    ports:
+      - "8554:8554" # RTSP
+      - "1935:1935" # RTMP
+      - "8888:8888" # HLS
+      - "8889:8889" # WebRTC
+      - "8189:8189/udp" # WebRTC UDP ICE
+      - "9997:9997" # MediaMTX HTTP API
+    volumes:
+      - ./mediamtx.yml:/mediamtx.yml
+    restart: always
+
   backend:
     container_name: parkflow-backend
     build:
@@ -29,6 +43,7 @@ services:
       # MONGODB_URL is expected to be in the .env file (Atlas connection string)
     depends_on:
       - redis
+      - mediamtx
 
 volumes:
   redis_data:

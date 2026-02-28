@@ -17,6 +17,7 @@ abstract class CameraInfoState with _$CameraInfoState {
     @Default(InteractionMode.inspection) InteractionMode interactionMode,
     @Default([]) List<Offset> currentDrawingPoints,
     @Default(false) bool showAiDetections,
+    @Default(false) bool isSidebarCollapsed,
     String? error,
   }) = _CameraInfoState;
 }
@@ -57,6 +58,10 @@ class CameraInfo extends _$CameraInfo {
 
   void toggleAiDetections() {
     state = state.copyWith(showAiDetections: !state.showAiDetections);
+  }
+
+  void toggleSidebar() {
+    state = state.copyWith(isSidebarCollapsed: !state.isSidebarCollapsed);
   }
 
   void addDrawingPoint(Offset point) {

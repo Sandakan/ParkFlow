@@ -202,7 +202,7 @@ async def webrtc_offer(
     
     # Send WHEP application/sdp POST to MediaMTX
     # Note: Using a fixed mediamtx host because MediaMTX controls the streams
-    mediamtx_host = 'host.docker.internal' if os.path.exists('/.dockerenv') else 'localhost'
+    mediamtx_host = 'mediamtx' if os.path.exists('/.dockerenv') else 'localhost'
     
     # 1. Dynamically tell MediaMTX to proxy this RTSP stream (if it hasn't already)
     # Using sourceOnDemand=True means MediaMTX will only connect to the IP Camera when someone watches

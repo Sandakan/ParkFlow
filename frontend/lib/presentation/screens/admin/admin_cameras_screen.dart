@@ -52,7 +52,9 @@ class AdminCamerasScreen extends ConsumerWidget {
                       : state.filteredCameras.isEmpty
                       ? const _EmptyState()
                       : ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ).copyWith(bottom: 80),
                           itemCount: state.filteredCameras.length,
                           itemBuilder: (context, index) {
                             final camera = state.filteredCameras[index];
