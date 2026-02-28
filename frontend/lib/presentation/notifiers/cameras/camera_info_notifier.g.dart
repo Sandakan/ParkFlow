@@ -58,7 +58,7 @@ final class CameraInfoProvider
   }
 }
 
-String _$cameraInfoHash() => r'26f765a744e53d4db8cd5aebe35f79eee9759ef1';
+String _$cameraInfoHash() => r'13ff263be61ee54121941e1b4d54101cdaaa0eaa';
 
 final class CameraInfoFamily extends $Family
     with

@@ -19,15 +19,18 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file and install dependencies
-COPY requirements.txt .
+COPY backend/requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements.txt
 
 # Pre-download YOLO model to bake it into the image layer
 RUN python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
 
+# Copy the trained parking model
+COPY ai/models/best.pt /app/ai/models/best.pt
+
 # Copy the backend application code
-COPY app ./app
+COPY backend/app ./app
 
 # Expose the port FastAPI runs on
 EXPOSE 8000

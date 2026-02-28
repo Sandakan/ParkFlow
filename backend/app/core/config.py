@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
 
     # AI Model Settings
-    YOLO_MODEL_PATH: str = "yolo26n.pt"
+    YOLO_MODEL_PATH: str = "/app/ai/models/best.pt"
     YOLO_CONFIDENCE: float = 0.25
 
     class Config:

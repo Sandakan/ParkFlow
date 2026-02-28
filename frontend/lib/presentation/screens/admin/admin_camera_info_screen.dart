@@ -50,6 +50,8 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
               normalizedCurrentPoints: state.currentDrawingPoints,
               slots: state.slots,
               showAiDetections: state.showAiDetections,
+              aiDetections: state.aiDetections,
+              aiSlotHits: state.aiSlotHits,
               onTap: (normalizedPoint) {
                 notifier.addDrawingPoint(normalizedPoint);
                 if (state.currentDrawingPoints.length == 3) {

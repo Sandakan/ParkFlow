@@ -26,6 +26,9 @@ docker build -t mock-rtsp .
 
 The easiest way to run the mock server is using Docker Compose.
 
+> [!IMPORTANT]
+> **The backend stack must be started first.** The mock RTSP server joins the `parkflow-backend` network that is created by the backend's `docker-compose.yml`. Always start the backend before starting `mock_rtsp`.
+
 ### Start the Server & Watch for Changes
 
 Builds the image and starts the container. This command will keep the terminal open, showing live logs and automatically rebuilding/syncing when you change files:
@@ -57,6 +60,20 @@ docker compose logs -f
 
 ```bash
 docker compose down
+```
+
+### After `docker prune` (network not found error)
+
+If you see `network parkflow-backend not found`, it means Docker's networks were pruned. Fix:
+
+```bash
+# 1. Restart the backend stack first (it creates parkflow-net)
+cd ../backend
+docker compose up --build --watch
+
+# 2. Then start mock_rtsp in a separate terminal
+cd ../mock_rtsp
+docker compose up --watch
 ```
 
 ---
