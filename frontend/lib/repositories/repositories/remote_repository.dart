@@ -19,6 +19,7 @@ import 'package:parkflow/repositories/entities/parking/create_camera_request.dar
 import 'package:parkflow/core/network/entities/get_cameras_response_entity.dart';
 import 'package:parkflow/repositories/entities/camera/create_webrtc_offer_request.dart';
 import 'package:parkflow/core/network/entities/get_webrtc_offer_response_entity.dart';
+import 'package:parkflow/repositories/entities/parking/create_parking_slot_request.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -168,10 +169,18 @@ class RemoteRepository implements RemoteRepositoryInterface {
   }
 
   @override
-  Future<GetParkingSlotsResponseEntity> getParkingSlots() async {
+  Future<GetParkingSlotsResponseEntity> getParkingSlots({
+    String? cameraId,
+  }) async {
+    final Map<String, dynamic> queryParameters = {};
+    if (cameraId != null) {
+      queryParameters['camera_id'] = cameraId;
+    }
+
     final response = await httpAPI.doRequest(
       HttpMethodEnum.get,
       'parking/slots',
+      queryParameters: queryParameters,
       accessToken: await _getToken(),
     );
 
@@ -189,6 +198,35 @@ class RemoteRepository implements RemoteRepositoryInterface {
         stackTrace: stackTrace,
       );
     }
+  }
+
+  @override
+  Future<void> createParkingSlot(CreateParkingSlotRequest request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'parking/slots',
+      data: request.toJson(),
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> deleteParkingSlot(String slotId, {String? cameraId}) async {
+    final Map<String, dynamic> queryParameters = {};
+    if (cameraId != null) {
+      queryParameters['camera_id'] = cameraId;
+    }
+
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.delete,
+      'parking/slots/$slotId',
+      queryParameters: queryParameters,
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
   }
 
   @override

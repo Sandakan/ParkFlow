@@ -5,6 +5,7 @@ import 'package:parkflow/presentation/widgets/camera/camera_webrtc_player.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/presentation/notifiers/cameras/camera_info_notifier.dart';
 import 'package:parkflow/presentation/widgets/camera/spot_picker_canvas.dart';
+import 'package:parkflow/models/parking/parking_slot_model.dart';
 
 class AdminCameraInfoScreen extends ConsumerStatefulWidget {
   final String cameraId;
@@ -46,10 +47,11 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
           Positioned.fill(
             child: SpotPickerCanvas(
               mode: state.interactionMode,
-              currentPoints: state.currentDrawingPoints,
+              normalizedCurrentPoints: state.currentDrawingPoints,
+              slots: state.slots,
               showAiDetections: state.showAiDetections,
-              onTap: (point) {
-                notifier.addDrawingPoint(point);
+              onTap: (normalizedPoint) {
+                notifier.addDrawingPoint(normalizedPoint);
                 if (state.currentDrawingPoints.length == 3) {
                   // 4th point just added via onTap, prompt name
                   _promptSlotName(notifier);
@@ -79,36 +81,6 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 children: [
                   Positioned.fill(
                     child: _buildSidebar(context, state, notifier),
-                  ),
-                  // Toggle Button for Wide Screen
-                  Positioned(
-                    left: 0,
-                    top: 20,
-                    child: GestureDetector(
-                      onTap: () => notifier.toggleSidebar(),
-                      child: Container(
-                        width: 32,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: const BorderRadius.horizontal(
-                            left: Radius.circular(8),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.1),
-                              blurRadius: 4,
-                            ),
-                          ],
-                        ),
-                        child: Icon(
-                          state.isSidebarCollapsed
-                              ? Icons.chevron_left
-                              : Icons.chevron_right,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -199,13 +171,14 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 ],
               ),
             ),
-            if (state.isSidebarCollapsed) ...[
-              const SizedBox(width: 12),
-              IconButton(
-                icon: const Icon(Icons.menu_open, color: Colors.white),
-                onPressed: () => notifier.toggleSidebar(),
+            const SizedBox(width: 12),
+            IconButton(
+              icon: Icon(
+                state.isSidebarCollapsed ? Icons.menu_open : Icons.menu,
+                color: Colors.white,
               ),
-            ],
+              onPressed: () => notifier.toggleSidebar(),
+            ),
           ],
         ),
       ),
@@ -273,16 +246,6 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                           InteractionMode.drawing,
                         ),
                       ),
-                      if (!isBottomSheet)
-                        IconButton(
-                          icon: Icon(
-                            state.isSidebarCollapsed
-                                ? Icons.keyboard_arrow_right
-                                : Icons.keyboard_arrow_left,
-                          ),
-                          tooltip: 'Collapse',
-                          onPressed: () => notifier.toggleSidebar(),
-                        ),
                     ] else
                       IconButton(
                         icon: const Icon(Icons.close),
@@ -325,75 +288,199 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 ],
               ),
             ),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                _buildSlotItem('Slot A1'),
-                _buildSlotItem('Slot A2'),
-                _buildSlotItem('Slot A3'),
-              ]),
-            ),
+            if (state.isLoading)
+              const SliverFillRemaining(
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (state.slots.isEmpty)
+              SliverFillRemaining(
+                child: Center(
+                  child: Text(
+                    'No slots defined yet.',
+                    style: TextStyle(color: AppColors.textSecondary),
+                  ),
+                ),
+              )
+            else
+              SliverList(
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final slot = state.slots[index];
+                  return _buildSlotItem(context, slot, notifier);
+                }, childCount: state.slots.length),
+              ),
+            if (state.isSavingSlot)
+              const SliverToBoxAdapter(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      SizedBox(width: 12),
+                      Text(
+                        'Saving new slot...',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSlotItem(String name) {
+  Widget _buildSlotItem(
+    BuildContext context,
+    ParkingSlotModel slot,
+    CameraInfo notifier,
+  ) {
     return ListTile(
-      leading: Icon(Icons.local_parking, color: AppColors.textSecondary),
-      title: Text(name),
-      trailing: const Icon(Icons.chevron_right),
+      leading: Icon(
+        Icons.local_parking,
+        color: slot.isOccupied ? Colors.red : AppColors.primary,
+      ),
+      title: Text(slot.name),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            slot.isOccupied ? 'Occupied' : 'Vacant',
+            style: TextStyle(
+              color: slot.isOccupied ? Colors.red : Colors.green,
+              fontSize: 12,
+            ),
+          ),
+          Text(
+            'Type: ${slot.slotType?.toUpperCase() ?? 'GENERAL'}',
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+          ),
+        ],
+      ),
+      trailing: IconButton(
+        icon: const Icon(Icons.delete_outline, color: Colors.red),
+        onPressed: () => _confirmDelete(context, slot, notifier),
+      ),
       onTap: () {
         // Handle slot click (e.g. highlight it on the canvas)
       },
     );
   }
 
+  void _confirmDelete(
+    BuildContext context,
+    ParkingSlotModel slot,
+    CameraInfo notifier,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Slot'),
+        content: Text('Are you sure you want to delete ${slot.name}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              notifier.deleteSlot(slot.id);
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _promptSlotName(CameraInfo notifier) {
     final controller = TextEditingController();
+    String tempType = 'general';
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return AlertDialog(
-          title: const Text('New Parking Slot'),
-          content: TextField(
-            controller: controller,
-            decoration: const InputDecoration(
-              hintText: 'e.g. A-15',
-              border: OutlineInputBorder(),
-            ),
-            autofocus: true,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                notifier.resetDrawing();
-                notifier.setInteractionMode(InteractionMode.inspection);
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final name = controller.text.trim();
-                if (name.isNotEmpty) {
-                  Navigator.of(context).pop();
-                  await notifier.saveSlot(name);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text('Slot $name saved')));
-                  }
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('New Parking Slot'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: controller,
+                    decoration: const InputDecoration(
+                      labelText: 'Slot Identifier',
+                      hintText: 'e.g. A-15',
+                      border: OutlineInputBorder(),
+                    ),
+                    autofocus: true,
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButtonFormField<String>(
+                    initialValue: tempType,
+                    decoration: const InputDecoration(
+                      labelText: 'Slot Type',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: const [
+                      DropdownMenuItem(
+                        value: 'general',
+                        child: Text('General'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'disabled',
+                        child: Text('Disabled'),
+                      ),
+                      DropdownMenuItem(value: 'ev', child: Text('EV Charging')),
+                    ],
+                    onChanged: (val) {
+                      if (val != null) {
+                        setDialogState(() => tempType = val);
+                      }
+                    },
+                  ),
+                ],
               ),
-              child: const Text('Save Slot'),
-            ),
-          ],
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    notifier.resetDrawing();
+                    notifier.setInteractionMode(InteractionMode.inspection);
+                  },
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    final name = controller.text.trim();
+                    if (name.isNotEmpty) {
+                      Navigator.of(context).pop();
+                      notifier.setSelectedSlotType(tempType);
+                      await notifier.saveSlot(name);
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Slot $name saved')),
+                        );
+                      }
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Save Slot'),
+                ),
+              ],
+            );
+          },
         );
       },
     );

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParkingSlotModel {
 
- String get id; String get name; bool get isOccupied; DateTime? get lastUpdated;
+ String get id; String get name; bool get isOccupied;@JsonKey(name: 'slot_type') String? get slotType;@JsonKey(name: 'camera_id') String? get cameraId; List<Point2D>? get coordinates; DateTime? get lastUpdated;
 /// Create a copy of ParkingSlotModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ParkingSlotModelCopyWith<ParkingSlotModel> get copyWith => _$ParkingSlotModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParkingSlotModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isOccupied, isOccupied) || other.isOccupied == isOccupied)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParkingSlotModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isOccupied, isOccupied) || other.isOccupied == isOccupied)&&(identical(other.slotType, slotType) || other.slotType == slotType)&&(identical(other.cameraId, cameraId) || other.cameraId == cameraId)&&const DeepCollectionEquality().equals(other.coordinates, coordinates)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,isOccupied,lastUpdated);
+int get hashCode => Object.hash(runtimeType,id,name,isOccupied,slotType,cameraId,const DeepCollectionEquality().hash(coordinates),lastUpdated);
 
 @override
 String toString() {
-  return 'ParkingSlotModel(id: $id, name: $name, isOccupied: $isOccupied, lastUpdated: $lastUpdated)';
+  return 'ParkingSlotModel(id: $id, name: $name, isOccupied: $isOccupied, slotType: $slotType, cameraId: $cameraId, coordinates: $coordinates, lastUpdated: $lastUpdated)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ParkingSlotModelCopyWith<$Res>  {
   factory $ParkingSlotModelCopyWith(ParkingSlotModel value, $Res Function(ParkingSlotModel) _then) = _$ParkingSlotModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, bool isOccupied, DateTime? lastUpdated
+ String id, String name, bool isOccupied,@JsonKey(name: 'slot_type') String? slotType,@JsonKey(name: 'camera_id') String? cameraId, List<Point2D>? coordinates, DateTime? lastUpdated
 });
 
 
@@ -65,12 +65,15 @@ class _$ParkingSlotModelCopyWithImpl<$Res>
 
 /// Create a copy of ParkingSlotModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? isOccupied = null,Object? lastUpdated = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? isOccupied = null,Object? slotType = freezed,Object? cameraId = freezed,Object? coordinates = freezed,Object? lastUpdated = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,isOccupied: null == isOccupied ? _self.isOccupied : isOccupied // ignore: cast_nullable_to_non_nullable
-as bool,lastUpdated: freezed == lastUpdated ? _self.lastUpdated : lastUpdated // ignore: cast_nullable_to_non_nullable
+as bool,slotType: freezed == slotType ? _self.slotType : slotType // ignore: cast_nullable_to_non_nullable
+as String?,cameraId: freezed == cameraId ? _self.cameraId : cameraId // ignore: cast_nullable_to_non_nullable
+as String?,coordinates: freezed == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as List<Point2D>?,lastUpdated: freezed == lastUpdated ? _self.lastUpdated : lastUpdated // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -156,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  bool isOccupied,  DateTime? lastUpdated)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  bool isOccupied, @JsonKey(name: 'slot_type')  String? slotType, @JsonKey(name: 'camera_id')  String? cameraId,  List<Point2D>? coordinates,  DateTime? lastUpdated)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParkingSlotModel() when $default != null:
-return $default(_that.id,_that.name,_that.isOccupied,_that.lastUpdated);case _:
+return $default(_that.id,_that.name,_that.isOccupied,_that.slotType,_that.cameraId,_that.coordinates,_that.lastUpdated);case _:
   return orElse();
 
 }
@@ -177,10 +180,10 @@ return $default(_that.id,_that.name,_that.isOccupied,_that.lastUpdated);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  bool isOccupied,  DateTime? lastUpdated)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  bool isOccupied, @JsonKey(name: 'slot_type')  String? slotType, @JsonKey(name: 'camera_id')  String? cameraId,  List<Point2D>? coordinates,  DateTime? lastUpdated)  $default,) {final _that = this;
 switch (_that) {
 case _ParkingSlotModel():
-return $default(_that.id,_that.name,_that.isOccupied,_that.lastUpdated);case _:
+return $default(_that.id,_that.name,_that.isOccupied,_that.slotType,_that.cameraId,_that.coordinates,_that.lastUpdated);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +200,10 @@ return $default(_that.id,_that.name,_that.isOccupied,_that.lastUpdated);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  bool isOccupied,  DateTime? lastUpdated)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  bool isOccupied, @JsonKey(name: 'slot_type')  String? slotType, @JsonKey(name: 'camera_id')  String? cameraId,  List<Point2D>? coordinates,  DateTime? lastUpdated)?  $default,) {final _that = this;
 switch (_that) {
 case _ParkingSlotModel() when $default != null:
-return $default(_that.id,_that.name,_that.isOccupied,_that.lastUpdated);case _:
+return $default(_that.id,_that.name,_that.isOccupied,_that.slotType,_that.cameraId,_that.coordinates,_that.lastUpdated);case _:
   return null;
 
 }
@@ -212,12 +215,23 @@ return $default(_that.id,_that.name,_that.isOccupied,_that.lastUpdated);case _:
 @JsonSerializable()
 
 class _ParkingSlotModel implements ParkingSlotModel {
-  const _ParkingSlotModel({required this.id, required this.name, required this.isOccupied, this.lastUpdated});
+  const _ParkingSlotModel({required this.id, required this.name, required this.isOccupied, @JsonKey(name: 'slot_type') this.slotType, @JsonKey(name: 'camera_id') this.cameraId, final  List<Point2D>? coordinates, this.lastUpdated}): _coordinates = coordinates;
   factory _ParkingSlotModel.fromJson(Map<String, dynamic> json) => _$ParkingSlotModelFromJson(json);
 
 @override final  String id;
 @override final  String name;
 @override final  bool isOccupied;
+@override@JsonKey(name: 'slot_type') final  String? slotType;
+@override@JsonKey(name: 'camera_id') final  String? cameraId;
+ final  List<Point2D>? _coordinates;
+@override List<Point2D>? get coordinates {
+  final value = _coordinates;
+  if (value == null) return null;
+  if (_coordinates is EqualUnmodifiableListView) return _coordinates;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 @override final  DateTime? lastUpdated;
 
 /// Create a copy of ParkingSlotModel
@@ -233,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParkingSlotModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isOccupied, isOccupied) || other.isOccupied == isOccupied)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParkingSlotModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isOccupied, isOccupied) || other.isOccupied == isOccupied)&&(identical(other.slotType, slotType) || other.slotType == slotType)&&(identical(other.cameraId, cameraId) || other.cameraId == cameraId)&&const DeepCollectionEquality().equals(other._coordinates, _coordinates)&&(identical(other.lastUpdated, lastUpdated) || other.lastUpdated == lastUpdated));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,isOccupied,lastUpdated);
+int get hashCode => Object.hash(runtimeType,id,name,isOccupied,slotType,cameraId,const DeepCollectionEquality().hash(_coordinates),lastUpdated);
 
 @override
 String toString() {
-  return 'ParkingSlotModel(id: $id, name: $name, isOccupied: $isOccupied, lastUpdated: $lastUpdated)';
+  return 'ParkingSlotModel(id: $id, name: $name, isOccupied: $isOccupied, slotType: $slotType, cameraId: $cameraId, coordinates: $coordinates, lastUpdated: $lastUpdated)';
 }
 
 
@@ -253,7 +267,7 @@ abstract mixin class _$ParkingSlotModelCopyWith<$Res> implements $ParkingSlotMod
   factory _$ParkingSlotModelCopyWith(_ParkingSlotModel value, $Res Function(_ParkingSlotModel) _then) = __$ParkingSlotModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, bool isOccupied, DateTime? lastUpdated
+ String id, String name, bool isOccupied,@JsonKey(name: 'slot_type') String? slotType,@JsonKey(name: 'camera_id') String? cameraId, List<Point2D>? coordinates, DateTime? lastUpdated
 });
 
 
@@ -270,12 +284,15 @@ class __$ParkingSlotModelCopyWithImpl<$Res>
 
 /// Create a copy of ParkingSlotModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? isOccupied = null,Object? lastUpdated = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? isOccupied = null,Object? slotType = freezed,Object? cameraId = freezed,Object? coordinates = freezed,Object? lastUpdated = freezed,}) {
   return _then(_ParkingSlotModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,isOccupied: null == isOccupied ? _self.isOccupied : isOccupied // ignore: cast_nullable_to_non_nullable
-as bool,lastUpdated: freezed == lastUpdated ? _self.lastUpdated : lastUpdated // ignore: cast_nullable_to_non_nullable
+as bool,slotType: freezed == slotType ? _self.slotType : slotType // ignore: cast_nullable_to_non_nullable
+as String?,cameraId: freezed == cameraId ? _self.cameraId : cameraId // ignore: cast_nullable_to_non_nullable
+as String?,coordinates: freezed == coordinates ? _self._coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as List<Point2D>?,lastUpdated: freezed == lastUpdated ? _self.lastUpdated : lastUpdated // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

@@ -4,11 +4,45 @@ from app.api.deps import get_current_user, get_current_admin
 from app.schemas.response import APIResponse, ResponseCode
 from app.models.parking_slot import ParkingSlotInDB
 from app.models.parking_lot import ParkingLotInDB, Point
-from app.schemas.parking import CreateParkingLotRequest, UpdateParkingLotRequest, CreateCameraRequest, CreateParkingSlotRequest
+from app.schemas.parking import CreateParkingLotRequest, UpdateParkingLotRequest, CreateCameraRequest, CreateParkingSlotRequest, UpdateParkingSlotRequest
 from app.schemas.reservation import CreateReservationRequest, ReservationResponse
 from app.core.database import db
 
 router = APIRouter()
+
+
+async def _update_logical_slot_status(slot_id: str):
+    """
+    Recalculate the logical slot status based on the Boolean OR of all its active mappings.
+    If ANY mapping is occupied, the logical slot is occupied.
+    """
+    from datetime import datetime, timezone
+    from bson import ObjectId
+    
+    # 1. Fetch all active mappings for this logical slot
+    cursor = db.client["parkflow"].camera_slot_mappings.find({
+        "slot_id": slot_id,
+        "deleted_at": None
+    })
+    mappings = await cursor.to_list(length=100)
+    
+    # 2. Boolean OR logic: Any mapping is_occupied=True means logical slot is occupied
+    is_any_occupied = any(m.get("is_occupied", False) for m in mappings)
+    
+    # 3. Update logical slot status
+    new_status = "occupied" if is_any_occupied else "vacant"
+    
+    # Fetch current logical slot to check if change is needed (and respect "reserved")
+    slot = await db.client["parkflow"].parking_slots.find_one({"_id": ObjectId(slot_id)})
+    if slot and slot.get("status") != "reserved":
+        if slot.get("status") != new_status:
+            await db.client["parkflow"].parking_slots.update_one(
+                {"_id": ObjectId(slot_id)},
+                {"$set": {
+                    "status": new_status,
+                    "updated_at": datetime.now(timezone.utc)
+                }}
+            )
 
 
 @router.get(
@@ -17,22 +51,45 @@ router = APIRouter()
     description="Retrieve the list of all parking slots and their current occupancy status.",
 )
 async def get_parking_slots(
+    camera_id: Optional[str] = Query(None, description="Filter slots by camera ID"),
     current_user: Any = Depends(get_current_user),
 ) -> Any:
     """
     Get all parking slots.
     """
-    cursor = db.client["parkflow"].parking_slots.find({"deleted_at": None})
-    slots = await cursor.to_list(length=1000)
-    
-    serialized_slots = []
-    for slot in slots:
-        serialized_slots.append({
-            "id": str(slot.get("_id") or slot.get("parking_slot_id")),
-            "name": slot.get("slot_number", "Unnamed"),
-            "isOccupied": slot.get("status") == "occupied",
-            "lastUpdated": slot.get("updated_at").isoformat() if slot.get("updated_at") else None
-        })
+    if camera_id:
+        # Fetch mappings for this camera
+        cursor = db.client["parkflow"].camera_slot_mappings.find({"camera_id": camera_id, "deleted_at": None})
+        mappings = await cursor.to_list(length=1000)
+        
+        serialized_slots = []
+        for m in mappings:
+            # Fetch logical slot info
+            from bson import ObjectId
+            slot = await db.client["parkflow"].parking_slots.find_one({"_id": ObjectId(m["slot_id"])})
+            if slot:
+                serialized_slots.append({
+                    "id": str(slot["_id"]),
+                    "name": slot.get("slot_number", "Unnamed"),
+                    "isOccupied": slot.get("status") == "occupied",
+                    "camera_id": camera_id,
+                    "coordinates": m.get("coordinates", []),
+                    "lastUpdated": slot.get("updated_at").isoformat() if slot.get("updated_at") else None
+                })
+    else:
+        # Fetch all logical slots
+        query = {"deleted_at": None}
+        cursor = db.client["parkflow"].parking_slots.find(query)
+        slots = await cursor.to_list(length=1000)
+        
+        serialized_slots = []
+        for slot in slots:
+            serialized_slots.append({
+                "id": str(slot.get("_id") or slot.get("parking_slot_id")),
+                "name": slot.get("slot_number", "Unnamed"),
+                "isOccupied": slot.get("status") == "occupied",
+                "lastUpdated": slot.get("updated_at").isoformat() if slot.get("updated_at") else None
+            })
 
     return APIResponse.success_response(
         message="Parking slots retrieved",
@@ -281,30 +338,196 @@ async def create_parking_slot(
     current_admin: Any = Depends(get_current_admin),
 ) -> Any:
     """
-    Create a new parking slot.
+    Create a new parking slot with mapping.
+    """
+    from datetime import datetime, timezone
+    from bson import ObjectId
+    now = datetime.now(timezone.utc)
+    
+    # 1. Find or Create logical slot
+    slot_filter = {
+        "lot_id": request.lot_id,
+        "slot_number": request.slot_number,
+        "deleted_at": None
+    }
+    
+    existing_slot = await db.client["parkflow"].parking_slots.find_one(slot_filter)
+    
+    if existing_slot:
+        slot_id = existing_slot["_id"]
+    else:
+        new_slot = {
+            "lot_id": request.lot_id,
+            "slot_number": request.slot_number,
+            "status": "vacant",
+            "slot_type": request.slot_type,
+            "created_at": now,
+            "updated_at": now,
+            "deleted_at": None,
+        }
+        result = await db.client["parkflow"].parking_slots.insert_one(new_slot)
+        slot_id = result.inserted_id
+
+    # 2. Upsert Camera Slot Mapping
+    mapping_filter = {
+        "camera_id": request.camera_id,
+        "slot_id": str(slot_id),
+        "deleted_at": None
+    }
+    
+    mapping_data = {
+        "camera_id": request.camera_id,
+        "slot_id": str(slot_id),
+        "coordinates": [c.model_dump() for c in request.coordinates],
+        "is_occupied": False, # Initial state
+        "updated_at": now
+    }
+    
+    await db.client["parkflow"].camera_slot_mappings.update_one(
+        mapping_filter,
+        {
+            "$set": mapping_data,
+            "$setOnInsert": {"created_at": now}
+        },
+        upsert=True
+    )
+
+    return APIResponse.success_response(
+        message="Parking slot mapping created successfully",
+        code=ResponseCode.SUCCESS,
+        data={"id": str(slot_id)},
+        status_code=status.HTTP_201_CREATED
+    )
+
+
+@router.put(
+    "/slots/{slot_id}",
+    response_model=APIResponse[dict],
+    description="Update a parking slot or its mapping.",
+)
+async def update_parking_slot(
+    slot_id: str,
+    request: UpdateParkingSlotRequest,
+    camera_id: Optional[str] = Query(None, description="Camera ID if updating a specific mapping"),
+    current_admin: Any = Depends(get_current_admin),
+) -> Any:
+    """
+    Update a parking slot or its mapping coordinates.
+    """
+    from datetime import datetime, timezone
+    from bson import ObjectId
+    now = datetime.now(timezone.utc)
+    
+    if camera_id and request.coordinates is not None:
+        # Update specific mapping coordinates
+        await db.client["parkflow"].camera_slot_mappings.update_one(
+            {"camera_id": camera_id, "slot_id": slot_id, "deleted_at": None},
+            {"$set": {
+                "coordinates": [c.model_dump() for c in request.coordinates],
+                "updated_at": now
+            }}
+        )
+    
+    # Update logical slot details (name, etc)
+    update_data = {}
+    if request.slot_number is not None:
+        update_data["slot_number"] = request.slot_number
+    if request.slot_type is not None:
+        update_data["slot_type"] = request.slot_type
+    
+    if update_data:
+        update_data["updated_at"] = now
+        await db.client["parkflow"].parking_slots.update_one(
+            {"_id": ObjectId(slot_id), "deleted_at": None},
+            {"$set": update_data}
+        )
+
+    return APIResponse.success_response(
+        message="Parking slot updated successfully",
+        code=ResponseCode.SUCCESS,
+    )
+
+
+@router.delete(
+    "/slots/{slot_id}",
+    response_model=APIResponse[dict],
+    description="Delete a parking slot or a specific camera mapping.",
+)
+async def delete_parking_slot(
+    slot_id: str,
+    camera_id: Optional[str] = Query(None, description="Camera ID if deleting a specific mapping"),
+    current_admin: Any = Depends(get_current_admin),
+) -> Any:
+    """
+    Delete a parking slot mapping or the logical slot itself.
+    """
+    from datetime import datetime, timezone
+    from bson import ObjectId
+    now = datetime.now(timezone.utc)
+    
+    if camera_id:
+        # Delete only the specific mapping
+        result = await db.client["parkflow"].camera_slot_mappings.update_one(
+            {"camera_id": camera_id, "slot_id": slot_id, "deleted_at": None},
+            {"$set": {"deleted_at": now}}
+        )
+        # Recalculate logical status since a sensor input was removed
+        await _update_logical_slot_status(slot_id)
+    else:
+        # Delete logical slot and ALL its mappings
+        await db.client["parkflow"].parking_slots.update_one(
+            {"_id": ObjectId(slot_id), "deleted_at": None},
+            {"$set": {"deleted_at": now}}
+        )
+        await db.client["parkflow"].camera_slot_mappings.update_many(
+            {"slot_id": slot_id, "deleted_at": None},
+            {"$set": {"deleted_at": now}}
+        )
+        result = type('obj', (object,), {'matched_count': 1}) # Mock result
+
+    return APIResponse.success_response(
+        message="Parking slot/mapping deleted successfully",
+        code=ResponseCode.SUCCESS,
+    )
+
+
+@router.post(
+    "/slots/{slot_id}/test-detection",
+    response_model=APIResponse[dict],
+    description="Mock endpoint to test Boolean OR sensor fusion logic.",
+)
+async def test_detection(
+    slot_id: str,
+    camera_id: str = Query(..., description="Camera ID reporting the detection"),
+    is_occupied: bool = Query(..., description="Detection result from this camera"),
+    current_admin: Any = Depends(get_current_admin),
+) -> Any:
+    """
+    Update a mapping's detection state and trigger Sensor Fusion.
     """
     from datetime import datetime, timezone
     now = datetime.now(timezone.utc)
     
-    new_slot = {
-        "lot_id": request.lot_id,
-        "slot_number": request.slot_number,
-        "status": "vacant",
-        "type_restriction": request.type_restriction,
-        "coordinates": [c.model_dump() for c in request.coordinates],
-        "created_at": now,
-        "updated_at": now,
-        
-        "deleted_at": None,
-    }
+    await db.client["parkflow"].camera_slot_mappings.update_one(
+        {"camera_id": camera_id, "slot_id": slot_id},
+        {"$set": {
+            "is_occupied": is_occupied,
+            "updated_at": now
+        }}
+    )
     
-    result = await db.client["parkflow"].parking_slots.insert_one(new_slot)
-
+    await _update_logical_slot_status(slot_id)
+    
+    # Fetch final logical status
+    from bson import ObjectId
+    slot = await db.client["parkflow"].parking_slots.find_one({"_id": ObjectId(slot_id)})
+    
     return APIResponse.success_response(
-        message="Parking slot created successfully",
-        code=ResponseCode.SUCCESS,
-        data={"id": str(result.inserted_id)},
-        status_code=status.HTTP_201_CREATED
+        message="Detection processed and fusion recalculated",
+        data={
+            "logical_slot_id": slot_id,
+            "new_logical_status": slot.get("status") if slot else "unknown"
+        }
     )
 
 

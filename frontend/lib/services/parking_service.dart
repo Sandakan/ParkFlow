@@ -11,6 +11,7 @@ import 'package:parkflow/utils/handlers/error_handler.dart';
 import 'package:parkflow/utils/helpers/talker.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:parkflow/repositories/entities/parking/create_parking_slot_request.dart';
 
 part 'parking_service.g.dart';
 
@@ -21,10 +22,26 @@ class ParkingService {
 
   ParkingService(this._remote, this._baseUrl);
 
-  Future<List<ParkingSlotModel>> fetchParkingSlots() async {
+  Future<List<ParkingSlotModel>> fetchParkingSlots({String? cameraId}) async {
     try {
-      final response = await _remote.getParkingSlots();
+      final response = await _remote.getParkingSlots(cameraId: cameraId);
       return response.slots;
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> createParkingSlot(CreateParkingSlotRequest request) async {
+    try {
+      await _remote.createParkingSlot(request);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> deleteParkingSlot(String slotId, {String? cameraId}) async {
+    try {
+      await _remote.deleteParkingSlot(slotId, cameraId: cameraId);
     } catch (e) {
       throw ErrorHandler.handle(e);
     }

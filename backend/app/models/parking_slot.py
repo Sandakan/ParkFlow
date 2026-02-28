@@ -13,8 +13,22 @@ class ParkingSlotInDB(BaseModel):
     lot_id: str
     slot_number: str
     status: Literal["vacant", "occupied", "reserved"] = "vacant"
-    type_restriction: Literal["car", "tuk-tuk", "bike"] = "car"
-    coordinates: List[Point2D]  # multiple points for virtual polygon
+    slot_type: Literal["general", "disabled", "ev"] = "general"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    deleted_at: Optional[datetime] = None
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+    )
+
+
+class CameraSlotMappingInDB(BaseModel):
+    mapping_id: str = Field(alias="_id")
+    camera_id: str
+    slot_id: str  # Foreign key to ParkingSlotInDB
+    coordinates: List[Point2D]
+    is_occupied: bool = False
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = None

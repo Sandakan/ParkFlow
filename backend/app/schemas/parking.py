@@ -31,6 +31,13 @@ class Point2D(BaseModel):
 
 class CreateParkingSlotRequest(BaseModel):
     lot_id: str
+    camera_id: str
     slot_number: str
-    type_restriction: str = "car"
+    slot_type: str = "general"
     coordinates: list[Point2D]
+
+
+class UpdateParkingSlotRequest(BaseModel):
+    slot_number: Optional[str] = None
+    slot_type: Optional[str] = None
+    coordinates: Optional[list[Point2D]] = None
