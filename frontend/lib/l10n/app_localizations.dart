@@ -688,11 +688,17 @@ abstract class AppLocalizations {
   /// **'Front Gate'**
   String get cameraNameHint;
 
-  /// No description provided for @cameraCreatedSuccess.
+  /// Success message when a camera is created
   ///
   /// In en, this message translates to:
   /// **'Camera created successfully'**
   String get cameraCreatedSuccess;
+
+  /// Error message when a user tries to register with an existing email
+  ///
+  /// In en, this message translates to:
+  /// **'The user with this email already exists in the system.'**
+  String get userAlreadyExists;
 }
 
 class _AppLocalizationsDelegate

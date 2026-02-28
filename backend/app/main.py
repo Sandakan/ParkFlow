@@ -9,6 +9,7 @@ from app.api.routers import auth, users, inference, parking, cameras
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from app.core.exceptions import AppException
 from app.schemas.response import APIResponse, ResponseCode
 
 
@@ -50,6 +51,16 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     response = APIResponse.error_response(
         code=code,
         message=str(exc.detail),
+        status_code=exc.status_code,
+    )
+    return JSONResponse(status_code=exc.status_code, content=response.model_dump())
+
+
+@app.exception_handler(AppException)
+async def app_exception_handler(request: Request, exc: AppException):
+    response = APIResponse.error_response(
+        code=exc.code,
+        message=exc.message,
         status_code=exc.status_code,
     )
     return JSONResponse(status_code=exc.status_code, content=response.model_dump())

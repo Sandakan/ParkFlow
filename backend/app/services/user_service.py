@@ -2,6 +2,8 @@ from typing import Optional, Any
 from fastapi import HTTPException, status
 from app.models.user import UserInDB
 from app.schemas.user import UserCreate, UserUpdate
+from app.schemas.response import ResponseCode
+from app.core.exceptions import AppException
 from app.repositories.user_repository import user_repository
 from app.core.security import get_password_hash, verify_password
 
@@ -16,9 +18,10 @@ class UserService:
     async def create_user(self, user_in: UserCreate) -> UserInDB:
         user = await self.get_user_by_email(email=user_in.email)
         if user:
-            raise HTTPException(
+            raise AppException(
+                message="The user with this username already exists in the system.",
+                code=ResponseCode.USER_ALREADY_EXISTS,
                 status_code=400,
-                detail="The user with this username already exists in the system.",
             )
         user_db = UserInDB(
             _id="temp_id",

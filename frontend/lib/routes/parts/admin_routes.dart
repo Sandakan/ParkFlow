@@ -65,6 +65,18 @@ class AdminCreateCameraRoute extends GoRouteData with $AdminCreateCameraRoute {
   }
 }
 
+class AdminCameraInfoRoute extends GoRouteData with $AdminCameraInfoRoute {
+  final String cameraId;
+  const AdminCameraInfoRoute(this.cameraId);
+
+  static const path = ':cameraId';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AdminCameraInfoScreen(cameraId: cameraId);
+  }
+}
+
 class AdminAnalyticsRoute extends GoRouteData with $AdminAnalyticsRoute {
   const AdminAnalyticsRoute();
   static const path = '/admin/analytics';

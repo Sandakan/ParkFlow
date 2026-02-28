@@ -61,7 +61,7 @@ class AdminCamerasScreen extends ConsumerWidget {
                               child: CameraCard(
                                 camera: camera,
                                 onTap: () {
-                                  // Can implement camera details action in future
+                                  AdminCameraInfoRoute(camera.id).push(context);
                                 },
                               ),
                             );

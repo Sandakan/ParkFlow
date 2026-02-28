@@ -9,8 +9,11 @@ import 'package:parkflow/repositories/providers/env_repository_provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 
+import 'package:media_kit/media_kit.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
 
   // Remove the # from URLs on web
   usePathUrlStrategy();

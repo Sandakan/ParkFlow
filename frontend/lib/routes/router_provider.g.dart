@@ -122,6 +122,10 @@ RouteBase get $adminShellRoute => StatefulShellRouteData.$route(
               path: 'create',
               factory: $AdminCreateCameraRoute._fromState,
             ),
+            GoRouteData.$route(
+              path: ':cameraId',
+              factory: $AdminCameraInfoRoute._fromState,
+            ),
           ],
         ),
       ],
@@ -265,6 +269,31 @@ mixin $AdminCreateCameraRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/admin/cameras/create');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AdminCameraInfoRoute on GoRouteData {
+  static AdminCameraInfoRoute _fromState(GoRouterState state) =>
+      AdminCameraInfoRoute(state.pathParameters['cameraId']!);
+
+  AdminCameraInfoRoute get _self => this as AdminCameraInfoRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/admin/cameras/${Uri.encodeComponent(_self.cameraId)}',
+  );
 
   @override
   void go(BuildContext context) => context.go(location);

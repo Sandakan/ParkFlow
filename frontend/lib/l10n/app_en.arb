@@ -329,5 +329,12 @@
 	"createCameraTitle": "Create New Camera",
 	"cameraNameLabel": "Camera Name",
 	"cameraNameHint": "Front Gate",
-	"cameraCreatedSuccess": "Camera created successfully"
+	"cameraCreatedSuccess": "Camera created successfully",
+	"@cameraCreatedSuccess": {
+		"description": "Success message when a camera is created"
+	},
+	"userAlreadyExists": "The user with this email already exists in the system.",
+	"@userAlreadyExists": {
+		"description": "Error message when a user tries to register with an existing email"
+	}
 }

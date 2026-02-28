@@ -311,4 +311,8 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get cameraCreatedSuccess => 'Camera created successfully';
+
+  @override
+  String get userAlreadyExists =>
+      'The user with this email already exists in the system.';
 }

@@ -5,11 +5,21 @@ class AppException implements Exception {
   final AppStatusCode code;
   final Object? cause;
   final StackTrace? stackTrace;
+  final String? customMessage;
 
-  const AppException(this.code, {this.cause, this.stackTrace});
+  const AppException(
+    this.code, {
+    this.customMessage,
+    this.cause,
+    this.stackTrace,
+  });
 
-  String toLocalizedString(AppLocalizations l10n) =>
-      code.toLocalizedString(l10n);
+  String toLocalizedString(AppLocalizations l10n) {
+    if (customMessage != null && customMessage!.isNotEmpty) {
+      return customMessage!;
+    }
+    return code.toLocalizedString(l10n);
+  }
 
   @override
   String toString() => 'AppException(code: $code, cause: $cause)';

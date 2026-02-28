@@ -21,6 +21,8 @@ enum AppStatusCode {
   @JsonValue('SERVER_ERROR')
   serverError,
   // Authentication related error codes
+  @JsonValue('USER_ALREADY_EXISTS')
+  userAlreadyExists,
   @JsonValue('AUTH_TOKEN_EXPIRED')
   authTokenExpired,
   @JsonValue('INVALID_CREDENTIALS')
@@ -57,6 +59,8 @@ enum AppStatusCode {
         return l10n.currentPasswordInvalid;
       case AppStatusCode.changePasswordFailed:
         return l10n.changePasswordFailed;
+      case AppStatusCode.userAlreadyExists:
+        return l10n.userAlreadyExists;
       case AppStatusCode.invalidCredentials:
         return l10n.invalidCredentials;
       default:
@@ -65,9 +69,11 @@ enum AppStatusCode {
   }
 
   factory AppStatusCode.fromString(String code) {
-    return AppStatusCode.values.firstWhere(
-      (e) => e.name == code,
-      orElse: () => AppStatusCode.unknownError,
-    );
+    return _$AppStatusCodeEnumMap.entries
+        .firstWhere(
+          (e) => e.value == code,
+          orElse: () => MapEntry(AppStatusCode.unknownError, ''),
+        )
+        .key;
   }
 }

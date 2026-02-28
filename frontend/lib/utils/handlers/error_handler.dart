@@ -19,13 +19,22 @@ class ErrorHandler {
         case DioExceptionType.badResponse:
           final data = error.response?.data;
           AppStatusCode errorCode = AppStatusCode.serverError;
-          if (data is Map<String, dynamic> && data['code'] != null) {
-            errorCode = AppStatusCode.fromString(data['code'].toString());
+          String? customMessage;
+
+          if (data is Map<String, dynamic>) {
+            if (data['code'] != null) {
+              errorCode = AppStatusCode.fromString(data['code'].toString());
+            }
+            if (data['message'] != null) {
+              customMessage = data['message'].toString();
+            }
           } else if (error.response?.statusCode == 401) {
             errorCode = AppStatusCode.sessionExpired;
           }
+
           return AppException(
             errorCode,
+            customMessage: customMessage,
             cause: error,
             stackTrace: error.stackTrace,
           );

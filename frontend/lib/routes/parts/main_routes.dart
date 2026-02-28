@@ -12,8 +12,12 @@ part of '../router_provider.dart';
         TypedGoRoute<AdminParkingLotsRoute>(
           path: AdminParkingLotsRoute.path,
           routes: [
-            TypedGoRoute<AdminCreateParkingLotRoute>(path: 'create'),
-            TypedGoRoute<AdminEditParkingLotRoute>(path: 'edit/:lotId'),
+            TypedGoRoute<AdminCreateParkingLotRoute>(
+              path: AdminCreateParkingLotRoute.path,
+            ),
+            TypedGoRoute<AdminEditParkingLotRoute>(
+              path: AdminEditParkingLotRoute.path,
+            ),
           ],
         ),
       ],
@@ -22,7 +26,12 @@ part of '../router_provider.dart';
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<AdminCamerasRoute>(
           path: AdminCamerasRoute.path,
-          routes: [TypedGoRoute<AdminCreateCameraRoute>(path: 'create')],
+          routes: [
+            TypedGoRoute<AdminCreateCameraRoute>(
+              path: AdminCreateCameraRoute.path,
+            ),
+            TypedGoRoute<AdminCameraInfoRoute>(path: AdminCameraInfoRoute.path),
+          ],
         ),
       ],
     ),

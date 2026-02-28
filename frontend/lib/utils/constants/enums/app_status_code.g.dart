@@ -14,6 +14,7 @@ const _$AppStatusCodeEnumMap = {
   AppStatusCode.invalidResponse: 'INVALID_RESPONSE',
   AppStatusCode.invalidPageNumber: 'INVALID_PAGE_NUMBER',
   AppStatusCode.serverError: 'SERVER_ERROR',
+  AppStatusCode.userAlreadyExists: 'USER_ALREADY_EXISTS',
   AppStatusCode.authTokenExpired: 'AUTH_TOKEN_EXPIRED',
   AppStatusCode.invalidCredentials: 'INVALID_CREDENTIALS',
   AppStatusCode.sessionExpired: 'SESSION_EXPIRED',
