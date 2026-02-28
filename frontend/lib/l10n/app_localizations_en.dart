@@ -314,4 +314,104 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get userAlreadyExists =>
       'The user with this email already exists in the system.';
+
+  @override
+  String get analyticsTitle => 'Analytics';
+
+  @override
+  String get analyticsOverview => 'System Vitals';
+
+  @override
+  String get analyticsTotalCapacity => 'Total Capacity';
+
+  @override
+  String get analyticsOccupancy => 'Current Occupancy';
+
+  @override
+  String get analyticsStreamHealth => 'Stream Health';
+
+  @override
+  String get analyticsAvgDwell => 'Avg. Dwell Time';
+
+  @override
+  String get analyticsDwellUnit => 'min';
+
+  @override
+  String get analyticsOccupancyTrend => 'Occupancy Trends';
+
+  @override
+  String get analyticsPeriod24h => '24h';
+
+  @override
+  String get analyticsPeriod7d => '7d';
+
+  @override
+  String get analyticsPeriod30d => '30d';
+
+  @override
+  String get analyticsTodayLabel => 'Today';
+
+  @override
+  String get analyticsPriorLabel => 'Prior Period';
+
+  @override
+  String get analyticsTurnoverRate => 'Turnover Rate';
+
+  @override
+  String get analyticsTurnoverToday => 'Turnover Today';
+
+  @override
+  String get analyticsAiHealth => 'AI Engine Health';
+
+  @override
+  String get analyticsConfidenceMean => 'Detection Confidence';
+
+  @override
+  String get analyticsCpuLoad => 'CPU Load';
+
+  @override
+  String get analyticsInferenceLatency => 'Inference Latency';
+
+  @override
+  String get analyticsNoData => 'No data yet';
+
+  @override
+  String get analyticsRefresh => 'Refresh';
+
+  @override
+  String get analyticsSlots => 'slots';
+
+  @override
+  String get analyticsOccupied => 'occupied';
+
+  @override
+  String get analyticsVacant => 'vacant';
+
+  @override
+  String get analyticsCameras => 'cameras active';
+
+  @override
+  String get analyticsOccupancyTrendSubtitle =>
+      'Occupancy over time vs. prior period';
+
+  @override
+  String get analyticsSampleCount => 'samples';
+
+  @override
+  String get analyticsFinancials => 'Financials';
+
+  @override
+  String get analyticsRevenueToday => 'Revenue Today';
+
+  @override
+  String get analyticsRevenueMonth => 'Revenue Month';
+
+  @override
+  String get analyticsRevenueUnit => 'LKR';
+
+  @override
+  String get analyticsOperationalImpact => 'Operational Impact';
+
+  @override
+  String get analyticsRevenueTrend => 'Revenue Trend';
 }

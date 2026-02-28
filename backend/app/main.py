@@ -14,7 +14,7 @@ from app.core.config import settings
 from app.core.database import connect_to_mongo, close_mongo_connection, db
 from app.core.redis import connect_to_redis, close_redis_connection, redis_cache
 from app.core.exceptions import AppException
-from app.api.routers import auth, users, inference, parking, cameras
+from app.api.routers import auth, users, inference, parking, cameras, analytics
 
 from app.schemas.response import APIResponse, ResponseCode
 
@@ -99,6 +99,7 @@ app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(inference.router, prefix="/api/v1/inference", tags=["AI Inference"])
 app.include_router(parking.router, prefix="/api/v1/parking", tags=["Parking"])
 app.include_router(cameras.router, prefix="/api/v1/cameras", tags=["Cameras"])
+app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytics"])
 
 
 @app.get("/favicon.ico", include_in_schema=False)

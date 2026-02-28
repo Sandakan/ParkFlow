@@ -14,9 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CameraInfoState {
 
- bool get isLoading; bool get isSavingSlot; CameraModel? get camera; List<ParkingSlotModel> get slots; InteractionMode get interactionMode; String get selectedSlotType; List<Offset> get currentDrawingPoints; bool get showAiDetections; bool get isSidebarCollapsed;// AI Detection stream data
- List<DetectedBox> get aiDetections; Map<String, bool> get aiSlotHits;// slotId -> isOccupied
- String? get error;
+ bool get isLoading; bool get isSavingSlot; CameraModel? get camera; List<ParkingSlotModel> get slots; InteractionMode get interactionMode; String get selectedSlotType; List<Offset> get currentDrawingPoints; bool get showAiDetections; bool get isSidebarCollapsed; List<DetectedBox> get aiDetections; Map<String, bool> get aiSlotHits; String? get error;
 /// Create a copy of CameraInfoState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -255,9 +253,7 @@ class _CameraInfoState implements CameraInfoState {
 
 @override@JsonKey() final  bool showAiDetections;
 @override@JsonKey() final  bool isSidebarCollapsed;
-// AI Detection stream data
  final  List<DetectedBox> _aiDetections;
-// AI Detection stream data
 @override@JsonKey() List<DetectedBox> get aiDetections {
   if (_aiDetections is EqualUnmodifiableListView) return _aiDetections;
   // ignore: implicit_dynamic_type
@@ -271,7 +267,6 @@ class _CameraInfoState implements CameraInfoState {
   return EqualUnmodifiableMapView(_aiSlotHits);
 }
 
-// slotId -> isOccupied
 @override final  String? error;
 
 /// Create a copy of CameraInfoState

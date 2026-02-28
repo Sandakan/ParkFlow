@@ -12,6 +12,9 @@ import 'package:parkflow/repositories/entities/parking/create_camera_request.dar
 import 'package:parkflow/repositories/entities/camera/create_webrtc_offer_request.dart';
 import 'package:parkflow/core/network/entities/get_webrtc_offer_response_entity.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_slot_request.dart';
+import 'package:parkflow/core/network/entities/get_analytics_overview_response_entity.dart';
+import 'package:parkflow/core/network/entities/get_occupancy_trend_response_entity.dart';
+import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dart';
 
 abstract class RemoteRepositoryInterface {
   Future<LoginResponseEntity> login(LoginRequestEntity request);
@@ -35,4 +38,8 @@ abstract class RemoteRepositoryInterface {
     String cameraId,
     CreateWebrtcOfferRequest request,
   );
+
+  Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview();
+  Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(String period);
+  Future<GetAiHealthResponseEntity> getAiHealth();
 }

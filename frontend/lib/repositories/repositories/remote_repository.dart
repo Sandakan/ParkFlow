@@ -20,6 +20,9 @@ import 'package:parkflow/core/network/entities/get_cameras_response_entity.dart'
 import 'package:parkflow/repositories/entities/camera/create_webrtc_offer_request.dart';
 import 'package:parkflow/core/network/entities/get_webrtc_offer_response_entity.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_slot_request.dart';
+import 'package:parkflow/core/network/entities/get_analytics_overview_response_entity.dart';
+import 'package:parkflow/core/network/entities/get_occupancy_trend_response_entity.dart';
+import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -416,6 +419,74 @@ class RemoteRepository implements RemoteRepositoryInterface {
         validatedResponse.data,
       );
       return data;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview() async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'analytics/overview',
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetAnalyticsOverviewResponseEntity.fromJson(
+        validatedResponse.data,
+      );
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(
+    String period,
+  ) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'analytics/occupancy-trend',
+      queryParameters: {'period': period},
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetOccupancyTrendResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetAiHealthResponseEntity> getAiHealth() async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'analytics/ai-health',
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetAiHealthResponseEntity.fromJson(validatedResponse.data);
     } catch (e, stackTrace) {
       throw AppException(
         AppStatusCode.invalidResponse,

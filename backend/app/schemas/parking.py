@@ -8,6 +8,7 @@ class CreateParkingLotRequest(BaseModel):
     latitude: float = Field(..., description="Latitude of the location")
     longitude: float = Field(..., description="Longitude of the location")
     total_slots: int = Field(..., description="Total number of parking slots available", ge=0)
+    price_per_hour: float = Field(default=0.0, description="Price per hour for parking in this lot", ge=0)
 
 
 class UpdateParkingLotRequest(BaseModel):
@@ -16,6 +17,7 @@ class UpdateParkingLotRequest(BaseModel):
     latitude: Optional[float] = Field(None, description="Latitude of the location")
     longitude: Optional[float] = Field(None, description="Longitude of the location")
     total_slots: Optional[int] = Field(None, description="Total number of parking slots available", ge=0)
+    price_per_hour: Optional[float] = Field(None, description="Price per hour for parking in this lot", ge=0)
 
 
 class CreateCameraRequest(BaseModel):
