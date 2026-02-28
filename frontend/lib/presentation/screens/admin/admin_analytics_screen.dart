@@ -20,7 +20,7 @@ class AdminAnalyticsScreen extends ConsumerWidget {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 700),
+            constraints: const BoxConstraints(maxWidth: 1100),
             child: RefreshIndicator(
               onRefresh: () => ref.read(analyticsProvider.notifier).refresh(),
               child: SingleChildScrollView(
@@ -29,45 +29,108 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                   horizontal: 16,
                   vertical: 20,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _PageHeader(
-                      onRefresh: () =>
-                          ref.read(analyticsProvider.notifier).refresh(),
-                    ),
-                    const SizedBox(height: 24),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isWide = constraints.maxWidth > 900;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _PageHeader(
+                          onRefresh: () =>
+                              ref.read(analyticsProvider.notifier).refresh(),
+                        ),
+                        const SizedBox(height: 24),
 
-                    // ── Vitals section ──────────────────────────────────────
-                    _SectionLabel(l10n.analyticsOverview),
-                    const SizedBox(height: 12),
-                    _VitalsGrid(state: state),
-                    const SizedBox(height: 24),
+                        // ── Vitals section ──────────────────────────────────
+                        _SectionLabel(l10n.analyticsOverview),
+                        const SizedBox(height: 12),
+                        _VitalsGrid(state: state, isWide: isWide),
+                        const SizedBox(height: 24),
 
-                    // ── Occupancy Trend ─────────────────────────────────────
-                    _SectionLabel(l10n.analyticsOccupancyTrend),
-                    const SizedBox(height: 12),
-                    _OccupancyTrendCard(state: state),
-                    const SizedBox(height: 24),
+                        if (isWide) ...[
+                          // Wide layout for trends
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _SectionLabel(l10n.analyticsOccupancyTrend),
+                                    const SizedBox(height: 12),
+                                    _OccupancyTrendCard(state: state),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _SectionLabel(l10n.analyticsRevenueTrend),
+                                    const SizedBox(height: 12),
+                                    _RevenueTrendCard(state: state),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _SectionLabel(
+                                      l10n.analyticsOperationalImpact,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _OperationalImpactRow(state: state),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _SectionLabel(l10n.analyticsAiHealth),
+                                    const SizedBox(height: 12),
+                                    _AiHealthCard(state: state),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ] else ...[
+                          // Narrow layout (original)
+                          _SectionLabel(l10n.analyticsOccupancyTrend),
+                          const SizedBox(height: 12),
+                          _OccupancyTrendCard(state: state),
+                          const SizedBox(height: 24),
 
-                    // ── Revenue Trend ───────────────────────────────────────
-                    _SectionLabel(l10n.analyticsRevenueTrend),
-                    const SizedBox(height: 12),
-                    _RevenueTrendCard(state: state),
-                    const SizedBox(height: 24),
+                          _SectionLabel(l10n.analyticsRevenueTrend),
+                          const SizedBox(height: 12),
+                          _RevenueTrendCard(state: state),
+                          const SizedBox(height: 24),
 
-                    // ── Operational Impact Row ──────────────────────────────
-                    _SectionLabel(l10n.analyticsOperationalImpact),
-                    const SizedBox(height: 12),
-                    _OperationalImpactRow(state: state),
-                    const SizedBox(height: 24),
+                          _SectionLabel(l10n.analyticsOperationalImpact),
+                          const SizedBox(height: 12),
+                          _OperationalImpactRow(state: state),
+                          const SizedBox(height: 24),
 
-                    // ── AI Health ───────────────────────────────────────────
-                    _SectionLabel(context.l10n.analyticsAiHealth),
-                    const SizedBox(height: 12),
-                    _AiHealthCard(state: state),
-                    const SizedBox(height: 32),
-                  ],
+                          _SectionLabel(context.l10n.analyticsAiHealth),
+                          const SizedBox(height: 12),
+                          _AiHealthCard(state: state),
+                        ],
+                        const SizedBox(height: 32),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
@@ -152,8 +215,9 @@ class _SectionLabel extends StatelessWidget {
 
 class _VitalsGrid extends StatelessWidget {
   final AnalyticsState state;
+  final bool isWide;
 
-  const _VitalsGrid({required this.state});
+  const _VitalsGrid({required this.state, this.isWide = false});
 
   @override
   Widget build(BuildContext context) {
@@ -168,12 +232,12 @@ class _VitalsGrid extends StatelessWidget {
     final streamPct = ov != null ? (ov.streamHealthPct * 100).round() : null;
 
     return GridView.count(
-      crossAxisCount: 2,
+      crossAxisCount: isWide ? 4 : 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
-      childAspectRatio: 1.4,
+      childAspectRatio: isWide ? 1.8 : 1.4,
       children: [
         _KpiCard(
           icon: Icons.local_parking_rounded,
