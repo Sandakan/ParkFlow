@@ -78,6 +78,8 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 app.add_middleware(
     CORSMiddleware,
+    # TODO: Remove this in production when webrtc_test.html testing is not needed
+    allow_origins=["null"],
     allow_origin_regex=r"http://localhost:?\d*|http://127.0.0.1:?\d*",
     allow_credentials=True,
     allow_methods=["*"],

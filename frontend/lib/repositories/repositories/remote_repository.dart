@@ -15,8 +15,10 @@ import 'package:parkflow/repositories/interfaces/secure_storage_repository_inter
 import 'package:parkflow/core/network/entities/get_parking_lot_response_entity.dart';
 import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
-import 'package:parkflow/core/network/entities/get_cameras_response_entity.dart';
 import 'package:parkflow/repositories/entities/parking/create_camera_request.dart';
+import 'package:parkflow/core/network/entities/get_cameras_response_entity.dart';
+import 'package:parkflow/repositories/entities/camera/create_webrtc_offer_request.dart';
+import 'package:parkflow/core/network/entities/get_webrtc_offer_response_entity.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -355,5 +357,33 @@ class RemoteRepository implements RemoteRepositoryInterface {
     );
 
     validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<GetWebrtcOfferResponseEntity> sendWebrtcOffer(
+    String cameraId,
+    CreateWebrtcOfferRequest request,
+  ) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'cameras/$cameraId/webrtc/offer',
+      data: request.toJson(),
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      final data = GetWebrtcOfferResponseEntity.fromJson(
+        validatedResponse.data,
+      );
+      return data;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
   }
 }

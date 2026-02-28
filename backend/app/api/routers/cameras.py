@@ -4,6 +4,7 @@ from app.api.deps import get_current_user, get_current_admin
 from app.schemas.response import APIResponse, ResponseCode
 from app.schemas.parking import CreateCameraRequest
 from app.core.database import db
+from pydantic import BaseModel
 
 router = APIRouter()
 
@@ -153,3 +154,102 @@ async def delete_camera(
         message="Camera deleted successfully",
         code=ResponseCode.SUCCESS,
     )
+
+class WebRTCOffer(BaseModel):
+    sdp: str
+    type: str
+
+@router.post(
+    "/{camera_id}/webrtc/offer",
+    response_model=APIResponse[dict],
+    description="Exchange WebRTC offer for an answer to stream camera via WebRTC.",
+)
+async def webrtc_offer(
+    camera_id: str,
+    offer: WebRTCOffer,
+    current_user: Any = Depends(get_current_user),
+) -> Any:
+    """
+    Process WebRTC offer, connect to MediaMTX WHEP API natively, and return WebRTC answer.
+    """
+    from bson import ObjectId
+    import httpx
+    from urllib.parse import urlparse
+    import os
+
+    camera = await db.client["parkflow"].cameras.find_one({"_id": ObjectId(camera_id), "deleted_at": None})
+    if not camera:
+        return APIResponse.error_response(
+            message="Camera not found",
+            code=ResponseCode.NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND
+        )
+
+    rtsp_url = camera.get("rtsp_url")
+    if not isinstance(rtsp_url, str) or not rtsp_url:
+        return APIResponse.error_response(
+            message="Camera RTSP URL not configured",
+            code=ResponseCode.ERROR,
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+
+    parsed = urlparse(rtsp_url)
+    hostname = parsed.hostname
+    
+    # If standard hostname is localhost/127.0.0.1, we must route internally to the host adapter from Docker
+    if os.path.exists('/.dockerenv') and hostname in ['localhost', '127.0.0.1']:
+        hostname = 'host.docker.internal'
+    
+    # Send WHEP application/sdp POST to MediaMTX
+    # Note: Using a fixed mediamtx host because MediaMTX controls the streams
+    mediamtx_host = 'host.docker.internal' if os.path.exists('/.dockerenv') else 'localhost'
+    
+    # 1. Dynamically tell MediaMTX to proxy this RTSP stream (if it hasn't already)
+    # Using sourceOnDemand=True means MediaMTX will only connect to the IP Camera when someone watches
+    api_url = f"http://{mediamtx_host}:9997/v3/config/paths/add/{camera_id}"
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            # We ignore 400 Bad Request because it usually means "path already exists" which is fine!
+            await client.post(
+                api_url,
+                json={
+                    "source": rtsp_url,
+                    "sourceOnDemand": True
+                },
+                timeout=5.0
+            )
+            
+            # 2. Now that MediaMTX knows about the path, request a WebRTC WHEP session for it
+            whep_url = f"http://{mediamtx_host}:8889/{camera_id}/whep"
+            
+            resp = await client.post(
+                whep_url,
+                headers={"Content-Type": "application/sdp"},
+                content=offer.sdp,
+                timeout=10.0
+            )
+
+        if resp.status_code not in (200, 201):
+            return APIResponse.error_response(
+                message=f"RTSP Server WebRTC failed with {resp.status_code}: {resp.text}",
+                code=ResponseCode.ERROR,
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+        answer_sdp = resp.text
+        return APIResponse.success_response(
+            message="WebRTC Answer created",
+            code=ResponseCode.SUCCESS,
+            data={
+                "sdp": answer_sdp,
+                "type": "answer"
+            }
+        )
+
+    except Exception as e:
+        return APIResponse.error_response(
+            message=f"Failed to communicate with RTSP WebRTC endpoint: {str(e)}",
+            code=ResponseCode.INTERNAL_SERVER_ERROR,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )

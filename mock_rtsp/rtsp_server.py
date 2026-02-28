@@ -50,7 +50,7 @@ def stream_file(file_path, stream_name):
     if not is_image:
         cmd += ["-c:a", "aac"]
         
-    cmd += ["-f", "rtsp", rtsp_url, "-v", "error"]
+    cmd += ["-f", "rtsp", "-rtsp_transport", "tcp", rtsp_url, "-v", "error"]
 
     while True:
         process = subprocess.Popen(cmd)
@@ -66,7 +66,25 @@ def main():
     print(f"MediaMTX configurations loaded from {MEDIAMTX_CONFIG}")
     print("=================================================")
 
-    # 1. Start MediaMTX
+    # 1. Update MediaMTX config dynamically to enable WHEP & Control API
+    try:
+        with open(MEDIAMTX_CONFIG, "a") as f:
+            f.write("\napi: yes\n")
+            f.write("apiAddress: :9997\n")
+            f.write("webrtcICEHostNAT1To1IPs: [10.0.2.2, 127.0.0.1, 192.168.110.183]\n")
+            f.write("authMethod: internal\n")
+            f.write("authInternalUsers:\n")
+            f.write("- user: any\n")
+            f.write("  permissions:\n")
+            f.write("  - action: publish\n")
+            f.write("  - action: read\n")
+            f.write("  - action: playback\n")
+            f.write("  - action: api\n")
+        print("Successfully injected WebRTC & API configs into mediamtx.yml")
+    except Exception as e:
+        print(f"Warning: Failed to update mediamtx.yml: {e}")
+
+    # 1.5. Start MediaMTX
     try:
         mediamtx = subprocess.Popen([MEDIAMTX_PATH, MEDIAMTX_CONFIG])
         processes.append(mediamtx)
@@ -114,7 +132,7 @@ def main():
             "ffmpeg", "-re", "-f", "lavfi", "-i", "testsrc=size=1280x720:rate=30",
             "-f", "lavfi", "-i", "sine=frequency=1000:sample_rate=48000",
             "-c:v", "libx264", "-preset", "ultrafast", "-tune", "zerolatency",
-            "-c:a", "aac", "-f", "rtsp", f"rtsp://localhost:{RTSP_PORT}/test_pattern"
+            "-c:a", "aac", "-f", "rtsp", "-rtsp_transport", "tcp", f"rtsp://localhost:{RTSP_PORT}/test_pattern"
         ]
         test_pattern_proc = subprocess.Popen(test_pattern_cmd)
         processes.append(test_pattern_proc)

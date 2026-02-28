@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
+import 'package:parkflow/presentation/widgets/camera/camera_webrtc_player.dart';
 
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/presentation/notifiers/cameras/camera_info_notifier.dart';
@@ -18,26 +17,13 @@ class AdminCameraInfoScreen extends ConsumerStatefulWidget {
 }
 
 class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
-  late final Player player;
-  late final VideoController controller;
-
   @override
   void initState() {
     super.initState();
-    player = Player();
-    controller = VideoController(player);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final cameraInfo = ref.read(cameraInfoProvider(widget.cameraId));
-      if (cameraInfo.camera != null && cameraInfo.camera!.rtspUrl.isNotEmpty) {
-        player.open(Media(cameraInfo.camera!.rtspUrl));
-      }
-    });
   }
 
   @override
   void dispose() {
-    player.dispose();
     super.dispose();
   }
 
@@ -45,15 +31,6 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(cameraInfoProvider(widget.cameraId));
     final notifier = ref.read(cameraInfoProvider(widget.cameraId).notifier);
-
-    // Watch for camera url changes if state updates
-    ref.listen(cameraInfoProvider(widget.cameraId), (previous, next) {
-      if (previous?.camera?.rtspUrl != next.camera?.rtspUrl &&
-          next.camera?.rtspUrl != null &&
-          next.camera!.rtspUrl.isNotEmpty) {
-        player.open(Media(next.camera!.rtspUrl));
-      }
-    });
 
     final screenWidth = MediaQuery.of(context).size.width;
     final isWide = screenWidth > 800;
@@ -63,13 +40,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
       body: Stack(
         children: [
           // 1. Background Video Layer
-          Positioned.fill(
-            child: Video(
-              controller: controller,
-              controls: NoVideoControls,
-              fit: BoxFit.contain,
-            ),
-          ),
+          Positioned.fill(child: CameraWebrtcPlayer(cameraId: widget.cameraId)),
 
           // 2. Interaction Layer
           Positioned.fill(

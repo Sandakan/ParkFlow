@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>WebRTC RTSP Test</title>
+	</head>
+	<body>
+		<h2>Backend WebRTC Video Test</h2>
+		<video
+			id="video"
+			autoplay
+			playsinline
+			controls
+			style="max-width: 600px; border: 1px solid black; background: #eee"></video>
+		<br />
+		<input type="text" id="cameraId" placeholder="Camera ID" style="width: 300px" value="69a29eeb3c5942f6bf30e23d" />
+		<br /><br />
+		<input type="text" id="token" placeholder="Bearer Token" style="width: 500px" />
+		<br /><br />
+		<button id="startBtn">Start WebRTC Stream</button>
+		<br /><br />
+		<div id="status" style="font-family: monospace">Idle</div>
+
+		<script>
+			const video = document.getElementById('video');
+			const startBtn = document.getElementById('startBtn');
+			const statusDiv = document.getElementById('status');
+			const cameraIdInput = document.getElementById('cameraId');
+			const tokenInput = document.getElementById('token');
+
+			let pc = null;
+
+			startBtn.onclick = async () => {
+				if (pc) {
+					pc.close();
+					pc = null;
+				}
+
+				const cameraId = cameraIdInput.value.trim();
+				const token = tokenInput.value.trim();
+
+				if (!cameraId || !token) {
+					alert('Provide camera ID and Token from Flutter logs');
+					return;
+				}
+
+				statusDiv.innerText = 'Connecting...';
+
+				pc = new RTCPeerConnection({
+					iceServers: [
+						{ urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+						{ urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+						{
+							urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+							username: 'openrelayproject',
+							credential: 'openrelayproject',
+						},
+					],
+				});
+
+				pc.oniceconnectionstatechange = () => {
+					statusDiv.innerText = `ICE State: ${pc.iceConnectionState}`;
+				};
+
+				pc.onconnectionstatechange = () => {
+					statusDiv.innerText += ` | Connection: ${pc.connectionState}`;
+				};
+
+				pc.ontrack = (event) => {
+					statusDiv.innerText += ' | Track Received!';
+					if (video.srcObject !== event.streams[0]) {
+						video.srcObject = event.streams[0];
+					}
+				};
+
+				pc.addTransceiver('video', { direction: 'recvonly' });
+
+				const offer = await pc.createOffer();
+				await pc.setLocalDescription(offer);
+
+				// Wait for ICE gathering
+				await new Promise((resolve) => {
+					if (pc.iceGatheringState === 'complete') {
+						resolve();
+					} else {
+						const checkState = () => {
+							if (pc.iceGatheringState === 'complete') {
+								pc.removeEventListener('icegatheringstatechange', checkState);
+								resolve();
+							}
+						};
+						pc.addEventListener('icegatheringstatechange', checkState);
+
+						setTimeout(() => {
+							pc.removeEventListener('icegatheringstatechange', checkState);
+							resolve();
+						}, 5000);
+					}
+				});
+
+				const finalOffer = pc.localDescription;
+				statusDiv.innerText = 'Sending Offer to Backend...';
+
+				try {
+					const response = await fetch(`http://localhost:8000/api/v1/cameras/${cameraId}/webrtc/offer`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({
+							sdp: finalOffer.sdp,
+							type: finalOffer.type,
+						}),
+					});
+
+					if (!response.ok) {
+						const err = await response.text();
+						statusDiv.innerText = `HTTP Error: ${response.status} - ${err}`;
+						return;
+					}
+
+					const data = await response.json();
+					statusDiv.innerText = 'Received Answer, Setting Remote Description...';
+
+					await pc.setRemoteDescription(
+						new RTCSessionDescription({
+							sdp: data.data.sdp,
+							type: data.data.type,
+						}),
+					);
+				} catch (e) {
+					statusDiv.innerText += ` | Fetch Error: ${e.message}`;
+				}
+			};
+		</script>
+	</body>
+</html>

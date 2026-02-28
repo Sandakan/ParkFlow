@@ -7,11 +7,15 @@ services:
       - "1935:1935" # RTMP
       - "8888:8888" # HLS
       - "8889:8889" # WebRTC
+      - "8189:8189/udp" # WebRTC UDP ICE
+      - "9997:9997" # MediaMTX HTTP API
     volumes:
       - ./assets:/assets
       - ./stream_config.json:/stream_config.json
     environment:
       - PYTHONUNBUFFERED=1
+      - MTX_API=yes
+      - MTX_APIAUTH=no
     restart: unless-stopped
     develop:
       watch:
