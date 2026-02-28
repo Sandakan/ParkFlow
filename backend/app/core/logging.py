@@ -1,5 +1,18 @@
 import sys
+import logging
 from loguru import logger
+
+# Third-party loggers that emit too many DEBUG/INFO messages to be useful.
+# Raise these to WARNING to keep the log output clean.
+_NOISY_LOGGERS = [
+    "pymongo",
+    "motor",
+    "urllib3",
+    "httpcore",
+    "httpx",
+    "asyncio",
+    "watchfiles",
+]
 
 
 def setup_logging() -> None:
@@ -9,8 +22,6 @@ def setup_logging() -> None:
     Intercepts stdlib `logging` so third-party libraries (uvicorn, motor, etc.)
     route through loguru automatically.
     """
-    import logging
-
     logger.remove()  # Remove default handler
 
     logger.add(
@@ -23,8 +34,8 @@ def setup_logging() -> None:
             "<level>{message}</level>"
         ),
         colorize=True,
-        backtrace=True,   
-        diagnose=True,    
+        backtrace=True,
+        diagnose=True,
     )
 
     # Intercept stdlib logging (used by uvicorn, motor, httpx, etc.)
@@ -45,6 +56,10 @@ def setup_logging() -> None:
             )
 
     logging.basicConfig(handlers=[InterceptHandler()], level=0, force=True)
+
+    # Suppress chatty third-party loggers — raise them to WARNING
+    for name in _NOISY_LOGGERS:
+        logging.getLogger(name).setLevel(logging.WARNING)
 
 
 __all__ = ["logger", "setup_logging"]
