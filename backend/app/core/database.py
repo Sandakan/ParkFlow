@@ -33,7 +33,6 @@ def get_database():
 
 
 async def update_camera_status(camera_id: str, is_alive: bool):
-    """Update camera's alive status and last seen timestamp in DB."""
     from bson import ObjectId
     from datetime import datetime, timezone
 
@@ -49,3 +48,12 @@ async def update_camera_status(camera_id: str, is_alive: bool):
         )
     except Exception as e:
         print(f"Failed to update camera status for {camera_id}: {e}")
+
+
+async def get_inference_settings():
+    from app.models.settings import InferenceSettingsInDB
+
+    settings_doc = await db.client["parkflow"].settings.find_one({"_id": "inference"})
+    if not settings_doc:
+        return InferenceSettingsInDB()
+    return InferenceSettingsInDB(**settings_doc)

@@ -8,13 +8,22 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 # Configure logging first so all subsequent imports route through loguru
 from app.core.logging import logger, setup_logging
+
 setup_logging()
 
 from app.core.config import settings
 from app.core.database import connect_to_mongo, close_mongo_connection, db
 from app.core.redis import connect_to_redis, close_redis_connection, redis_cache
 from app.core.exceptions import AppException
-from app.api.routers import auth, users, inference, parking, cameras, analytics
+from app.api.routers import (
+    auth,
+    users,
+    inference,
+    parking,
+    cameras,
+    analytics,
+    settings as settings_router,
+)
 
 from app.schemas.response import APIResponse, ResponseCode
 
@@ -100,6 +109,7 @@ app.include_router(inference.router, prefix="/api/v1/inference", tags=["AI Infer
 app.include_router(parking.router, prefix="/api/v1/parking", tags=["Parking"])
 app.include_router(cameras.router, prefix="/api/v1/cameras", tags=["Cameras"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytics"])
+app.include_router(settings_router.router, prefix="/api/v1/settings", tags=["Settings"])
 
 
 @app.get("/favicon.ico", include_in_schema=False)

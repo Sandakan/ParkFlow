@@ -15,6 +15,8 @@ import 'package:parkflow/repositories/entities/parking/create_parking_slot_reque
 import 'package:parkflow/core/network/entities/get_analytics_overview_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_occupancy_trend_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dart';
+import 'package:parkflow/repositories/entities/settings/get_inference_settings_response_entity.dart';
+import 'package:parkflow/repositories/entities/settings/update_inference_settings_request.dart';
 
 abstract class RemoteRepositoryInterface {
   Future<LoginResponseEntity> login(LoginRequestEntity request);
@@ -43,4 +45,7 @@ abstract class RemoteRepositoryInterface {
   Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(String period);
   Future<GetAiHealthResponseEntity> getAiHealth();
   Future<bool> checkCameraHealth(String cameraId);
+
+  Future<GetInferenceSettingsResponseEntity> getInferenceSettings();
+  Future<void> updateInferenceSettings(UpdateInferenceSettingsRequest request);
 }

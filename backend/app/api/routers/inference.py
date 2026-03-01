@@ -13,7 +13,7 @@ from app.ai.detector import run_frame
 from app.ai.inference import process_parking_image
 from app.ai.stream_manager import ParkingStreamManager
 from app.api.deps import get_current_user
-from app.core.database import db, update_camera_status
+from app.core.database import db, update_camera_status, get_inference_settings
 from app.core.logging import logger
 from app.core.utils import get_internal_rtsp_url
 from app.models.parking_lot import ParkingLotInDB
@@ -36,6 +36,7 @@ async def process_image(
         raise HTTPException(status_code=400, detail="File must be an image")
 
     image_bytes = await file.read()
+    settings_obj = await get_inference_settings()
 
     cursor = db.client["parkflow"].parking_slots.find(
         {"lot_id": lot_id, "deleted_at": None}
@@ -49,7 +50,9 @@ async def process_image(
             status_code=404,
         )
 
-    occupancy_data, annotated_image = process_parking_image(image_bytes, slots)
+    occupancy_data, annotated_image = process_parking_image(
+        image_bytes, slots, inference_settings=settings_obj
+    )
 
     if "error" in occupancy_data:
         return APIResponse.error_response(
@@ -103,8 +106,11 @@ async def stream_processed(lot_id: str):
         )
 
     rtsp_url = get_internal_rtsp_url(camera["rtsp_url"])
+    settings_obj = await get_inference_settings()
     return StreamingResponse(
-        ParkingStreamManager.stream_processed_video(rtsp_url, slots),
+        ParkingStreamManager.stream_processed_video(
+            rtsp_url, slots, inference_settings=settings_obj
+        ),
         media_type="multipart/x-mixed-replace; boundary=frame",
     )
 
@@ -160,6 +166,7 @@ async def _detection_stream(
         return
 
     rtsp_url = get_internal_rtsp_url(rtsp_url)
+    settings_obj = await get_inference_settings()
     logger.info(
         "Starting AI detection stream for camera_id={} ({} mappings) from {}",
         camera_id,
@@ -178,6 +185,14 @@ async def _detection_stream(
 
     await update_camera_status(camera_id, True)
 
+    frame_count = 0
+    frame_skip = settings_obj.frame_skip
+    stability_buffer = settings_obj.stability_buffer
+
+    # Track consecutive hits for each mapping to implement stability buffer
+    # mapping_id -> {"last_state": bool, "consecutive_count": int}
+    stability_trackers: Dict[str, Dict[str, Any]] = {}
+
     try:
         while True:
             if await request.is_disconnected():
@@ -192,13 +207,87 @@ async def _detection_stream(
                 cap = cv2.VideoCapture(rtsp_url)
                 continue
 
+            frame_count += 1
+            if frame_skip > 1 and frame_count % frame_skip != 0:
+                continue
+
             frame_result = await asyncio.get_event_loop().run_in_executor(
-                None, run_frame, frame, mappings
+                None,
+                run_frame,
+                frame,
+                mappings,
+                settings_obj.confidence_threshold,
+                settings_obj.iou_threshold,
             )
+
+            stable_slot_hits = []
+            now_ts = datetime.now(timezone.utc)
+
+            for hit in frame_result.slot_hits:
+                m_id = hit.mapping_id
+                current_raw_state = hit.is_occupied
+
+                if m_id not in stability_trackers:
+                    stability_trackers[m_id] = {"state": current_raw_state, "count": 0}
+
+                tracker = stability_trackers[m_id]
+
+                if current_raw_state == tracker["state"]:
+                    tracker["count"] = 0  # reset if we stay in same state
+                else:
+                    tracker["count"] += 1
+
+                # If we've seen the new state enough times, switch
+                if tracker["count"] >= stability_buffer:
+                    tracker["state"] = current_raw_state
+                    tracker["count"] = 0
+
+                    # PERSIST to DB when state changes
+                    from app.api.routers.parking import _update_logical_slot_status
+
+                    await db.client["parkflow"].camera_slot_mappings.update_one(
+                        {"_id": ObjectId(m_id)},
+                        {
+                            "$set": {
+                                "is_occupied": tracker["state"],
+                                "updated_at": now_ts,
+                            }
+                        },
+                    )
+                    # Trigger logical slot status update (sensor fusion)
+                    await _update_logical_slot_status(hit.slot_id)
+
+                    # Log the event
+                    await db.client["parkflow"].occupancy_logs.insert_one(
+                        {
+                            "slot_id": hit.slot_id,
+                            "mapping_id": m_id,
+                            "event_type": (
+                                "check-in" if tracker["state"] else "check-out"
+                            ),
+                            "confidence_score": next(
+                                (
+                                    d.confidence
+                                    for d in frame_result.detections
+                                    if tracker["state"]
+                                ),
+                                1.0,
+                            ),
+                            "created_at": now_ts,
+                        }
+                    )
+
+                stable_slot_hits.append(
+                    {
+                        "slot_id": hit.slot_id,
+                        "mapping_id": m_id,
+                        "is_occupied": tracker["state"],
+                    }
+                )
 
             payload = {
                 "camera_id": camera_id,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": now_ts.isoformat(),
                 "detections": [
                     {
                         "label": d.label,
@@ -210,14 +299,7 @@ async def _detection_stream(
                     }
                     for d in frame_result.detections
                 ],
-                "slot_hits": [
-                    {
-                        "slot_id": h.slot_id,
-                        "mapping_id": h.mapping_id,
-                        "is_occupied": h.is_occupied,
-                    }
-                    for h in frame_result.slot_hits
-                ],
+                "slot_hits": stable_slot_hits,
             }
 
             yield {"data": json.dumps(payload)}

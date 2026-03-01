@@ -41,7 +41,9 @@ class ParkingStreamManager:
 
     @staticmethod
     async def stream_processed_video(
-        rtsp_url: str, parking_slots: List[Dict[str, Any]]
+        rtsp_url: str,
+        parking_slots: List[Dict[str, Any]],
+        inference_settings: Optional[Any] = None,
     ) -> AsyncGenerator[bytes, None]:
         """Reads, processes with YOLO, and yields annotated frames."""
         cap = cv2.VideoCapture(rtsp_url)
@@ -49,13 +51,21 @@ class ParkingStreamManager:
             yield b"--frame\r\nContent-Type: text/plain\r\n\r\nError: stream closed\r\n"
             return
 
-        model = ai_loader.load_model_for_lot(parking_slots)
+        model = ai_loader.load_model_for_lot(
+            parking_slots, inference_settings=inference_settings
+        )
+        frame_skip = inference_settings.frame_skip if inference_settings else 1
+        frame_count = 0
 
         try:
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:
                     break
+
+                frame_count += 1
+                if frame_skip > 1 and frame_count % frame_skip != 0:
+                    continue
 
                 if model:
                     try:

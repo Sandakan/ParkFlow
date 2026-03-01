@@ -414,4 +414,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get analyticsRevenueTrend => 'Revenue Trend';
+
+  @override
+  String get settingsSubtitle => 'AI Inference & System Configuration';
+
+  @override
+  String get settingsPrecisionPanel => 'Inference Precision';
+
+  @override
+  String get settingsConfidenceThreshold => 'Confidence Threshold';
+
+  @override
+  String get settingsConfidenceThresholdDesc =>
+      'Lower values catch more objects but increase false positives.';
+
+  @override
+  String get settingsIouThreshold => 'IoU (Overlap) Threshold';
+
+  @override
+  String get settingsIouThresholdDesc =>
+      'Percentage overlap with slots required to trigger status.';
+
+  @override
+  String get settingsFrameSkip => 'Frame Skipping';
+
+  @override
+  String get settingsFrameSkipDesc =>
+      'Reduce processing load by processing every Nth frame.';
+
+  @override
+  String get settingsFrameSkipEveryFrame =>
+      'Process every frame (Max accuracy)';
+
+  @override
+  String get settingsFrameSkipEvery2nd => 'Every 2nd frame (Balanced)';
+
+  @override
+  String get settingsFrameSkipEvery3rd => 'Every 3rd frame (Efficiency)';
+
+  @override
+  String get settingsStabilityBuffer => 'Stability Buffer';
+
+  @override
+  String get settingsStabilityBufferDesc =>
+      'Consecutive frames required for a status change.';
+
+  @override
+  String get settingsSaveButton => 'Save Settings';
+
+  @override
+  String get settingsSaveSuccess => 'Settings updated successfully';
+
+  @override
+  String get settingsSaveError => 'Failed to update settings';
+
+  @override
+  String get settingsSaving => 'Saving...';
 }

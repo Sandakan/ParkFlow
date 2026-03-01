@@ -23,6 +23,8 @@ import 'package:parkflow/repositories/entities/parking/create_parking_slot_reque
 import 'package:parkflow/core/network/entities/get_analytics_overview_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_occupancy_trend_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dart';
+import 'package:parkflow/repositories/entities/settings/get_inference_settings_response_entity.dart';
+import 'package:parkflow/repositories/entities/settings/update_inference_settings_request.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -512,5 +514,42 @@ class RemoteRepository implements RemoteRepositoryInterface {
     } catch (e) {
       return false;
     }
+  }
+
+  @override
+  Future<GetInferenceSettingsResponseEntity> getInferenceSettings() async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'settings/inference',
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetInferenceSettingsResponseEntity.fromJson(
+        validatedResponse.data,
+      );
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<void> updateInferenceSettings(
+    UpdateInferenceSettingsRequest request,
+  ) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.put,
+      'settings/inference',
+      data: request.toJson(),
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
   }
 }

@@ -44,26 +44,18 @@ def _get_model() -> YOLO:
     return _model
 
 
-def run_frame(frame: np.ndarray, mappings: List[Dict[str, Any]]) -> FrameResult:
-    """
-    Runs YOLO inference on `frame` and checks which camera slot mappings
-    are overlapped by a detected vehicle.
-
-    Args:
-        frame: BGR numpy array from cv2.
-        mappings: List of camera_slot_mapping documents from MongoDB.
-                  Each mapping must have 'coordinates' (list of {x, y} dicts,
-                  normalized 0–1) and '_id' / 'slot_id' fields.
-
-    Returns:
-        FrameResult with detections and slot_hits.
-    """
+def run_frame(
+    frame: np.ndarray,
+    mappings: List[Dict[str, Any]],
+    conf: float = 0.25,
+    iou: float = 0.45,
+) -> FrameResult:
     model = _get_model()
 
     result = FrameResult()
 
     try:
-        predictions = model.predict(frame, conf=settings.YOLO_CONFIDENCE, verbose=False)
+        predictions = model.predict(frame, conf=conf, iou=iou, verbose=False)
     except Exception:
         logger.exception("YOLO prediction failed")
         return result

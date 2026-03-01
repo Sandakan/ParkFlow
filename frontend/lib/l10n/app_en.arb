@@ -531,5 +531,70 @@
 	"analyticsRevenueTrend": "Revenue Trend",
 	"@analyticsRevenueTrend": {
 		"description": "Label for the chart section showing revenue earnings over time"
-	}
+	},
+	"settingsSubtitle": "AI Inference & System Configuration",
+	"@settingsSubtitle": {
+		"description": "Subtitle for the settings screen"
+	},
+	"settingsPrecisionPanel": "Inference Precision",
+	"@settingsPrecisionPanel": {
+		"description": "Label for the AI inference configuration panel"
+	},
+	"settingsConfidenceThreshold": "Confidence Threshold",
+	"@settingsConfidenceThreshold": {
+		"description": "Slider label for detection confidence"
+	},
+	"settingsConfidenceThresholdDesc": "Lower values catch more objects but increase false positives.",
+	"@settingsConfidenceThresholdDesc": {
+		"description": "Description for confidence threshold"
+	},
+	"settingsIouThreshold": "IoU (Overlap) Threshold",
+	"@settingsIouThreshold": {
+		"description": "Slider label for IoU threshold"
+	},
+	"settingsIouThresholdDesc": "Percentage overlap with slots required to trigger status.",
+	"@settingsIouThresholdDesc": {
+		"description": "Description for IoU threshold"
+	},
+	"settingsFrameSkip": "Frame Skipping",
+	"@settingsFrameSkip": {
+		"description": "Dropdown label for frame skipping"
+	},
+	"settingsFrameSkipDesc": "Reduce processing load by processing every Nth frame.",
+	"@settingsFrameSkipDesc": {
+		"description": "Description for frame skipping"
+	},
+	"settingsFrameSkipEveryFrame": "Process every frame (Max accuracy)",
+	"@settingsFrameSkipEveryFrame": {
+		"description": "Dropdown option for no frame skipping"
+	},
+	"settingsFrameSkipEvery2nd": "Every 2nd frame (Balanced)",
+	"@settingsFrameSkipEvery2nd": {
+		"description": "Dropdown option for 1 frame skipping"
+	},
+	"settingsFrameSkipEvery3rd": "Every 3rd frame (Efficiency)",
+	"@settingsFrameSkipEvery3rd": {
+		"description": "Dropdown option for 2 frame skipping"
+	},
+	"settingsStabilityBuffer": "Stability Buffer",
+	"@settingsStabilityBuffer": {
+		"description": "Number field label for stability buffer"
+	},
+	"settingsStabilityBufferDesc": "Consecutive frames required for a status change.",
+	"@settingsStabilityBufferDesc": {
+		"description": "Description for stability buffer"
+	},
+	"settingsSaveButton": "Save Settings",
+	"@settingsSaveButton": {
+		"description": "Button text to save settings"
+	},
+	"settingsSaveSuccess": "Settings updated successfully",
+	"@settingsSaveSuccess": {
+		"description": "Success snackbar message"
+	},
+	"settingsSaveError": "Failed to update settings",
+	"@settingsSaveError": {
+		"description": "Error snackbar message"
+	},
+	"settingsSaving": "Saving..."
 }

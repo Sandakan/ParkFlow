@@ -897,6 +897,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Revenue Trend'**
   String get analyticsRevenueTrend;
+
+  /// Subtitle for the settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'AI Inference & System Configuration'**
+  String get settingsSubtitle;
+
+  /// Label for the AI inference configuration panel
+  ///
+  /// In en, this message translates to:
+  /// **'Inference Precision'**
+  String get settingsPrecisionPanel;
+
+  /// Slider label for detection confidence
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence Threshold'**
+  String get settingsConfidenceThreshold;
+
+  /// Description for confidence threshold
+  ///
+  /// In en, this message translates to:
+  /// **'Lower values catch more objects but increase false positives.'**
+  String get settingsConfidenceThresholdDesc;
+
+  /// Slider label for IoU threshold
+  ///
+  /// In en, this message translates to:
+  /// **'IoU (Overlap) Threshold'**
+  String get settingsIouThreshold;
+
+  /// Description for IoU threshold
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage overlap with slots required to trigger status.'**
+  String get settingsIouThresholdDesc;
+
+  /// Dropdown label for frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Frame Skipping'**
+  String get settingsFrameSkip;
+
+  /// Description for frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce processing load by processing every Nth frame.'**
+  String get settingsFrameSkipDesc;
+
+  /// Dropdown option for no frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Process every frame (Max accuracy)'**
+  String get settingsFrameSkipEveryFrame;
+
+  /// Dropdown option for 1 frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Every 2nd frame (Balanced)'**
+  String get settingsFrameSkipEvery2nd;
+
+  /// Dropdown option for 2 frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Every 3rd frame (Efficiency)'**
+  String get settingsFrameSkipEvery3rd;
+
+  /// Number field label for stability buffer
+  ///
+  /// In en, this message translates to:
+  /// **'Stability Buffer'**
+  String get settingsStabilityBuffer;
+
+  /// Description for stability buffer
+  ///
+  /// In en, this message translates to:
+  /// **'Consecutive frames required for a status change.'**
+  String get settingsStabilityBufferDesc;
+
+  /// Button text to save settings
+  ///
+  /// In en, this message translates to:
+  /// **'Save Settings'**
+  String get settingsSaveButton;
+
+  /// Success snackbar message
+  ///
+  /// In en, this message translates to:
+  /// **'Settings updated successfully'**
+  String get settingsSaveSuccess;
+
+  /// Error snackbar message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update settings'**
+  String get settingsSaveError;
+
+  /// No description provided for @settingsSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving...'**
+  String get settingsSaving;
 }
 
 class _AppLocalizationsDelegate

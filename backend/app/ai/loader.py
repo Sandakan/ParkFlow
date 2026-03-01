@@ -28,18 +28,27 @@ class ParkingAILoader:
         return tmp_filename
 
     def load_model_for_lot(
-        self, parking_slots: List[Dict[str, Any]]
+        self,
+        parking_slots: List[Dict[str, Any]],
+        inference_settings: Optional[Any] = None,
     ) -> Optional[ParkingManagement]:
         if not parking_slots:
             return None
 
         json_file_path = self._generate_bounding_box_json(parking_slots)
 
+        # Build config
+        conf = (
+            inference_settings.confidence_threshold
+            if inference_settings
+            else settings.YOLO_CONFIDENCE
+        )
+
         try:
             model = ParkingManagement(
                 model=settings.YOLO_MODEL_PATH,
                 json_file=json_file_path,
-                conf=settings.YOLO_CONFIDENCE,
+                conf=conf,
             )
             return model
         finally:

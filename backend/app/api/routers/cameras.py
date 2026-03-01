@@ -6,10 +6,10 @@ from app.schemas.parking import CreateCameraRequest
 from app.core.database import db, update_camera_status
 from app.core.utils import get_internal_rtsp_url
 from pydantic import BaseModel
+from app.core.logging import logger
 import cv2
 import asyncio
 
-router = APIRouter()
 
 router = APIRouter()
 
@@ -329,6 +329,7 @@ async def webrtc_offer(
 
         error_details = traceback.format_exc()
         print(f"WebRTC Error: {error_details}")
+        logger.exception("WebRTC Error: %s", e)
         return APIResponse.error_response(
             message=f"Failed to communicate with RTSP WebRTC endpoint: {repr(e)}",
             code=ResponseCode.INTERNAL_SERVER_ERROR,
