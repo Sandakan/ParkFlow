@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$LoginRequestEntity {
 
-@JsonKey(name: "username") String get username;@JsonKey(name: "password") String get password;
+@JsonKey(name: "email") String get email;@JsonKey(name: "password") String get password;
 /// Create a copy of LoginRequestEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $LoginRequestEntityCopyWith<LoginRequestEntity> get copyWith => _$LoginRequestEn
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginRequestEntity&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoginRequestEntity&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,username,password);
+int get hashCode => Object.hash(runtimeType,email,password);
 
 @override
 String toString() {
-  return 'LoginRequestEntity(username: $username, password: $password)';
+  return 'LoginRequestEntity(email: $email, password: $password)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $LoginRequestEntityCopyWith<$Res>  {
   factory $LoginRequestEntityCopyWith(LoginRequestEntity value, $Res Function(LoginRequestEntity) _then) = _$LoginRequestEntityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "username") String username,@JsonKey(name: "password") String password
+@JsonKey(name: "email") String email,@JsonKey(name: "password") String password
 });
 
 
@@ -65,9 +65,9 @@ class _$LoginRequestEntityCopyWithImpl<$Res>
 
 /// Create a copy of LoginRequestEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? username = null,Object? password = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? password = null,}) {
   return _then(_self.copyWith(
-username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
+email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -154,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "username")  String username, @JsonKey(name: "password")  String password)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "email")  String email, @JsonKey(name: "password")  String password)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LoginRequestEntity() when $default != null:
-return $default(_that.username,_that.password);case _:
+return $default(_that.email,_that.password);case _:
   return orElse();
 
 }
@@ -175,10 +175,10 @@ return $default(_that.username,_that.password);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "username")  String username, @JsonKey(name: "password")  String password)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "email")  String email, @JsonKey(name: "password")  String password)  $default,) {final _that = this;
 switch (_that) {
 case _LoginRequestEntity():
-return $default(_that.username,_that.password);case _:
+return $default(_that.email,_that.password);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +195,10 @@ return $default(_that.username,_that.password);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "username")  String username, @JsonKey(name: "password")  String password)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "email")  String email, @JsonKey(name: "password")  String password)?  $default,) {final _that = this;
 switch (_that) {
 case _LoginRequestEntity() when $default != null:
-return $default(_that.username,_that.password);case _:
+return $default(_that.email,_that.password);case _:
   return null;
 
 }
@@ -210,10 +210,10 @@ return $default(_that.username,_that.password);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _LoginRequestEntity extends LoginRequestEntity {
-  const _LoginRequestEntity({@JsonKey(name: "username") required this.username, @JsonKey(name: "password") required this.password}): super._();
+  const _LoginRequestEntity({@JsonKey(name: "email") required this.email, @JsonKey(name: "password") required this.password}): super._();
   factory _LoginRequestEntity.fromJson(Map<String, dynamic> json) => _$LoginRequestEntityFromJson(json);
 
-@override@JsonKey(name: "username") final  String username;
+@override@JsonKey(name: "email") final  String email;
 @override@JsonKey(name: "password") final  String password;
 
 /// Create a copy of LoginRequestEntity
@@ -229,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginRequestEntity&&(identical(other.username, username) || other.username == username)&&(identical(other.password, password) || other.password == password));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LoginRequestEntity&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,username,password);
+int get hashCode => Object.hash(runtimeType,email,password);
 
 @override
 String toString() {
-  return 'LoginRequestEntity(username: $username, password: $password)';
+  return 'LoginRequestEntity(email: $email, password: $password)';
 }
 
 
@@ -249,7 +249,7 @@ abstract mixin class _$LoginRequestEntityCopyWith<$Res> implements $LoginRequest
   factory _$LoginRequestEntityCopyWith(_LoginRequestEntity value, $Res Function(_LoginRequestEntity) _then) = __$LoginRequestEntityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "username") String username,@JsonKey(name: "password") String password
+@JsonKey(name: "email") String email,@JsonKey(name: "password") String password
 });
 
 
@@ -266,9 +266,9 @@ class __$LoginRequestEntityCopyWithImpl<$Res>
 
 /// Create a copy of LoginRequestEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? username = null,Object? password = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? password = null,}) {
   return _then(_LoginRequestEntity(
-username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
+email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,password: null == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String,
   ));

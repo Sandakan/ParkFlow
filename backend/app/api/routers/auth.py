@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta, timezone
 from typing import Any
-from fastapi import APIRouter, Body, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Body, Depends, HTTPException, status, Form
 from jose import jwt, JWTError
 
 from app.core.config import settings
 from app.core.security import create_access_token, create_refresh_token
-from app.schemas.token import Token, TokenPayload
+from app.schemas.token import Token, TokenPayload, LoginRequest
 from app.schemas.response import APIResponse, ResponseCode
 from app.schemas.user import UserResponse
 from app.models.user import UserInDB
@@ -21,28 +20,35 @@ router = APIRouter()
     response_model=APIResponse[Token],
     description="Authenticate user with email and password to receive access and refresh tokens.",
 )
-async def login_access_token(form_data: OAuth2PasswordRequestForm = Depends()) -> Any:
+async def login_access_token(
+    email: str = Form(...),
+    password: str = Form(...),
+) -> Any:
     """
-    OAuth2 compatible token login, get an access token for future requests
+    Login with email and password, get an access token for future requests
     """
-    user = await user_service.authenticate(
-        email=form_data.username, password=form_data.password
-    )
+    user = await user_service.authenticate(email=email, password=password)
     if not user:
         return APIResponse.error_response(
             message="Incorrect email or password",
             code=ResponseCode.INVALID_CREDENTIALS,
             status_code=status.HTTP_400_BAD_REQUEST,
         )
-    access_token_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    refresh_token_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+    refresh_token_expires = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES
+    )
 
     token_data = Token(
         access_token=create_access_token(
-            user.user_id, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+            user.user_id,
+            expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
         ),
         refresh_token=create_refresh_token(
-            user.user_id, expires_delta=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+            user.user_id,
+            expires_delta=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES),
         ),
         token_type="bearer",
         access_token_expires_at=access_token_expires.isoformat(),
@@ -81,15 +87,21 @@ async def refresh_token(refresh_token: str = Body(..., embed=True)) -> Any:
             message="User not found", code=ResponseCode.USER_NOT_FOUND, status_code=404
         )
 
-    access_token_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    refresh_token_expires = datetime.now(timezone.utc) + timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
+    refresh_token_expires = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES
+    )
 
     new_token = Token(
         access_token=create_access_token(
-            user.user_id, expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+            user.user_id,
+            expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
         ),
         refresh_token=create_refresh_token(
-            user.user_id, expires_delta=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+            user.user_id,
+            expires_delta=timedelta(minutes=settings.REFRESH_TOKEN_EXPIRE_MINUTES),
         ),
         token_type="bearer",
         access_token_expires_at=access_token_expires.isoformat(),
@@ -117,4 +129,3 @@ async def test_token(current_user: UserInDB = Depends(get_current_user)) -> Any:
         code=ResponseCode.SUCCESS,
         data=UserResponse(**current_user.model_dump(), id=current_user.user_id),
     )
-

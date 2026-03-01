@@ -24,7 +24,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements.txt
 
 # Pre-download YOLO model to bake it into the image layer
-RUN python -c "from ultralytics import YOLO; YOLO('yolov8n.pt')"
+RUN python -c "from ultralytics import YOLO; YOLO('yolov26m.pt')"
 
 # Copy the trained parking model
 COPY ai/models/best.pt /app/ai/models/best.pt
