@@ -23,21 +23,17 @@ from app.ai.detector import run_frame
 from app.ai.inference import process_parking_image
 from app.ai.stream_manager import ParkingStreamManager
 from app.api.deps import get_current_user
-from app.core.database import db
+from app.core.database import db, update_camera_status
 from app.core.logging import logger
+from app.core.utils import get_internal_rtsp_url
 from app.models.parking_lot import ParkingLotInDB
 from app.models.parking_slot import ParkingSlotInDB
 from app.schemas.response import APIResponse, ResponseCode
 
 router = APIRouter()
 
-# SSE inference interval — ~3 FPS is enough for parking occupancy
 _INFERENCE_INTERVAL = 0.35
 
-
-# ---------------------------------------------------------------------------
-# Image inference
-# ---------------------------------------------------------------------------
 
 @router.post("/image", response_model=APIResponse[dict])
 async def process_image(
@@ -51,7 +47,9 @@ async def process_image(
 
     image_bytes = await file.read()
 
-    cursor = db.client["parkflow"].parking_slots.find({"lot_id": lot_id, "deleted_at": None})
+    cursor = db.client["parkflow"].parking_slots.find(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
     slots = await cursor.to_list(length=1000)
 
     if not slots:
@@ -70,18 +68,25 @@ async def process_image(
             status_code=500,
         )
 
-    return APIResponse.success_response(message="Image processed successfully", data=occupancy_data)
+    return APIResponse.success_response(
+        message="Image processed successfully", data=occupancy_data
+    )
 
 
 @router.get("/stream/raw/{lot_id}")
 async def stream_raw(lot_id: str):
     """Raw (unprocessed) MJPEG feed for a lot."""
-    camera = await db.client["parkflow"].cameras.find_one({"lot_id": lot_id, "deleted_at": None})
+    camera = await db.client["parkflow"].cameras.find_one(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
     if not camera or "rtsp_url" not in camera:
-        raise HTTPException(status_code=404, detail="No active camera or stream URL found for this lot")
+        raise HTTPException(
+            status_code=404, detail="No active camera or stream URL found for this lot"
+        )
 
+    rtsp_url = get_internal_rtsp_url(camera["rtsp_url"])
     return StreamingResponse(
-        ParkingStreamManager.stream_raw_video(camera["rtsp_url"]),
+        ParkingStreamManager.stream_raw_video(rtsp_url),
         media_type="multipart/x-mixed-replace; boundary=frame",
     )
 
@@ -89,22 +94,34 @@ async def stream_raw(lot_id: str):
 @router.get("/stream/processed/{lot_id}")
 async def stream_processed(lot_id: str):
     """YOLO-annotated MJPEG feed for a lot."""
-    camera = await db.client["parkflow"].cameras.find_one({"lot_id": lot_id, "deleted_at": None})
+    camera = await db.client["parkflow"].cameras.find_one(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
     if not camera or "rtsp_url" not in camera:
-        raise HTTPException(status_code=404, detail="No active camera or stream URL found for this lot")
+        raise HTTPException(
+            status_code=404, detail="No active camera or stream URL found for this lot"
+        )
 
-    cursor = db.client["parkflow"].parking_slots.find({"lot_id": lot_id, "deleted_at": None})
+    cursor = db.client["parkflow"].parking_slots.find(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
     slots = await cursor.to_list(length=1000)
 
     if not slots:
-        raise HTTPException(status_code=404, detail="No parking slots defined for this lot")
+        raise HTTPException(
+            status_code=404, detail="No parking slots defined for this lot"
+        )
 
+    rtsp_url = get_internal_rtsp_url(camera["rtsp_url"])
     return StreamingResponse(
-        ParkingStreamManager.stream_processed_video(camera["rtsp_url"], slots),
+        ParkingStreamManager.stream_processed_video(rtsp_url, slots),
         media_type="multipart/x-mixed-replace; boundary=frame",
     )
 
-async def _detection_stream(camera_id: str, request: Request) -> AsyncGenerator[dict, None]:
+
+async def _detection_stream(
+    camera_id: str, request: Request
+) -> AsyncGenerator[dict, None]:
     """
     Reads frames from the camera RTSP stream, runs YOLO inference via a thread
     executor, performs Shapely overlap checks against slot mappings, and yields
@@ -117,9 +134,13 @@ async def _detection_stream(camera_id: str, request: Request) -> AsyncGenerator[
 
     camera = None
     if oid is not None:
-        camera = await db.client["parkflow"].cameras.find_one({"_id": oid, "deleted_at": None})
+        camera = await db.client["parkflow"].cameras.find_one(
+            {"_id": oid, "deleted_at": None}
+        )
     if not camera:
-        camera = await db.client["parkflow"].cameras.find_one({"_id": camera_id, "deleted_at": None})
+        camera = await db.client["parkflow"].cameras.find_one(
+            {"_id": camera_id, "deleted_at": None}
+        )
     if not camera:
         logger.warning("SSE stream requested for unknown camera_id={}", camera_id)
         yield {"event": "error", "data": json.dumps({"error": "Camera not found"})}
@@ -127,7 +148,10 @@ async def _detection_stream(camera_id: str, request: Request) -> AsyncGenerator[
 
     rtsp_url: str = camera.get("rtsp_url", "")
     if not rtsp_url:
-        yield {"event": "error", "data": json.dumps({"error": "Camera has no RTSP URL"})}
+        yield {
+            "event": "error",
+            "data": json.dumps({"error": "Camera has no RTSP URL"}),
+        }
         return
 
     cursor = db.client["parkflow"].camera_slot_mappings.find(
@@ -137,16 +161,32 @@ async def _detection_stream(camera_id: str, request: Request) -> AsyncGenerator[
 
     if not mappings:
         logger.info("No slot mappings found for camera_id={}. Closing SSE.", camera_id)
-        yield {"event": "error", "data": json.dumps({"error": "No slot mappings configured for this camera"})}
+        yield {
+            "event": "error",
+            "data": json.dumps(
+                {"error": "No slot mappings configured for this camera"}
+            ),
+        }
         return
 
-    logger.info("Starting AI detection stream for camera_id={} ({} mappings)", camera_id, len(mappings))
+    rtsp_url = get_internal_rtsp_url(rtsp_url)
+    logger.info(
+        "Starting AI detection stream for camera_id={} ({} mappings) from {}",
+        camera_id,
+        len(mappings),
+        rtsp_url,
+    )
 
     cap = cv2.VideoCapture(rtsp_url)
     if not cap.isOpened():
         logger.error("Could not open RTSP stream: {}", rtsp_url)
-        yield {"event": "error", "data": json.dumps({"error": "Could not connect to camera stream"})}
+        yield {
+            "event": "error",
+            "data": json.dumps({"error": "Could not connect to camera stream"}),
+        }
         return
+
+    await update_camera_status(camera_id, True)
 
     try:
         while True:

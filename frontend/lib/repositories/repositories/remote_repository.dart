@@ -495,4 +495,22 @@ class RemoteRepository implements RemoteRepositoryInterface {
       );
     }
   }
+
+  @override
+  Future<bool> checkCameraHealth(String cameraId) async {
+    try {
+      final response = await httpAPI.doRequest(
+        HttpMethodEnum.get,
+        'cameras/$cameraId/health',
+        accessToken: await _getToken(),
+      );
+
+      final validatedResponse = validateResponse(response);
+
+      return (validatedResponse.data as Map<String, dynamic>)['isAlive'] ??
+          false;
+    } catch (e) {
+      return false;
+    }
+  }
 }

@@ -27,6 +27,14 @@ class CameraService {
       rethrow;
     }
   }
+
+  Future<bool> checkCameraHealth(String cameraId) async {
+    try {
+      return await _remote.checkCameraHealth(cameraId);
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 @riverpod

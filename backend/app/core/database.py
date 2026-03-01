@@ -30,3 +30,22 @@ async def close_mongo_connection():
 def get_database():
     """Dependency to yield the database client"""
     return db.client
+
+
+async def update_camera_status(camera_id: str, is_alive: bool):
+    """Update camera's alive status and last seen timestamp in DB."""
+    from bson import ObjectId
+    from datetime import datetime, timezone
+
+    try:
+        await db.client["parkflow"].cameras.update_one(
+            {"_id": ObjectId(camera_id)},
+            {
+                "$set": {
+                    "is_alive": is_alive,
+                    "last_active": datetime.now(timezone.utc) if is_alive else None,
+                }
+            },
+        )
+    except Exception as e:
+        print(f"Failed to update camera status for {camera_id}: {e}")

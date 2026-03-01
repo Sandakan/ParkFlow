@@ -42,4 +42,5 @@ abstract class RemoteRepositoryInterface {
   Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview();
   Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(String period);
   Future<GetAiHealthResponseEntity> getAiHealth();
+  Future<bool> checkCameraHealth(String cameraId);
 }

@@ -41,7 +41,7 @@ final class CamerasNotifierProvider
   }
 }
 
-String _$camerasNotifierHash() => r'bfbc35810b415d259b57b6c4dae1c277b2c02b47';
+String _$camerasNotifierHash() => r'6aa41db046cfdc49764ace3f9f0cb72360844f39';
 
 abstract class _$CamerasNotifier extends $Notifier<CamerasState> {
   CamerasState build();

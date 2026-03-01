@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     # AI Model Settings
     YOLO_MODEL_PATH: str = "/app/ai/models/best.pt"
-    YOLO_CONFIDENCE: float = 0.25
+    YOLO_CONFIDENCE: float = 0.1
 
     class Config:
         env_file = ".env"

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:parkflow/services/webrtc_service.dart';
+import 'package:parkflow/presentation/notifiers/cameras/cameras_notifier.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 
 class CameraWebrtcPlayer extends ConsumerStatefulWidget {
@@ -32,6 +33,10 @@ class _CameraWebrtcPlayerState extends ConsumerState<CameraWebrtcPlayer> {
         widget.cameraId,
         (renderer) {
           if (mounted) {
+            ref
+                .read(camerasProvider.notifier)
+                .updateCameraHealth(widget.cameraId, true);
+
             setState(() {
               _renderer = renderer;
               _isLoading = false;
@@ -41,6 +46,10 @@ class _CameraWebrtcPlayerState extends ConsumerState<CameraWebrtcPlayer> {
       );
     } catch (e) {
       if (mounted) {
+        ref
+            .read(camerasProvider.notifier)
+            .updateCameraHealth(widget.cameraId, false);
+
         setState(() {
           _errorMessage = 'Failed to load camera stream: ${e.toString()}';
           _isLoading = false;

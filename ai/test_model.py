@@ -17,33 +17,17 @@ from pathlib import Path
 import cv2
 from ultralytics import YOLO
 
-# ── Model selection ──────────────────────────────────────────────────────────
-#   True  → use your custom trained model  (ai/models/best.pt)
-#   False → use the ultralytics built-in   (yolo11n.pt, downloaded automatically)
 USE_CUSTOM_MODEL = True
 
-# ── Paths (relative to this file so you can run from anywhere) ────────────────
 BASE = Path(__file__).parent
-MODEL_PATH: Path | str = BASE / "models" / "top-view-best.pt" if USE_CUSTOM_MODEL else "yolo26s.pt"
+MODEL_PATH: Path | str = BASE / "models" / "best.pt" if USE_CUSTOM_MODEL else "yolo26s.pt"
 VIDEO_PATH = BASE.parent / "mock_rtsp" / "assets" / "vid1.mp4"
 
-# ── Config ────────────────────────────────────────────────────────────────────
-CONFIDENCE   = 0.05   # detection confidence threshold
-DISPLAY_SCALE = 1.0   # scale factor for the display window (e.g. 0.75 to shrink)
+CONFIDENCE   = 0.1   
+DISPLAY_SCALE = 1.0   
 WINDOW_NAME  = "ParkFlow — Model Test"
 
-# ── Label colours (BGR) — extend as your model's classes grow ─────────────────
-CLASS_COLORS: dict[str, tuple[int, int, int]] = {
-    "space-empty":    (0, 200, 0),      # green
-    "space-occupied": (0, 0, 220),      # red
-    "spaces":         (200, 200, 0),    # cyan-ish
-    "car":            (255, 140, 0),    # orange
-    "bus":            (0, 140, 255),    # blue
-    "truck":          (180, 0, 180),    # purple
-    "motorcycle":     (0, 220, 220),    # yellow
-    "van":            (100, 255, 100),  # light green
-}
-DEFAULT_COLOR = (200, 200, 200)  # grey for unknown classes
+DEFAULT_COLOR = (200, 200, 200)
 
 
 def draw_detections(frame, result) -> None:
@@ -65,7 +49,7 @@ def draw_detections(frame, result) -> None:
 
         label = names.get(cls_ids[i], str(cls_ids[i]))
         conf  = float(confs[i])
-        color = CLASS_COLORS.get(label, DEFAULT_COLOR)
+        color = DEFAULT_COLOR
 
         # Box
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
@@ -87,8 +71,6 @@ def draw_detections(frame, result) -> None:
 
 
 def main() -> None:
-    # ── Validate paths ────────────────────────────────────────────────────────
-    # Only check existence for local Path objects; built-in names are resolved by ultralytics
     if isinstance(MODEL_PATH, Path) and not MODEL_PATH.exists():
         sys.exit(f"[ERROR] Model not found: {MODEL_PATH}")
     if not VIDEO_PATH.exists():
@@ -125,22 +107,16 @@ def main() -> None:
 
             frame_idx += 1
 
-            # Measure wall-clock FPS (inference + render)
             now      = time.perf_counter()
             elapsed  = now - last_tick
             live_fps = 1.0 / elapsed if elapsed > 0 else 0.0
             last_tick = now
-
-            # Run inference (verbose=False silences per-frame console spam)
             predictions = model.predict(frame, conf=CONFIDENCE, verbose=False)
             result = predictions[0]
 
             draw_detections(frame, result)
-
-            # Print the raw class IDs found in the frame
             print(f"Detected classes: {result.boxes.cls.tolist()}")
 
-            # HUD overlay
             n_det = len(result.boxes) if result.boxes else 0
             info  = f"Frame {frame_idx}  |  {live_fps:.1f} FPS  |  Detections: {n_det}  |  conf>={CONFIDENCE}"
             cv2.putText(
@@ -152,7 +128,6 @@ def main() -> None:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.65, (30, 30, 30), 1, cv2.LINE_AA,
             )
 
-            # Scale output if desired
             if DISPLAY_SCALE != 1.0:
                 dh, dw = frame.shape[:2]
                 frame = cv2.resize(

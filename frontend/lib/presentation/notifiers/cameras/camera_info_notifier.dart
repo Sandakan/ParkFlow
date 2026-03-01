@@ -160,6 +160,8 @@ class CameraInfo extends _$CameraInfo {
         aiDetections: event.detections,
         aiSlotHits: hitMap,
       );
+
+      ref.read(camerasProvider.notifier).updateCameraHealth(cameraId, true);
     } catch (_) {}
   }
 
