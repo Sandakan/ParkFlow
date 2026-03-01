@@ -1,13 +1,3 @@
-"""
-AI Inference router — image processing, MJPEG streams, and SSE detection stream.
-
-Routes registered at /api/v1/inference:
-  POST /image                         — single-image occupancy check
-  GET  /stream/raw/{lot_id}           — raw MJPEG feed
-  GET  /stream/processed/{lot_id}     — YOLO-annotated MJPEG feed
-  GET  /stream/{camera_id}            — SSE real-time detection stream (AI detections + slot hits)
-"""
-
 import asyncio
 import json
 from datetime import datetime, timezone

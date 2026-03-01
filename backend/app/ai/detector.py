@@ -1,8 +1,3 @@
-"""
-CameraDetector: runs YOLO inference on a single video frame and performs
-Shapely-based overlap detection against camera slot mappings.
-"""
-
 from dataclasses import dataclass, field
 from typing import List, Dict, Any
 
@@ -89,14 +84,16 @@ def run_frame(frame: np.ndarray, mappings: List[Dict[str, Any]]) -> FrameResult:
     detected_boxes: List[DetectedBox] = []
     for i in range(len(xyxyn)):
         x1, y1, x2, y2 = xyxyn[i]
-        detected_boxes.append(DetectedBox(
-            label=names.get(cls_ids[i], str(cls_ids[i])),
-            confidence=float(confs[i]),
-            x1=float(x1),
-            y1=float(y1),
-            x2=float(x2),
-            y2=float(y2),
-        ))
+        detected_boxes.append(
+            DetectedBox(
+                label=names.get(cls_ids[i], str(cls_ids[i])),
+                confidence=float(confs[i]),
+                x1=float(x1),
+                y1=float(y1),
+                x2=float(x2),
+                y2=float(y2),
+            )
+        )
 
     result.detections = detected_boxes
 
@@ -118,28 +115,37 @@ def run_frame(frame: np.ndarray, mappings: List[Dict[str, Any]]) -> FrameResult:
         for det_box in detected_boxes:
             vehicle_shape = shapely_box(det_box.x1, det_box.y1, det_box.x2, det_box.y2)
             centroid = vehicle_shape.centroid
-            
+
             if slot_poly.contains(centroid):
                 label = det_box.label.lower()
-                
+
                 if label == "space-empty":
                     continue
-                
-                if label in ["space-occupied", "car", "bus", "truck", "motorcycle", "van"]:
+
+                if label in [
+                    "space-occupied",
+                    "car",
+                    "bus",
+                    "truck",
+                    "motorcycle",
+                    "van",
+                ]:
                     is_occupied = True
                     break
-                
+
                 if label != "spaces":
                     is_occupied = True
                     break
 
         mapping_id = str(mapping.get("_id", ""))
         slot_id = str(mapping.get("slot_id", ""))
-        result.slot_hits.append(SlotHit(
-            slot_id=slot_id,
-            mapping_id=mapping_id,
-            is_occupied=is_occupied,
-        ))
+        result.slot_hits.append(
+            SlotHit(
+                slot_id=slot_id,
+                mapping_id=mapping_id,
+                is_occupied=is_occupied,
+            )
+        )
 
     logger.debug(
         "Frame processed: {} detections, {} slot hits",

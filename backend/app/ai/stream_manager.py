@@ -26,7 +26,6 @@ class ParkingStreamManager:
                 if not ret:
                     break
 
-                # Encode frame to JPEG
                 success, buffer = cv2.imencode(".jpg", frame)
                 if not success:
                     continue
@@ -50,7 +49,6 @@ class ParkingStreamManager:
             yield b"--frame\r\nContent-Type: text/plain\r\n\r\nError: stream closed\r\n"
             return
 
-        # Initialize the model dynamically for this stream
         model = ai_loader.load_model_for_lot(parking_slots)
 
         try:
@@ -60,23 +58,20 @@ class ParkingStreamManager:
                     break
 
                 if model:
-                    # Run inference which overlays annotations onto the frame
                     try:
                         results = model(frame)
-                        # Extract the annotated frame
                         annotated_frame = getattr(results, "plot_im", frame)
                         if isinstance(results, np.ndarray):
                             annotated_frame = results
                         elif hasattr(results, "plot"):
                             annotated_frame = results.plot()
                     except Exception as e:
-                        # Fallback to raw frame if model fails internally
-                        logger.warning("Frame processing error, falling back to raw frame: {}", e)
+                        logger.warning(
+                            "Frame processing error, falling back to raw frame: {}", e
+                        )
                         annotated_frame = frame
                 else:
                     annotated_frame = frame
-
-                # Encode annotated frame to JPEG
                 success, buffer = cv2.imencode(".jpg", annotated_frame)
                 if not success:
                     continue
