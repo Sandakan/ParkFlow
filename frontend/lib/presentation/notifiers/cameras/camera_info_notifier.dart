@@ -9,7 +9,9 @@ import 'package:parkflow/models/parking/camera_model.dart';
 import 'package:parkflow/models/parking/ai_detection_event.dart';
 import 'package:parkflow/presentation/notifiers/cameras/cameras_notifier.dart';
 import 'package:parkflow/services/parking_service.dart';
+import 'package:parkflow/services/camera_service.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_slot_request.dart';
+import 'package:parkflow/repositories/entities/parking/update_camera_request.dart';
 import 'package:parkflow/repositories/entities/parking/point2d.dart';
 import 'package:parkflow/repositories/providers/env_repository_provider.dart';
 import 'package:parkflow/repositories/providers/secure_storage_repository_provider.dart';
@@ -247,6 +249,38 @@ class CameraInfo extends _$CameraInfo {
       await _fetchSlots();
     } catch (e) {
       state = state.copyWith(error: e.toString());
+    }
+  }
+
+  Future<void> updateCamera(UpdateCameraRequest request) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      await ref.read(cameraServiceProvider).updateCamera(cameraId, request);
+      if (state.camera != null) {
+        state = state.copyWith(
+          camera: state.camera!.copyWith(
+            name: request.name ?? state.camera!.name,
+            rtspUrl: request.rtspUrl ?? state.camera!.rtspUrl,
+          ),
+        );
+      }
+      await ref.read(camerasProvider.notifier).refresh();
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> deleteCamera() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      await ref.read(cameraServiceProvider).deleteCamera(cameraId);
+      await ref.read(camerasProvider.notifier).refresh();
+      state = state.copyWith(isLoading: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      rethrow;
     }
   }
 }

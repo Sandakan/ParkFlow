@@ -470,4 +470,115 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsSaving => 'Saving...';
+
+  @override
+  String get unknownLot => 'Unknown Parking Lot';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get liveBadge => 'LIVE';
+
+  @override
+  String get editCameraTooltip => 'Edit Camera';
+
+  @override
+  String get deleteCameraTooltip => 'Delete Camera';
+
+  @override
+  String get editCameraDialogTitle => 'Edit Camera';
+
+  @override
+  String get cameraUpdatedSuccess => 'Camera updated successfully';
+
+  @override
+  String get cameraDeletedSuccess => 'Camera deleted successfully';
+
+  @override
+  String get deleteCameraConfirmTitle => 'Delete Camera?';
+
+  @override
+  String get deleteCameraConfirmMessage =>
+      'Are you sure you want to delete this camera? This action cannot be undone.';
+
+  @override
+  String get saveChangesButton => 'Save Changes';
+
+  @override
+  String get parkingSlotsTitle => 'Parking Slots';
+
+  @override
+  String get addSlotTooltip => 'Add Slot';
+
+  @override
+  String get cancelDrawingTooltip => 'Cancel Drawing';
+
+  @override
+  String get tapPointsInstruction =>
+      'Tap 4 points on the video to define the parking slot corners.';
+
+  @override
+  String get showAiDetectionsLabel => 'Show AI Detections';
+
+  @override
+  String get noSlotsDefinedMessage => 'No slots defined yet.';
+
+  @override
+  String get savingNewSlotMessage => 'Saving new slot...';
+
+  @override
+  String get vacantStatus => 'Vacant';
+
+  @override
+  String get slotTypeLabel => 'Slot Type';
+
+  @override
+  String get slotTypeGeneral => 'General';
+
+  @override
+  String get slotTypeDisabled => 'Disabled';
+
+  @override
+  String get slotTypeEv => 'EV Charging';
+
+  @override
+  String get newParkingSlotTitle => 'New Parking Slot';
+
+  @override
+  String get slotIdentifierLabel => 'Slot Identifier';
+
+  @override
+  String get slotIdentifierHint => 'e.g. A-15';
+
+  @override
+  String get saveSlotButton => 'Save Slot';
+
+  @override
+  String slotSavedSuccess(String name) {
+    return 'Slot $name saved';
+  }
+
+  @override
+  String get deleteSlotConfirmTitle => 'Delete Slot?';
+
+  @override
+  String deleteSlotConfirmMessage(String name) {
+    return 'Are you sure you want to delete $name?';
+  }
+
+  @override
+  String get slotTypePrefix => 'Type';
+
+  @override
+  String get selectParkingLotHint => 'Select Parking Lot';
+
+  @override
+  String get analyticsLiveStatus => 'live';
+
+  @override
+  String get analyticsMsUnit => 'ms';
+
+  @override
+  String get enterValueHint => 'Enter value';
 }

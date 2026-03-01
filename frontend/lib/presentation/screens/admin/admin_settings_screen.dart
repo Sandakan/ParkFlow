@@ -447,7 +447,7 @@ class _SettingNumberFieldState extends State<_SettingNumberField> {
           decoration: InputDecoration(
             fillColor: AppColors.inputFill,
             filled: true,
-            hintText: 'Enter value',
+            hintText: context.l10n.enterValueHint,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               vertical: 12,

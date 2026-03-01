@@ -259,7 +259,7 @@ class _VitalsGrid extends StatelessWidget {
           label: l10n.analyticsStreamHealth,
           value: streamPct != null ? '$streamPct%' : null,
           subtitle:
-              '${ov?.activeStreamCount ?? 0}/${ov?.totalCameraCount ?? 0} live',
+              '${ov?.activeStreamCount ?? 0}/${ov?.totalCameraCount ?? 0} ${l10n.analyticsLiveStatus}',
           isLoading: state.isLoadingOverview,
           valueColor: _getStreamHealthColor(ov?.streamHealthPct ?? 0),
         ),
@@ -1092,7 +1092,7 @@ class _AiHealthCard extends StatelessWidget {
                     ? min(1.0, health!.inferenceLatencyMs! / 500)
                     : 0,
                 displayText: health?.inferenceLatencyMs != null
-                    ? '${health!.inferenceLatencyMs!.toStringAsFixed(0)} ms'
+                    ? '${health!.inferenceLatencyMs!.toStringAsFixed(0)} ${l10n.analyticsMsUnit}'
                     : '—',
               ),
             ],

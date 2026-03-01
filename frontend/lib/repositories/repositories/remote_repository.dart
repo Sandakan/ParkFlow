@@ -16,6 +16,7 @@ import 'package:parkflow/core/network/entities/get_parking_lot_response_entity.d
 import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
 import 'package:parkflow/repositories/entities/parking/create_camera_request.dart';
+import 'package:parkflow/repositories/entities/parking/update_camera_request.dart';
 import 'package:parkflow/core/network/entities/get_cameras_response_entity.dart';
 import 'package:parkflow/repositories/entities/camera/create_webrtc_offer_request.dart';
 import 'package:parkflow/core/network/entities/get_webrtc_offer_response_entity.dart';
@@ -396,6 +397,32 @@ class RemoteRepository implements RemoteRepositoryInterface {
       HttpMethodEnum.post,
       'cameras/',
       data: request.toJson(),
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> updateCamera(
+    String cameraId,
+    UpdateCameraRequest request,
+  ) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.patch,
+      'cameras/$cameraId',
+      data: request.toJson(),
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> deleteCamera(String cameraId) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.delete,
+      'cameras/$cameraId',
       accessToken: await _getToken(),
     );
 

@@ -99,7 +99,7 @@ class LotCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'LKR ${lot.revenueToday.toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
+                          '${context.l10n.analyticsRevenueUnit} ${lot.revenueToday.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]},")}',
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.primary,

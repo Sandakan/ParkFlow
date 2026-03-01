@@ -60,7 +60,7 @@ class CameraCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      camera.lotName ?? 'Unknown Parking Lot',
+                      camera.lotName ?? context.l10n.unknownLot,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: AppColors.textSecondary,
                         fontWeight: FontWeight.w500,

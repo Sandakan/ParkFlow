@@ -999,6 +999,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Saving...'**
   String get settingsSaving;
+
+  /// Fallback text displayed when a parking lot name is missing or unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Parking Lot'**
+  String get unknownLot;
+
+  /// Generic loading indicator text
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// Label for live video feed status
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE'**
+  String get liveBadge;
+
+  /// Tooltip for the edit camera button
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Camera'**
+  String get editCameraTooltip;
+
+  /// Tooltip for the delete camera button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Camera'**
+  String get deleteCameraTooltip;
+
+  /// Title for the edit camera dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Camera'**
+  String get editCameraDialogTitle;
+
+  /// Success message when a camera is updated
+  ///
+  /// In en, this message translates to:
+  /// **'Camera updated successfully'**
+  String get cameraUpdatedSuccess;
+
+  /// Success message when a camera is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Camera deleted successfully'**
+  String get cameraDeletedSuccess;
+
+  /// Title for the delete camera confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Camera?'**
+  String get deleteCameraConfirmTitle;
+
+  /// Message for the delete camera confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this camera? This action cannot be undone.'**
+  String get deleteCameraConfirmMessage;
+
+  /// Text for the save changes button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChangesButton;
+
+  /// Title for the parking slots management section
+  ///
+  /// In en, this message translates to:
+  /// **'Parking Slots'**
+  String get parkingSlotsTitle;
+
+  /// Tooltip for the add parking slot button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Slot'**
+  String get addSlotTooltip;
+
+  /// Tooltip for the cancel drawing button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Drawing'**
+  String get cancelDrawingTooltip;
+
+  /// Instruction text for creating a new parking slot
+  ///
+  /// In en, this message translates to:
+  /// **'Tap 4 points on the video to define the parking slot corners.'**
+  String get tapPointsInstruction;
+
+  /// Label for the switch to show/hide AI detections
+  ///
+  /// In en, this message translates to:
+  /// **'Show AI Detections'**
+  String get showAiDetectionsLabel;
+
+  /// Message shown when no parking slots are defined for a camera
+  ///
+  /// In en, this message translates to:
+  /// **'No slots defined yet.'**
+  String get noSlotsDefinedMessage;
+
+  /// Loading message when saving a new parking slot
+  ///
+  /// In en, this message translates to:
+  /// **'Saving new slot...'**
+  String get savingNewSlotMessage;
+
+  /// Label indicating a parking slot is vacant
+  ///
+  /// In en, this message translates to:
+  /// **'Vacant'**
+  String get vacantStatus;
+
+  /// Label for the parking slot type selector
+  ///
+  /// In en, this message translates to:
+  /// **'Slot Type'**
+  String get slotTypeLabel;
+
+  /// Label for the general parking slot type
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get slotTypeGeneral;
+
+  /// Label for the disabled parking slot type
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get slotTypeDisabled;
+
+  /// Label for the electric vehicle charging parking slot type
+  ///
+  /// In en, this message translates to:
+  /// **'EV Charging'**
+  String get slotTypeEv;
+
+  /// Title for the new parking slot dialog
+  ///
+  /// In en, this message translates to:
+  /// **'New Parking Slot'**
+  String get newParkingSlotTitle;
+
+  /// Label for the slot identifier input field
+  ///
+  /// In en, this message translates to:
+  /// **'Slot Identifier'**
+  String get slotIdentifierLabel;
+
+  /// Hint text for the slot identifier input field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. A-15'**
+  String get slotIdentifierHint;
+
+  /// Text for the save slot button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Slot'**
+  String get saveSlotButton;
+
+  /// Success message when a parking slot is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Slot {name} saved'**
+  String slotSavedSuccess(String name);
+
+  /// Title for the delete parking slot confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Slot?'**
+  String get deleteSlotConfirmTitle;
+
+  /// Message for the delete parking slot confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {name}?'**
+  String deleteSlotConfirmMessage(String name);
+
+  /// No description provided for @slotTypePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get slotTypePrefix;
+
+  /// Hint text for the parking lot selection dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Select Parking Lot'**
+  String get selectParkingLotHint;
+
+  /// Label for live streams in analytics
+  ///
+  /// In en, this message translates to:
+  /// **'live'**
+  String get analyticsLiveStatus;
+
+  /// Millisecond unit label
+  ///
+  /// In en, this message translates to:
+  /// **'ms'**
+  String get analyticsMsUnit;
+
+  /// Hint text for numeric input fields
+  ///
+  /// In en, this message translates to:
+  /// **'Enter value'**
+  String get enterValueHint;
 }
 
 class _AppLocalizationsDelegate

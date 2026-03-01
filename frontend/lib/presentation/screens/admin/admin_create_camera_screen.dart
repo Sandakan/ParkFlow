@@ -137,7 +137,7 @@ class _AdminCreateCameraScreenState
                                 context.l10n.fieldRequired,
                           },
                           decoration: InputDecoration(
-                            hintText: 'Select Parking Lot',
+                            hintText: context.l10n.selectParkingLotHint,
                             prefixIcon: Icon(
                               Icons.local_parking,
                               color: AppColors.textSecondary,

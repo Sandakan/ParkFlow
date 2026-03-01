@@ -1,5 +1,6 @@
 import 'package:parkflow/models/parking/camera_model.dart';
 import 'package:parkflow/repositories/entities/parking/create_camera_request.dart';
+import 'package:parkflow/repositories/entities/parking/update_camera_request.dart';
 import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
 import 'package:parkflow/repositories/providers/remote_repository_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,6 +24,25 @@ class CameraService {
   Future<void> createCamera(CreateCameraRequest request) async {
     try {
       await _remote.createCamera(request);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> updateCamera(
+    String cameraId,
+    UpdateCameraRequest request,
+  ) async {
+    try {
+      await _remote.updateCamera(cameraId, request);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteCamera(String cameraId) async {
+    try {
+      await _remote.deleteCamera(cameraId);
     } catch (e) {
       rethrow;
     }

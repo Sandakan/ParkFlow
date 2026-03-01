@@ -2,7 +2,7 @@ from typing import Any, Optional
 from fastapi import APIRouter, Depends, status, Query
 from app.api.deps import get_current_user, get_current_admin
 from app.schemas.response import APIResponse, ResponseCode
-from app.schemas.parking import CreateCameraRequest
+from app.schemas.parking import CreateCameraRequest, UpdateCameraRequest
 from app.core.database import db, update_camera_status
 from app.core.utils import get_internal_rtsp_url
 from pydantic import BaseModel
@@ -198,6 +198,50 @@ async def get_parking_lot_cameras(
         message="Cameras retrieved",
         code=ResponseCode.SUCCESS,
         data={"cameras": serialized_cameras},
+    )
+
+
+@router.patch(
+    "/{camera_id}",
+    response_model=APIResponse[dict],
+    description="Update a specific camera by ID.",
+)
+async def update_camera(
+    camera_id: str,
+    request: UpdateCameraRequest,
+    current_admin: Any = Depends(get_current_admin),
+) -> Any:
+    """
+    Update camera details.
+    """
+    from bson import ObjectId
+    from datetime import datetime, timezone
+
+    update_data = {k: v for k, v in request.model_dump().items() if v is not None}
+    if not update_data:
+        return APIResponse.error_response(
+            message="No update data provided",
+            code=ResponseCode.BAD_REQUEST,
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+    update_data["updated_at"] = datetime.now(timezone.utc)
+
+    result = await db.client["parkflow"].cameras.update_one(
+        {"_id": ObjectId(camera_id), "deleted_at": None},
+        {"$set": update_data},
+    )
+
+    if result.matched_count == 0:
+        return APIResponse.error_response(
+            message="Camera not found",
+            code=ResponseCode.NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    return APIResponse.success_response(
+        message="Camera updated successfully",
+        code=ResponseCode.SUCCESS,
     )
 
 
