@@ -1,0 +1,29 @@
+services:
+  mock-rtsp:
+    build: .
+    container_name: mock-rtsp
+    volumes:
+      - ./assets:/assets
+      - ./stream_config.json:/stream_config.json
+    environment:
+      - PYTHONUNBUFFERED=1
+      - RTSP_HOST=mediamtx
+    networks:
+      - backend_default
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: rebuild
+          path: ./rtsp_server.py
+        - action: rebuild
+          path: ./Dockerfile
+        - action: sync
+          path: ./stream_config.json
+          target: /stream_config.json
+        - action: sync
+          path: ./assets/
+          target: /assets/
+
+networks:
+  backend_default:
+    external: true

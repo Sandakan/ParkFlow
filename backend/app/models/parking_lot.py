@@ -1,0 +1,22 @@
+from pydantic import BaseModel, Field, ConfigDict
+from typing import Tuple, Literal, Optional
+from datetime import datetime
+
+
+class Point(BaseModel):
+    type: Literal["Point"] = "Point"
+    coordinates: Tuple[float, float]  # [longitude, latitude]
+
+
+class ParkingLotInDB(BaseModel):
+    parking_lot_id: str = Field(alias="_id")
+    name: str
+    location: Point
+    total_slots: int
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    deleted_at: Optional[datetime] = None
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+    )

@@ -1,0 +1,340 @@
+{
+	"@@locale": "en",
+	"appTitle": "ParkFlow",
+	"@appTitle": {
+		"description": "The title of the application"
+	},
+	"loginTitle": "ParkFlow",
+	"@loginTitle": {
+		"description": "The title displayed on the login screen"
+	},
+	"welcomeBackSubtitle": "Welcome back! Sign in to your account.",
+	"@welcomeBackSubtitle": {
+		"description": "The subtitle displayed on the login screen"
+	},
+	"signInToContinue": "Sign in to continue",
+	"@signInToContinue": {
+		"description": "The subtitle displayed on the login screen"
+	},
+	"emailLabel": "Email",
+	"@emailLabel": {
+		"description": "The label for the email input field"
+	},
+	"passwordLabel": "Password",
+	"@passwordLabel": {
+		"description": "The label for the password input field"
+	},
+	"emailHint": "you@example.com",
+	"@emailHint": {
+		"description": "The hint for the email input field"
+	},
+	"passwordHint": "••••••••",
+	"@passwordHint": {
+		"description": "The hint for the password input field"
+	},
+	"forgotPassword": "Forgot Password?",
+	"@forgotPassword": {
+		"description": "Forgot password button text"
+	},
+	"loginButton": "Login",
+	"@loginButton": {
+		"description": "The text for the login button"
+	},
+	"signInButton": "Sign In",
+	"@signInButton": {
+		"description": "The text for the sign in button"
+	},
+	"dontHaveAccount": "Don't have an account? ",
+	"@dontHaveAccount": {
+		"description": "Text asking if the user doesn't have an account"
+	},
+	"signUp": "Sign up",
+	"@signUp": {
+		"description": "Sign up link text"
+	},
+	"createAccountTitle": "Create Account",
+	"@createAccountTitle": {
+		"description": "Title for the registration screen"
+	},
+	"signUpSubtitle": "Sign up to get started!",
+	"@signUpSubtitle": {
+		"description": "Subtitle for the registration screen"
+	},
+	"fullNameLabel": "Full Name",
+	"@fullNameLabel": {
+		"description": "Label for the full name input field"
+	},
+	"fullNameHint": "John Doe",
+	"@fullNameHint": {
+		"description": "Hint text for the full name input field"
+	},
+	"nameRequired": "Name is required",
+	"@nameRequired": {
+		"description": "Validation message when name is empty"
+	},
+	"confirmPasswordLabel": "Confirm Password",
+	"@confirmPasswordLabel": {
+		"description": "Label for the confirm password input field"
+	},
+	"confirmPasswordRequired": "Confirm Password is required",
+	"@confirmPasswordRequired": {
+		"description": "Validation message when confirm password is empty"
+	},
+	"passwordsMustMatch": "Passwords must match",
+	"@passwordsMustMatch": {
+		"description": "Validation message when passwords do not match"
+	},
+	"signUpButton": "Sign Up",
+	"@signUpButton": {
+		"description": "Text for the sign up button"
+	},
+	"alreadyHaveAccount": "Already have an account? ",
+	"@alreadyHaveAccount": {
+		"description": "Text asking if the user already has an account"
+	},
+	"signIn": "Sign in",
+	"@signIn": {
+		"description": "Sign in link text"
+	},
+	"liveDashboard": "ParkFlow Live Dashboard",
+	"@liveDashboard": {
+		"description": "The title for the live dashboard page"
+	},
+	"liveFeed": "Live Feed",
+	"@liveFeed": {
+		"description": "The title for the live video feed section"
+	},
+	"occupied": "Occupied",
+	"@occupied": {
+		"description": "Label indicating a parking slot is occupied"
+	},
+	"available": "Available",
+	"@available": {
+		"description": "Label indicating a parking slot is available"
+	},
+	"logoutTooltip": "Logout",
+	"@logoutTooltip": {
+		"description": "Tooltip for the logout button"
+	},
+	"checkInternetConnection": "Please check your internet connection and try again.",
+	"@checkInternetConnection": {
+		"description": "Error message when there is no internet connection"
+	},
+	"somethingWrongDescription": "Something went wrong. Please try again later.",
+	"@somethingWrongDescription": {
+		"description": "Generic error message for unknown errors"
+	},
+	"authTokenExpiredError": "Your session has expired. Please log in again.",
+	"@authTokenExpiredError": {
+		"description": "Error message when the authentication token has expired"
+	},
+	"sessionExpired": "Session expired",
+	"@sessionExpired": {
+		"description": "Title or short description for session expired error"
+	},
+	"invalidPageNumber": "Invalid page number",
+	"@invalidPageNumber": {
+		"description": "Error message for invalid page number"
+	},
+	"currentPasswordInvalid": "Current password is not valid",
+	"@currentPasswordInvalid": {
+		"description": "Error message for invalid current password"
+	},
+	"changePasswordFailed": "Failed to change password",
+	"@changePasswordFailed": {
+		"description": "Error message when changing password fails"
+	},
+	"emailRequired": "The email must not be empty",
+	"@emailRequired": {
+		"description": "Validation message when email is empty"
+	},
+	"emailInvalid": "The email value must be a valid email",
+	"@emailInvalid": {
+		"description": "Validation message when email format is invalid"
+	},
+	"passwordRequired": "The password must not be empty",
+	"@passwordRequired": {
+		"description": "Validation message when password is empty"
+	},
+	"passwordMinLength": "The password must be at least 6 characters long",
+	"@passwordMinLength": {
+		"description": "Validation message when password is too short"
+	},
+	"invalidCredentials": "The email or password you entered is incorrect",
+	"@invalidCredentials": {
+		"description": "Error message for invalid login credentials"
+	},
+	"adminDashboard": "Home",
+	"@adminDashboard": {
+		"description": "Title for the admin dashboard screen"
+	},
+	"adminWelcome": "Welcome, Administrator",
+	"@adminWelcome": {
+		"description": "Welcome message for admin users"
+	},
+	"home": "Home",
+	"@home": {
+		"description": "Label for the home/dashboard navigation"
+	},
+	"profile": "Profile",
+	"@profile": {
+		"description": "Label for the profile navigation/screen"
+	},
+	"guest": "Guest",
+	"@guest": {
+		"description": "Placeholder for unknown user name"
+	},
+	"logout": "Logout",
+	"@logout": {
+		"description": "Text for the logout button/label"
+	},
+	"adminConsoleSubtitle": "ParkFlow Administration Console",
+	"@adminConsoleSubtitle": {
+		"description": "Subtitle for the admin dashboard"
+	},
+	"manageSlots": "Manage Parking Slots",
+	"@manageSlots": {
+		"description": "Button text for managing parking slots"
+	},
+	"featureComingSoon": "Manage Slots feature coming soon!",
+	"@featureComingSoon": {
+		"description": "Flash message for unimplemented features"
+	},
+	"parkingLots": "Lots",
+	"@parkingLots": {
+		"description": "Label for the parking lots navigation"
+	},
+	"cameras": "Cameras",
+	"@cameras": {
+		"description": "Label for the cameras navigation"
+	},
+	"analytics": "Analytics",
+	"@analytics": {
+		"description": "Label for the analytics navigation"
+	},
+	"settings": "Settings",
+	"@settings": {
+		"description": "Label for the settings navigation"
+	},
+	"searchLotHint": "Search parking lots...",
+	"@searchLotHint": {
+		"description": "The hint for the search parking lots input field"
+	},
+	"createNewLot": "Create Parking Lot",
+	"@createNewLot": {
+		"description": "Text for the create parking lot button"
+	},
+	"statusOpen": "Open",
+	"@statusOpen": {
+		"description": "Label indicating a parking lot is open"
+	},
+	"statusClosed": "Closed",
+	"@statusClosed": {
+		"description": "Label indicating a parking lot is closed"
+	},
+	"totalSlotsLabel": "Total Slots",
+	"@totalSlotsLabel": {
+		"description": "Label for the total slots count"
+	},
+	"revenueToday": "Revenue Today",
+	"@revenueToday": {
+		"description": "Label for today's revenue"
+	},
+	"noLotsFound": "No parking lots found",
+	"@noLotsFound": {
+		"description": "Message displayed when no parking lots are found in search"
+	},
+	"errorLoadingLots": "Error loading lots",
+	"@errorLoadingLots": {
+		"description": "Message displayed when there is an error fetching parking lots"
+	},
+	"createLotTitle": "Create New Parking Lot",
+	"@createLotTitle": {
+		"description": "The title displayed on the create new parking lot screen"
+	},
+	"lotNameLabel": "Lot Name",
+	"@lotNameLabel": {
+		"description": "The label for the lot name input field"
+	},
+	"lotNameHint": "Downtown Parking",
+	"@lotNameHint": {
+		"description": "The hint for the lot name input field"
+	},
+	"lotAddressLabel": "Lot Address",
+	"@lotAddressLabel": {
+		"description": "The label for the lot address input field"
+	},
+	"lotAddressHint": "123 Main St",
+	"@lotAddressHint": {
+		"description": "The hint for the lot address input field"
+	},
+	"latitudeLabel": "Latitude",
+	"@latitudeLabel": {
+		"description": "The label for the latitude input field"
+	},
+	"latitudeHint": "0.000",
+	"@latitudeHint": {
+		"description": "The hint for the latitude input field"
+	},
+	"longitudeLabel": "Longitude",
+	"@longitudeLabel": {
+		"description": "The label for the longitude input field"
+	},
+	"longitudeHint": "0.000",
+	"@longitudeHint": {
+		"description": "The hint for the longitude input field"
+	},
+	"totalSlotsHint": "Number of slots",
+	"@totalSlotsHint": {
+		"description": "The hint for the total slots input field"
+	},
+	"rtspUrlLabel": "RTSP URL",
+	"@rtspUrlLabel": {
+		"description": "The label for the RTSP URL input field"
+	},
+	"rtspUrlHint": "rtsp://...",
+	"@rtspUrlHint": {
+		"description": "The hint for the RTSP URL input field"
+	},
+	"createButton": "Create",
+	"@createButton": {
+		"description": "The text for the create button"
+	},
+	"lotCreatedSuccess": "Parking lot created successfully",
+	"@lotCreatedSuccess": {
+		"description": "Success message when a lot is created"
+	},
+	"fieldRequired": "This field is required",
+	"@fieldRequired": {
+		"description": "Validation message when a field is required"
+	},
+	"invalidNumber": "Invalid number",
+	"editLotTitle": "Edit Parking Lot",
+	"updateButton": "Update",
+	"lotUpdatedSuccess": "Parking lot updated successfully",
+	"deleteLot": "Delete Lot",
+	"deleteLotConfirmTitle": "Delete Parking Lot?",
+	"deleteLotConfirmMessage": "Are you sure you want to delete this parking lot? This action cannot be undone.",
+	"deleteButton": "Delete",
+	"cancelButton": "Cancel",
+	"lotDeletedSuccess": "Parking lot deleted successfully",
+	"camerasTabLabel": "Cameras",
+	"searchCameraHint": "Search cameras...",
+	"createNewCamera": "Create Camera",
+	"noCamerasFound": "No cameras found",
+	"errorLoadingCameras": "Error loading cameras",
+	"rtspHealth": "Health",
+	"statusConnected": "Connected",
+	"statusDisconnected": "Disconnected",
+	"createCameraTitle": "Create New Camera",
+	"cameraNameLabel": "Camera Name",
+	"cameraNameHint": "Front Gate",
+	"cameraCreatedSuccess": "Camera created successfully",
+	"@cameraCreatedSuccess": {
+		"description": "Success message when a camera is created"
+	},
+	"userAlreadyExists": "The user with this email already exists in the system.",
+	"@userAlreadyExists": {
+		"description": "Error message when a user tries to register with an existing email"
+	}
+}
