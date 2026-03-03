@@ -12,8 +12,15 @@ from sse_starlette.sse import EventSourceResponse
 from app.ai.detector import run_frame
 from app.ai.inference import process_parking_image
 from app.ai.stream_manager import ParkingStreamManager
+from app.ai.redis_state import (
+    push_detection,
+    get_stable_state,
+    get_confirmed_state,
+    set_confirmed_state,
+)
 from app.api.deps import get_current_user
 from app.core.database import db, update_camera_status, get_inference_settings
+from app.core.redis import redis_cache
 from app.core.logging import logger
 from app.core.utils import get_internal_rtsp_url
 from app.models.parking_lot import ParkingLotInDB
@@ -188,10 +195,7 @@ async def _detection_stream(
     frame_count = 0
     frame_skip = settings_obj.frame_skip
     stability_buffer = settings_obj.stability_buffer
-
-    # Track consecutive hits for each mapping to implement stability buffer
-    # mapping_id -> {"last_state": bool, "consecutive_count": int}
-    stability_trackers: Dict[str, Dict[str, Any]] = {}
+    redis = redis_cache.client
 
     try:
         while True:
@@ -227,61 +231,55 @@ async def _detection_stream(
                 m_id = hit.mapping_id
                 current_raw_state = hit.is_occupied
 
-                if m_id not in stability_trackers:
-                    stability_trackers[m_id] = {"state": current_raw_state, "count": 0}
+                await push_detection(
+                    redis, camera_id, m_id, current_raw_state, buffer_size=30
+                )
 
-                tracker = stability_trackers[m_id]
+                stable_state = await get_stable_state(
+                    redis, camera_id, m_id, threshold=stability_buffer
+                )
 
-                if current_raw_state == tracker["state"]:
-                    tracker["count"] = 0  # reset if we stay in same state
-                else:
-                    tracker["count"] += 1
+                confirmed_state = await get_confirmed_state(redis, camera_id, m_id)
 
-                # If we've seen the new state enough times, switch
-                if tracker["count"] >= stability_buffer:
-                    tracker["state"] = current_raw_state
-                    tracker["count"] = 0
+                if stable_state is not None and stable_state != confirmed_state:
+                    await set_confirmed_state(redis, camera_id, m_id, stable_state)
 
-                    # PERSIST to DB when state changes
                     from app.api.routers.parking import _update_logical_slot_status
 
                     await db.client["parkflow"].camera_slot_mappings.update_one(
                         {"_id": ObjectId(m_id)},
                         {
                             "$set": {
-                                "is_occupied": tracker["state"],
+                                "is_occupied": stable_state,
                                 "updated_at": now_ts,
                             }
                         },
                     )
-                    # Trigger logical slot status update (sensor fusion)
                     await _update_logical_slot_status(hit.slot_id)
 
-                    # Log the event
                     await db.client["parkflow"].occupancy_logs.insert_one(
                         {
                             "slot_id": hit.slot_id,
                             "mapping_id": m_id,
-                            "event_type": (
-                                "check-in" if tracker["state"] else "check-out"
-                            ),
+                            "event_type": ("check-in" if stable_state else "check-out"),
                             "confidence_score": next(
                                 (
                                     d.confidence
                                     for d in frame_result.detections
-                                    if tracker["state"]
+                                    if stable_state
                                 ),
                                 1.0,
                             ),
                             "created_at": now_ts,
                         }
                     )
+                    confirmed_state = stable_state
 
                 stable_slot_hits.append(
                     {
                         "slot_id": hit.slot_id,
                         "mapping_id": m_id,
-                        "is_occupied": tracker["state"],
+                        "is_occupied": confirmed_state,
                     }
                 )
 
