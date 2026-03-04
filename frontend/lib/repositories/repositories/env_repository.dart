@@ -27,10 +27,10 @@ class EnvRepository implements EnvRepositoryInterface {
     return EnvRepository._(
       level: level,
       baseUrl: _optimizeUrl(
-        dotenv.get('BASE_URL', fallback: 'http://localhost:8000/api/v1'),
+        dotenv.get('BASE_URL', fallback: 'http://localhost:8200/api/v1'),
       ),
       webSocketUrl: _optimizeUrl(
-        dotenv.get('WEB_SOCKET_URL', fallback: 'http://localhost:8000'),
+        dotenv.get('WEB_SOCKET_URL', fallback: 'http://localhost:8200'),
         isWebSocket: true,
       ),
     );

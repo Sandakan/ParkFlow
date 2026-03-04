@@ -62,9 +62,11 @@ class AdminParkingLotsScreen extends ConsumerWidget {
                               padding: const EdgeInsets.only(bottom: 12.0),
                               child: LotCard(
                                 lot: lot,
-                                onTap: () => AdminEditParkingLotRoute(
-                                  lot.id,
-                                ).push(context),
+                                onTap: () {
+                                  AdminParkingLotDetailsRoute(
+                                    lot.id,
+                                  ).go(context);
+                                },
                               ),
                             );
                           },
@@ -77,7 +79,7 @@ class AdminParkingLotsScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          const AdminCreateParkingLotRoute().push(context);
+          const AdminCreateParkingLotRoute().go(context);
         },
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,

@@ -22,7 +22,7 @@ final class SettingsServiceProvider
         argument: null,
         retry: null,
         name: r'settingsServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -49,4 +49,4 @@ final class SettingsServiceProvider
   }
 }
 
-String _$settingsServiceHash() => r'ccf0c792d440a8144d32a5a964577e5d6f4de67d';
+String _$settingsServiceHash() => r'1f2ef51262f2eeba9fe03c24cbaedfc5db66b655';

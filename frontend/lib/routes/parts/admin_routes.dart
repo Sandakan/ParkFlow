@@ -45,6 +45,19 @@ class AdminEditParkingLotRoute extends GoRouteData
   }
 }
 
+class AdminParkingLotDetailsRoute extends GoRouteData
+    with $AdminParkingLotDetailsRoute {
+  final String lotId;
+  const AdminParkingLotDetailsRoute(this.lotId);
+
+  static const path = ':lotId';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return AdminParkingLotDetailsScreen(lotId: lotId);
+  }
+}
+
 class AdminCamerasRoute extends GoRouteData with $AdminCamerasRoute {
   const AdminCamerasRoute();
   static const path = '/admin/cameras';

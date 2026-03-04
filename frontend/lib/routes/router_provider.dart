@@ -19,6 +19,7 @@ import 'package:parkflow/presentation/screens/admin/admin_camera_info_screen.dar
 import 'package:parkflow/presentation/screens/admin/admin_analytics_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_edit_parking_lot_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_settings_screen.dart';
+import 'package:parkflow/presentation/screens/admin/admin_parking_lot_details_screen.dart';
 
 part 'router_provider.g.dart';
 

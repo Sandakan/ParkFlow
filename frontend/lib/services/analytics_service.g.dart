@@ -26,7 +26,7 @@ final class AnalyticsServiceProvider
         argument: null,
         retry: null,
         name: r'analyticsServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -53,4 +53,4 @@ final class AnalyticsServiceProvider
   }
 }
 
-String _$analyticsServiceHash() => r'e415454b5b9e495c90f4074e0f9def5745d4965e';
+String _$analyticsServiceHash() => r'11795d422a777a3950020d17355eff9fea52f57d';

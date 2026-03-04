@@ -18,6 +18,9 @@ part of '../router_provider.dart';
             TypedGoRoute<AdminEditParkingLotRoute>(
               path: AdminEditParkingLotRoute.path,
             ),
+            TypedGoRoute<AdminParkingLotDetailsRoute>(
+              path: AdminParkingLotDetailsRoute.path,
+            ),
           ],
         ),
       ],

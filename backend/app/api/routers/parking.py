@@ -92,6 +92,7 @@ async def get_parking_slots(
                         "coordinates": m.get("coordinates", []),
                         "logical_row": slot.get("logical_row", 0),
                         "logical_col": slot.get("logical_col", 0),
+                        "lot_id": slot.get("lot_id"),
                         "lastUpdated": (
                             slot.get("updated_at").isoformat()
                             if slot.get("updated_at")
@@ -116,6 +117,7 @@ async def get_parking_slots(
                     "isOccupied": slot.get("status") == "occupied",
                     "logical_row": slot.get("logical_row", 0),
                     "logical_col": slot.get("logical_col", 0),
+                    "lot_id": slot.get("lot_id"),
                     "lastUpdated": (
                         slot.get("updated_at").isoformat()
                         if slot.get("updated_at")
@@ -413,6 +415,17 @@ async def create_parking_slot(
 
     if existing_slot:
         slot_id = existing_slot["_id"]
+        await db.client["parkflow"].parking_slots.update_one(
+            {"_id": slot_id},
+            {
+                "$set": {
+                    "logical_row": request.logical_row,
+                    "logical_col": request.logical_col,
+                    "slot_type": request.slot_type,
+                    "updated_at": now,
+                }
+            },
+        )
     else:
         new_slot = {
             "lot_id": request.lot_id,

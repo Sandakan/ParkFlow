@@ -21,7 +21,7 @@ final class ParkingServiceProvider
         argument: null,
         retry: null,
         name: r'parkingServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -48,4 +48,4 @@ final class ParkingServiceProvider
   }
 }
 
-String _$parkingServiceHash() => r'90b02f0bd0e8da62370a5d76cce0e1519b81d8de';
+String _$parkingServiceHash() => r'a2136251529bec53eeff2fb47c5cee2c7f5de458';

@@ -7,6 +7,8 @@ import 'package:parkflow/presentation/notifiers/parking_lots/parking_lots_notifi
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:parkflow/presentation/notifiers/parking_lots/parking_lot_layout_notifier.dart';
+import 'package:parkflow/presentation/widgets/parking/parking_lot_layout_grid.dart';
 
 class AdminEditParkingLotScreen extends ConsumerStatefulWidget {
   final String lotId;
@@ -40,6 +42,18 @@ class _AdminEditParkingLotScreenState
     'totalSlots': FormControl<String>(
       validators: [Validators.required, Validators.pattern(r'^\d+$')],
     ),
+    'slotWidth': FormControl<String>(
+      validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+    ),
+    'slotLength': FormControl<String>(
+      validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+    ),
+    'entranceRow': FormControl<String>(
+      validators: [Validators.required, Validators.pattern(r'^\d+$')],
+    ),
+    'entranceCol': FormControl<String>(
+      validators: [Validators.required, Validators.pattern(r'^\d+$')],
+    ),
   });
 
   @override
@@ -59,6 +73,18 @@ class _AdminEditParkingLotScreenState
         'latitude': lot.latitude.toString(),
         'longitude': lot.longitude.toString(),
         'totalSlots': lot.totalSlots.toString(),
+        'slotWidth': (lot.slotWidthMeters ?? 5.0).toString(),
+        'slotLength': (lot.slotLengthMeters ?? 5.0).toString(),
+        'entranceRow':
+            (lot.entranceLogicalLocations?.isNotEmpty == true
+                    ? lot.entranceLogicalLocations![0][0]
+                    : 0)
+                .toString(),
+        'entranceCol':
+            (lot.entranceLogicalLocations?.isNotEmpty == true
+                    ? lot.entranceLogicalLocations![0][1]
+                    : 0)
+                .toString(),
       });
     } catch (e) {
       if (mounted) {
@@ -93,6 +119,18 @@ class _AdminEditParkingLotScreenState
         latitude: double.parse(form.control('latitude').value as String),
         longitude: double.parse(form.control('longitude').value as String),
         totalSlots: int.parse(form.control('totalSlots').value as String),
+        slotWidthMeters: double.parse(
+          form.control('slotWidth').value as String,
+        ),
+        slotLengthMeters: double.parse(
+          form.control('slotLength').value as String,
+        ),
+        entranceLogicalLocations: [
+          [
+            int.parse(form.control('entranceRow').value as String),
+            int.parse(form.control('entranceCol').value as String),
+          ],
+        ],
       );
 
       await ref
@@ -263,6 +301,108 @@ class _AdminEditParkingLotScreenState
                             hint: context.l10n.totalSlotsHint,
                             icon: Icons.format_list_numbered,
                             keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildTextField(
+                                  formControlName: 'slotWidth',
+                                  label: context.l10n.slotWidthLabel,
+                                  hint: 'e.g. 5.0',
+                                  icon: Icons.width_full_outlined,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: _buildTextField(
+                                  formControlName: 'slotLength',
+                                  label: context.l10n.slotLengthLabel,
+                                  hint: 'e.g. 5.0',
+                                  icon: Icons.height_outlined,
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _buildTextField(
+                                  formControlName: 'entranceRow',
+                                  label:
+                                      '${context.l10n.entranceCoordsLabel} (${context.l10n.rowLabel})',
+                                  hint: '0',
+                                  icon: Icons.door_front_door_outlined,
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: _buildTextField(
+                                  formControlName: 'entranceCol',
+                                  label:
+                                      '${context.l10n.entranceCoordsLabel} (${context.l10n.colLabel})',
+                                  hint: '0',
+                                  icon: Icons.door_front_door_outlined,
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 32),
+                          const Divider(),
+                          const SizedBox(height: 16),
+                          Text(
+                            context.l10n.currentOccupancyLayout,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final layoutState = ref.watch(
+                                parkingLotLayoutProvider(widget.lotId),
+                              );
+                              if (layoutState.isLoading) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (layoutState.slots.isEmpty) {
+                                return Center(
+                                  child: Text(
+                                    context.l10n.noSlotsDefinedMessage,
+                                    style: TextStyle(
+                                      color: AppColors.textSecondary,
+                                    ),
+                                  ),
+                                );
+                              }
+                              return ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 300,
+                                ),
+                                child: SingleChildScrollView(
+                                  child: ParkingLotLayoutGrid(
+                                    slots: layoutState.slots,
+                                    highlightedSlotIds: layoutState.suggestions
+                                        .map((s) => s.slotId)
+                                        .toList(),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                           const SizedBox(height: 32),
                           ElevatedButton(

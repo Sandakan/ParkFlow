@@ -63,7 +63,7 @@ class AdminCamerasScreen extends ConsumerWidget {
                               child: CameraCard(
                                 camera: camera,
                                 onTap: () {
-                                  AdminCameraInfoRoute(camera.id).push(context);
+                                  AdminCameraInfoRoute(camera.id).go(context);
                                 },
                               ),
                             );
@@ -77,7 +77,7 @@ class AdminCamerasScreen extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          const AdminCreateCameraRoute().push(context);
+          const AdminCreateCameraRoute().go(context);
         },
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,

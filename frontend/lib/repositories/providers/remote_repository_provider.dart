@@ -8,14 +8,13 @@ import 'package:parkflow/utils/http/http_api_provider.dart';
 
 part 'remote_repository_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 RemoteRepositoryInterface remoteRepository(Ref ref) {
   final httpApi = ref.watch(httpApiProvider);
   final secureStorage = ref.watch(secureStorageRepositoryProvider);
   final env = ref.watch(envRepositoryProvider);
 
   return RemoteRepository(
-    ref: ref,
     httpAPI: httpApi,
     secureStorageRepository: secureStorage,
     envRepository: env,

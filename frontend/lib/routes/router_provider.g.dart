@@ -108,6 +108,10 @@ RouteBase get $adminShellRoute => StatefulShellRouteData.$route(
               path: 'edit/:lotId',
               factory: $AdminEditParkingLotRoute._fromState,
             ),
+            GoRouteData.$route(
+              path: ':lotId',
+              factory: $AdminParkingLotDetailsRoute._fromState,
+            ),
           ],
         ),
       ],
@@ -226,6 +230,31 @@ mixin $AdminEditParkingLotRoute on GoRouteData {
   @override
   String get location => GoRouteData.$location(
     '/admin/parking-lots/edit/${Uri.encodeComponent(_self.lotId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AdminParkingLotDetailsRoute on GoRouteData {
+  static AdminParkingLotDetailsRoute _fromState(GoRouterState state) =>
+      AdminParkingLotDetailsRoute(state.pathParameters['lotId']!);
+
+  AdminParkingLotDetailsRoute get _self => this as AdminParkingLotDetailsRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/admin/parking-lots/${Uri.encodeComponent(_self.lotId)}',
   );
 
   @override

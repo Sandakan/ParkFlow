@@ -26,7 +26,7 @@ final class RemoteRepositoryProvider
         argument: null,
         retry: null,
         name: r'remoteRepositoryProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -54,4 +54,4 @@ final class RemoteRepositoryProvider
   }
 }
 
-String _$remoteRepositoryHash() => r'9e14d416f2c1bd0f87af814bf8d3cd63d350e42d';
+String _$remoteRepositoryHash() => r'f4bb69d89621870b4058efdc58dd95b48acef560';

@@ -5,17 +5,22 @@ import 'package:parkflow/repositories/interfaces/remote_repository_interface.dar
 import 'package:parkflow/repositories/providers/remote_repository_provider.dart';
 import 'package:parkflow/utils/handlers/error_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 
 part 'analytics_service.g.dart';
 
 class AnalyticsService {
   final RemoteRepositoryInterface _remote;
+  final Ref _ref;
 
-  AnalyticsService(this._remote);
+  AnalyticsService(this._remote, this._ref);
+
+  Future<String?> _getToken() =>
+      _ref.read(authProvider.notifier).getValidAccessToken();
 
   Future<GetAnalyticsOverviewResponseEntity> fetchOverview() async {
     try {
-      return await _remote.getAnalyticsOverview();
+      return await _remote.getAnalyticsOverview(accessToken: await _getToken());
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -25,7 +30,10 @@ class AnalyticsService {
     String period,
   ) async {
     try {
-      return await _remote.getOccupancyTrend(period);
+      return await _remote.getOccupancyTrend(
+        period,
+        accessToken: await _getToken(),
+      );
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -33,15 +41,15 @@ class AnalyticsService {
 
   Future<GetAiHealthResponseEntity> fetchAiHealth() async {
     try {
-      return await _remote.getAiHealth();
+      return await _remote.getAiHealth(accessToken: await _getToken());
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 AnalyticsService analyticsService(Ref ref) {
   final remote = ref.watch(remoteRepositoryProvider);
-  return AnalyticsService(remote);
+  return AnalyticsService(remote, ref);
 }

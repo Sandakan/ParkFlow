@@ -18,37 +18,82 @@ import 'package:parkflow/core/network/entities/get_occupancy_trend_response_enti
 import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dart';
 import 'package:parkflow/repositories/entities/settings/get_inference_settings_response_entity.dart';
 import 'package:parkflow/repositories/entities/settings/update_inference_settings_request.dart';
+import 'package:parkflow/core/network/entities/get_parking_suggestions_response_entity.dart';
 
 abstract class RemoteRepositoryInterface {
   Future<LoginResponseEntity> login(LoginRequestEntity request);
   Future<void> register(RegisterRequestEntity request);
   Future<GetUserResponseEntity> getCurrentUser(String token);
-  Future<GetParkingSlotsResponseEntity> getParkingSlots({String? cameraId});
-  Future<GetParkingLotsResponseEntity> getParkingLots({String? search});
-  Future<GetParkingLotResponseEntity> getParkingLot(String lotId);
+  Future<GetParkingSlotsResponseEntity> getParkingSlots({
+    String? cameraId,
+    String? lotId,
+    String? accessToken,
+  });
+  Future<GetParkingLotsResponseEntity> getParkingLots({
+    String? search,
+    String? accessToken,
+  });
+  Future<GetParkingLotResponseEntity> getParkingLot(
+    String lotId, {
+    String? accessToken,
+  });
   Future<GetUserResponseEntity> testToken(String token);
   Future<LoginResponseEntity> refreshToken(String refreshToken);
-  Future<void> createParkingLot(CreateParkingLotRequest request);
-  Future<void> updateParkingLot(String lotId, UpdateParkingLotRequest request);
-  Future<void> deleteParkingLot(String lotId);
+  Future<void> createParkingLot(
+    CreateParkingLotRequest request, {
+    String? accessToken,
+  });
+  Future<void> updateParkingLot(
+    String lotId,
+    UpdateParkingLotRequest request, {
+    String? accessToken,
+  });
+  Future<void> deleteParkingLot(String lotId, {String? accessToken});
 
-  Future<void> createParkingSlot(CreateParkingSlotRequest request);
-  Future<void> deleteParkingSlot(String slotId, {String? cameraId});
+  Future<void> createParkingSlot(
+    CreateParkingSlotRequest request, {
+    String? accessToken,
+  });
+  Future<void> deleteParkingSlot(
+    String slotId, {
+    String? cameraId,
+    String? accessToken,
+  });
 
-  Future<GetCamerasResponseEntity> getCameras();
-  Future<void> createCamera(CreateCameraRequest request);
-  Future<void> updateCamera(String cameraId, UpdateCameraRequest request);
-  Future<void> deleteCamera(String cameraId);
+  Future<GetCamerasResponseEntity> getCameras({String? accessToken});
+  Future<void> createCamera(CreateCameraRequest request, {String? accessToken});
+  Future<void> updateCamera(
+    String cameraId,
+    UpdateCameraRequest request, {
+    String? accessToken,
+  });
+  Future<void> deleteCamera(String cameraId, {String? accessToken});
   Future<GetWebrtcOfferResponseEntity> sendWebrtcOffer(
     String cameraId,
-    CreateWebrtcOfferRequest request,
-  );
+    CreateWebrtcOfferRequest request, {
+    String? accessToken,
+  });
 
-  Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview();
-  Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(String period);
-  Future<GetAiHealthResponseEntity> getAiHealth();
-  Future<bool> checkCameraHealth(String cameraId);
+  Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview({
+    String? accessToken,
+  });
+  Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(
+    String period, {
+    String? accessToken,
+  });
+  Future<GetAiHealthResponseEntity> getAiHealth({String? accessToken});
+  Future<bool> checkCameraHealth(String cameraId, {String? accessToken});
 
-  Future<GetInferenceSettingsResponseEntity> getInferenceSettings();
-  Future<void> updateInferenceSettings(UpdateInferenceSettingsRequest request);
+  Future<GetInferenceSettingsResponseEntity> getInferenceSettings({
+    String? accessToken,
+  });
+  Future<void> updateInferenceSettings(
+    UpdateInferenceSettingsRequest request, {
+    String? accessToken,
+  });
+
+  Future<GetParkingSuggestionsResponseEntity> getParkingSuggestions(
+    String lotId, {
+    String? accessToken,
+  });
 }

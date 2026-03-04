@@ -12,19 +12,32 @@ import 'package:parkflow/utils/helpers/talker.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_slot_request.dart';
+import 'package:parkflow/core/network/entities/get_parking_suggestions_response_entity.dart';
+import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 
 part 'parking_service.g.dart';
 
 class ParkingService {
   final RemoteRepositoryInterface _remote;
   final String _baseUrl;
+  final Ref _ref;
   socket_io.Socket? _socket;
 
-  ParkingService(this._remote, this._baseUrl);
+  ParkingService(this._remote, this._baseUrl, this._ref);
 
-  Future<List<ParkingSlotModel>> fetchParkingSlots({String? cameraId}) async {
+  Future<String?> _getToken() =>
+      _ref.read(authProvider.notifier).getValidAccessToken();
+
+  Future<List<ParkingSlotModel>> fetchParkingSlots({
+    String? cameraId,
+    String? lotId,
+  }) async {
     try {
-      final response = await _remote.getParkingSlots(cameraId: cameraId);
+      final response = await _remote.getParkingSlots(
+        cameraId: cameraId,
+        lotId: lotId,
+        accessToken: await _getToken(),
+      );
       return response.slots;
     } catch (e) {
       throw ErrorHandler.handle(e);
@@ -33,7 +46,7 @@ class ParkingService {
 
   Future<void> createParkingSlot(CreateParkingSlotRequest request) async {
     try {
-      await _remote.createParkingSlot(request);
+      await _remote.createParkingSlot(request, accessToken: await _getToken());
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -41,7 +54,11 @@ class ParkingService {
 
   Future<void> deleteParkingSlot(String slotId, {String? cameraId}) async {
     try {
-      await _remote.deleteParkingSlot(slotId, cameraId: cameraId);
+      await _remote.deleteParkingSlot(
+        slotId,
+        cameraId: cameraId,
+        accessToken: await _getToken(),
+      );
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -49,7 +66,10 @@ class ParkingService {
 
   Future<List<ParkingLotModel>> fetchParkingLots({String? search}) async {
     try {
-      final response = await _remote.getParkingLots(search: search);
+      final response = await _remote.getParkingLots(
+        search: search,
+        accessToken: await _getToken(),
+      );
       return response.lots;
     } catch (e) {
       throw ErrorHandler.handle(e);
@@ -58,7 +78,7 @@ class ParkingService {
 
   Future<void> createParkingLot(CreateParkingLotRequest request) async {
     try {
-      await _remote.createParkingLot(request);
+      await _remote.createParkingLot(request, accessToken: await _getToken());
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -66,7 +86,7 @@ class ParkingService {
 
   Future<GetParkingLotResponseEntity> fetchParkingLot(String lotId) async {
     try {
-      return await _remote.getParkingLot(lotId);
+      return await _remote.getParkingLot(lotId, accessToken: await _getToken());
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -77,7 +97,11 @@ class ParkingService {
     UpdateParkingLotRequest request,
   ) async {
     try {
-      await _remote.updateParkingLot(lotId, request);
+      await _remote.updateParkingLot(
+        lotId,
+        request,
+        accessToken: await _getToken(),
+      );
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -85,7 +109,20 @@ class ParkingService {
 
   Future<void> deleteParkingLot(String lotId) async {
     try {
-      await _remote.deleteParkingLot(lotId);
+      await _remote.deleteParkingLot(lotId, accessToken: await _getToken());
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<GetParkingSuggestionsResponseEntity> getParkingSuggestions(
+    String lotId,
+  ) async {
+    try {
+      return await _remote.getParkingSuggestions(
+        lotId,
+        accessToken: await _getToken(),
+      );
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -142,9 +179,9 @@ class ParkingService {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 ParkingService parkingService(Ref ref) {
   final remote = ref.watch(remoteRepositoryProvider);
   final env = ref.watch(envRepositoryProvider);
-  return ParkingService(remote, env.getWebSocketUrl());
+  return ParkingService(remote, env.getWebSocketUrl(), ref);
 }

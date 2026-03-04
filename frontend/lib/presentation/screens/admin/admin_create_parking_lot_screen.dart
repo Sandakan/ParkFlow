@@ -39,6 +39,22 @@ class _AdminCreateParkingLotScreenState
     'totalSlots': FormControl<String>(
       validators: [Validators.required, Validators.pattern(r'^\d+$')],
     ),
+    'slotWidth': FormControl<String>(
+      value: '5.0',
+      validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+    ),
+    'slotLength': FormControl<String>(
+      value: '5.0',
+      validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+    ),
+    'entranceRow': FormControl<String>(
+      value: '0',
+      validators: [Validators.required, Validators.pattern(r'^\d+$')],
+    ),
+    'entranceCol': FormControl<String>(
+      value: '0',
+      validators: [Validators.required, Validators.pattern(r'^\d+$')],
+    ),
   });
 
   Future<void> _submit() async {
@@ -56,6 +72,18 @@ class _AdminCreateParkingLotScreenState
         latitude: double.parse(form.control('latitude').value as String),
         longitude: double.parse(form.control('longitude').value as String),
         totalSlots: int.parse(form.control('totalSlots').value as String),
+        slotWidthMeters: double.parse(
+          form.control('slotWidth').value as String,
+        ),
+        slotLengthMeters: double.parse(
+          form.control('slotLength').value as String,
+        ),
+        entranceLogicalLocations: [
+          [
+            int.parse(form.control('entranceRow').value as String),
+            int.parse(form.control('entranceCol').value as String),
+          ],
+        ],
       );
 
       await ref.read(parkingServiceProvider).createParkingLot(request);
@@ -158,6 +186,58 @@ class _AdminCreateParkingLotScreenState
                       hint: context.l10n.totalSlotsHint,
                       icon: Icons.format_list_numbered,
                       keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
+                            formControlName: 'slotWidth',
+                            label: 'Slot Width (m)',
+                            hint: 'e.g. 5.0',
+                            icon: Icons.width_full_outlined,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildTextField(
+                            formControlName: 'slotLength',
+                            label: 'Slot Length (m)',
+                            hint: 'e.g. 5.0',
+                            icon: Icons.height_outlined,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
+                            formControlName: 'entranceRow',
+                            label: 'Entrance Row',
+                            hint: '0',
+                            icon: Icons.door_front_door_outlined,
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildTextField(
+                            formControlName: 'entranceCol',
+                            label: 'Entrance Column',
+                            hint: '0',
+                            icon: Icons.door_front_door_outlined,
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(

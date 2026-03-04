@@ -561,6 +561,8 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
 
   void _promptSlotName(CameraInfo notifier) {
     final controller = TextEditingController();
+    final rowController = TextEditingController(text: '0');
+    final colController = TextEditingController(text: '0');
     String tempType = 'general';
 
     showDialog(
@@ -582,6 +584,32 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                       border: const OutlineInputBorder(),
                     ),
                     autofocus: true,
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: rowController,
+                          decoration: const InputDecoration(
+                            labelText: 'Logical Row',
+                            border: OutlineInputBorder(),
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: TextField(
+                          controller: colController,
+                          decoration: const InputDecoration(
+                            labelText: 'Logical Column',
+                            border: OutlineInputBorder(),
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
@@ -623,15 +651,23 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    final name = controller.text.trim();
-                    if (name.isNotEmpty) {
+                    final nameStr = controller.text.trim();
+                    if (nameStr.isNotEmpty) {
                       Navigator.of(context).pop();
                       notifier.setSelectedSlotType(tempType);
-                      await notifier.saveSlot(name);
+                      final row = int.tryParse(rowController.text) ?? 0;
+                      final col = int.tryParse(colController.text) ?? 0;
+                      await notifier.saveSlot(
+                        nameStr,
+                        logicalRow: row,
+                        logicalCol: col,
+                      );
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(context.l10n.slotSavedSuccess(name)),
+                            content: Text(
+                              context.l10n.slotSavedSuccess(nameStr),
+                            ),
                           ),
                         );
                       }

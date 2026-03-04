@@ -21,7 +21,7 @@ final class CameraServiceProvider
         argument: null,
         retry: null,
         name: r'cameraServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -48,4 +48,4 @@ final class CameraServiceProvider
   }
 }
 
-String _$cameraServiceHash() => r'c274029193805e5e67b7da6e909bb4078333f319';
+String _$cameraServiceHash() => r'8732d7e14973dd8d4638788d1c40906942c46f5b';

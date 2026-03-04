@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateParkingSlotRequest {
 
- String get lotId; String get cameraId; String get slotNumber; String get slotType; List<Point2D> get coordinates;
+ String get lotId; String get cameraId; String get slotNumber; String get slotType;@JsonKey(name: 'logical_row') int get logicalRow;@JsonKey(name: 'logical_col') int get logicalCol; List<Point2D> get coordinates;
 /// Create a copy of CreateParkingSlotRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CreateParkingSlotRequestCopyWith<CreateParkingSlotRequest> get copyWith => _$Cr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateParkingSlotRequest&&(identical(other.lotId, lotId) || other.lotId == lotId)&&(identical(other.cameraId, cameraId) || other.cameraId == cameraId)&&(identical(other.slotNumber, slotNumber) || other.slotNumber == slotNumber)&&(identical(other.slotType, slotType) || other.slotType == slotType)&&const DeepCollectionEquality().equals(other.coordinates, coordinates));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateParkingSlotRequest&&(identical(other.lotId, lotId) || other.lotId == lotId)&&(identical(other.cameraId, cameraId) || other.cameraId == cameraId)&&(identical(other.slotNumber, slotNumber) || other.slotNumber == slotNumber)&&(identical(other.slotType, slotType) || other.slotType == slotType)&&(identical(other.logicalRow, logicalRow) || other.logicalRow == logicalRow)&&(identical(other.logicalCol, logicalCol) || other.logicalCol == logicalCol)&&const DeepCollectionEquality().equals(other.coordinates, coordinates));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,lotId,cameraId,slotNumber,slotType,const DeepCollectionEquality().hash(coordinates));
+int get hashCode => Object.hash(runtimeType,lotId,cameraId,slotNumber,slotType,logicalRow,logicalCol,const DeepCollectionEquality().hash(coordinates));
 
 @override
 String toString() {
-  return 'CreateParkingSlotRequest(lotId: $lotId, cameraId: $cameraId, slotNumber: $slotNumber, slotType: $slotType, coordinates: $coordinates)';
+  return 'CreateParkingSlotRequest(lotId: $lotId, cameraId: $cameraId, slotNumber: $slotNumber, slotType: $slotType, logicalRow: $logicalRow, logicalCol: $logicalCol, coordinates: $coordinates)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CreateParkingSlotRequestCopyWith<$Res>  {
   factory $CreateParkingSlotRequestCopyWith(CreateParkingSlotRequest value, $Res Function(CreateParkingSlotRequest) _then) = _$CreateParkingSlotRequestCopyWithImpl;
 @useResult
 $Res call({
- String lotId, String cameraId, String slotNumber, String slotType, List<Point2D> coordinates
+ String lotId, String cameraId, String slotNumber, String slotType,@JsonKey(name: 'logical_row') int logicalRow,@JsonKey(name: 'logical_col') int logicalCol, List<Point2D> coordinates
 });
 
 
@@ -65,13 +65,15 @@ class _$CreateParkingSlotRequestCopyWithImpl<$Res>
 
 /// Create a copy of CreateParkingSlotRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? lotId = null,Object? cameraId = null,Object? slotNumber = null,Object? slotType = null,Object? coordinates = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? lotId = null,Object? cameraId = null,Object? slotNumber = null,Object? slotType = null,Object? logicalRow = null,Object? logicalCol = null,Object? coordinates = null,}) {
   return _then(_self.copyWith(
 lotId: null == lotId ? _self.lotId : lotId // ignore: cast_nullable_to_non_nullable
 as String,cameraId: null == cameraId ? _self.cameraId : cameraId // ignore: cast_nullable_to_non_nullable
 as String,slotNumber: null == slotNumber ? _self.slotNumber : slotNumber // ignore: cast_nullable_to_non_nullable
 as String,slotType: null == slotType ? _self.slotType : slotType // ignore: cast_nullable_to_non_nullable
-as String,coordinates: null == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as String,logicalRow: null == logicalRow ? _self.logicalRow : logicalRow // ignore: cast_nullable_to_non_nullable
+as int,logicalCol: null == logicalCol ? _self.logicalCol : logicalCol // ignore: cast_nullable_to_non_nullable
+as int,coordinates: null == coordinates ? _self.coordinates : coordinates // ignore: cast_nullable_to_non_nullable
 as List<Point2D>,
   ));
 }
@@ -157,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String lotId,  String cameraId,  String slotNumber,  String slotType,  List<Point2D> coordinates)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String lotId,  String cameraId,  String slotNumber,  String slotType, @JsonKey(name: 'logical_row')  int logicalRow, @JsonKey(name: 'logical_col')  int logicalCol,  List<Point2D> coordinates)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateParkingSlotRequest() when $default != null:
-return $default(_that.lotId,_that.cameraId,_that.slotNumber,_that.slotType,_that.coordinates);case _:
+return $default(_that.lotId,_that.cameraId,_that.slotNumber,_that.slotType,_that.logicalRow,_that.logicalCol,_that.coordinates);case _:
   return orElse();
 
 }
@@ -178,10 +180,10 @@ return $default(_that.lotId,_that.cameraId,_that.slotNumber,_that.slotType,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String lotId,  String cameraId,  String slotNumber,  String slotType,  List<Point2D> coordinates)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String lotId,  String cameraId,  String slotNumber,  String slotType, @JsonKey(name: 'logical_row')  int logicalRow, @JsonKey(name: 'logical_col')  int logicalCol,  List<Point2D> coordinates)  $default,) {final _that = this;
 switch (_that) {
 case _CreateParkingSlotRequest():
-return $default(_that.lotId,_that.cameraId,_that.slotNumber,_that.slotType,_that.coordinates);case _:
+return $default(_that.lotId,_that.cameraId,_that.slotNumber,_that.slotType,_that.logicalRow,_that.logicalCol,_that.coordinates);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +200,10 @@ return $default(_that.lotId,_that.cameraId,_that.slotNumber,_that.slotType,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String lotId,  String cameraId,  String slotNumber,  String slotType,  List<Point2D> coordinates)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String lotId,  String cameraId,  String slotNumber,  String slotType, @JsonKey(name: 'logical_row')  int logicalRow, @JsonKey(name: 'logical_col')  int logicalCol,  List<Point2D> coordinates)?  $default,) {final _that = this;
 switch (_that) {
 case _CreateParkingSlotRequest() when $default != null:
-return $default(_that.lotId,_that.cameraId,_that.slotNumber,_that.slotType,_that.coordinates);case _:
+return $default(_that.lotId,_that.cameraId,_that.slotNumber,_that.slotType,_that.logicalRow,_that.logicalCol,_that.coordinates);case _:
   return null;
 
 }
@@ -213,13 +215,15 @@ return $default(_that.lotId,_that.cameraId,_that.slotNumber,_that.slotType,_that
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _CreateParkingSlotRequest implements CreateParkingSlotRequest {
-  const _CreateParkingSlotRequest({required this.lotId, required this.cameraId, required this.slotNumber, this.slotType = 'general', required final  List<Point2D> coordinates}): _coordinates = coordinates;
+  const _CreateParkingSlotRequest({required this.lotId, required this.cameraId, required this.slotNumber, this.slotType = 'general', @JsonKey(name: 'logical_row') this.logicalRow = 0, @JsonKey(name: 'logical_col') this.logicalCol = 0, required final  List<Point2D> coordinates}): _coordinates = coordinates;
   factory _CreateParkingSlotRequest.fromJson(Map<String, dynamic> json) => _$CreateParkingSlotRequestFromJson(json);
 
 @override final  String lotId;
 @override final  String cameraId;
 @override final  String slotNumber;
 @override@JsonKey() final  String slotType;
+@override@JsonKey(name: 'logical_row') final  int logicalRow;
+@override@JsonKey(name: 'logical_col') final  int logicalCol;
  final  List<Point2D> _coordinates;
 @override List<Point2D> get coordinates {
   if (_coordinates is EqualUnmodifiableListView) return _coordinates;
@@ -241,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateParkingSlotRequest&&(identical(other.lotId, lotId) || other.lotId == lotId)&&(identical(other.cameraId, cameraId) || other.cameraId == cameraId)&&(identical(other.slotNumber, slotNumber) || other.slotNumber == slotNumber)&&(identical(other.slotType, slotType) || other.slotType == slotType)&&const DeepCollectionEquality().equals(other._coordinates, _coordinates));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateParkingSlotRequest&&(identical(other.lotId, lotId) || other.lotId == lotId)&&(identical(other.cameraId, cameraId) || other.cameraId == cameraId)&&(identical(other.slotNumber, slotNumber) || other.slotNumber == slotNumber)&&(identical(other.slotType, slotType) || other.slotType == slotType)&&(identical(other.logicalRow, logicalRow) || other.logicalRow == logicalRow)&&(identical(other.logicalCol, logicalCol) || other.logicalCol == logicalCol)&&const DeepCollectionEquality().equals(other._coordinates, _coordinates));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,lotId,cameraId,slotNumber,slotType,const DeepCollectionEquality().hash(_coordinates));
+int get hashCode => Object.hash(runtimeType,lotId,cameraId,slotNumber,slotType,logicalRow,logicalCol,const DeepCollectionEquality().hash(_coordinates));
 
 @override
 String toString() {
-  return 'CreateParkingSlotRequest(lotId: $lotId, cameraId: $cameraId, slotNumber: $slotNumber, slotType: $slotType, coordinates: $coordinates)';
+  return 'CreateParkingSlotRequest(lotId: $lotId, cameraId: $cameraId, slotNumber: $slotNumber, slotType: $slotType, logicalRow: $logicalRow, logicalCol: $logicalCol, coordinates: $coordinates)';
 }
 
 
@@ -261,7 +265,7 @@ abstract mixin class _$CreateParkingSlotRequestCopyWith<$Res> implements $Create
   factory _$CreateParkingSlotRequestCopyWith(_CreateParkingSlotRequest value, $Res Function(_CreateParkingSlotRequest) _then) = __$CreateParkingSlotRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String lotId, String cameraId, String slotNumber, String slotType, List<Point2D> coordinates
+ String lotId, String cameraId, String slotNumber, String slotType,@JsonKey(name: 'logical_row') int logicalRow,@JsonKey(name: 'logical_col') int logicalCol, List<Point2D> coordinates
 });
 
 
@@ -278,13 +282,15 @@ class __$CreateParkingSlotRequestCopyWithImpl<$Res>
 
 /// Create a copy of CreateParkingSlotRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? lotId = null,Object? cameraId = null,Object? slotNumber = null,Object? slotType = null,Object? coordinates = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? lotId = null,Object? cameraId = null,Object? slotNumber = null,Object? slotType = null,Object? logicalRow = null,Object? logicalCol = null,Object? coordinates = null,}) {
   return _then(_CreateParkingSlotRequest(
 lotId: null == lotId ? _self.lotId : lotId // ignore: cast_nullable_to_non_nullable
 as String,cameraId: null == cameraId ? _self.cameraId : cameraId // ignore: cast_nullable_to_non_nullable
 as String,slotNumber: null == slotNumber ? _self.slotNumber : slotNumber // ignore: cast_nullable_to_non_nullable
 as String,slotType: null == slotType ? _self.slotType : slotType // ignore: cast_nullable_to_non_nullable
-as String,coordinates: null == coordinates ? _self._coordinates : coordinates // ignore: cast_nullable_to_non_nullable
+as String,logicalRow: null == logicalRow ? _self.logicalRow : logicalRow // ignore: cast_nullable_to_non_nullable
+as int,logicalCol: null == logicalCol ? _self.logicalCol : logicalCol // ignore: cast_nullable_to_non_nullable
+as int,coordinates: null == coordinates ? _self._coordinates : coordinates // ignore: cast_nullable_to_non_nullable
 as List<Point2D>,
   ));
 }
