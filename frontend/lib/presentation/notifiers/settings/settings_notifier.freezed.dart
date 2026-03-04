@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SettingsState {
 
- double get confidenceThreshold; double get iouThreshold; int get frameSkip; int get stabilityBuffer; bool get isLoading; bool get isSaving; String? get error; bool get saveSuccess;
+ double get confidenceThreshold; double get iouThreshold; int get frameSkip; int get stabilityBuffer; bool get globalInferenceEnabled; bool get isLoading; bool get isSaving; String? get error; bool get saveSuccess;
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $SettingsStateCopyWith<SettingsState> get copyWith => _$SettingsStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.confidenceThreshold, confidenceThreshold) || other.confidenceThreshold == confidenceThreshold)&&(identical(other.iouThreshold, iouThreshold) || other.iouThreshold == iouThreshold)&&(identical(other.frameSkip, frameSkip) || other.frameSkip == frameSkip)&&(identical(other.stabilityBuffer, stabilityBuffer) || other.stabilityBuffer == stabilityBuffer)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.error, error) || other.error == error)&&(identical(other.saveSuccess, saveSuccess) || other.saveSuccess == saveSuccess));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SettingsState&&(identical(other.confidenceThreshold, confidenceThreshold) || other.confidenceThreshold == confidenceThreshold)&&(identical(other.iouThreshold, iouThreshold) || other.iouThreshold == iouThreshold)&&(identical(other.frameSkip, frameSkip) || other.frameSkip == frameSkip)&&(identical(other.stabilityBuffer, stabilityBuffer) || other.stabilityBuffer == stabilityBuffer)&&(identical(other.globalInferenceEnabled, globalInferenceEnabled) || other.globalInferenceEnabled == globalInferenceEnabled)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.error, error) || other.error == error)&&(identical(other.saveSuccess, saveSuccess) || other.saveSuccess == saveSuccess));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,confidenceThreshold,iouThreshold,frameSkip,stabilityBuffer,isLoading,isSaving,error,saveSuccess);
+int get hashCode => Object.hash(runtimeType,confidenceThreshold,iouThreshold,frameSkip,stabilityBuffer,globalInferenceEnabled,isLoading,isSaving,error,saveSuccess);
 
 @override
 String toString() {
-  return 'SettingsState(confidenceThreshold: $confidenceThreshold, iouThreshold: $iouThreshold, frameSkip: $frameSkip, stabilityBuffer: $stabilityBuffer, isLoading: $isLoading, isSaving: $isSaving, error: $error, saveSuccess: $saveSuccess)';
+  return 'SettingsState(confidenceThreshold: $confidenceThreshold, iouThreshold: $iouThreshold, frameSkip: $frameSkip, stabilityBuffer: $stabilityBuffer, globalInferenceEnabled: $globalInferenceEnabled, isLoading: $isLoading, isSaving: $isSaving, error: $error, saveSuccess: $saveSuccess)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $SettingsStateCopyWith<$Res>  {
   factory $SettingsStateCopyWith(SettingsState value, $Res Function(SettingsState) _then) = _$SettingsStateCopyWithImpl;
 @useResult
 $Res call({
- double confidenceThreshold, double iouThreshold, int frameSkip, int stabilityBuffer, bool isLoading, bool isSaving, String? error, bool saveSuccess
+ double confidenceThreshold, double iouThreshold, int frameSkip, int stabilityBuffer, bool globalInferenceEnabled, bool isLoading, bool isSaving, String? error, bool saveSuccess
 });
 
 
@@ -62,13 +62,14 @@ class _$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? confidenceThreshold = null,Object? iouThreshold = null,Object? frameSkip = null,Object? stabilityBuffer = null,Object? isLoading = null,Object? isSaving = null,Object? error = freezed,Object? saveSuccess = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? confidenceThreshold = null,Object? iouThreshold = null,Object? frameSkip = null,Object? stabilityBuffer = null,Object? globalInferenceEnabled = null,Object? isLoading = null,Object? isSaving = null,Object? error = freezed,Object? saveSuccess = null,}) {
   return _then(_self.copyWith(
 confidenceThreshold: null == confidenceThreshold ? _self.confidenceThreshold : confidenceThreshold // ignore: cast_nullable_to_non_nullable
 as double,iouThreshold: null == iouThreshold ? _self.iouThreshold : iouThreshold // ignore: cast_nullable_to_non_nullable
 as double,frameSkip: null == frameSkip ? _self.frameSkip : frameSkip // ignore: cast_nullable_to_non_nullable
 as int,stabilityBuffer: null == stabilityBuffer ? _self.stabilityBuffer : stabilityBuffer // ignore: cast_nullable_to_non_nullable
-as int,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
+as int,globalInferenceEnabled: null == globalInferenceEnabled ? _self.globalInferenceEnabled : globalInferenceEnabled // ignore: cast_nullable_to_non_nullable
+as bool,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,isSaving: null == isSaving ? _self.isSaving : isSaving // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,saveSuccess: null == saveSuccess ? _self.saveSuccess : saveSuccess // ignore: cast_nullable_to_non_nullable
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double confidenceThreshold,  double iouThreshold,  int frameSkip,  int stabilityBuffer,  bool isLoading,  bool isSaving,  String? error,  bool saveSuccess)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double confidenceThreshold,  double iouThreshold,  int frameSkip,  int stabilityBuffer,  bool globalInferenceEnabled,  bool isLoading,  bool isSaving,  String? error,  bool saveSuccess)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.confidenceThreshold,_that.iouThreshold,_that.frameSkip,_that.stabilityBuffer,_that.isLoading,_that.isSaving,_that.error,_that.saveSuccess);case _:
+return $default(_that.confidenceThreshold,_that.iouThreshold,_that.frameSkip,_that.stabilityBuffer,_that.globalInferenceEnabled,_that.isLoading,_that.isSaving,_that.error,_that.saveSuccess);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.confidenceThreshold,_that.iouThreshold,_that.frameSkip,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double confidenceThreshold,  double iouThreshold,  int frameSkip,  int stabilityBuffer,  bool isLoading,  bool isSaving,  String? error,  bool saveSuccess)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double confidenceThreshold,  double iouThreshold,  int frameSkip,  int stabilityBuffer,  bool globalInferenceEnabled,  bool isLoading,  bool isSaving,  String? error,  bool saveSuccess)  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState():
-return $default(_that.confidenceThreshold,_that.iouThreshold,_that.frameSkip,_that.stabilityBuffer,_that.isLoading,_that.isSaving,_that.error,_that.saveSuccess);case _:
+return $default(_that.confidenceThreshold,_that.iouThreshold,_that.frameSkip,_that.stabilityBuffer,_that.globalInferenceEnabled,_that.isLoading,_that.isSaving,_that.error,_that.saveSuccess);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.confidenceThreshold,_that.iouThreshold,_that.frameSkip,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double confidenceThreshold,  double iouThreshold,  int frameSkip,  int stabilityBuffer,  bool isLoading,  bool isSaving,  String? error,  bool saveSuccess)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double confidenceThreshold,  double iouThreshold,  int frameSkip,  int stabilityBuffer,  bool globalInferenceEnabled,  bool isLoading,  bool isSaving,  String? error,  bool saveSuccess)?  $default,) {final _that = this;
 switch (_that) {
 case _SettingsState() when $default != null:
-return $default(_that.confidenceThreshold,_that.iouThreshold,_that.frameSkip,_that.stabilityBuffer,_that.isLoading,_that.isSaving,_that.error,_that.saveSuccess);case _:
+return $default(_that.confidenceThreshold,_that.iouThreshold,_that.frameSkip,_that.stabilityBuffer,_that.globalInferenceEnabled,_that.isLoading,_that.isSaving,_that.error,_that.saveSuccess);case _:
   return null;
 
 }
@@ -213,13 +214,14 @@ return $default(_that.confidenceThreshold,_that.iouThreshold,_that.frameSkip,_th
 
 
 class _SettingsState implements SettingsState {
-  const _SettingsState({this.confidenceThreshold = 0.25, this.iouThreshold = 0.45, this.frameSkip = 1, this.stabilityBuffer = 3, this.isLoading = false, this.isSaving = false, this.error, this.saveSuccess = false});
+  const _SettingsState({this.confidenceThreshold = 0.25, this.iouThreshold = 0.45, this.frameSkip = 1, this.stabilityBuffer = 3, this.globalInferenceEnabled = false, this.isLoading = false, this.isSaving = false, this.error, this.saveSuccess = false});
   
 
 @override@JsonKey() final  double confidenceThreshold;
 @override@JsonKey() final  double iouThreshold;
 @override@JsonKey() final  int frameSkip;
 @override@JsonKey() final  int stabilityBuffer;
+@override@JsonKey() final  bool globalInferenceEnabled;
 @override@JsonKey() final  bool isLoading;
 @override@JsonKey() final  bool isSaving;
 @override final  String? error;
@@ -235,16 +237,16 @@ _$SettingsStateCopyWith<_SettingsState> get copyWith => __$SettingsStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.confidenceThreshold, confidenceThreshold) || other.confidenceThreshold == confidenceThreshold)&&(identical(other.iouThreshold, iouThreshold) || other.iouThreshold == iouThreshold)&&(identical(other.frameSkip, frameSkip) || other.frameSkip == frameSkip)&&(identical(other.stabilityBuffer, stabilityBuffer) || other.stabilityBuffer == stabilityBuffer)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.error, error) || other.error == error)&&(identical(other.saveSuccess, saveSuccess) || other.saveSuccess == saveSuccess));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SettingsState&&(identical(other.confidenceThreshold, confidenceThreshold) || other.confidenceThreshold == confidenceThreshold)&&(identical(other.iouThreshold, iouThreshold) || other.iouThreshold == iouThreshold)&&(identical(other.frameSkip, frameSkip) || other.frameSkip == frameSkip)&&(identical(other.stabilityBuffer, stabilityBuffer) || other.stabilityBuffer == stabilityBuffer)&&(identical(other.globalInferenceEnabled, globalInferenceEnabled) || other.globalInferenceEnabled == globalInferenceEnabled)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.error, error) || other.error == error)&&(identical(other.saveSuccess, saveSuccess) || other.saveSuccess == saveSuccess));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,confidenceThreshold,iouThreshold,frameSkip,stabilityBuffer,isLoading,isSaving,error,saveSuccess);
+int get hashCode => Object.hash(runtimeType,confidenceThreshold,iouThreshold,frameSkip,stabilityBuffer,globalInferenceEnabled,isLoading,isSaving,error,saveSuccess);
 
 @override
 String toString() {
-  return 'SettingsState(confidenceThreshold: $confidenceThreshold, iouThreshold: $iouThreshold, frameSkip: $frameSkip, stabilityBuffer: $stabilityBuffer, isLoading: $isLoading, isSaving: $isSaving, error: $error, saveSuccess: $saveSuccess)';
+  return 'SettingsState(confidenceThreshold: $confidenceThreshold, iouThreshold: $iouThreshold, frameSkip: $frameSkip, stabilityBuffer: $stabilityBuffer, globalInferenceEnabled: $globalInferenceEnabled, isLoading: $isLoading, isSaving: $isSaving, error: $error, saveSuccess: $saveSuccess)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$SettingsStateCopyWith<$Res> implements $SettingsStateCopy
   factory _$SettingsStateCopyWith(_SettingsState value, $Res Function(_SettingsState) _then) = __$SettingsStateCopyWithImpl;
 @override @useResult
 $Res call({
- double confidenceThreshold, double iouThreshold, int frameSkip, int stabilityBuffer, bool isLoading, bool isSaving, String? error, bool saveSuccess
+ double confidenceThreshold, double iouThreshold, int frameSkip, int stabilityBuffer, bool globalInferenceEnabled, bool isLoading, bool isSaving, String? error, bool saveSuccess
 });
 
 
@@ -272,13 +274,14 @@ class __$SettingsStateCopyWithImpl<$Res>
 
 /// Create a copy of SettingsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? confidenceThreshold = null,Object? iouThreshold = null,Object? frameSkip = null,Object? stabilityBuffer = null,Object? isLoading = null,Object? isSaving = null,Object? error = freezed,Object? saveSuccess = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? confidenceThreshold = null,Object? iouThreshold = null,Object? frameSkip = null,Object? stabilityBuffer = null,Object? globalInferenceEnabled = null,Object? isLoading = null,Object? isSaving = null,Object? error = freezed,Object? saveSuccess = null,}) {
   return _then(_SettingsState(
 confidenceThreshold: null == confidenceThreshold ? _self.confidenceThreshold : confidenceThreshold // ignore: cast_nullable_to_non_nullable
 as double,iouThreshold: null == iouThreshold ? _self.iouThreshold : iouThreshold // ignore: cast_nullable_to_non_nullable
 as double,frameSkip: null == frameSkip ? _self.frameSkip : frameSkip // ignore: cast_nullable_to_non_nullable
 as int,stabilityBuffer: null == stabilityBuffer ? _self.stabilityBuffer : stabilityBuffer // ignore: cast_nullable_to_non_nullable
-as int,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
+as int,globalInferenceEnabled: null == globalInferenceEnabled ? _self.globalInferenceEnabled : globalInferenceEnabled // ignore: cast_nullable_to_non_nullable
+as bool,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,isSaving: null == isSaving ? _self.isSaving : isSaving // ignore: cast_nullable_to_non_nullable
 as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,saveSuccess: null == saveSuccess ? _self.saveSuccess : saveSuccess // ignore: cast_nullable_to_non_nullable

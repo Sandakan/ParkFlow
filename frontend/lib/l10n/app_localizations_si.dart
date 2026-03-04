@@ -472,6 +472,22 @@ class AppLocalizationsSi extends AppLocalizations {
   String get settingsSaving => 'Saving...';
 
   @override
+  String get settingsSystemControl => 'System Control';
+
+  @override
+  String get settingsGlobalInference => 'Enable Global Inference';
+
+  @override
+  String get settingsGlobalInferenceDesc =>
+      'Enable or disable AI inference globally for all available cameras.';
+
+  @override
+  String get settingsInferenceRunning => 'Running';
+
+  @override
+  String get settingsInferenceStopped => 'Stopped';
+
+  @override
   String get unknownLot => 'Unknown Parking Lot';
 
   @override

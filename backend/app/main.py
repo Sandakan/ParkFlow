@@ -15,6 +15,7 @@ from app.core.config import settings
 from app.core.database import connect_to_mongo, close_mongo_connection, db
 from app.core.redis import connect_to_redis, close_redis_connection, redis_cache
 from app.core.exceptions import AppException
+from app.ai.inference_manager import inference_manager
 from app.api.routers import (
     auth,
     users,
@@ -35,9 +36,12 @@ async def lifespan(app: FastAPI):
     await connect_to_redis()
     logger.info("ParkFlow API started successfully.")
 
+    await inference_manager.start_all()
+
     yield
 
     logger.info("Shutting down ParkFlow API...")
+    await inference_manager.stop_all()
     await close_mongo_connection()
     await close_redis_connection()
 

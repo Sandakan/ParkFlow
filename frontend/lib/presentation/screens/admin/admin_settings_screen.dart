@@ -55,6 +55,13 @@ class AdminSettingsScreen extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              _SectionLabel(l10n.settingsSystemControl),
+                              const SizedBox(height: 12),
+                              _SystemControlCard(
+                                state: state,
+                                notifier: notifier,
+                              ),
+                              const SizedBox(height: 32),
                               _SectionLabel(l10n.settingsPrecisionPanel),
                               const SizedBox(height: 12),
                               _PrecisionSettingsCard(
@@ -159,6 +166,110 @@ class _SectionLabel extends StatelessWidget {
         fontWeight: FontWeight.bold,
         letterSpacing: 1.0,
         color: AppColors.textSecondary.withValues(alpha: 0.8),
+      ),
+    );
+  }
+}
+
+class _SystemControlCard extends StatelessWidget {
+  final SettingsState state;
+  final SettingsNotifier notifier;
+
+  const _SystemControlCard({required this.state, required this.notifier});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    return Card(
+      elevation: 0,
+      color: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: AppColors.outlineVariant, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.settingsGlobalInference,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        l10n.settingsGlobalInferenceDesc,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Switch(
+                  value: state.globalInferenceEnabled,
+                  onChanged: notifier.updateGlobalInferenceEnabled,
+                  activeThumbColor: AppColors.primary,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: state.globalInferenceEnabled
+                        ? AppColors.availableBackground
+                        : AppColors.surfaceVariant,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: state.globalInferenceEnabled
+                              ? AppColors.availableText
+                              : AppColors.textSecondary,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        state.globalInferenceEnabled
+                            ? l10n.settingsInferenceRunning
+                            : l10n.settingsInferenceStopped,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: state.globalInferenceEnabled
+                              ? AppColors.availableText
+                              : AppColors.textSecondary,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

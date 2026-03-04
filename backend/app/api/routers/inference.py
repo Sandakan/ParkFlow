@@ -18,7 +18,8 @@ from app.ai.redis_state import (
     get_confirmed_state,
     set_confirmed_state,
 )
-from app.api.deps import get_current_user
+from app.ai.inference_manager import inference_manager
+from app.api.deps import get_current_user, get_current_admin
 from app.core.database import db, update_camera_status, get_inference_settings
 from app.core.redis import redis_cache
 from app.core.logging import logger
@@ -336,4 +337,53 @@ async def detection_stream_sse(
     return EventSourceResponse(
         _detection_stream(camera_id, request),
         media_type="text/event-stream",
+    )
+
+
+@router.post(
+    "/control/start-all",
+    response_model=APIResponse[dict],
+    summary="Start background inference for all cameras",
+)
+async def start_all_inference(
+    admin=Depends(get_current_admin),
+):
+    """Start global background inference for every camera that has slot mappings."""
+    await inference_manager.start_all()
+    running = inference_manager.running_camera_ids()
+    return APIResponse.success_response(
+        message="Inference started for all eligible cameras",
+        data={"running_cameras": running, "count": len(running)},
+    )
+
+
+@router.post(
+    "/control/stop-all",
+    response_model=APIResponse[dict],
+    summary="Stop all running background inference tasks",
+)
+async def stop_all_inference(
+    admin=Depends(get_current_admin),
+):
+    """Cancel all active background inference tasks."""
+    await inference_manager.stop_all()
+    return APIResponse.success_response(
+        message="All inference tasks stopped",
+        data={"running_cameras": [], "count": 0},
+    )
+
+
+@router.get(
+    "/control/status",
+    response_model=APIResponse[dict],
+    summary="Get the list of cameras currently running background inference",
+)
+async def inference_status(
+    admin=Depends(get_current_admin),
+):
+    """Returns which cameras have an active background inference task."""
+    running = inference_manager.running_camera_ids()
+    return APIResponse.success_response(
+        message="Inference status",
+        data={"running_cameras": running, "count": len(running)},
     )

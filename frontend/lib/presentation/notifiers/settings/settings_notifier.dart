@@ -14,6 +14,7 @@ abstract class SettingsState with _$SettingsState {
     @Default(0.45) double iouThreshold,
     @Default(1) int frameSkip,
     @Default(3) int stabilityBuffer,
+    @Default(false) bool globalInferenceEnabled,
     @Default(false) bool isLoading,
     @Default(false) bool isSaving,
     String? error,
@@ -40,6 +41,7 @@ class SettingsNotifier extends _$SettingsNotifier {
         iouThreshold: settings.iouThreshold,
         frameSkip: settings.frameSkip,
         stabilityBuffer: settings.stabilityBuffer,
+        globalInferenceEnabled: settings.globalInferenceEnabled,
         isLoading: false,
       );
     } on AppException catch (e) {
@@ -68,6 +70,10 @@ class SettingsNotifier extends _$SettingsNotifier {
     state = state.copyWith(stabilityBuffer: value, saveSuccess: false);
   }
 
+  void updateGlobalInferenceEnabled(bool value) {
+    state = state.copyWith(globalInferenceEnabled: value, saveSuccess: false);
+  }
+
   Future<void> saveSettings() async {
     state = state.copyWith(isSaving: true, error: null, saveSuccess: false);
     try {
@@ -76,6 +82,7 @@ class SettingsNotifier extends _$SettingsNotifier {
         iouThreshold: state.iouThreshold,
         frameSkip: state.frameSkip,
         stabilityBuffer: state.stabilityBuffer,
+        globalInferenceEnabled: state.globalInferenceEnabled,
       );
       await ref.read(settingsServiceProvider).updateInferenceSettings(request);
       state = state.copyWith(isSaving: false, saveSuccess: true);

@@ -9,6 +9,7 @@ class InferenceSettingsInDB(BaseModel):
     iou_threshold: float = 0.45
     frame_skip: int = 1
     stability_buffer: int = 3
+    global_inference_enabled: bool = False
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     model_config = ConfigDict(

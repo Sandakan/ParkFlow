@@ -597,6 +597,11 @@
 		"description": "Error snackbar message"
 	},
 	"settingsSaving": "Saving...",
+	"settingsSystemControl": "System Control",
+	"settingsGlobalInference": "Enable Global Inference",
+	"settingsGlobalInferenceDesc": "Enable or disable AI inference globally for all available cameras.",
+	"settingsInferenceRunning": "Running",
+	"settingsInferenceStopped": "Stopped",
 	"unknownLot": "Unknown Parking Lot",
 	"@unknownLot": {
 		"description": "Fallback text displayed when a parking lot name is missing or unknown"

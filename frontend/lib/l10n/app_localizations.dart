@@ -1000,6 +1000,36 @@ abstract class AppLocalizations {
   /// **'Saving...'**
   String get settingsSaving;
 
+  /// No description provided for @settingsSystemControl.
+  ///
+  /// In en, this message translates to:
+  /// **'System Control'**
+  String get settingsSystemControl;
+
+  /// No description provided for @settingsGlobalInference.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Global Inference'**
+  String get settingsGlobalInference;
+
+  /// No description provided for @settingsGlobalInferenceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable or disable AI inference globally for all available cameras.'**
+  String get settingsGlobalInferenceDesc;
+
+  /// No description provided for @settingsInferenceRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get settingsInferenceRunning;
+
+  /// No description provided for @settingsInferenceStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped'**
+  String get settingsInferenceStopped;
+
   /// Fallback text displayed when a parking lot name is missing or unknown
   ///
   /// In en, this message translates to:
