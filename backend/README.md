@@ -57,8 +57,24 @@ This service handles the Computer Vision processing and API endpoints.
    ```
 
 4. **Access the Application**:
-   * Backend: <http://localhost:8000>
-   * Swagger Docs: <http://localhost:8000/docs>
+   * Backend: <http://localhost:8200>
+   * Swagger Docs: <http://localhost:8200/docs>
+
+   > **Windows Note — Port 8200**: The host-facing port is **8200** (not 8000) because
+   > Windows Hyper-V/WSL2 silently reserves the range **7968–8067** at boot time, which
+   > includes port 8000. Docker cannot bind to reserved ports and raises:
+>
+   > ```text
+   > ports are not available: … listen tcp 0.0.0.0:8000: bind: An attempt was made to
+   > access a socket in a way forbidden by its access permissions.
+   > ```
+>
+   > The container still listens internally on **8000**; only the host mapping changed
+   > (`8200:8000`). To verify your own reserved ranges run:
+>
+   > ```powershell
+   > netsh interface ipv4 show excludedportrange protocol=tcp
+   > ```
 
 ### Updating Containers When Files Change
 

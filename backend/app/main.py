@@ -36,6 +36,14 @@ async def lifespan(app: FastAPI):
     await connect_to_redis()
     logger.info("ParkFlow API started successfully.")
 
+    host_port = os.getenv("HOST_PORT", "8200")
+    logger.info(
+        "\n"
+        f"Base URL  : http://localhost:{host_port} \n"
+        f"API Docs  : http://localhost:{host_port}/docs \n"
+        f"Health    : http://localhost:{host_port}/ \n"
+    )
+
     await inference_manager.start_all()
 
     yield
