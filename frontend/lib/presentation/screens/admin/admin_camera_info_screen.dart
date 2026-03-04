@@ -250,7 +250,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => context.pop(),
             child: Text(context.l10n.cancelButton),
           ),
           ElevatedButton(
@@ -263,7 +263,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 try {
                   await notifier.updateCamera(request);
                   if (context.mounted) {
-                    Navigator.pop(context);
+                    context.pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(context.l10n.cameraUpdatedSuccess),
@@ -301,19 +301,20 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
   void _confirmDeleteCamera(BuildContext context, CameraInfo notifier) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: Text(context.l10n.deleteCameraConfirmTitle),
         content: Text(context.l10n.deleteCameraConfirmMessage),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => ctx.pop(),
             child: Text(context.l10n.cancelButton),
           ),
           TextButton(
             onPressed: () async {
               try {
-                Navigator.pop(context);
+                ctx.pop();
                 await notifier.deleteCamera();
+
                 if (context.mounted) {
                   context.pop(); // Go back to cameras list
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -542,12 +543,12 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
         content: Text(context.l10n.deleteSlotConfirmMessage(slot.name)),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => context.pop(),
             child: Text(context.l10n.cancelButton),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              context.pop();
               notifier.deleteSlot(slot.id);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
