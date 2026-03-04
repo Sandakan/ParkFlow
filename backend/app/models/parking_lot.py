@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Tuple, Literal, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class Point(BaseModel):
@@ -13,6 +13,11 @@ class ParkingLotInDB(BaseModel):
     name: str
     location: Point
     total_slots: int
+    entrance_logical_locations: list[list[int]] = Field(
+        default_factory=lambda: [[0, 0]]
+    )
+    slot_width_meters: float = 5.0
+    slot_length_meters: float = 5.0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = None
