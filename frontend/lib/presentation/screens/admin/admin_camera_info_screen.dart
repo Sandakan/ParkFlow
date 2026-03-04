@@ -45,25 +45,33 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // 1. Background Video Layer
-          Positioned.fill(child: CameraWebrtcPlayer(cameraId: widget.cameraId)),
-
-          // 2. Interaction Layer
-          Positioned.fill(
-            child: SpotPickerCanvas(
-              mode: state.interactionMode,
-              normalizedCurrentPoints: state.currentDrawingPoints,
-              slots: state.slots,
-              showAiDetections: state.showAiDetections,
-              aiDetections: state.aiDetections,
-              aiSlotHits: state.aiSlotHits,
-              onTap: (normalizedPoint) {
-                notifier.addDrawingPoint(normalizedPoint);
-                if (state.currentDrawingPoints.length == 3) {
-                  // 4th point just added via onTap, prompt name
-                  _promptSlotName(notifier);
-                }
-              },
+          // 1. & 2. Video & Interaction Layer (Wrapped in AspectRatio for scaling accuracy)
+          Center(
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: CameraWebrtcPlayer(cameraId: widget.cameraId),
+                  ),
+                  Positioned.fill(
+                    child: SpotPickerCanvas(
+                      mode: state.interactionMode,
+                      normalizedCurrentPoints: state.currentDrawingPoints,
+                      slots: state.slots,
+                      showAiDetections: state.showAiDetections,
+                      aiDetections: state.aiDetections,
+                      aiSlotHits: state.aiSlotHits,
+                      onTap: (normalizedPoint) {
+                        notifier.addDrawingPoint(normalizedPoint);
+                        if (state.currentDrawingPoints.length == 3) {
+                          _promptSlotName(notifier);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
 
