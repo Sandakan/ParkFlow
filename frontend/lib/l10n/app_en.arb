@@ -4,6 +4,10 @@
 	"@appTitle": {
 		"description": "The title of the application"
 	},
+	"parkingLotsTitle": "Parking Lots",
+	"@parkingLotsTitle": {
+		"description": "The title for the parking lots management screen"
+	},
 	"loginTitle": "ParkFlow",
 	"@loginTitle": {
 		"description": "The title displayed on the login screen"
@@ -750,5 +754,29 @@
 	"enterValueHint": "Enter value",
 	"@enterValueHint": {
 		"description": "Hint text for numeric input fields"
+	},
+	"currentOccupancyLayout": "Current Occupancy Layout",
+	"@currentOccupancyLayout": {
+		"description": "Title for the current occupancy layout grid section"
+	},
+	"slotWidthLabel": "Slot Width (m)",
+	"@slotWidthLabel": {
+		"description": "Label for the parking slot width input"
+	},
+	"slotLengthLabel": "Slot Length (m)",
+	"@slotLengthLabel": {
+		"description": "Label for the parking slot length input"
+	},
+	"entranceCoordsLabel": "Entrance Coords",
+	"@entranceCoordsLabel": {
+		"description": "Label for the entrance logical coordinates section"
+	},
+	"rowLabel": "Row",
+	"@rowLabel": {
+		"description": "Label for logical row input"
+	},
+	"colLabel": "Column",
+	"@colLabel": {
+		"description": "Label for logical column input"
 	}
 }

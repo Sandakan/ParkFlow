@@ -10,8 +10,11 @@ abstract class ParkingSlotModel with _$ParkingSlotModel {
     required String id,
     required String name,
     required bool isOccupied,
+    @JsonKey(name: 'lot_id') String? lotId,
     @JsonKey(name: 'slot_type') String? slotType,
     @JsonKey(name: 'camera_id') String? cameraId,
+    @JsonKey(name: 'logical_row') @Default(0) int logicalRow,
+    @JsonKey(name: 'logical_col') @Default(0) int logicalCol,
     List<Point2D>? coordinates,
     DateTime? lastUpdated,
   }) = _ParkingSlotModel;

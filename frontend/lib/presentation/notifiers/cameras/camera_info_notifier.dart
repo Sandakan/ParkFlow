@@ -194,7 +194,11 @@ class CameraInfo extends _$CameraInfo {
     state = state.copyWith(currentDrawingPoints: []);
   }
 
-  Future<void> saveSlot(String slotName) async {
+  Future<void> saveSlot(
+    String slotNumber, {
+    int logicalRow = 0,
+    int logicalCol = 0,
+  }) async {
     if (state.camera == null) return;
 
     final points = state.currentDrawingPoints
@@ -204,10 +208,12 @@ class CameraInfo extends _$CameraInfo {
     // Create a temporary slot for optimistic rendering
     final tempSlot = ParkingSlotModel(
       id: 'temp-${DateTime.now().millisecondsSinceEpoch}',
-      name: slotName,
+      name: slotNumber,
       isOccupied: false,
       slotType: state.selectedSlotType,
       cameraId: cameraId,
+      logicalRow: logicalRow,
+      logicalCol: logicalCol,
       coordinates: points,
     );
 
@@ -222,8 +228,10 @@ class CameraInfo extends _$CameraInfo {
       final request = CreateParkingSlotRequest(
         lotId: state.camera!.lotId,
         cameraId: cameraId,
-        slotNumber: slotName,
+        slotNumber: slotNumber,
         slotType: state.selectedSlotType,
+        logicalRow: logicalRow,
+        logicalCol: logicalCol,
         coordinates: points,
       );
 

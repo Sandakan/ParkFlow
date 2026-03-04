@@ -14,6 +14,10 @@ abstract class ParkingLotModel with _$ParkingLotModel {
     required double occupancy,
     required int revenueToday,
     required String address,
+    @JsonKey(name: 'entrance_logical_locations')
+    List<List<int>>? entranceLogicalLocations,
+    @JsonKey(name: 'slot_width_meters') double? slotWidthMeters,
+    @JsonKey(name: 'slot_length_meters') double? slotLengthMeters,
   }) = _ParkingLotModel;
 
   factory ParkingLotModel.fromJson(Map<String, dynamic> json) =>

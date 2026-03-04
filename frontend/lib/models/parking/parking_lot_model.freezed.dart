@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParkingLotModel {
 
- String get id; String get name; bool get isOpen; int get camerasCount; int get totalSlots; double get occupancy; int get revenueToday; String get address;
+ String get id; String get name; bool get isOpen; int get camerasCount; int get totalSlots; double get occupancy; int get revenueToday; String get address;@JsonKey(name: 'entrance_logical_locations') List<List<int>>? get entranceLogicalLocations;@JsonKey(name: 'slot_width_meters') double? get slotWidthMeters;@JsonKey(name: 'slot_length_meters') double? get slotLengthMeters;
 /// Create a copy of ParkingLotModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ParkingLotModelCopyWith<ParkingLotModel> get copyWith => _$ParkingLotModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParkingLotModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isOpen, isOpen) || other.isOpen == isOpen)&&(identical(other.camerasCount, camerasCount) || other.camerasCount == camerasCount)&&(identical(other.totalSlots, totalSlots) || other.totalSlots == totalSlots)&&(identical(other.occupancy, occupancy) || other.occupancy == occupancy)&&(identical(other.revenueToday, revenueToday) || other.revenueToday == revenueToday)&&(identical(other.address, address) || other.address == address));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParkingLotModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isOpen, isOpen) || other.isOpen == isOpen)&&(identical(other.camerasCount, camerasCount) || other.camerasCount == camerasCount)&&(identical(other.totalSlots, totalSlots) || other.totalSlots == totalSlots)&&(identical(other.occupancy, occupancy) || other.occupancy == occupancy)&&(identical(other.revenueToday, revenueToday) || other.revenueToday == revenueToday)&&(identical(other.address, address) || other.address == address)&&const DeepCollectionEquality().equals(other.entranceLogicalLocations, entranceLogicalLocations)&&(identical(other.slotWidthMeters, slotWidthMeters) || other.slotWidthMeters == slotWidthMeters)&&(identical(other.slotLengthMeters, slotLengthMeters) || other.slotLengthMeters == slotLengthMeters));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,isOpen,camerasCount,totalSlots,occupancy,revenueToday,address);
+int get hashCode => Object.hash(runtimeType,id,name,isOpen,camerasCount,totalSlots,occupancy,revenueToday,address,const DeepCollectionEquality().hash(entranceLogicalLocations),slotWidthMeters,slotLengthMeters);
 
 @override
 String toString() {
-  return 'ParkingLotModel(id: $id, name: $name, isOpen: $isOpen, camerasCount: $camerasCount, totalSlots: $totalSlots, occupancy: $occupancy, revenueToday: $revenueToday, address: $address)';
+  return 'ParkingLotModel(id: $id, name: $name, isOpen: $isOpen, camerasCount: $camerasCount, totalSlots: $totalSlots, occupancy: $occupancy, revenueToday: $revenueToday, address: $address, entranceLogicalLocations: $entranceLogicalLocations, slotWidthMeters: $slotWidthMeters, slotLengthMeters: $slotLengthMeters)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ParkingLotModelCopyWith<$Res>  {
   factory $ParkingLotModelCopyWith(ParkingLotModel value, $Res Function(ParkingLotModel) _then) = _$ParkingLotModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, bool isOpen, int camerasCount, int totalSlots, double occupancy, int revenueToday, String address
+ String id, String name, bool isOpen, int camerasCount, int totalSlots, double occupancy, int revenueToday, String address,@JsonKey(name: 'entrance_logical_locations') List<List<int>>? entranceLogicalLocations,@JsonKey(name: 'slot_width_meters') double? slotWidthMeters,@JsonKey(name: 'slot_length_meters') double? slotLengthMeters
 });
 
 
@@ -65,7 +65,7 @@ class _$ParkingLotModelCopyWithImpl<$Res>
 
 /// Create a copy of ParkingLotModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? isOpen = null,Object? camerasCount = null,Object? totalSlots = null,Object? occupancy = null,Object? revenueToday = null,Object? address = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? isOpen = null,Object? camerasCount = null,Object? totalSlots = null,Object? occupancy = null,Object? revenueToday = null,Object? address = null,Object? entranceLogicalLocations = freezed,Object? slotWidthMeters = freezed,Object? slotLengthMeters = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,10 @@ as int,totalSlots: null == totalSlots ? _self.totalSlots : totalSlots // ignore:
 as int,occupancy: null == occupancy ? _self.occupancy : occupancy // ignore: cast_nullable_to_non_nullable
 as double,revenueToday: null == revenueToday ? _self.revenueToday : revenueToday // ignore: cast_nullable_to_non_nullable
 as int,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
-as String,
+as String,entranceLogicalLocations: freezed == entranceLogicalLocations ? _self.entranceLogicalLocations : entranceLogicalLocations // ignore: cast_nullable_to_non_nullable
+as List<List<int>>?,slotWidthMeters: freezed == slotWidthMeters ? _self.slotWidthMeters : slotWidthMeters // ignore: cast_nullable_to_non_nullable
+as double?,slotLengthMeters: freezed == slotLengthMeters ? _self.slotLengthMeters : slotLengthMeters // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 
@@ -160,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  bool isOpen,  int camerasCount,  int totalSlots,  double occupancy,  int revenueToday,  String address)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  bool isOpen,  int camerasCount,  int totalSlots,  double occupancy,  int revenueToday,  String address, @JsonKey(name: 'entrance_logical_locations')  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters')  double? slotWidthMeters, @JsonKey(name: 'slot_length_meters')  double? slotLengthMeters)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParkingLotModel() when $default != null:
-return $default(_that.id,_that.name,_that.isOpen,_that.camerasCount,_that.totalSlots,_that.occupancy,_that.revenueToday,_that.address);case _:
+return $default(_that.id,_that.name,_that.isOpen,_that.camerasCount,_that.totalSlots,_that.occupancy,_that.revenueToday,_that.address,_that.entranceLogicalLocations,_that.slotWidthMeters,_that.slotLengthMeters);case _:
   return orElse();
 
 }
@@ -181,10 +184,10 @@ return $default(_that.id,_that.name,_that.isOpen,_that.camerasCount,_that.totalS
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  bool isOpen,  int camerasCount,  int totalSlots,  double occupancy,  int revenueToday,  String address)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  bool isOpen,  int camerasCount,  int totalSlots,  double occupancy,  int revenueToday,  String address, @JsonKey(name: 'entrance_logical_locations')  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters')  double? slotWidthMeters, @JsonKey(name: 'slot_length_meters')  double? slotLengthMeters)  $default,) {final _that = this;
 switch (_that) {
 case _ParkingLotModel():
-return $default(_that.id,_that.name,_that.isOpen,_that.camerasCount,_that.totalSlots,_that.occupancy,_that.revenueToday,_that.address);case _:
+return $default(_that.id,_that.name,_that.isOpen,_that.camerasCount,_that.totalSlots,_that.occupancy,_that.revenueToday,_that.address,_that.entranceLogicalLocations,_that.slotWidthMeters,_that.slotLengthMeters);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +204,10 @@ return $default(_that.id,_that.name,_that.isOpen,_that.camerasCount,_that.totalS
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  bool isOpen,  int camerasCount,  int totalSlots,  double occupancy,  int revenueToday,  String address)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  bool isOpen,  int camerasCount,  int totalSlots,  double occupancy,  int revenueToday,  String address, @JsonKey(name: 'entrance_logical_locations')  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters')  double? slotWidthMeters, @JsonKey(name: 'slot_length_meters')  double? slotLengthMeters)?  $default,) {final _that = this;
 switch (_that) {
 case _ParkingLotModel() when $default != null:
-return $default(_that.id,_that.name,_that.isOpen,_that.camerasCount,_that.totalSlots,_that.occupancy,_that.revenueToday,_that.address);case _:
+return $default(_that.id,_that.name,_that.isOpen,_that.camerasCount,_that.totalSlots,_that.occupancy,_that.revenueToday,_that.address,_that.entranceLogicalLocations,_that.slotWidthMeters,_that.slotLengthMeters);case _:
   return null;
 
 }
@@ -216,7 +219,7 @@ return $default(_that.id,_that.name,_that.isOpen,_that.camerasCount,_that.totalS
 @JsonSerializable()
 
 class _ParkingLotModel implements ParkingLotModel {
-  const _ParkingLotModel({required this.id, required this.name, required this.isOpen, required this.camerasCount, required this.totalSlots, required this.occupancy, required this.revenueToday, required this.address});
+  const _ParkingLotModel({required this.id, required this.name, required this.isOpen, required this.camerasCount, required this.totalSlots, required this.occupancy, required this.revenueToday, required this.address, @JsonKey(name: 'entrance_logical_locations') final  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters') this.slotWidthMeters, @JsonKey(name: 'slot_length_meters') this.slotLengthMeters}): _entranceLogicalLocations = entranceLogicalLocations;
   factory _ParkingLotModel.fromJson(Map<String, dynamic> json) => _$ParkingLotModelFromJson(json);
 
 @override final  String id;
@@ -227,6 +230,17 @@ class _ParkingLotModel implements ParkingLotModel {
 @override final  double occupancy;
 @override final  int revenueToday;
 @override final  String address;
+ final  List<List<int>>? _entranceLogicalLocations;
+@override@JsonKey(name: 'entrance_logical_locations') List<List<int>>? get entranceLogicalLocations {
+  final value = _entranceLogicalLocations;
+  if (value == null) return null;
+  if (_entranceLogicalLocations is EqualUnmodifiableListView) return _entranceLogicalLocations;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+@override@JsonKey(name: 'slot_width_meters') final  double? slotWidthMeters;
+@override@JsonKey(name: 'slot_length_meters') final  double? slotLengthMeters;
 
 /// Create a copy of ParkingLotModel
 /// with the given fields replaced by the non-null parameter values.
@@ -241,16 +255,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParkingLotModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isOpen, isOpen) || other.isOpen == isOpen)&&(identical(other.camerasCount, camerasCount) || other.camerasCount == camerasCount)&&(identical(other.totalSlots, totalSlots) || other.totalSlots == totalSlots)&&(identical(other.occupancy, occupancy) || other.occupancy == occupancy)&&(identical(other.revenueToday, revenueToday) || other.revenueToday == revenueToday)&&(identical(other.address, address) || other.address == address));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParkingLotModel&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.isOpen, isOpen) || other.isOpen == isOpen)&&(identical(other.camerasCount, camerasCount) || other.camerasCount == camerasCount)&&(identical(other.totalSlots, totalSlots) || other.totalSlots == totalSlots)&&(identical(other.occupancy, occupancy) || other.occupancy == occupancy)&&(identical(other.revenueToday, revenueToday) || other.revenueToday == revenueToday)&&(identical(other.address, address) || other.address == address)&&const DeepCollectionEquality().equals(other._entranceLogicalLocations, _entranceLogicalLocations)&&(identical(other.slotWidthMeters, slotWidthMeters) || other.slotWidthMeters == slotWidthMeters)&&(identical(other.slotLengthMeters, slotLengthMeters) || other.slotLengthMeters == slotLengthMeters));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,isOpen,camerasCount,totalSlots,occupancy,revenueToday,address);
+int get hashCode => Object.hash(runtimeType,id,name,isOpen,camerasCount,totalSlots,occupancy,revenueToday,address,const DeepCollectionEquality().hash(_entranceLogicalLocations),slotWidthMeters,slotLengthMeters);
 
 @override
 String toString() {
-  return 'ParkingLotModel(id: $id, name: $name, isOpen: $isOpen, camerasCount: $camerasCount, totalSlots: $totalSlots, occupancy: $occupancy, revenueToday: $revenueToday, address: $address)';
+  return 'ParkingLotModel(id: $id, name: $name, isOpen: $isOpen, camerasCount: $camerasCount, totalSlots: $totalSlots, occupancy: $occupancy, revenueToday: $revenueToday, address: $address, entranceLogicalLocations: $entranceLogicalLocations, slotWidthMeters: $slotWidthMeters, slotLengthMeters: $slotLengthMeters)';
 }
 
 
@@ -261,7 +275,7 @@ abstract mixin class _$ParkingLotModelCopyWith<$Res> implements $ParkingLotModel
   factory _$ParkingLotModelCopyWith(_ParkingLotModel value, $Res Function(_ParkingLotModel) _then) = __$ParkingLotModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, bool isOpen, int camerasCount, int totalSlots, double occupancy, int revenueToday, String address
+ String id, String name, bool isOpen, int camerasCount, int totalSlots, double occupancy, int revenueToday, String address,@JsonKey(name: 'entrance_logical_locations') List<List<int>>? entranceLogicalLocations,@JsonKey(name: 'slot_width_meters') double? slotWidthMeters,@JsonKey(name: 'slot_length_meters') double? slotLengthMeters
 });
 
 
@@ -278,7 +292,7 @@ class __$ParkingLotModelCopyWithImpl<$Res>
 
 /// Create a copy of ParkingLotModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? isOpen = null,Object? camerasCount = null,Object? totalSlots = null,Object? occupancy = null,Object? revenueToday = null,Object? address = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? isOpen = null,Object? camerasCount = null,Object? totalSlots = null,Object? occupancy = null,Object? revenueToday = null,Object? address = null,Object? entranceLogicalLocations = freezed,Object? slotWidthMeters = freezed,Object? slotLengthMeters = freezed,}) {
   return _then(_ParkingLotModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -288,7 +302,10 @@ as int,totalSlots: null == totalSlots ? _self.totalSlots : totalSlots // ignore:
 as int,occupancy: null == occupancy ? _self.occupancy : occupancy // ignore: cast_nullable_to_non_nullable
 as double,revenueToday: null == revenueToday ? _self.revenueToday : revenueToday // ignore: cast_nullable_to_non_nullable
 as int,address: null == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
-as String,
+as String,entranceLogicalLocations: freezed == entranceLogicalLocations ? _self._entranceLogicalLocations : entranceLogicalLocations // ignore: cast_nullable_to_non_nullable
+as List<List<int>>?,slotWidthMeters: freezed == slotWidthMeters ? _self.slotWidthMeters : slotWidthMeters // ignore: cast_nullable_to_non_nullable
+as double?,slotLengthMeters: freezed == slotLengthMeters ? _self.slotLengthMeters : slotLengthMeters // ignore: cast_nullable_to_non_nullable
+as double?,
   ));
 }
 

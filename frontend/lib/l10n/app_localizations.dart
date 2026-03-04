@@ -106,6 +106,12 @@ abstract class AppLocalizations {
   /// **'ParkFlow'**
   String get appTitle;
 
+  /// The title for the parking lots management screen
+  ///
+  /// In en, this message translates to:
+  /// **'Parking Lots'**
+  String get parkingLotsTitle;
+
   /// The title displayed on the login screen
   ///
   /// In en, this message translates to:
@@ -1239,6 +1245,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter value'**
   String get enterValueHint;
+
+  /// Title for the current occupancy layout grid section
+  ///
+  /// In en, this message translates to:
+  /// **'Current Occupancy Layout'**
+  String get currentOccupancyLayout;
+
+  /// Label for the parking slot width input
+  ///
+  /// In en, this message translates to:
+  /// **'Slot Width (m)'**
+  String get slotWidthLabel;
+
+  /// Label for the parking slot length input
+  ///
+  /// In en, this message translates to:
+  /// **'Slot Length (m)'**
+  String get slotLengthLabel;
+
+  /// Label for the entrance logical coordinates section
+  ///
+  /// In en, this message translates to:
+  /// **'Entrance Coords'**
+  String get entranceCoordsLabel;
+
+  /// Label for logical row input
+  ///
+  /// In en, this message translates to:
+  /// **'Row'**
+  String get rowLabel;
+
+  /// Label for logical column input
+  ///
+  /// In en, this message translates to:
+  /// **'Column'**
+  String get colLabel;
 }
 
 class _AppLocalizationsDelegate

@@ -12,6 +12,9 @@ class AppLocalizationsSi extends AppLocalizations {
   String get appTitle => 'ParkFlow';
 
   @override
+  String get parkingLotsTitle => 'Parking Lots';
+
+  @override
   String get loginTitle => 'ParkFlow';
 
   @override
@@ -597,4 +600,22 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get enterValueHint => 'Enter value';
+
+  @override
+  String get currentOccupancyLayout => 'Current Occupancy Layout';
+
+  @override
+  String get slotWidthLabel => 'Slot Width (m)';
+
+  @override
+  String get slotLengthLabel => 'Slot Length (m)';
+
+  @override
+  String get entranceCoordsLabel => 'Entrance Coords';
+
+  @override
+  String get rowLabel => 'Row';
+
+  @override
+  String get colLabel => 'Column';
 }
