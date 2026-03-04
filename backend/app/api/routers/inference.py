@@ -29,7 +29,7 @@ from app.schemas.response import APIResponse, ResponseCode
 
 router = APIRouter()
 
-_INFERENCE_INTERVAL = 0.35
+_INFERENCE_INTERVAL = 0.15
 
 
 @router.post("/image", response_model=APIResponse[dict])
@@ -190,6 +190,9 @@ async def _detection_stream(
         }
         return
 
+    # drain buffered frames manually on every iteration below.
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+
     await update_camera_status(camera_id, True)
 
     frame_count = 0
@@ -203,12 +206,18 @@ async def _detection_stream(
                 logger.info("SSE client disconnected for camera_id={}", camera_id)
                 break
 
-            ret, frame = cap.read()
+            # Drain any frames queued in the OpenCV/FFmpeg buffer so we
+            # always run inference on the most recent frame, not a stale one.
+            # grab() fetches without decoding; retrieve() decodes only
+            for _ in range(4):
+                cap.grab()
+            ret, frame = cap.retrieve()
             if not ret:
                 logger.warning("Lost frame from camera_id={}, retrying...", camera_id)
                 await asyncio.sleep(1.0)
                 cap.release()
                 cap = cv2.VideoCapture(rtsp_url)
+                cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
                 continue
 
             frame_count += 1
@@ -224,8 +233,21 @@ async def _detection_stream(
                 settings_obj.iou_threshold,
             )
 
-            stable_slot_hits = []
             now_ts = datetime.now(timezone.utc)
+
+            raw_detections = [
+                {
+                    "label": d.label,
+                    "confidence": round(d.confidence, 3),
+                    "x1": round(d.x1, 4),
+                    "y1": round(d.y1, 4),
+                    "x2": round(d.x2, 4),
+                    "y2": round(d.y2, 4),
+                }
+                for d in frame_result.detections
+            ]
+
+            stable_slot_hits = []
 
             for hit in frame_result.slot_hits:
                 m_id = hit.mapping_id
@@ -286,17 +308,7 @@ async def _detection_stream(
             payload = {
                 "camera_id": camera_id,
                 "timestamp": now_ts.isoformat(),
-                "detections": [
-                    {
-                        "label": d.label,
-                        "confidence": round(d.confidence, 3),
-                        "x1": round(d.x1, 4),
-                        "y1": round(d.y1, 4),
-                        "x2": round(d.x2, 4),
-                        "y2": round(d.y2, 4),
-                    }
-                    for d in frame_result.detections
-                ],
+                "detections": raw_detections,
                 "slot_hits": stable_slot_hits,
             }
 
