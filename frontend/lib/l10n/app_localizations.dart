@@ -1174,6 +1174,12 @@ abstract class AppLocalizations {
   /// **'EV Charging'**
   String get slotTypeEv;
 
+  /// Label for the parking lot entrance
+  ///
+  /// In en, this message translates to:
+  /// **'Entrance'**
+  String get slotTypeEntrance;
+
   /// Title for the new parking slot dialog
   ///
   /// In en, this message translates to:

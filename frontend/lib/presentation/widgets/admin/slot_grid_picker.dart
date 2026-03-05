@@ -54,6 +54,12 @@ class SlotGridPicker extends StatelessWidget {
               label: 'Empty',
             ),
             const SizedBox(width: 12),
+            _LegendDot(
+              color: AppColors.entranceBackground,
+              borderColor: AppColors.entranceBorder,
+              label: 'Entrance',
+            ),
+            const SizedBox(width: 12),
             _LegendDot(color: AppColors.primary, label: 'Selected'),
           ],
         ),
@@ -72,6 +78,11 @@ class SlotGridPicker extends StatelessWidget {
   ) {
     const cellSize = 44.0;
     const labelSize = 24.0;
+
+    final slotMap = <String, ParkingSlotModel>{
+      for (final slot in existingSlots)
+        '${slot.logicalRow}_${slot.logicalCol}': slot,
+    };
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -121,7 +132,7 @@ class SlotGridPicker extends StatelessWidget {
                   for (int c = 0; c < totalCols; c++)
                     Padding(
                       padding: const EdgeInsets.only(right: 4),
-                      child: _buildCell(context, r, c, usedKeys, cellSize),
+                      child: _buildCell(context, r, c, slotMap, cellSize),
                     ),
                 ],
               ),
@@ -135,11 +146,12 @@ class SlotGridPicker extends StatelessWidget {
     BuildContext context,
     int row,
     int col,
-    Set<String> usedKeys,
+    Map<String, ParkingSlotModel> slotMap,
     double cellSize,
   ) {
     final key = '${row}_$col';
-    final isUsed = usedKeys.contains(key);
+    final existingSlot = slotMap[key];
+    final isUsed = existingSlot != null;
     final isSelected = selectedRow == row && selectedCol == col;
 
     Color bgColor;
@@ -147,9 +159,18 @@ class SlotGridPicker extends StatelessWidget {
     Widget child;
 
     if (isUsed) {
-      bgColor = Colors.grey.shade200;
-      borderColor = Colors.grey.shade300;
-      child = Icon(Icons.local_parking, size: 14, color: Colors.grey.shade400);
+      final isEntrance = existingSlot.slotType == 'entrance';
+      bgColor = isEntrance
+          ? AppColors.entranceBackground
+          : Colors.grey.shade200;
+      borderColor = isEntrance
+          ? AppColors.entranceBorder
+          : Colors.grey.shade300;
+      child = Icon(
+        isEntrance ? Icons.door_front_door : Icons.local_parking,
+        size: 14,
+        color: isEntrance ? AppColors.entranceText : Colors.grey.shade400,
+      );
     } else if (isSelected) {
       bgColor = AppColors.primary;
       borderColor = AppColors.primary;

@@ -82,17 +82,22 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                 }
 
                 final isHighlighted = highlightedSlotIds.contains(slot.id);
+                final isEntrance = slot.slotType == 'entrance';
 
                 return Container(
                   decoration: BoxDecoration(
-                    color: slot.isOccupied
+                    color: isEntrance
+                        ? AppColors.entranceBackground
+                        : slot.isOccupied
                         ? AppColors.occupiedBackground
                         : isHighlighted
                         ? AppColors.primary.withValues(alpha: 0.2)
                         : AppColors.availableBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: slot.isOccupied
+                      color: isEntrance
+                          ? AppColors.entranceBorder
+                          : slot.isOccupied
                           ? AppColors.occupiedBorder
                           : isHighlighted
                           ? AppColors.primary
@@ -107,11 +112,15 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
-                            slot.isOccupied
+                            isEntrance
+                                ? Icons.door_front_door
+                                : slot.isOccupied
                                 ? Icons.directions_car
                                 : Icons.local_parking,
                             size: 16.0,
-                            color: slot.isOccupied
+                            color: isEntrance
+                                ? AppColors.entranceText
+                                : slot.isOccupied
                                 ? AppColors.occupiedText
                                 : isHighlighted
                                 ? AppColors.primary
@@ -123,7 +132,9 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 8,
                               fontWeight: FontWeight.bold,
-                              color: slot.isOccupied
+                              color: isEntrance
+                                  ? AppColors.entranceTextDark
+                                  : slot.isOccupied
                                   ? AppColors.occupiedTextDark
                                   : AppColors.availableTextDark,
                             ),
@@ -135,7 +146,9 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 7,
                               color:
-                                  (slot.isOccupied
+                                  (isEntrance
+                                          ? AppColors.entranceTextDark
+                                          : slot.isOccupied
                                           ? AppColors.occupiedTextDark
                                           : AppColors.availableTextDark)
                                       .withValues(alpha: 0.7),

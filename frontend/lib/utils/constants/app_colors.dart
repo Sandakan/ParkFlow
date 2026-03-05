@@ -34,4 +34,10 @@ abstract final class AppColors {
   static final Color availableBorder = Colors.green.shade300;
   static final Color availableText = Colors.green.shade700;
   static final Color availableTextDark = Colors.green.shade900;
+
+  // Entrance (indigo)
+  static final Color entranceBackground = Colors.indigo.shade50;
+  static final Color entranceBorder = Colors.indigo.shade300;
+  static final Color entranceText = Colors.indigo.shade700;
+  static final Color entranceTextDark = Colors.indigo.shade900;
 }

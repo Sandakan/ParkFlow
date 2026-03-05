@@ -562,6 +562,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get slotTypeEv => 'EV Charging';
 
   @override
+  String get slotTypeEntrance => 'Entrance';
+
+  @override
   String get newParkingSlotTitle => 'New Parking Slot';
 
   @override

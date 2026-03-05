@@ -698,6 +698,10 @@
 	"@slotTypeEv": {
 		"description": "Label for the electric vehicle charging parking slot type"
 	},
+	"slotTypeEntrance": "Entrance",
+	"@slotTypeEntrance": {
+		"description": "Label for the parking lot entrance"
+	},
 	"newParkingSlotTitle": "New Parking Slot",
 	"@newParkingSlotTitle": {
 		"description": "Title for the new parking slot dialog"

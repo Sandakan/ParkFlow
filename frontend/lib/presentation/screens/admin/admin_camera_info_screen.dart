@@ -693,6 +693,10 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                         value: 'ev',
                         child: Text(context.l10n.slotTypeEv),
                       ),
+                      DropdownMenuItem(
+                        value: 'entrance',
+                        child: Text(context.l10n.slotTypeEntrance),
+                      ),
                     ],
                   ),
                 ],
