@@ -745,6 +745,8 @@ async def get_parking_suggestions(
     vacant_slots = await cursor.to_list(length=500)
 
     # 3. Calculate distances
+    l = lot.get("slot_length_meters", 5.0)
+    w = lot.get("slot_width_meters", 5.0)
     suggestions = []
     for slot in vacant_slots:
         s_row = slot.get("logical_row", 0)
