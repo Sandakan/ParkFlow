@@ -55,7 +55,10 @@ class ParkingNotifier extends _$ParkingNotifier {
   }
 
   void _initStream() {
-    final stream = ref.read(parkingServiceProvider).streamParkingSlots();
+    final lotId = state.lot?.id;
+    final stream = ref
+        .read(parkingServiceProvider)
+        .streamParkingSlots(lotId: lotId);
     _subscription = stream.listen(
       (slots) {
         state = state.copyWith(isLoading: false, slots: slots, error: null);

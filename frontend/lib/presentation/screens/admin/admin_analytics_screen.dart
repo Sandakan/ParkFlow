@@ -19,6 +19,7 @@ class AdminAnalyticsScreen extends ConsumerWidget {
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: Center(
+          heightFactor: 1,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 1100),
             child: RefreshIndicator(

@@ -44,7 +44,7 @@ class ParkingLotLayout extends _$ParkingLotLayout {
   }
 
   void _initStream(String lotId, ParkingService service) {
-    final stream = service.streamParkingSlots();
+    final stream = service.streamParkingSlots(lotId: lotId);
     _subscription = stream.listen(
       (slots) {
         final filteredSlots = slots.where((s) => s.lotId == lotId).toList();

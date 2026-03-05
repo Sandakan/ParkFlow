@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
 import 'package:parkflow/repositories/providers/remote_repository_provider.dart';
 import 'package:parkflow/repositories/providers/env_repository_provider.dart';
@@ -9,7 +10,7 @@ import 'package:parkflow/repositories/entities/parking/update_parking_lot_reques
 import 'package:parkflow/core/network/entities/get_parking_lot_response_entity.dart';
 import 'package:parkflow/utils/handlers/error_handler.dart';
 import 'package:parkflow/utils/helpers/talker.dart';
-import 'package:socket_io_client/socket_io_client.dart' as socket_io;
+import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_slot_request.dart';
 import 'package:parkflow/core/network/entities/get_parking_suggestions_response_entity.dart';
@@ -21,8 +22,6 @@ class ParkingService {
   final RemoteRepositoryInterface _remote;
   final String _baseUrl;
   final Ref _ref;
-  socket_io.Socket? _socket;
-
   ParkingService(this._remote, this._baseUrl, this._ref);
 
   Future<String?> _getToken() =>
@@ -128,51 +127,76 @@ class ParkingService {
     }
   }
 
-  Stream<List<ParkingSlotModel>> streamParkingSlots() {
+  Stream<List<ParkingSlotModel>> streamParkingSlots({String? lotId}) {
     final controller = StreamController<List<ParkingSlotModel>>.broadcast();
+    final client = http.Client();
 
-    // Initial fetch
-    fetchParkingSlots()
-        .then((slots) {
-          if (!controller.isClosed) {
-            controller.add(slots);
-          }
-        })
-        .catchError((e) {
-          if (!controller.isClosed) controller.addError(e);
-        });
-
-    _socket = socket_io.io(
-      _baseUrl,
-      socket_io.OptionBuilder()
-          .setTransports(['websocket'])
-          .disableAutoConnect()
-          .build(),
-    );
-
-    _socket?.onConnect((_) {
-      talker.info('Socket.IO connected for parking slots updates');
-    });
-
-    _socket?.on('slots_update', (data) {
+    Future<void> connect() async {
       try {
-        final List slotsData = data as List;
-        final slots = slotsData
-            .map((e) => ParkingSlotModel.fromJson(e))
-            .toList();
-        if (!controller.isClosed) {
-          controller.add(slots);
-        }
-      } catch (e) {
-        talker.error('Error parsing slot updates', e);
-      }
-    });
+        final token = await _getToken();
+        final url = Uri.parse(
+          '$_baseUrl/parking/stream${lotId != null ? '?lot_id=$lotId' : ''}',
+        );
 
-    _socket?.connect();
+        final request = http.Request('GET', url);
+        if (token != null) {
+          request.headers['Authorization'] = 'Bearer $token';
+        }
+        request.headers['Accept'] = 'text/event-stream';
+        request.headers['Cache-Control'] = 'no-cache';
+
+        final response = await client.send(request);
+
+        if (response.statusCode != 200) {
+          if (!controller.isClosed) {
+            controller.addError(
+              'Failed to connect to stream: ${response.statusCode}',
+            );
+          }
+          return;
+        }
+
+        response.stream
+            .transform(utf8.decoder)
+            .transform(const LineSplitter())
+            .listen(
+              (line) {
+                if (line.startsWith('data: ')) {
+                  try {
+                    final jsonStr = line.substring(6);
+                    final List slotsData = json.decode(jsonStr) as List;
+                    final slots = slotsData
+                        .map((e) => ParkingSlotModel.fromJson(e))
+                        .toList();
+                    if (!controller.isClosed) {
+                      controller.add(slots);
+                    }
+                  } catch (e) {
+                    talker.error('Error parsing SSE data', e);
+                  }
+                }
+              },
+              onError: (e) {
+                talker.error('SSE Stream error', e);
+                if (!controller.isClosed) {
+                  controller.addError(e);
+                }
+              },
+              onDone: () {
+                talker.info('SSE Stream closed');
+              },
+              cancelOnError: true,
+            );
+      } catch (e) {
+        if (!controller.isClosed) controller.addError(e);
+      }
+    }
+
+    connect();
 
     controller.onCancel = () {
-      _socket?.disconnect();
-      _socket?.dispose();
+      client.close();
+      talker.info('Parking slots stream cancelled, client closed');
     };
 
     return controller.stream;
@@ -183,5 +207,5 @@ class ParkingService {
 ParkingService parkingService(Ref ref) {
   final remote = ref.watch(remoteRepositoryProvider);
   final env = ref.watch(envRepositoryProvider);
-  return ParkingService(remote, env.getWebSocketUrl(), ref);
+  return ParkingService(remote, env.getBaseUrl(), ref);
 }

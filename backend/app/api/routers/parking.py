@@ -1,7 +1,12 @@
+import asyncio
+import json
 from typing import Any, List, Optional
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, status, Request
+from sse_starlette.sse import EventSourceResponse
 from app.api.deps import get_current_user, get_current_admin
 from app.schemas.response import APIResponse, ResponseCode
+from app.core.redis import redis_cache
+from app.core.logging import logger
 from app.models.parking_slot import ParkingSlotInDB
 from app.models.parking_lot import ParkingLotInDB, Point
 from app.schemas.parking import (
@@ -52,6 +57,20 @@ async def _update_logical_slot_status(slot_id: str):
                     }
                 },
             )
+
+            try:
+                await redis_cache.client.publish(
+                    "slot_updates",
+                    json.dumps(
+                        {
+                            "slot_id": slot_id,
+                            "lot_id": str(slot.get("lot_id")),
+                            "status": new_status,
+                        }
+                    ),
+                )
+            except Exception as e:
+                logger.error(f"Failed to publish slot update: {e}")
 
 
 @router.get(
@@ -131,6 +150,51 @@ async def get_parking_slots(
         code=ResponseCode.SUCCESS,
         data={"slots": serialized_slots},
     )
+
+
+@router.get(
+    "/stream",
+    summary="SSE stream for real-time parking slot updates",
+    description="Streams the full list of slots whenever any slot in the requested lot (or all lots) changes status.",
+)
+async def slot_updates_stream(
+    request: Request,
+    lot_id: Optional[str] = Query(None, description="Filter updates by lot ID"),
+    current_user: Any = Depends(get_current_user),
+):
+    async def event_generator():
+        pubsub = redis_cache.client.pubsub()
+        await pubsub.subscribe("slot_updates")
+
+        initial_slots = await get_parking_slots(
+            camera_id=None, lot_id=lot_id, current_user=current_user
+        )
+        yield {"data": json.dumps(initial_slots.data["slots"])}
+
+        try:
+            while True:
+                if await request.is_disconnected():
+                    break
+
+                message = await pubsub.get_message(
+                    ignore_subscribe_messages=True, timeout=1.0
+                )
+                if message:
+                    data = json.loads(message["data"])
+                    if lot_id and data.get("lot_id") != lot_id:
+                        continue
+
+                    updated_slots = await get_parking_slots(
+                        camera_id=None, lot_id=lot_id, current_user=current_user
+                    )
+                    yield {"data": json.dumps(updated_slots.data["slots"])}
+
+                await asyncio.sleep(0.1)
+        finally:
+            await pubsub.unsubscribe("slot_updates")
+            await pubsub.close()
+
+    return EventSourceResponse(event_generator())
 
 
 @router.post(
