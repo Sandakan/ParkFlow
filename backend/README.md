@@ -65,7 +65,7 @@ This service handles the Computer Vision processing and API endpoints.
    > includes port 8000. Docker cannot bind to reserved ports and raises:
 >
    > ```text
-   > ports are not available: … listen tcp 0.0.0.0:8000: bind: An attempt was made to
+   > ports are not available: … listen tcp 0.0.0.0:8200: bind: An attempt was made to
    > access a socket in a way forbidden by its access permissions.
    > ```
 >

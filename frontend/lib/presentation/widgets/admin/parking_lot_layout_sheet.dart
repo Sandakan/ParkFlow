@@ -49,50 +49,51 @@ class ParkingLotLayoutSheet extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
           ],
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          if (isSheet)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        lot.name,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        context.l10n.currentOccupancyLayout,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
                   children: [
-                    Text(
-                      lot.name,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                    IconButton(
+                      onPressed: () {
+                        if (isSheet) Navigator.pop(context);
+                        AdminEditParkingLotRoute(lot.id).go(context);
+                      },
+                      icon: const Icon(
+                        Icons.edit_outlined,
+                        color: AppColors.primary,
                       ),
+                      tooltip: context.l10n.editLotTitle,
                     ),
-                    Text(
-                      context.l10n.currentOccupancyLayout,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
+                    if (isSheet)
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close),
                       ),
-                    ),
                   ],
                 ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      if (isSheet) Navigator.pop(context);
-                      AdminEditParkingLotRoute(lot.id).go(context);
-                    },
-                    icon: const Icon(
-                      Icons.edit_outlined,
-                      color: AppColors.primary,
-                    ),
-                    tooltip: context.l10n.editLotTitle,
-                  ),
-                  if (isSheet)
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
-                    ),
-                ],
-              ),
-            ],
-          ),
+              ],
+            ),
           const SizedBox(height: 24),
           if (layoutState.isLoading)
             const Center(child: CircularProgressIndicator())

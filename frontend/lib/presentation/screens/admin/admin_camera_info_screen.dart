@@ -527,6 +527,11 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
             '${context.l10n.slotTypePrefix}: ${slot.slotType?.toUpperCase() ?? context.l10n.slotTypeGeneral.toUpperCase()}',
             style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
           ),
+          if (slot.logicalRow > 0 || slot.logicalCol > 0)
+            Text(
+              'Row: ${slot.logicalRow}, Col: ${slot.logicalCol}',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+            ),
         ],
       ),
       trailing: IconButton(

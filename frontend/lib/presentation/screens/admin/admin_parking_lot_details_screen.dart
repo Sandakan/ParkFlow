@@ -4,6 +4,8 @@ import 'package:parkflow/presentation/widgets/admin/parking_lot_layout_sheet.dar
 import 'package:parkflow/models/parking/parking_lot_model.dart';
 import 'package:parkflow/presentation/notifiers/parking_lots/parking_lot_layout_notifier.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:parkflow/routes/router_provider.dart';
 
 class AdminParkingLotDetailsScreen extends ConsumerWidget {
   final String lotId;
@@ -16,7 +18,22 @@ class AdminParkingLotDetailsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(layoutState.lot?.name ?? context.l10n.parkingLotsTitle),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(layoutState.lot?.name ?? context.l10n.parkingLotsTitle),
+          ],
+        ),
+        actions: [
+          if (layoutState.lot != null)
+            IconButton(
+              onPressed: () {
+                AdminEditParkingLotRoute(layoutState.lot!.id).go(context);
+              },
+              icon: const Icon(Icons.edit_outlined, color: AppColors.primary),
+              tooltip: context.l10n.editLotTitle,
+            ),
+        ],
       ),
       body: layoutState.lot == null && layoutState.isLoading
           ? const Center(child: CircularProgressIndicator())

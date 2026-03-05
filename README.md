@@ -44,7 +44,7 @@ ParkFlow is a final-year implementation of a Smart Parking System integrating Co
    uvicorn app.main:app --reload
    ```
 
-_Docs available at: <http://localhost:8000/docs>_
+_Docs available at: <http://localhost:8200/docs>_
 
 #### 2. Start Frontend (Terminal B)
 
@@ -79,8 +79,8 @@ _Docs available at: <http://localhost:8000/docs>_
    ```
 
 4. **Access the Application**:
-   - Backend: <http://localhost:8000>
-   - Swagger Docs: <http://localhost:8000/docs>
+   - Backend: <http://localhost:8200>
+   - Swagger Docs: <http://localhost:8200/docs>
 
 #### 2. Run Frontend Connected to Docker
 
