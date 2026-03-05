@@ -58,22 +58,25 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.grey.shade300),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.grid_3x3,
-                          size: 14,
-                          color: Colors.grey.shade300,
-                        ),
-                        Text(
-                          'R$r C$c',
-                          style: TextStyle(
-                            fontSize: 7,
-                            color: Colors.grey.shade400,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.grid_3x3,
+                            size: 14,
+                            color: Colors.grey.shade300,
                           ),
-                        ),
-                      ],
+                          Text(
+                            'R$r C$c',
+                            style: TextStyle(
+                              fontSize: 7,
+                              color: Colors.grey.shade400,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }
@@ -98,45 +101,48 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                     ),
                   ),
                   child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          slot.isOccupied
-                              ? Icons.directions_car
-                              : Icons.local_parking,
-                          size: 16.0,
-                          color: slot.isOccupied
-                              ? AppColors.occupiedText
-                              : isHighlighted
-                              ? AppColors.primary
-                              : AppColors.availableText,
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          slot.name,
-                          style: TextStyle(
-                            fontSize: 8,
-                            fontWeight: FontWeight.bold,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            slot.isOccupied
+                                ? Icons.directions_car
+                                : Icons.local_parking,
+                            size: 16.0,
                             color: slot.isOccupied
-                                ? AppColors.occupiedTextDark
-                                : AppColors.availableTextDark,
+                                ? AppColors.occupiedText
+                                : isHighlighted
+                                ? AppColors.primary
+                                : AppColors.availableText,
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          'R${slot.logicalRow} C${slot.logicalCol}',
-                          style: TextStyle(
-                            fontSize: 7,
-                            color:
-                                (slot.isOccupied
-                                        ? AppColors.occupiedTextDark
-                                        : AppColors.availableTextDark)
-                                    .withValues(alpha: 0.7),
+                          const SizedBox(height: 2),
+                          Text(
+                            slot.name,
+                            style: TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                              color: slot.isOccupied
+                                  ? AppColors.occupiedTextDark
+                                  : AppColors.availableTextDark,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                        ),
-                      ],
+                          Text(
+                            'R${slot.logicalRow} C${slot.logicalCol}',
+                            style: TextStyle(
+                              fontSize: 7,
+                              color:
+                                  (slot.isOccupied
+                                          ? AppColors.occupiedTextDark
+                                          : AppColors.availableTextDark)
+                                      .withValues(alpha: 0.7),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
