@@ -15,6 +15,7 @@ import time
 from pathlib import Path
 
 import cv2
+import torch
 from ultralytics import YOLO
 
 USE_CUSTOM_MODEL = True
@@ -23,7 +24,7 @@ BASE = Path(__file__).parent
 MODEL_PATH: Path | str = (
     BASE / "models" / "best.pt" if USE_CUSTOM_MODEL else "yolo26s.pt"
 )
-VIDEO_PATH = BASE.parent / "mock_rtsp" / "assets" / "vid1.mp4"
+VIDEO_PATH = BASE.parent / "mock_rtsp" / "assets" / "vid3.mp4"
 
 CONFIDENCE = 0.1
 DISPLAY_SCALE = 1.0
@@ -85,6 +86,17 @@ def main() -> None:
 
     print(f"[INFO] Loading model  : {MODEL_PATH}")
     model = YOLO(str(MODEL_PATH))
+
+    # Device detection
+    device = "cpu"
+    if torch.backends.mps.is_available():
+        device = "mps"
+    elif torch.cuda.is_available():
+        device = "cuda"
+
+    print(f"[INFO] Using device   : {device}")
+    model.to(device)
+
     print(f"[INFO] Model classes  : {model.names}")
     print(f"[INFO] Opening video  : {VIDEO_PATH}")
 
@@ -121,31 +133,40 @@ def main() -> None:
             predictions = model.predict(frame, conf=CONFIDENCE, verbose=False)
             result = predictions[0]
 
-            draw_detections(frame, result)
-            print(f"Detected classes: {result.boxes.cls.tolist()}")
-
             n_det = len(result.boxes) if result.boxes else 0
-            info = f"Frame {frame_idx}  |  {live_fps:.1f} FPS  |  Detections: {n_det}  |  conf>={CONFIDENCE}"
-            cv2.putText(
-                frame,
-                info,
-                (10, 28),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.65,
-                (255, 255, 255),
-                2,
-                cv2.LINE_AA,
+
+            draw_detections(frame, result)
+            print(
+                f"[DEBUG] Frame: {frame_idx:04d} | FPS: {live_fps:.1f} | Detections: {n_det} | Conf>={CONFIDENCE} | Classes: {result.boxes.cls.tolist()}"
             )
-            cv2.putText(
-                frame,
-                info,
-                (10, 28),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.65,
-                (30, 30, 30),
-                1,
-                cv2.LINE_AA,
-            )
+
+            info1 = f"Frame: {frame_idx:04d} | FPS: {live_fps:.1f} | Det: {n_det} | Conf: {CONFIDENCE}"
+            info2 = f"Classes: {result.boxes.cls.tolist()}"
+
+            for i, txt in enumerate([info1, info2]):
+                y = 28 + (i * 28)
+                # Outline/Shadow
+                cv2.putText(
+                    frame,
+                    txt,
+                    (10, y),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.65,
+                    (255, 255, 255),
+                    2,
+                    cv2.LINE_AA,
+                )
+                # Main text
+                cv2.putText(
+                    frame,
+                    txt,
+                    (10, y),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.65,
+                    (30, 30, 30),
+                    1,
+                    cv2.LINE_AA,
+                )
 
             if DISPLAY_SCALE != 1.0:
                 dh, dw = frame.shape[:2]
