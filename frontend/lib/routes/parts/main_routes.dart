@@ -2,9 +2,9 @@ part of '../router_provider.dart';
 
 @TypedStatefulShellRoute<AdminShellRoute>(
   branches: <TypedStatefulShellBranch<StatefulShellBranchData>>[
-    TypedStatefulShellBranch<AdminDashboardBranch>(
+    TypedStatefulShellBranch<AdminAnalyticsBranch>(
       routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<AdminDashboardRoute>(path: AdminDashboardRoute.path),
+        TypedGoRoute<AdminAnalyticsRoute>(path: AdminAnalyticsRoute.path),
       ],
     ),
     TypedStatefulShellBranch<AdminParkingLotsBranch>(
@@ -38,11 +38,7 @@ part of '../router_provider.dart';
         ),
       ],
     ),
-    TypedStatefulShellBranch<AdminAnalyticsBranch>(
-      routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<AdminAnalyticsRoute>(path: AdminAnalyticsRoute.path),
-      ],
-    ),
+
     TypedStatefulShellBranch<AdminSettingsBranch>(
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<AdminSettingsRoute>(path: AdminSettingsRoute.path),
@@ -61,10 +57,6 @@ class AdminShellRoute extends StatefulShellRouteData {
   ) {
     return MainLayoutScreen(navigationShell: navigationShell);
   }
-}
-
-class AdminDashboardBranch extends StatefulShellBranchData {
-  const AdminDashboardBranch();
 }
 
 class AdminParkingLotsBranch extends StatefulShellBranchData {

@@ -114,9 +114,9 @@ class MainLayoutScreen extends ConsumerWidget {
     if (authState.isAdmin) {
       return [
         NavigationDestinationData(
-          icon: Icons.dashboard_outlined,
-          selectedIcon: Icons.dashboard,
-          label: context.l10n.adminDashboard,
+          icon: Icons.bar_chart_outlined,
+          selectedIcon: Icons.bar_chart,
+          label: context.l10n.analytics,
         ),
         NavigationDestinationData(
           icon: Icons.local_parking_outlined,
@@ -127,11 +127,6 @@ class MainLayoutScreen extends ConsumerWidget {
           icon: Icons.videocam_outlined,
           selectedIcon: Icons.videocam,
           label: context.l10n.cameras,
-        ),
-        NavigationDestinationData(
-          icon: Icons.bar_chart_outlined,
-          selectedIcon: Icons.bar_chart,
-          label: context.l10n.analytics,
         ),
         NavigationDestinationData(
           icon: Icons.settings_outlined,

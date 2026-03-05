@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/states/auth/auth_state.dart';
 import 'package:parkflow/presentation/screens/boot/boot_screen.dart';
-import 'package:parkflow/presentation/screens/dashboard/admin_dashboard_screen.dart';
 import 'package:parkflow/presentation/screens/home/home_screen.dart';
 import 'package:parkflow/presentation/screens/auth/login_screen.dart';
 import 'package:parkflow/presentation/screens/auth/register_screen.dart';
@@ -64,7 +63,7 @@ GoRouter router(Ref ref) {
 
       if (isBooting) {
         if (isAuth) {
-          if (isAdmin) return AdminDashboardRoute.path;
+          if (isAdmin) return AdminAnalyticsRoute.path;
           if (authState.isDriver) return HomeRoute.path;
           return HomeRoute.path;
         }
@@ -80,17 +79,17 @@ GoRouter router(Ref ref) {
 
       if (isAuth) {
         if (isGoingToLogin || isGoingToRegister) {
-          if (isAdmin) return AdminDashboardRoute.path;
+          if (isAdmin) return AdminAnalyticsRoute.path;
           if (authState.isDriver) return HomeRoute.path;
           return HomeRoute.path;
         }
 
         final isGoingToAdmin =
-            state.matchedLocation == AdminDashboardRoute.path;
+            state.matchedLocation == AdminAnalyticsRoute.path;
         final isGoingToHome = state.matchedLocation == HomeRoute.path;
 
         if (isAdmin && isGoingToHome) {
-          return AdminDashboardRoute.path;
+          return AdminAnalyticsRoute.path;
         }
         if (!isAdmin && isGoingToAdmin) {
           return HomeRoute.path;

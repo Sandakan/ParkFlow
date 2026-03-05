@@ -90,7 +90,7 @@ RouteBase get $adminShellRoute => StatefulShellRouteData.$route(
       routes: [
         GoRouteData.$route(
           path: '/admin',
-          factory: $AdminDashboardRoute._fromState,
+          factory: $AdminAnalyticsRoute._fromState,
         ),
       ],
     ),
@@ -137,14 +137,6 @@ RouteBase get $adminShellRoute => StatefulShellRouteData.$route(
     StatefulShellBranchData.$branch(
       routes: [
         GoRouteData.$route(
-          path: '/admin/analytics',
-          factory: $AdminAnalyticsRoute._fromState,
-        ),
-      ],
-    ),
-    StatefulShellBranchData.$branch(
-      routes: [
-        GoRouteData.$route(
           path: '/admin/settings',
           factory: $AdminSettingsRoute._fromState,
         ),
@@ -158,9 +150,9 @@ extension $AdminShellRouteExtension on AdminShellRoute {
       const AdminShellRoute();
 }
 
-mixin $AdminDashboardRoute on GoRouteData {
-  static AdminDashboardRoute _fromState(GoRouterState state) =>
-      const AdminDashboardRoute();
+mixin $AdminAnalyticsRoute on GoRouteData {
+  static AdminAnalyticsRoute _fromState(GoRouterState state) =>
+      const AdminAnalyticsRoute();
 
   @override
   String get location => GoRouteData.$location('/admin');
@@ -323,27 +315,6 @@ mixin $AdminCameraInfoRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/admin/cameras/${Uri.encodeComponent(_self.cameraId)}',
   );
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $AdminAnalyticsRoute on GoRouteData {
-  static AdminAnalyticsRoute _fromState(GoRouterState state) =>
-      const AdminAnalyticsRoute();
-
-  @override
-  String get location => GoRouteData.$location('/admin/analytics');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -539,4 +510,4 @@ final class RouterProvider
   }
 }
 
-String _$routerHash() => r'951caa693bcc086138761b466f23c2a1bdd55308';
+String _$routerHash() => r'e0a6a3f0198e95feb9fcdfb20d345b3b0a66f370';
