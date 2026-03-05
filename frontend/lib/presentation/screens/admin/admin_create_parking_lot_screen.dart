@@ -47,14 +47,6 @@ class _AdminCreateParkingLotScreenState
       value: '5.0',
       validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
     ),
-    'entranceRow': FormControl<String>(
-      value: '0',
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-    'entranceCol': FormControl<String>(
-      value: '0',
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
   });
 
   Future<void> _submit() async {
@@ -78,12 +70,6 @@ class _AdminCreateParkingLotScreenState
         slotLengthMeters: double.parse(
           form.control('slotLength').value as String,
         ),
-        entranceLogicalLocations: [
-          [
-            int.parse(form.control('entranceRow').value as String),
-            int.parse(form.control('entranceCol').value as String),
-          ],
-        ],
       );
 
       await ref.read(parkingServiceProvider).createParkingLot(request);
@@ -211,30 +197,6 @@ class _AdminCreateParkingLotScreenState
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildTextField(
-                            formControlName: 'entranceRow',
-                            label: 'Entrance Row',
-                            hint: '0',
-                            icon: Icons.door_front_door_outlined,
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _buildTextField(
-                            formControlName: 'entranceCol',
-                            label: 'Entrance Column',
-                            hint: '0',
-                            icon: Icons.door_front_door_outlined,
-                            keyboardType: TextInputType.number,
                           ),
                         ),
                       ],

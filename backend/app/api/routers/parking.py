@@ -164,7 +164,6 @@ async def create_parking_lot(
             "coordinates": [request.longitude, request.latitude],
         },
         "total_slots": request.total_slots,
-        "entrance_logical_locations": request.entrance_logical_locations,
         "slot_width_meters": request.slot_width_meters,
         "slot_length_meters": request.slot_length_meters,
         "status": "open",
@@ -277,9 +276,6 @@ async def get_parking_lot(
             "latitude": lot.get("location", {}).get("coordinates", [0, 0])[1],
             "longitude": lot.get("location", {}).get("coordinates", [0, 0])[0],
             "totalSlots": lot.get("total_slots", 0),
-            "entrance_logical_locations": lot.get(
-                "entrance_logical_locations", [[0, 0]]
-            ),
             "slot_width_meters": lot.get("slot_width_meters", 5.0),
             "slot_length_meters": lot.get("slot_length_meters", 5.0),
         },
@@ -321,8 +317,6 @@ async def update_parking_lot(
         update_data["total_slots"] = request.total_slots
     if request.price_per_hour is not None:
         update_data["price_per_hour"] = request.price_per_hour
-    if request.entrance_logical_locations is not None:
-        update_data["entrance_logical_locations"] = request.entrance_logical_locations
     if request.slot_width_meters is not None:
         update_data["slot_width_meters"] = request.slot_width_meters
     if request.slot_length_meters is not None:
@@ -733,11 +727,18 @@ async def get_parking_suggestions(
             message="Lot not found", code=ResponseCode.NOT_FOUND
         )
 
-    entrances = lot.get("entrance_logical_locations", [[0, 0]])
-    w = lot.get("slot_width_meters", 5.0)
-    l = lot.get("slot_length_meters", 5.0)
+    cursor_entrances = db.client["parkflow"].parking_slots.find(
+        {"lot_id": lot_id, "slot_type": "entrance", "deleted_at": None}
+    )
+    entrance_slots = await cursor_entrances.to_list(length=100)
 
-    # 2. Fetch all vacant slots for this lot
+    entrances = []
+    if entrance_slots:
+        for es in entrance_slots:
+            entrances.append([es.get("logical_row", 0), es.get("logical_col", 0)])
+    else:
+        entrances = [[0, 0]]
+
     cursor = db.client["parkflow"].parking_slots.find(
         {"lot_id": lot_id, "status": "vacant", "deleted_at": None}
     )

@@ -13,10 +13,6 @@ class CreateParkingLotRequest(BaseModel):
     price_per_hour: float = Field(
         default=0.0, description="Price per hour for parking in this lot", ge=0
     )
-    entrance_logical_locations: list[list[int]] = Field(
-        default_factory=lambda: [[0, 0]],
-        description="List of [row, col] entrance coordinates",
-    )
     slot_width_meters: float = Field(
         default=5.0, description="Average width of a parking slot in meters"
     )
@@ -38,7 +34,6 @@ class UpdateParkingLotRequest(BaseModel):
     price_per_hour: Optional[float] = Field(
         None, description="Price per hour for parking in this lot", ge=0
     )
-    entrance_logical_locations: Optional[list[list[int]]] = None
     slot_width_meters: Optional[float] = None
     slot_length_meters: Optional[float] = None
 
