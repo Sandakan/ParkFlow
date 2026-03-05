@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:parkflow/presentation/widgets/admin/slot_grid_picker.dart';
 
 class AdminCameraInfoScreen extends ConsumerStatefulWidget {
   final String cameraId;
@@ -573,60 +574,108 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
   }
 
   void _promptSlotName(CameraInfo notifier) {
-    final controller = TextEditingController();
-    final rowController = TextEditingController(text: '0');
-    final colController = TextEditingController(text: '0');
-    String tempType = 'general';
+    final existingSlots = ref.read(cameraInfoProvider(widget.cameraId)).slots;
+
+    final form = fb.group({
+      'name': FormControl<String>(validators: [Validators.required]),
+      'type': FormControl<String>(
+        value: 'general',
+        validators: [Validators.required],
+      ),
+      'row': FormControl<int>(validators: [Validators.required]),
+      'col': FormControl<int>(validators: [Validators.required]),
+    });
 
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(context.l10n.newParkingSlotTitle),
-              content: Column(
+        return ReactiveForm(
+          formGroup: form,
+          child: AlertDialog(
+            title: Text(context.l10n.newParkingSlotTitle),
+            content: SingleChildScrollView(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
-                    controller: controller,
+                  ReactiveTextField<String>(
+                    formControlName: 'name',
                     decoration: InputDecoration(
                       labelText: context.l10n.slotIdentifierLabel,
                       hintText: context.l10n.slotIdentifierHint,
                       border: const OutlineInputBorder(),
                     ),
+                    textInputAction: TextInputAction.next,
                     autofocus: true,
+                    validationMessages: {
+                      ValidationMessage.required: (error) =>
+                          'Slot name is required',
+                    },
                   ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: rowController,
-                          decoration: const InputDecoration(
-                            labelText: 'Logical Row',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: TextField(
-                          controller: colController,
-                          decoration: const InputDecoration(
-                            labelText: 'Logical Column',
-                            border: OutlineInputBorder(),
-                          ),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: 24),
+
+                  // Visual grid picker
+                  ReactiveValueListenableBuilder<int>(
+                    formControlName: 'row',
+                    builder: (context, rowControl, child) {
+                      return ReactiveValueListenableBuilder<int>(
+                        formControlName: 'col',
+                        builder: (context, colControl, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SlotGridPicker(
+                                existingSlots: existingSlots,
+                                selectedRow: rowControl.value,
+                                selectedCol: colControl.value,
+                                onCellSelected: (pos) {
+                                  rowControl.value = pos.row;
+                                  colControl.value = pos.col;
+                                  // Mark as touched to show validation errors if any
+                                  rowControl.markAsTouched();
+                                  colControl.markAsTouched();
+                                },
+                              ),
+                              if ((rowControl.touched || colControl.touched) &&
+                                  (rowControl.invalid || colControl.invalid))
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    'Please select a grid position',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.error,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              if (rowControl.value != null &&
+                                  colControl.value != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    'Selected: Row ${rowControl.value}, Col ${colControl.value}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    initialValue: tempType,
+
+                  const SizedBox(height: 24),
+                  ReactiveDropdownField<String>(
+                    formControlName: 'type',
                     decoration: InputDecoration(
                       labelText: context.l10n.slotTypeLabel,
                       border: const OutlineInputBorder(),
@@ -645,36 +694,41 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                         child: Text(context.l10n.slotTypeEv),
                       ),
                     ],
-                    onChanged: (val) {
-                      if (val != null) {
-                        setDialogState(() => tempType = val);
-                      }
-                    },
                   ),
                 ],
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    notifier.resetDrawing();
-                    notifier.setInteractionMode(InteractionMode.inspection);
-                  },
-                  child: Text(context.l10n.cancelButton),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final nameStr = controller.text.trim();
-                    if (nameStr.isNotEmpty) {
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  notifier.resetDrawing();
+                  notifier.setInteractionMode(InteractionMode.inspection);
+                },
+                child: Text(context.l10n.cancelButton),
+              ),
+              ReactiveFormConsumer(
+                builder: (context, form, child) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      if (form.invalid) {
+                        form.markAllAsTouched();
+                        return;
+                      }
+
+                      final nameStr = form.control('name').value as String;
+                      final type = form.control('type').value as String;
+                      final row = form.control('row').value as int;
+                      final col = form.control('col').value as int;
+
                       Navigator.of(context).pop();
-                      notifier.setSelectedSlotType(tempType);
-                      final row = int.tryParse(rowController.text) ?? 0;
-                      final col = int.tryParse(colController.text) ?? 0;
+                      notifier.setSelectedSlotType(type);
                       await notifier.saveSlot(
                         nameStr,
                         logicalRow: row,
                         logicalCol: col,
                       );
+
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -684,17 +738,17 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                           ),
                         );
                       }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text(context.l10n.saveSlotButton),
-                ),
-              ],
-            );
-          },
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text(context.l10n.saveSlotButton),
+                  );
+                },
+              ),
+            ],
+          ),
         );
       },
     );

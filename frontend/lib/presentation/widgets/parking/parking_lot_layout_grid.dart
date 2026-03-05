@@ -58,12 +58,22 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.grey.shade300),
                     ),
-                    child: Center(
-                      child: Icon(
-                        Icons.grid_3x3,
-                        size: 16,
-                        color: Colors.grey.shade300,
-                      ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.grid_3x3,
+                          size: 14,
+                          color: Colors.grey.shade300,
+                        ),
+                        Text(
+                          'R$r C$c',
+                          style: TextStyle(
+                            fontSize: 7,
+                            color: Colors.grey.shade400,
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
@@ -114,6 +124,17 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          'R${slot.logicalRow} C${slot.logicalCol}',
+                          style: TextStyle(
+                            fontSize: 7,
+                            color:
+                                (slot.isOccupied
+                                        ? AppColors.occupiedTextDark
+                                        : AppColors.availableTextDark)
+                                    .withValues(alpha: 0.7),
+                          ),
                         ),
                       ],
                     ),

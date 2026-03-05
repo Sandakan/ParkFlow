@@ -46,7 +46,10 @@ class CameraInfo extends _$CameraInfo {
 
   @override
   CameraInfoState build(String cameraId) {
-    ref.onDispose(_stopDetectionStream);
+    ref.onDispose(() {
+      _sseSubscription?.cancel();
+      _sseSubscription = null;
+    });
     Future.microtask(() => _fetchCameraInfo());
     return const CameraInfoState(isLoading: true);
   }
