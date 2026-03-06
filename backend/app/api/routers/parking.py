@@ -15,6 +15,7 @@ from app.schemas.parking import (
     CreateCameraRequest,
     CreateParkingSlotRequest,
     UpdateParkingSlotRequest,
+    RateRequest,
 )
 from app.schemas.reservation import CreateReservationRequest, ReservationResponse
 from app.core.database import db
@@ -112,6 +113,8 @@ async def get_parking_slots(
                         "logical_row": slot.get("logical_row", 0),
                         "logical_col": slot.get("logical_col", 0),
                         "lot_id": slot.get("lot_id"),
+                        "rating": slot.get("average_rating", 0.0),
+                        "ratingCount": slot.get("rating_count", 0),
                         "lastUpdated": (
                             slot.get("updated_at").isoformat()
                             if slot.get("updated_at")
@@ -137,6 +140,8 @@ async def get_parking_slots(
                     "logical_row": slot.get("logical_row", 0),
                     "logical_col": slot.get("logical_col", 0),
                     "lot_id": slot.get("lot_id"),
+                    "rating": slot.get("average_rating", 0.0),
+                    "ratingCount": slot.get("rating_count", 0),
                     "lastUpdated": (
                         slot.get("updated_at").isoformat()
                         if slot.get("updated_at")
@@ -324,6 +329,8 @@ async def get_parking_lots(
                 "distanceMeters": distance_meters,
                 "latitude": lot.get("location", {}).get("coordinates", [0, 0])[1],
                 "longitude": lot.get("location", {}).get("coordinates", [0, 0])[0],
+                "rating": lot.get("average_rating"),
+                "ratingCount": lot.get("rating_count"),
             }
         )
 
@@ -381,6 +388,8 @@ async def get_parking_lot(
             "totalSlots": lot.get("total_slots", 0),
             "slot_width_meters": lot.get("slot_width_meters", 5.0),
             "slot_length_meters": lot.get("slot_length_meters", 5.0),
+            "rating": lot.get("average_rating", 0.0),
+            "ratingCount": lot.get("rating_count", 0),
         },
     )
 
@@ -806,6 +815,126 @@ async def get_reservations(
         message="Reservations retrieved",
         code=ResponseCode.SUCCESS,
         data={"reservations": serialized_reservations},
+    )
+
+
+@router.post(
+    "/lots/{lot_id}/rate",
+    response_model=APIResponse[dict],
+    description="Rate a parking lot.",
+)
+async def rate_parking_lot(
+    lot_id: str,
+    request: RateRequest,
+    current_user: Any = Depends(get_current_user),
+) -> Any:
+    """
+    Submit a rating for a parking lot.
+    """
+    from bson import ObjectId
+    from datetime import datetime, timezone
+
+    now = datetime.now(timezone.utc)
+
+    lot = await db.client["parkflow"].parking_lots.find_one({"_id": ObjectId(lot_id)})
+    if not lot:
+        return APIResponse.error_response(
+            message="Parking lot not found",
+            code=ResponseCode.NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    new_total_sum = lot.get("total_rating_sum", 0.0) + request.rating
+    new_count = lot.get("rating_count", 0) + 1
+    new_avg = new_total_sum / new_count
+
+    await db.client["parkflow"].parking_lots.update_one(
+        {"_id": ObjectId(lot_id)},
+        {
+            "$set": {
+                "total_rating_sum": new_total_sum,
+                "rating_count": new_count,
+                "average_rating": new_avg,
+                "updated_at": now,
+            }
+        },
+    )
+
+    return APIResponse.success_response(
+        message="Rating submitted successfully",
+        data={"average_rating": new_avg, "rating_count": new_count},
+    )
+
+
+@router.post(
+    "/slots/{slot_id}/rate",
+    response_model=APIResponse[dict],
+    description="Rate a parking slot.",
+)
+async def rate_parking_slot(
+    slot_id: str,
+    request: RateRequest,
+    current_user: Any = Depends(get_current_user),
+) -> Any:
+    """
+    Submit a rating for a parking slot. This also contributes to the lot's rating.
+    """
+    from bson import ObjectId
+    from datetime import datetime, timezone
+
+    now = datetime.now(timezone.utc)
+
+    slot = await db.client["parkflow"].parking_slots.find_one(
+        {"_id": ObjectId(slot_id)}
+    )
+    if not slot:
+        return APIResponse.error_response(
+            message="Parking slot not found",
+            code=ResponseCode.NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    new_slot_total_sum = slot.get("total_rating_sum", 0.0) + request.rating
+    new_slot_count = slot.get("rating_count", 0) + 1
+    new_slot_avg = new_slot_total_sum / new_slot_count
+
+    await db.client["parkflow"].parking_slots.update_one(
+        {"_id": ObjectId(slot_id)},
+        {
+            "$set": {
+                "total_rating_sum": new_slot_total_sum,
+                "rating_count": new_slot_count,
+                "average_rating": new_slot_avg,
+                "updated_at": now,
+            }
+        },
+    )
+
+    lot_id = slot.get("lot_id")
+    if lot_id:
+        lot = await db.client["parkflow"].parking_lots.find_one(
+            {"_id": ObjectId(lot_id)}
+        )
+        if lot:
+            new_lot_total_sum = lot.get("total_rating_sum", 0.0) + request.rating
+            new_lot_count = lot.get("rating_count", 0) + 1
+            new_lot_avg = new_lot_total_sum / new_lot_count
+
+            await db.client["parkflow"].parking_lots.update_one(
+                {"_id": ObjectId(lot_id)},
+                {
+                    "$set": {
+                        "total_rating_sum": new_lot_total_sum,
+                        "rating_count": new_lot_count,
+                        "average_rating": new_lot_avg,
+                        "updated_at": now,
+                    }
+                },
+            )
+
+    return APIResponse.success_response(
+        message="Slot rating submitted successfully",
+        data={"average_rating": new_slot_avg, "rating_count": new_slot_count},
     )
 
 

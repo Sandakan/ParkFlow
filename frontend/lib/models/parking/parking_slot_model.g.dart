@@ -22,6 +22,8 @@ _ParkingSlotModel _$ParkingSlotModelFromJson(Map<String, dynamic> json) =>
       lastUpdated: json['lastUpdated'] == null
           ? null
           : DateTime.parse(json['lastUpdated'] as String),
+      rating: (json['rating'] as num?)?.toDouble(),
+      ratingCount: (json['ratingCount'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$ParkingSlotModelToJson(_ParkingSlotModel instance) =>
@@ -36,4 +38,6 @@ Map<String, dynamic> _$ParkingSlotModelToJson(_ParkingSlotModel instance) =>
       'logical_col': instance.logicalCol,
       'coordinates': instance.coordinates,
       'lastUpdated': instance.lastUpdated?.toIso8601String(),
+      'rating': instance.rating,
+      'ratingCount': instance.ratingCount,
     };

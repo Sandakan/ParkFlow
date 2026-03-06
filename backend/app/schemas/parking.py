@@ -70,3 +70,7 @@ class UpdateParkingSlotRequest(BaseModel):
     logical_row: Optional[int] = None
     logical_col: Optional[int] = None
     coordinates: Optional[list[Point2D]] = None
+
+
+class RateRequest(BaseModel):
+    rating: float = Field(..., ge=1, le=5, description="Rating value between 1 and 5")

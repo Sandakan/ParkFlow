@@ -16,6 +16,9 @@ class ParkingSlotInDB(BaseModel):
     slot_type: Literal["general", "disabled", "ev"] = "general"
     logical_row: int = 0
     logical_col: int = 0
+    average_rating: float = 0.0
+    rating_count: int = 0
+    total_rating_sum: float = 0.0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = None

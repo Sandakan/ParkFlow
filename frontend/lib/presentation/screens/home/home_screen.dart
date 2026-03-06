@@ -88,8 +88,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final available = lot.totalSlots - (lot.totalSlots * lot.occupancy).toInt();
     final isFull = available <= 0;
 
-    final rating = 3.5 + (lot.id.hashCode.abs() % 16) / 10.0;
-    final cacheKey = '${lot.id}_${available}_${isFull}_rating';
+    final rating = lot.rating ?? 0.0;
+    final cacheKey = '${lot.id}_${available}_${isFull}_$rating';
 
     if (_markerIcons.containsKey(cacheKey)) {
       return _markerIcons[cacheKey]!;

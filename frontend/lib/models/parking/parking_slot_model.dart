@@ -17,6 +17,8 @@ abstract class ParkingSlotModel with _$ParkingSlotModel {
     @JsonKey(name: 'logical_col') @Default(0) int logicalCol,
     List<Point2D>? coordinates,
     DateTime? lastUpdated,
+    double? rating,
+    int? ratingCount,
   }) = _ParkingSlotModel;
 
   factory ParkingSlotModel.fromJson(Map<String, dynamic> json) =>
