@@ -14,6 +14,8 @@ abstract class ParkingLotModel with _$ParkingLotModel {
     required double occupancy,
     required int revenueToday,
     required String address,
+    required double latitude,
+    required double longitude,
     @JsonKey(name: 'entrance_logical_locations')
     List<List<int>>? entranceLogicalLocations,
     @JsonKey(name: 'slot_width_meters') double? slotWidthMeters,

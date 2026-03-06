@@ -9,7 +9,12 @@ class BookingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.bookings)),
-      body: const Center(child: Text('Current and past reservations')),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 700),
+          child: const Center(child: Text('Current and past reservations')),
+        ),
+      ),
     );
   }
 }

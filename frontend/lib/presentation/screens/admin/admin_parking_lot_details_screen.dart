@@ -51,6 +51,8 @@ class AdminParkingLotDetailsScreen extends ConsumerWidget {
                       occupancy: 0,
                       revenueToday: 0,
                       address: '',
+                      latitude: 0,
+                      longitude: 0,
                     ),
                 isSheet: false,
               ),

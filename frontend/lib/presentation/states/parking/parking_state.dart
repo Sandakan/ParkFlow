@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:parkflow/models/parking/parking_slot_model.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/models/parking/parking_lot_model.dart';
@@ -14,6 +15,7 @@ abstract class ParkingState with _$ParkingState {
     @Default([]) List<ParkingLotModel> lots,
     @Default([]) List<ParkingSuggestionEntity> suggestions,
     ParkingLotModel? lot,
+    Position? userPosition,
     String? searchQuery,
     AppException? error,
   }) = _ParkingState;

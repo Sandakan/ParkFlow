@@ -63,50 +63,6 @@ class MainLayoutScreen extends ConsumerWidget {
                   .toList(),
               selectedIndex: navigationShell.currentIndex,
               onDestinationSelected: (index) => _onTap(context, index),
-              trailing: authState.isAdmin
-                  ? Expanded(
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: size.width >= 800
-                              ? Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                  ),
-                                  child: TextButton.icon(
-                                    style: TextButton.styleFrom(
-                                      foregroundColor: colorScheme.error,
-                                      minimumSize: const Size.fromHeight(40),
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                      ),
-                                    ),
-                                    onPressed: () => ref
-                                        .read(authProvider.notifier)
-                                        .logout(),
-                                    icon: const Icon(Icons.logout, size: 20),
-                                    label: Text(
-                                      context.l10n.logout,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : IconButton(
-                                  icon: Icon(
-                                    Icons.logout,
-                                    color: colorScheme.error,
-                                  ),
-                                  onPressed: () =>
-                                      ref.read(authProvider.notifier).logout(),
-                                  tooltip: context.l10n.logout,
-                                ),
-                        ),
-                      ),
-                    )
-                  : null,
             ),
             const VerticalDivider(thickness: 1, width: 1),
             Expanded(child: navigationShell),
@@ -139,16 +95,7 @@ class MainLayoutScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: authState.isAdmin
-          ? AppBar(
-              title: Text(context.l10n.appTitle),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.logout),
-                  onPressed: () => ref.read(authProvider.notifier).logout(),
-                  tooltip: context.l10n.logout,
-                ),
-              ],
-            )
+          ? AppBar(title: Text(context.l10n.appTitle))
           : null,
       body: navigationShell,
       floatingActionButton: authState.isDriver

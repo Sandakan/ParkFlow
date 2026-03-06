@@ -16,6 +16,8 @@ _ParkingLotModel _$ParkingLotModelFromJson(Map<String, dynamic> json) =>
       occupancy: (json['occupancy'] as num).toDouble(),
       revenueToday: (json['revenueToday'] as num).toInt(),
       address: json['address'] as String,
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
       entranceLogicalLocations:
           (json['entrance_logical_locations'] as List<dynamic>?)
               ?.map(
@@ -39,6 +41,8 @@ Map<String, dynamic> _$ParkingLotModelToJson(_ParkingLotModel instance) =>
       'occupancy': instance.occupancy,
       'revenueToday': instance.revenueToday,
       'address': instance.address,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
       'entrance_logical_locations': instance.entranceLogicalLocations,
       'slot_width_meters': instance.slotWidthMeters,
       'slot_length_meters': instance.slotLengthMeters,

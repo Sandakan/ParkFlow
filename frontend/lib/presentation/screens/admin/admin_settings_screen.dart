@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/notifiers/settings/settings_notifier.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
@@ -69,6 +70,10 @@ class AdminSettingsScreen extends ConsumerWidget {
                                 notifier: notifier,
                               ),
                               const SizedBox(height: 32),
+                              _SectionLabel(l10n.logout.toUpperCase()),
+                              const SizedBox(height: 12),
+                              _LogoutCard(),
+                              const SizedBox(height: 48),
                             ],
                           ),
                         ),
@@ -582,6 +587,68 @@ class _SettingNumberFieldState extends State<_SettingNumberField> {
           },
         ),
       ],
+    );
+  }
+}
+
+class _LogoutCard extends ConsumerWidget {
+  const _LogoutCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+
+    return Card(
+      elevation: 0,
+      color: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: AppColors.outlineVariant, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.logout,
+                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Securely sign out of your account',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                FilledButton.icon(
+                  onPressed: () => ref.read(authProvider.notifier).logout(),
+                  icon: const Icon(Icons.logout_rounded, size: 18),
+                  label: Text(l10n.logout),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.error,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

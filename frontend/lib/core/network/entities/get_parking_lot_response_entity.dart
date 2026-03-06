@@ -29,6 +29,8 @@ abstract class GetParkingLotResponseEntity with _$GetParkingLotResponseEntity {
       id: id,
       name: name,
       address: address,
+      latitude: latitude,
+      longitude: longitude,
       totalSlots: totalSlots,
       isOpen: true,
       camerasCount: 0,

@@ -322,6 +322,8 @@ async def get_parking_lots(
                 "revenueToday": revenue_today,
                 "address": address,
                 "distanceMeters": distance_meters,
+                "latitude": lot.get("location", {}).get("coordinates", [0, 0])[1],
+                "longitude": lot.get("location", {}).get("coordinates", [0, 0])[0],
             }
         )
 

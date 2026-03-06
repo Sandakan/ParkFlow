@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ParkingState {
 
- bool get isLoading; List<ParkingSlotModel> get slots; List<ParkingLotModel> get lots; List<ParkingSuggestionEntity> get suggestions; ParkingLotModel? get lot; String? get searchQuery; AppException? get error;
+ bool get isLoading; List<ParkingSlotModel> get slots; List<ParkingLotModel> get lots; List<ParkingSuggestionEntity> get suggestions; ParkingLotModel? get lot; Position? get userPosition; String? get searchQuery; AppException? get error;
 /// Create a copy of ParkingState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ParkingStateCopyWith<ParkingState> get copyWith => _$ParkingStateCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParkingState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.slots, slots)&&const DeepCollectionEquality().equals(other.lots, lots)&&const DeepCollectionEquality().equals(other.suggestions, suggestions)&&(identical(other.lot, lot) || other.lot == lot)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ParkingState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.slots, slots)&&const DeepCollectionEquality().equals(other.lots, lots)&&const DeepCollectionEquality().equals(other.suggestions, suggestions)&&(identical(other.lot, lot) || other.lot == lot)&&(identical(other.userPosition, userPosition) || other.userPosition == userPosition)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(slots),const DeepCollectionEquality().hash(lots),const DeepCollectionEquality().hash(suggestions),lot,searchQuery,error);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(slots),const DeepCollectionEquality().hash(lots),const DeepCollectionEquality().hash(suggestions),lot,userPosition,searchQuery,error);
 
 @override
 String toString() {
-  return 'ParkingState(isLoading: $isLoading, slots: $slots, lots: $lots, suggestions: $suggestions, lot: $lot, searchQuery: $searchQuery, error: $error)';
+  return 'ParkingState(isLoading: $isLoading, slots: $slots, lots: $lots, suggestions: $suggestions, lot: $lot, userPosition: $userPosition, searchQuery: $searchQuery, error: $error)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ParkingStateCopyWith<$Res>  {
   factory $ParkingStateCopyWith(ParkingState value, $Res Function(ParkingState) _then) = _$ParkingStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, List<ParkingSlotModel> slots, List<ParkingLotModel> lots, List<ParkingSuggestionEntity> suggestions, ParkingLotModel? lot, String? searchQuery, AppException? error
+ bool isLoading, List<ParkingSlotModel> slots, List<ParkingLotModel> lots, List<ParkingSuggestionEntity> suggestions, ParkingLotModel? lot, Position? userPosition, String? searchQuery, AppException? error
 });
 
 
@@ -62,14 +62,15 @@ class _$ParkingStateCopyWithImpl<$Res>
 
 /// Create a copy of ParkingState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? slots = null,Object? lots = null,Object? suggestions = null,Object? lot = freezed,Object? searchQuery = freezed,Object? error = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? slots = null,Object? lots = null,Object? suggestions = null,Object? lot = freezed,Object? userPosition = freezed,Object? searchQuery = freezed,Object? error = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,slots: null == slots ? _self.slots : slots // ignore: cast_nullable_to_non_nullable
 as List<ParkingSlotModel>,lots: null == lots ? _self.lots : lots // ignore: cast_nullable_to_non_nullable
 as List<ParkingLotModel>,suggestions: null == suggestions ? _self.suggestions : suggestions // ignore: cast_nullable_to_non_nullable
 as List<ParkingSuggestionEntity>,lot: freezed == lot ? _self.lot : lot // ignore: cast_nullable_to_non_nullable
-as ParkingLotModel?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as ParkingLotModel?,userPosition: freezed == userPosition ? _self.userPosition : userPosition // ignore: cast_nullable_to_non_nullable
+as Position?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as AppException?,
   ));
@@ -168,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  List<ParkingSlotModel> slots,  List<ParkingLotModel> lots,  List<ParkingSuggestionEntity> suggestions,  ParkingLotModel? lot,  String? searchQuery,  AppException? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  List<ParkingSlotModel> slots,  List<ParkingLotModel> lots,  List<ParkingSuggestionEntity> suggestions,  ParkingLotModel? lot,  Position? userPosition,  String? searchQuery,  AppException? error)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ParkingState() when $default != null:
-return $default(_that.isLoading,_that.slots,_that.lots,_that.suggestions,_that.lot,_that.searchQuery,_that.error);case _:
+return $default(_that.isLoading,_that.slots,_that.lots,_that.suggestions,_that.lot,_that.userPosition,_that.searchQuery,_that.error);case _:
   return orElse();
 
 }
@@ -189,10 +190,10 @@ return $default(_that.isLoading,_that.slots,_that.lots,_that.suggestions,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  List<ParkingSlotModel> slots,  List<ParkingLotModel> lots,  List<ParkingSuggestionEntity> suggestions,  ParkingLotModel? lot,  String? searchQuery,  AppException? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  List<ParkingSlotModel> slots,  List<ParkingLotModel> lots,  List<ParkingSuggestionEntity> suggestions,  ParkingLotModel? lot,  Position? userPosition,  String? searchQuery,  AppException? error)  $default,) {final _that = this;
 switch (_that) {
 case _ParkingState():
-return $default(_that.isLoading,_that.slots,_that.lots,_that.suggestions,_that.lot,_that.searchQuery,_that.error);case _:
+return $default(_that.isLoading,_that.slots,_that.lots,_that.suggestions,_that.lot,_that.userPosition,_that.searchQuery,_that.error);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +210,10 @@ return $default(_that.isLoading,_that.slots,_that.lots,_that.suggestions,_that.l
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  List<ParkingSlotModel> slots,  List<ParkingLotModel> lots,  List<ParkingSuggestionEntity> suggestions,  ParkingLotModel? lot,  String? searchQuery,  AppException? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  List<ParkingSlotModel> slots,  List<ParkingLotModel> lots,  List<ParkingSuggestionEntity> suggestions,  ParkingLotModel? lot,  Position? userPosition,  String? searchQuery,  AppException? error)?  $default,) {final _that = this;
 switch (_that) {
 case _ParkingState() when $default != null:
-return $default(_that.isLoading,_that.slots,_that.lots,_that.suggestions,_that.lot,_that.searchQuery,_that.error);case _:
+return $default(_that.isLoading,_that.slots,_that.lots,_that.suggestions,_that.lot,_that.userPosition,_that.searchQuery,_that.error);case _:
   return null;
 
 }
@@ -224,7 +225,7 @@ return $default(_that.isLoading,_that.slots,_that.lots,_that.suggestions,_that.l
 
 
 class _ParkingState implements ParkingState {
-  const _ParkingState({this.isLoading = true, final  List<ParkingSlotModel> slots = const [], final  List<ParkingLotModel> lots = const [], final  List<ParkingSuggestionEntity> suggestions = const [], this.lot, this.searchQuery, this.error}): _slots = slots,_lots = lots,_suggestions = suggestions;
+  const _ParkingState({this.isLoading = true, final  List<ParkingSlotModel> slots = const [], final  List<ParkingLotModel> lots = const [], final  List<ParkingSuggestionEntity> suggestions = const [], this.lot, this.userPosition, this.searchQuery, this.error}): _slots = slots,_lots = lots,_suggestions = suggestions;
   
 
 @override@JsonKey() final  bool isLoading;
@@ -250,6 +251,7 @@ class _ParkingState implements ParkingState {
 }
 
 @override final  ParkingLotModel? lot;
+@override final  Position? userPosition;
 @override final  String? searchQuery;
 @override final  AppException? error;
 
@@ -263,16 +265,16 @@ _$ParkingStateCopyWith<_ParkingState> get copyWith => __$ParkingStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParkingState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._slots, _slots)&&const DeepCollectionEquality().equals(other._lots, _lots)&&const DeepCollectionEquality().equals(other._suggestions, _suggestions)&&(identical(other.lot, lot) || other.lot == lot)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ParkingState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._slots, _slots)&&const DeepCollectionEquality().equals(other._lots, _lots)&&const DeepCollectionEquality().equals(other._suggestions, _suggestions)&&(identical(other.lot, lot) || other.lot == lot)&&(identical(other.userPosition, userPosition) || other.userPosition == userPosition)&&(identical(other.searchQuery, searchQuery) || other.searchQuery == searchQuery)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_slots),const DeepCollectionEquality().hash(_lots),const DeepCollectionEquality().hash(_suggestions),lot,searchQuery,error);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_slots),const DeepCollectionEquality().hash(_lots),const DeepCollectionEquality().hash(_suggestions),lot,userPosition,searchQuery,error);
 
 @override
 String toString() {
-  return 'ParkingState(isLoading: $isLoading, slots: $slots, lots: $lots, suggestions: $suggestions, lot: $lot, searchQuery: $searchQuery, error: $error)';
+  return 'ParkingState(isLoading: $isLoading, slots: $slots, lots: $lots, suggestions: $suggestions, lot: $lot, userPosition: $userPosition, searchQuery: $searchQuery, error: $error)';
 }
 
 
@@ -283,7 +285,7 @@ abstract mixin class _$ParkingStateCopyWith<$Res> implements $ParkingStateCopyWi
   factory _$ParkingStateCopyWith(_ParkingState value, $Res Function(_ParkingState) _then) = __$ParkingStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, List<ParkingSlotModel> slots, List<ParkingLotModel> lots, List<ParkingSuggestionEntity> suggestions, ParkingLotModel? lot, String? searchQuery, AppException? error
+ bool isLoading, List<ParkingSlotModel> slots, List<ParkingLotModel> lots, List<ParkingSuggestionEntity> suggestions, ParkingLotModel? lot, Position? userPosition, String? searchQuery, AppException? error
 });
 
 
@@ -300,14 +302,15 @@ class __$ParkingStateCopyWithImpl<$Res>
 
 /// Create a copy of ParkingState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? slots = null,Object? lots = null,Object? suggestions = null,Object? lot = freezed,Object? searchQuery = freezed,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? slots = null,Object? lots = null,Object? suggestions = null,Object? lot = freezed,Object? userPosition = freezed,Object? searchQuery = freezed,Object? error = freezed,}) {
   return _then(_ParkingState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,slots: null == slots ? _self._slots : slots // ignore: cast_nullable_to_non_nullable
 as List<ParkingSlotModel>,lots: null == lots ? _self._lots : lots // ignore: cast_nullable_to_non_nullable
 as List<ParkingLotModel>,suggestions: null == suggestions ? _self._suggestions : suggestions // ignore: cast_nullable_to_non_nullable
 as List<ParkingSuggestionEntity>,lot: freezed == lot ? _self.lot : lot // ignore: cast_nullable_to_non_nullable
-as ParkingLotModel?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
+as ParkingLotModel?,userPosition: freezed == userPosition ? _self.userPosition : userPosition // ignore: cast_nullable_to_non_nullable
+as Position?,searchQuery: freezed == searchQuery ? _self.searchQuery : searchQuery // ignore: cast_nullable_to_non_nullable
 as String?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as AppException?,
   ));

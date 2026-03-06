@@ -9,7 +9,14 @@ class MyVehicleScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.myVehicle)),
-      body: const Center(child: Text('Vehicle details and parking history.')),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 700),
+          child: const Center(
+            child: Text('Vehicle details and parking history.'),
+          ),
+        ),
+      ),
     );
   }
 }

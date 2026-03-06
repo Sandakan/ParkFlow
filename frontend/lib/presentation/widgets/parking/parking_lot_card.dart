@@ -38,6 +38,7 @@ class ParkingLotCard extends ConsumerWidget {
           margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           padding: const EdgeInsets.all(20),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -69,7 +70,7 @@ class ParkingLotCard extends ConsumerWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const Spacer(),
+              const SizedBox(height: 12),
               Row(
                 children: [
                   const Icon(
@@ -78,27 +79,27 @@ class ParkingLotCard extends ConsumerWidget {
                     color: AppColors.primary,
                   ),
                   const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      lot.distanceMeters != null
-                          ? (lot.distanceMeters! >= 1000
-                                ? context.l10n.kmAway(
-                                    (lot.distanceMeters! / 1000)
-                                        .toStringAsFixed(1),
-                                  )
-                                : context.l10n.metersAway(
-                                    lot.distanceMeters!.toStringAsFixed(0),
-                                  ))
-                          : '---',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  Text(
+                    lot.distanceMeters != null
+                        ? (lot.distanceMeters! >= 1000
+                              ? context.l10n.kmAway(
+                                  (lot.distanceMeters! / 1000).toStringAsFixed(
+                                    1,
+                                  ),
+                                )
+                              : context.l10n.metersAway(
+                                  lot.distanceMeters!.toStringAsFixed(0),
+                                ))
+                        : '---',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  const Spacer(), // Use Spacer here to push the slots badge to the right
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
