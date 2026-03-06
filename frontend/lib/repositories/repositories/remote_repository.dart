@@ -25,6 +25,9 @@ import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dar
 import 'package:parkflow/repositories/entities/settings/get_inference_settings_response_entity.dart';
 import 'package:parkflow/repositories/entities/settings/update_inference_settings_request.dart';
 import 'package:parkflow/core/network/entities/get_parking_suggestions_response_entity.dart';
+import 'package:parkflow/models/parking/reservation_model.dart';
+import 'package:parkflow/repositories/entities/reservation/create_reservation_request_entity.dart';
+import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -157,6 +160,128 @@ class RemoteRepository implements RemoteRepositoryInterface {
     try {
       final data = GetUserResponseEntity.fromJson(validatedResponse.data);
       return data;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> addVehicle(
+    Map<String, dynamic> request, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'users/me/vehicles',
+      data: request,
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetUserResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> removeVehicle(
+    String plateNumber, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.delete,
+      'users/me/vehicles/$plateNumber',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetUserResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> addPaymentMethod(
+    Map<String, dynamic> request, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'users/me/payment-methods',
+      data: request,
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetUserResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> removePaymentMethod(
+    String methodId, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.delete,
+      'users/me/payment-methods/$methodId',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetUserResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> setDefaultPaymentMethod(
+    String methodId, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.put,
+      'users/me/payment-methods/$methodId/default',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetUserResponseEntity.fromJson(validatedResponse.data);
     } catch (e, stackTrace) {
       throw AppException(
         AppStatusCode.invalidResponse,
@@ -630,6 +755,56 @@ class RemoteRepository implements RemoteRepositoryInterface {
       return GetParkingSuggestionsResponseEntity.fromJson(
         validatedResponse.data,
       );
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<List<ReservationModel>> getMyReservations({
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'reservations/me',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      final List<dynamic> data = validatedResponse.data;
+      return data.map((json) => ReservationModel.fromJson(json)).toList();
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<ReservationResponseEntity> createReservation(
+    CreateReservationRequestEntity request, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'reservations/',
+      data: request.toJson(),
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      final data = ReservationResponseEntity.fromJson(validatedResponse.data);
+      return data;
     } catch (e, stackTrace) {
       throw AppException(
         AppStatusCode.invalidResponse,

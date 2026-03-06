@@ -5,6 +5,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_text_field.dart';
 
 import 'package:parkflow/presentation/notifiers/admin/admin_create_parking_lot_provider.dart';
 
@@ -67,8 +68,12 @@ class _AdminCreateParkingLotScreenState
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(context.l10n.createLotTitle),
+        title: Text(
+          context.l10n.createLotTitle,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: AppColors.white,
+        centerTitle: false,
         scrolledUnderElevation: 0,
       ),
       body: SafeArea(
@@ -82,31 +87,31 @@ class _AdminCreateParkingLotScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildTextField(
-                      context: context,
+                    LabeledReactiveTextField<String>(
                       formControlName: 'name',
                       label: context.l10n.lotNameLabel,
-                      hint: context.l10n.lotNameHint,
-                      icon: Icons.local_parking,
+                      hintText: context.l10n.lotNameHint,
+                      prefixIcon: Icons.local_parking,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
-                    _buildTextField(
-                      context: context,
+                    LabeledReactiveTextField<String>(
                       formControlName: 'address',
                       label: context.l10n.lotAddressLabel,
-                      hint: context.l10n.lotAddressHint,
-                      icon: Icons.location_on_outlined,
+                      hintText: context.l10n.lotAddressHint,
+                      prefixIcon: Icons.location_on_outlined,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
-                          child: _buildTextField(
-                            context: context,
+                          child: LabeledReactiveTextField<String>(
                             formControlName: 'latitude',
                             label: context.l10n.latitudeLabel,
-                            hint: context.l10n.latitudeHint,
-                            icon: Icons.explore_outlined,
+                            hintText: context.l10n.latitudeHint,
+                            prefixIcon: Icons.explore_outlined,
+                            isRequired: true,
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                               signed: true,
@@ -115,12 +120,12 @@ class _AdminCreateParkingLotScreenState
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: _buildTextField(
-                            context: context,
+                          child: LabeledReactiveTextField<String>(
                             formControlName: 'longitude',
                             label: context.l10n.longitudeLabel,
-                            hint: context.l10n.longitudeHint,
-                            icon: Icons.explore_outlined,
+                            hintText: context.l10n.longitudeHint,
+                            prefixIcon: Icons.explore_outlined,
+                            isRequired: true,
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                               signed: true,
@@ -130,24 +135,24 @@ class _AdminCreateParkingLotScreenState
                       ],
                     ),
                     const SizedBox(height: 16),
-                    _buildTextField(
-                      context: context,
+                    LabeledReactiveTextField<String>(
                       formControlName: 'totalSlots',
                       label: context.l10n.totalSlotsLabel,
-                      hint: context.l10n.totalSlotsHint,
-                      icon: Icons.format_list_numbered,
+                      hintText: context.l10n.totalSlotsHint,
+                      prefixIcon: Icons.format_list_numbered,
                       keyboardType: TextInputType.number,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
-                          child: _buildTextField(
-                            context: context,
+                          child: LabeledReactiveTextField<String>(
                             formControlName: 'slotWidth',
                             label: 'Slot Width (m)',
-                            hint: 'e.g. 5.0',
-                            icon: Icons.width_full_outlined,
+                            hintText: 'e.g. 5.0',
+                            prefixIcon: Icons.width_full_outlined,
+                            isRequired: true,
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                             ),
@@ -155,12 +160,12 @@ class _AdminCreateParkingLotScreenState
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: _buildTextField(
-                            context: context,
+                          child: LabeledReactiveTextField<String>(
                             formControlName: 'slotLength',
                             label: 'Slot Length (m)',
-                            hint: 'e.g. 5.0',
-                            icon: Icons.height_outlined,
+                            hintText: 'e.g. 5.0',
+                            prefixIcon: Icons.height_outlined,
+                            isRequired: true,
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                             ),
@@ -262,61 +267,6 @@ class _AdminCreateParkingLotScreenState
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField({
-    required BuildContext context,
-    required String formControlName,
-    required String label,
-    required String hint,
-    required IconData icon,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColors.black87,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ReactiveTextField<String>(
-          formControlName: formControlName,
-          keyboardType: keyboardType,
-          validationMessages: {
-            ValidationMessage.required: (error) => context.l10n.fieldRequired,
-            ValidationMessage.pattern: (error) => context.l10n.invalidNumber,
-          },
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(color: AppColors.textSecondary),
-            prefixIcon: Icon(icon, color: AppColors.textSecondary),
-            filled: true,
-            fillColor: AppColors.surfaceVariant.withValues(alpha: 0.5),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide.none,
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: AppColors.error),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: AppColors.error, width: 2),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

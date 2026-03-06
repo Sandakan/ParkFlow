@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:parkflow/utils/constants/app_colors.dart';
 
 class CustomReactiveTextField<T> extends StatelessWidget {
   final String formControlName;
@@ -16,6 +17,8 @@ class CustomReactiveTextField<T> extends StatelessWidget {
   final InputBorder? border;
   final InputBorder? focusedBorder;
   final EdgeInsetsGeometry? contentPadding;
+  final TextCapitalization textCapitalization;
+  final bool autofocus;
 
   const CustomReactiveTextField({
     super.key,
@@ -33,10 +36,37 @@ class CustomReactiveTextField<T> extends StatelessWidget {
     this.border,
     this.focusedBorder,
     this.contentPadding,
+    this.textCapitalization = TextCapitalization.none,
+    this.autofocus = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final defaultBorder =
+        border ??
+        OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.inputBorder),
+          borderRadius: BorderRadius.circular(12.0),
+        );
+
+    final defaultFocusedBorder =
+        focusedBorder ??
+        OutlineInputBorder(
+          borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
+          borderRadius: BorderRadius.circular(12.0),
+        );
+
+    final errorBorder = OutlineInputBorder(
+      borderSide: const BorderSide(color: AppColors.error, width: 1.0),
+      borderRadius: BorderRadius.circular(12.0),
+    );
+
+    final focusedErrorBorder = OutlineInputBorder(
+      borderSide: const BorderSide(color: AppColors.error, width: 1.5),
+      borderRadius: BorderRadius.circular(12.0),
+    );
+
     return ReactiveTextField<T>(
       formControlName: formControlName,
       validationMessages: validationMessages,
@@ -44,16 +74,25 @@ class CustomReactiveTextField<T> extends StatelessWidget {
       keyboardType: keyboardType,
       obscureText: obscureText,
       onSubmitted: onSubmitted,
+      textCapitalization: textCapitalization,
+      autofocus: autofocus,
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
-        filled: filled,
-        fillColor: fillColor,
-        contentPadding: contentPadding,
-        border: border ?? const OutlineInputBorder(),
-        enabledBorder: border,
-        focusedBorder: focusedBorder ?? border,
-        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+        hintStyle: TextStyle(color: AppColors.textSecondary),
+        filled: filled ?? true,
+        fillColor: fillColor ?? AppColors.inputFill,
+        contentPadding:
+            contentPadding ??
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+        border: defaultBorder,
+        enabledBorder: defaultBorder,
+        focusedBorder: defaultFocusedBorder,
+        errorBorder: errorBorder,
+        focusedErrorBorder: focusedErrorBorder,
+        prefixIcon: prefixIcon != null
+            ? Icon(prefixIcon, color: AppColors.textSecondary)
+            : null,
       ),
     );
   }

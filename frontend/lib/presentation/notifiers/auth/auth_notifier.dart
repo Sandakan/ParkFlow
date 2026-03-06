@@ -207,4 +207,15 @@ class AuthNotifier extends _$AuthNotifier {
       state = const AuthState.unauthenticated();
     }
   }
+
+  Future<void> refreshUser() async {
+    try {
+      final user = await ref.read(authServiceProvider).checkAuthState();
+      if (user != null) {
+        setAuthenticatedUser(user);
+      }
+    } catch (e) {
+      talker.error('[Auth] Refresh user failed: $e');
+    }
+  }
 }

@@ -17,7 +17,7 @@ class UserCreate(UserBase):
 
 
 class PaymentMethodCreate(BaseModel):
-    type: Literal["card", "wallet"]
+    type: Literal["cash", "card"]
     provider: str
     last4: Optional[str] = None
     is_default: bool = False

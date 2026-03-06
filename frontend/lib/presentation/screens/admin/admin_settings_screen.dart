@@ -543,10 +543,19 @@ class _SettingNumberFieldState extends State<_SettingNumberField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.label,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+        RichText(
+          text: TextSpan(
+            text: widget.label,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.black87,
+            ),
+            children: const [
+              TextSpan(
+                text: ' *',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 4),
@@ -564,9 +573,10 @@ class _SettingNumberFieldState extends State<_SettingNumberField> {
             fillColor: AppColors.inputFill,
             filled: true,
             hintText: context.l10n.enterValueHint,
+            hintStyle: TextStyle(color: AppColors.textSecondary),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
-              vertical: 12,
+              vertical: 16,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -578,7 +588,10 @@ class _SettingNumberFieldState extends State<_SettingNumberField> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primary),
+              borderSide: const BorderSide(
+                color: AppColors.primary,
+                width: 1.5,
+              ),
             ),
           ),
           onChanged: (val) {
@@ -598,56 +611,40 @@ class _LogoutCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = context.l10n;
 
-    return Card(
-      elevation: 0,
-      color: AppColors.white,
-      shape: RoundedRectangleBorder(
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: AppColors.outlineVariant, width: 1),
+        border: Border.all(color: AppColors.outlineVariant),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.logout,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Securely sign out of your account',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 16),
-                FilledButton.icon(
-                  onPressed: () => ref.read(authProvider.notifier).logout(),
-                  icon: const Icon(Icons.logout_rounded, size: 18),
-                  label: Text(l10n.logout),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.error,
-                    foregroundColor: AppColors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+      child: ListTile(
+        onTap: () => ref.read(authProvider.notifier).logout(),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.error.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: const Icon(
+            Icons.logout_rounded,
+            color: AppColors.error,
+            size: 24,
+          ),
         ),
+        title: Text(
+          l10n.logout,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: AppColors.error,
+          ),
+        ),
+        subtitle: Text(
+          'Sign out and secure your data',
+          style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+        ),
+        trailing: const Icon(Icons.chevron_right, size: 20),
       ),
     );
   }

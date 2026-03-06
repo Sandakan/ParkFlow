@@ -22,9 +22,13 @@ import 'package:parkflow/presentation/screens/admin/admin_analytics_screen.dart'
 import 'package:parkflow/presentation/screens/admin/admin_edit_parking_lot_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_settings_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_parking_lot_details_screen.dart';
+import 'package:parkflow/presentation/screens/parking/booking_screen.dart';
+import 'package:parkflow/presentation/screens/parking/digital_ticket_screen.dart';
+import 'package:parkflow/presentation/screens/profile/payment_methods_screen.dart';
+import 'package:parkflow/presentation/screens/profile/add_vehicle_screen.dart';
+import 'package:parkflow/presentation/screens/profile/add_payment_method_screen.dart';
 
 part 'router_provider.g.dart';
-
 part 'parts/boot_routes.dart';
 part 'parts/auth_routes.dart';
 part 'parts/home_routes.dart';

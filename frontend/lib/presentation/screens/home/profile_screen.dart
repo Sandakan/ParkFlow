@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:parkflow/routes/router_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -33,18 +34,6 @@ class ProfileScreen extends ConsumerWidget {
                 // Profile Header
                 Container(
                   padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: AppColors.outlineVariant),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
                   child: Column(
                     children: [
                       CircleAvatar(
@@ -85,8 +74,10 @@ class ProfileScreen extends ConsumerWidget {
                   _buildListTile(
                     icon: Icons.payment,
                     title: 'Payment Methods',
-                    subtitle: 'Manage cards and wallets',
-                    onTap: () {},
+                    subtitle: 'Manage cards and cash',
+                    onTap: () {
+                      const PaymentMethodsRoute().push(context);
+                    },
                   ),
                   _buildListTile(
                     icon: Icons.notifications_none,

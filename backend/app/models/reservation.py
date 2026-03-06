@@ -12,7 +12,7 @@ class ReservationInDB(BaseModel):
     end_time: datetime
     vehicle: VehicleDetails
     duration_minutes: int
-    payment_method: Literal["cash", "digital_wallet"]
+    payment_method: Literal["cash", "card"]
     total_price: float
     status: Literal["active", "completed", "cancelled"] = "active"
     qr_code_token: str

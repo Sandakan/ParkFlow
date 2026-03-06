@@ -11,6 +11,8 @@ import 'package:go_router/go_router.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_text_field.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_dropdown_field.dart';
 import 'package:parkflow/presentation/widgets/admin/slot_grid_picker.dart';
 
 class AdminCameraInfoScreen extends ConsumerWidget {
@@ -220,20 +222,23 @@ class AdminCameraInfoScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ReactiveTextField<String>(
+              LabeledReactiveTextField<String>(
                 formControlName: 'name',
-                decoration: InputDecoration(
-                  labelText: context.l10n.cameraNameLabel,
-                  border: const OutlineInputBorder(),
-                ),
+                label: context.l10n.cameraNameLabel,
+                isRequired: true,
+                validationMessages: {
+                  ValidationMessage.required: (error) =>
+                      'Camera name is required',
+                },
               ),
               const SizedBox(height: 16),
-              ReactiveTextField<String>(
+              LabeledReactiveTextField<String>(
                 formControlName: 'rtspUrl',
-                decoration: InputDecoration(
-                  labelText: context.l10n.rtspUrlLabel,
-                  border: const OutlineInputBorder(),
-                ),
+                label: context.l10n.rtspUrlLabel,
+                isRequired: true,
+                validationMessages: {
+                  ValidationMessage.required: (error) => 'RTSP URL is required',
+                },
               ),
             ],
           ),
@@ -584,15 +589,13 @@ class AdminCameraInfoScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ReactiveTextField<String>(
+                  LabeledReactiveTextField<String>(
                     formControlName: 'name',
-                    decoration: InputDecoration(
-                      labelText: context.l10n.slotIdentifierLabel,
-                      hintText: context.l10n.slotIdentifierHint,
-                      border: const OutlineInputBorder(),
-                    ),
-                    textInputAction: TextInputAction.next,
+                    label: context.l10n.slotIdentifierLabel,
+                    hintText: context.l10n.slotIdentifierHint,
+                    isRequired: true,
                     autofocus: true,
+                    textInputAction: TextInputAction.next,
                     validationMessages: {
                       ValidationMessage.required: (error) =>
                           'Slot name is required',
@@ -659,12 +662,10 @@ class AdminCameraInfoScreen extends ConsumerWidget {
                   ),
 
                   const SizedBox(height: 24),
-                  ReactiveDropdownField<String>(
+                  LabeledReactiveDropdownField<String>(
                     formControlName: 'type',
-                    decoration: InputDecoration(
-                      labelText: context.l10n.slotTypeLabel,
-                      border: const OutlineInputBorder(),
-                    ),
+                    label: context.l10n.slotTypeLabel,
+                    isRequired: true,
                     items: [
                       DropdownMenuItem(
                         value: 'general',

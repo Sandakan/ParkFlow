@@ -6,12 +6,16 @@ class ParkingLotLayout extends StatelessWidget {
   final List<ParkingSlotModel> slots;
   final List<dynamic> suggestions;
   final bool isLoading;
+  final String? selectedSlotId;
+  final ValueChanged<ParkingSlotModel>? onSlotSelected;
 
   const ParkingLotLayout({
     super.key,
     required this.slots,
     required this.suggestions,
     this.isLoading = false,
+    this.selectedSlotId,
+    this.onSlotSelected,
   });
 
   @override
@@ -101,7 +105,14 @@ class ParkingLotLayout extends StatelessWidget {
                   (s) => s.slotId == slot.id,
                 );
 
-                return _SlotWidget(slot: slot, isSuggestion: isSuggestion);
+                return InkWell(
+                  onTap: () => onSlotSelected?.call(slot),
+                  child: _SlotWidget(
+                    slot: slot,
+                    isSuggestion: isSuggestion,
+                    isSelected: selectedSlotId == slot.id,
+                  ),
+                );
               },
             ),
           ),
@@ -114,18 +125,27 @@ class ParkingLotLayout extends StatelessWidget {
 class _SlotWidget extends StatelessWidget {
   final ParkingSlotModel slot;
   final bool isSuggestion;
+  final bool isSelected;
 
-  const _SlotWidget({required this.slot, required this.isSuggestion});
+  const _SlotWidget({
+    required this.slot,
+    required this.isSuggestion,
+    required this.isSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = slot.isOccupied
+    final bgColor = isSelected
+        ? AppColors.primary
+        : slot.isOccupied
         ? AppColors.occupiedBackground
         : isSuggestion
         ? AppColors.primary.withValues(alpha: 0.08)
         : AppColors.availableBackground;
 
-    final borderColor = slot.isOccupied
+    final borderColor = isSelected
+        ? AppColors.primary
+        : slot.isOccupied
         ? AppColors.occupiedBorder
         : isSuggestion
         ? AppColors.primary
@@ -152,7 +172,9 @@ class _SlotWidget extends StatelessWidget {
           Icon(
             slot.isOccupied ? Icons.directions_car : Icons.local_parking,
             size: 32,
-            color: slot.isOccupied
+            color: isSelected
+                ? AppColors.white
+                : slot.isOccupied
                 ? AppColors.occupiedText
                 : isSuggestion
                 ? AppColors.primary
@@ -161,10 +183,10 @@ class _SlotWidget extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             slot.name,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 13,
-              color: Colors.black87,
+              color: isSelected ? AppColors.white : Colors.black87,
             ),
           ),
           if (isSuggestion)

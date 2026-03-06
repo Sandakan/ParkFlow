@@ -94,9 +94,6 @@ class MainLayoutScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: authState.isAdmin
-          ? AppBar(title: Text(context.l10n.appTitle))
-          : null,
       body: navigationShell,
       floatingActionButton: authState.isDriver
           ? Semantics(

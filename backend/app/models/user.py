@@ -11,7 +11,7 @@ class VehicleDetails(BaseModel):
 
 class PaymentMethod(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    type: Literal["card", "wallet"]
+    type: Literal["cash", "card"]
     provider: str
     last4: Optional[str] = None
     is_default: bool = False

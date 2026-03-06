@@ -11,7 +11,7 @@ class CreateReservationRequest(BaseModel):
     vehicle: VehicleDetails
     start_time: datetime
     duration_minutes: int
-    payment_method: Literal["cash", "digital_wallet", "wallet"]
+    payment_method: Literal["cash", "card"]
 
 
 class ReservationResponse(BaseModel):

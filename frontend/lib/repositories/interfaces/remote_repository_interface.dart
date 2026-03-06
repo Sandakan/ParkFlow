@@ -1,6 +1,7 @@
 import 'package:parkflow/core/network/entities/login_request_entity.dart';
 import 'package:parkflow/core/network/entities/login_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_user_response_entity.dart';
+import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/core/network/entities/get_parking_lot_response_entity.dart';
 import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
 import 'package:parkflow/core/network/entities/get_parking_slots_response_entity.dart';
@@ -19,11 +20,39 @@ import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dar
 import 'package:parkflow/repositories/entities/settings/get_inference_settings_response_entity.dart';
 import 'package:parkflow/repositories/entities/settings/update_inference_settings_request.dart';
 import 'package:parkflow/core/network/entities/get_parking_suggestions_response_entity.dart';
+import 'package:parkflow/repositories/entities/reservation/create_reservation_request_entity.dart';
+import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
 
 abstract class RemoteRepositoryInterface {
+  Future<List<ReservationModel>> getMyReservations({String? accessToken});
+  Future<ReservationResponseEntity> createReservation(
+    CreateReservationRequestEntity request, {
+    String? accessToken,
+  });
   Future<LoginResponseEntity> login(LoginRequestEntity request);
   Future<void> register(RegisterRequestEntity request);
   Future<GetUserResponseEntity> getCurrentUser(String token);
+
+  Future<GetUserResponseEntity> addVehicle(
+    Map<String, dynamic> request, {
+    String? accessToken,
+  });
+  Future<GetUserResponseEntity> removeVehicle(
+    String plateNumber, {
+    String? accessToken,
+  });
+  Future<GetUserResponseEntity> addPaymentMethod(
+    Map<String, dynamic> request, {
+    String? accessToken,
+  });
+  Future<GetUserResponseEntity> removePaymentMethod(
+    String methodId, {
+    String? accessToken,
+  });
+  Future<GetUserResponseEntity> setDefaultPaymentMethod(
+    String methodId, {
+    String? accessToken,
+  });
   Future<GetParkingSlotsResponseEntity> getParkingSlots({
     String? cameraId,
     String? lotId,

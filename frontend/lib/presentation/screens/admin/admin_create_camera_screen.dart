@@ -6,6 +6,8 @@ import 'package:parkflow/presentation/notifiers/parking_lots/parking_lots_notifi
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_text_field.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_dropdown_field.dart';
 
 import 'package:parkflow/repositories/entities/parking/create_camera_request.dart';
 import 'package:parkflow/presentation/notifiers/admin/admin_create_camera_provider.dart';
@@ -51,8 +53,12 @@ class _AdminCreateCameraScreenState
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(context.l10n.createCameraTitle),
+        title: Text(
+          context.l10n.createCameraTitle,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: AppColors.white,
+        centerTitle: false,
         scrolledUnderElevation: 0,
       ),
       body: SafeArea(
@@ -66,81 +72,34 @@ class _AdminCreateCameraScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildTextField(
+                    LabeledReactiveTextField<String>(
                       formControlName: 'name',
                       label: context.l10n.cameraNameLabel,
-                      hint: context.l10n.cameraNameHint,
-                      icon: Icons.videocam,
+                      hintText: context.l10n.cameraNameHint,
+                      prefixIcon: Icons.videocam,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
-                    _buildTextField(
+                    LabeledReactiveTextField<String>(
                       formControlName: 'rtspUrl',
                       label: context.l10n.rtspUrlLabel,
-                      hint: context.l10n.rtspUrlHint,
-                      icon: Icons.link,
+                      hintText: context.l10n.rtspUrlHint,
+                      prefixIcon: Icons.link,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          context.l10n.parkingLots, // Use "Lots" as label
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ReactiveDropdownField<String>(
-                          formControlName: 'lotId',
-                          validationMessages: {
-                            ValidationMessage.required: (error) =>
-                                context.l10n.fieldRequired,
-                          },
-                          decoration: InputDecoration(
-                            hintText: context.l10n.selectParkingLotHint,
-                            prefixIcon: Icon(
-                              Icons.local_parking,
-                              color: AppColors.textSecondary,
-                            ),
-                            filled: true,
-                            fillColor: AppColors.surfaceVariant.withValues(
-                              alpha: 0.5,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                color: AppColors.error,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                color: AppColors.error,
-                                width: 2,
-                              ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 16,
-                            ),
-                          ),
-                          items: parkingLotsState.lots.map((lot) {
-                            return DropdownMenuItem(
-                              value: lot.id,
-                              child: Text(lot.name),
-                            );
-                          }).toList(),
-                          hint: parkingLotsState.isLoading
-                              ? const Text('Loading...')
-                              : const Text('Select Parking Lot'),
-                        ),
-                      ],
+                    LabeledReactiveDropdownField<String>(
+                      formControlName: 'lotId',
+                      label: context.l10n.parkingLots,
+                      hintText: context.l10n.selectParkingLotHint,
+                      prefixIcon: Icons.local_parking,
+                      isRequired: true,
+                      items: parkingLotsState.lots.map((lot) {
+                        return DropdownMenuItem(
+                          value: lot.id,
+                          child: Text(lot.name),
+                        );
+                      }).toList(),
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(
@@ -220,59 +179,6 @@ class _AdminCreateCameraScreenState
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String formControlName,
-    required String label,
-    required String hint,
-    required IconData icon,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColors.black87,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ReactiveTextField<String>(
-          formControlName: formControlName,
-          keyboardType: keyboardType,
-          validationMessages: {
-            ValidationMessage.required: (error) => context.l10n.fieldRequired,
-          },
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(color: AppColors.textSecondary),
-            prefixIcon: Icon(icon, color: AppColors.textSecondary),
-            filled: true,
-            fillColor: AppColors.surfaceVariant.withValues(alpha: 0.5),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide.none,
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: AppColors.error),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: AppColors.error, width: 2),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

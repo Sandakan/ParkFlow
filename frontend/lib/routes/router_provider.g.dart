@@ -10,6 +10,11 @@ List<RouteBase> get $appRoutes => [
   $bootRoute,
   $loginRoute,
   $registerRoute,
+  $bookingRoute,
+  $digitalTicketRoute,
+  $paymentMethodsRoute,
+  $addVehicleRoute,
+  $addPaymentMethodRoute,
   $adminShellRoute,
   $driverShellRoute,
 ];
@@ -68,6 +73,137 @@ mixin $RegisterRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/register');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $bookingRoute =>
+    GoRouteData.$route(path: '/booking', factory: $BookingRoute._fromState);
+
+mixin $BookingRoute on GoRouteData {
+  static BookingRoute _fromState(GoRouterState state) => const BookingRoute();
+
+  @override
+  String get location => GoRouteData.$location('/booking');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $digitalTicketRoute => GoRouteData.$route(
+  path: '/digital-ticket/:reservationId',
+  factory: $DigitalTicketRoute._fromState,
+);
+
+mixin $DigitalTicketRoute on GoRouteData {
+  static DigitalTicketRoute _fromState(GoRouterState state) =>
+      DigitalTicketRoute(reservationId: state.pathParameters['reservationId']!);
+
+  DigitalTicketRoute get _self => this as DigitalTicketRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/digital-ticket/${Uri.encodeComponent(_self.reservationId)}',
+  );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $paymentMethodsRoute => GoRouteData.$route(
+  path: '/payment-methods',
+  factory: $PaymentMethodsRoute._fromState,
+);
+
+mixin $PaymentMethodsRoute on GoRouteData {
+  static PaymentMethodsRoute _fromState(GoRouterState state) =>
+      const PaymentMethodsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/payment-methods');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $addVehicleRoute => GoRouteData.$route(
+  path: '/add-vehicle',
+  factory: $AddVehicleRoute._fromState,
+);
+
+mixin $AddVehicleRoute on GoRouteData {
+  static AddVehicleRoute _fromState(GoRouterState state) =>
+      const AddVehicleRoute();
+
+  @override
+  String get location => GoRouteData.$location('/add-vehicle');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $addPaymentMethodRoute => GoRouteData.$route(
+  path: '/add-payment-method',
+  factory: $AddPaymentMethodRoute._fromState,
+);
+
+mixin $AddPaymentMethodRoute on GoRouteData {
+  static AddPaymentMethodRoute _fromState(GoRouterState state) =>
+      const AddPaymentMethodRoute();
+
+  @override
+  String get location => GoRouteData.$location('/add-payment-method');
 
   @override
   void go(BuildContext context) => context.go(location);

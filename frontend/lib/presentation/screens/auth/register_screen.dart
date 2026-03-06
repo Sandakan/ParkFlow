@@ -6,7 +6,7 @@ import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/gen/assets.gen.dart';
 import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
-import 'package:parkflow/presentation/widgets/forms/custom_reactive_text_field.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_text_field.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
@@ -53,16 +53,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final theme = Theme.of(context);
-
-    final inputBorder = OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.inputBorder),
-      borderRadius: BorderRadius.circular(12.0),
-    );
-
-    final focusedBorder = OutlineInputBorder(
-      borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
-      borderRadius: BorderRadius.circular(12.0),
-    );
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -122,62 +112,30 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                           SizedBox(height: 32.0),
 
-                          // Name label
-                          Text(
-                            context.l10n.fullNameLabel,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 8.0),
-
                           // Name field
-                          CustomReactiveTextField<String>(
+                          LabeledReactiveTextField<String>(
+                            label: context.l10n.fullNameLabel,
                             formControlName: 'name',
                             hintText: context.l10n.fullNameHint,
                             keyboardType: TextInputType.name,
                             textInputAction: TextInputAction.next,
-                            filled: true,
-                            fillColor: AppColors.inputFill,
-                            border: inputBorder,
-                            focusedBorder: focusedBorder,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
+                            isRequired: true,
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.nameRequired,
                             },
                           ),
 
-                          SizedBox(height: 24.0),
-
-                          // Email label
-                          Text(
-                            context.l10n.emailLabel,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 8.0),
+                          const SizedBox(height: 24.0),
 
                           // Email field
-                          CustomReactiveTextField<String>(
+                          LabeledReactiveTextField<String>(
+                            label: context.l10n.emailLabel,
                             formControlName: 'email',
                             hintText: context.l10n.emailHint,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
-                            filled: true,
-                            fillColor: AppColors.inputFill,
-                            border: inputBorder,
-                            focusedBorder: focusedBorder,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
+                            isRequired: true,
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.emailRequired,
@@ -186,32 +144,16 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             },
                           ),
 
-                          SizedBox(height: 24.0),
-
-                          // Password label
-                          Text(
-                            context.l10n.passwordLabel,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 8.0),
+                          const SizedBox(height: 24.0),
 
                           // Password field
-                          CustomReactiveTextField<String>(
+                          LabeledReactiveTextField<String>(
+                            label: context.l10n.passwordLabel,
                             formControlName: 'password',
                             hintText: context.l10n.passwordHint,
                             obscureText: true,
                             textInputAction: TextInputAction.next,
-                            filled: true,
-                            fillColor: AppColors.inputFill,
-                            border: inputBorder,
-                            focusedBorder: focusedBorder,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
+                            isRequired: true,
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.passwordRequired,
@@ -220,31 +162,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             },
                           ),
 
-                          SizedBox(height: 24.0),
-
-                          // Confirm Password label
-                          Text(
-                            context.l10n.confirmPasswordLabel,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 8.0),
+                          const SizedBox(height: 24.0),
 
                           // Confirm Password field
-                          CustomReactiveTextField<String>(
+                          LabeledReactiveTextField<String>(
+                            label: context.l10n.confirmPasswordLabel,
                             formControlName: 'passwordConfirmation',
                             hintText: context.l10n.passwordHint,
                             obscureText: true,
-                            filled: true,
-                            fillColor: AppColors.inputFill,
-                            border: inputBorder,
-                            focusedBorder: focusedBorder,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
+                            isRequired: true,
                             onSubmitted: (_) => _submit(ref, form),
                             validationMessages: {
                               ValidationMessage.required: (error) =>

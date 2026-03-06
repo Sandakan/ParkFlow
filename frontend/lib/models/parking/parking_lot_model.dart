@@ -13,6 +13,7 @@ abstract class ParkingLotModel with _$ParkingLotModel {
     required int totalSlots,
     required double occupancy,
     required int revenueToday,
+    @Default(50.0) double pricePerHour,
     required String address,
     required double latitude,
     required double longitude,
