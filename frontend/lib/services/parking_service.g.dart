@@ -48,4 +48,4 @@ final class ParkingServiceProvider
   }
 }
 
-String _$parkingServiceHash() => r'a2136251529bec53eeff2fb47c5cee2c7f5de458';
+String _$parkingServiceHash() => r'c2c412f8f68e92e61394e043dfeab8597e9e6292';

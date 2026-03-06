@@ -44,6 +44,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   @override
+  void dispose() {
+    form.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final theme = Theme.of(context);
@@ -239,7 +245,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               horizontal: 16.0,
                               vertical: 16.0,
                             ),
-                            onSubmitted: (_) => _submit(),
+                            onSubmitted: (_) => _submit(ref, form),
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.confirmPasswordRequired,
@@ -285,7 +291,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 width: double.infinity,
                                 height: 54.0,
                                 child: ElevatedButton(
-                                  onPressed: enabled ? _submit : null,
+                                  onPressed: enabled
+                                      ? () => _submit(ref, form)
+                                      : null,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: enabled
                                         ? theme.colorScheme.primary
@@ -363,14 +371,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     );
   }
 
-  void _submit() {
+  void _submit(WidgetRef ref, FormGroup form) {
     if (form.valid) {
       ref
           .read(authProvider.notifier)
           .register(
-            form.control('name').value,
-            form.control('email').value,
-            form.control('password').value,
+            form.control('name').value as String,
+            form.control('email').value as String,
+            form.control('password').value as String,
           );
     } else {
       form.markAllAsTouched();

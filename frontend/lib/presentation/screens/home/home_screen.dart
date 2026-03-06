@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
-import 'package:parkflow/core/app_exception.dart';
-import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/presentation/states/parking/parking_state.dart';
-import 'package:parkflow/models/parking/parking_slot_model.dart';
+
+import 'package:parkflow/presentation/notifiers/parking/home_search_controller.dart';
+import 'package:parkflow/presentation/widgets/parking/parking_lot_card.dart';
+import 'package:parkflow/presentation/widgets/parking/parking_suggestion_card.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -17,10 +19,24 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final parkingState = ref.watch(parkingProvider);
 
+    final searchController = ref.watch(homeSearchControllerProvider);
+
+    ref.listen(parkingProvider.select((s) => s.searchQuery), (prev, next) {
+      if (next != searchController.text) {
+        searchController.text = next ?? '';
+      }
+    });
+
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(context.l10n.liveDashboard),
+        title: Text(
+          context.l10n.explore,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         elevation: 0,
+        backgroundColor: AppColors.white,
+        foregroundColor: AppColors.black,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -31,130 +47,122 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       ),
-
-      body: parkingState.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : parkingState.error != null
-          ? Center(
-              child: Text(
-                AppException.getLocalizedErrorMessage(
-                  parkingState.error,
-                  AppLocalizations.of(context),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(parkingProvider);
+        },
+        child: CustomScrollView(
+          slivers: [
+            _buildSearchBar(context, searchController, ref),
+            if (parkingState.isLoading && parkingState.lots.isNotEmpty)
+              const SliverToBoxAdapter(
+                child: LinearProgressIndicator(
+                  minHeight: 2,
+                  backgroundColor: AppColors.white,
+                  color: AppColors.primary,
                 ),
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
-            )
-          : RefreshIndicator(
-              onRefresh: () async {
-                ref.invalidate(parkingProvider);
-              },
-              child: CustomScrollView(
-                slivers: [
-                  if (parkingState.suggestions.isNotEmpty)
-                    SliverToBoxAdapter(
-                      child: _buildSuggestions(context, parkingState),
-                    ),
-                  SliverPadding(
-                    padding: const EdgeInsets.all(16.0),
-                    sliver: _buildSlotGrid(context, parkingState),
-                  ),
-                ],
-              ),
-            ),
+            if (parkingState.isLoading && parkingState.lots.isEmpty)
+              const SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (parkingState.lots.isEmpty && !parkingState.isLoading)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Center(child: Text(context.l10n.noLotsNearby)),
+              )
+            else ...[
+              if (parkingState.lots.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: _buildNearbyLots(context, ref, parkingState),
+                ),
+              if (parkingState.suggestions.isNotEmpty)
+                SliverToBoxAdapter(
+                  child: _buildSuggestions(context, parkingState),
+                ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildSuggestions(BuildContext context, ParkingState state) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primary.withValues(alpha: 0.1),
-            AppColors.primary.withValues(alpha: 0.02),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+  Widget _buildSearchBar(
+    BuildContext context,
+    TextEditingController controller,
+    WidgetRef ref,
+  ) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+        child: TextField(
+          controller: controller,
+          onChanged: (value) {
+            EasyDebounce.debounce(
+              'search-debouncer',
+              const Duration(milliseconds: 500),
+              () {
+                final query = value.trim();
+                ref
+                    .read(parkingProvider.notifier)
+                    .fetchLots(query: query.isEmpty ? null : query);
+              },
+            );
+          },
+          decoration: InputDecoration(
+            hintText: context.l10n.searchLotHint,
+            hintStyle: const TextStyle(fontSize: 15),
+            prefixIcon: const Icon(Icons.search, color: AppColors.primary),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: AppColors.surfaceVariant.withValues(alpha: 0.5),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildNearbyLots(
+    BuildContext context,
+    WidgetRef ref,
+    ParkingState state,
+  ) {
+    return Container(
+      padding: const EdgeInsets.only(top: 8, bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.auto_awesome,
-                color: AppColors.primary,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                'Top Recommended P-Spots',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                  letterSpacing: 0.5,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
-              children: state.suggestions.map((s) {
-                return Container(
-                  margin: const EdgeInsets.only(right: 12),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+              children: [
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.nearbyLots,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.2,
                   ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary.withValues(alpha: 0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.place,
-                          color: AppColors.primary,
-                          size: 16,
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            s.slotName,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            '~${s.distanceMeters.toStringAsFixed(1)}m away',
-                            style: TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 180,
+            child: PageView.builder(
+              itemCount: state.lots.length,
+              controller: PageController(viewportFraction: 0.9),
+              clipBehavior: Clip.none,
+              itemBuilder: (context, index) {
+                final lot = state.lots[index];
+                final isSelected = state.lot?.id == lot.id;
+                return ParkingLotCard(lot: lot, isSelected: isSelected);
+              },
             ),
           ),
         ],
@@ -162,122 +170,39 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSlotGrid(BuildContext context, ParkingState state) {
-    if (state.slots.isEmpty) {
-      return const SliverToBoxAdapter(
-        child: Center(child: Text('No slots available')),
-      );
-    }
-
-    // Determine grid bounds
-    int maxRow = 0;
-    int maxCol = 0;
-    for (var slot in state.slots) {
-      if (slot.logicalRow > maxRow) maxRow = slot.logicalRow;
-      if (slot.logicalCol > maxCol) maxCol = slot.logicalCol;
-    }
-
-    // Create a matrix for slots
-    final Map<String, ParkingSlotModel> gridMap = {};
-    for (var slot in state.slots) {
-      gridMap['${slot.logicalRow}_${slot.logicalCol}'] = slot;
-    }
-
-    return SliverGrid(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: maxCol + 1,
-        crossAxisSpacing: 12.0,
-        mainAxisSpacing: 12.0,
-        childAspectRatio: 1.0,
-      ),
-      delegate: SliverChildBuilderDelegate((context, index) {
-        final r = index ~/ (maxCol + 1);
-        final c = index % (maxCol + 1);
-        final slot = gridMap['${r}_$c'];
-
-        if (slot == null) {
-          return Container(
-            decoration: BoxDecoration(
-              color: AppColors.surfaceVariant.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-          );
-        }
-
-        final isSuggestion = state.suggestions.any((s) => s.slotId == slot.id);
-
-        return Container(
-          decoration: BoxDecoration(
-            color: slot.isOccupied
-                ? AppColors.occupiedBackground
-                : isSuggestion
-                ? AppColors.primary.withValues(alpha: 0.1)
-                : AppColors.availableBackground,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: slot.isOccupied
-                  ? AppColors.occupiedBorder
-                  : isSuggestion
-                  ? AppColors.primary
-                  : AppColors.availableBorder,
-              width: isSuggestion ? 2.0 : 1.5,
-            ),
-            boxShadow: isSuggestion
-                ? [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.2),
-                      blurRadius: 8,
-                      spreadRadius: 1,
-                    ),
-                  ]
-                : null,
-          ),
-          child: InkWell(
-            onTap: () {
-              // Future: Show slot details
-            },
-            child: Stack(
-              children: [
-                if (isSuggestion)
-                  Positioned(
-                    top: 4,
-                    right: 4,
-                    child: Icon(Icons.star, color: AppColors.primary, size: 14),
-                  ),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        slot.isOccupied
-                            ? Icons.directions_car
-                            : Icons.local_parking,
-                        size: 24.0,
-                        color: slot.isOccupied
-                            ? AppColors.occupiedText
-                            : isSuggestion
-                            ? AppColors.primary
-                            : AppColors.availableText,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        slot.name,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: slot.isOccupied
-                              ? AppColors.occupiedTextDark
-                              : AppColors.availableTextDark,
-                        ),
-                      ),
-                    ],
-                  ),
+  Widget _buildSuggestions(BuildContext context, ParkingState state) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const SizedBox(width: 8),
+              Text(
+                context.l10n.topRecommended,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.2,
                 ),
-              ],
-            ),
+              ),
+              const Spacer(),
+              TextButton(onPressed: () {}, child: Text(context.l10n.seeAll)),
+            ],
           ),
-        );
-      }, childCount: (maxRow + 1) * (maxCol + 1)),
+          const SizedBox(height: 16),
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: state.suggestions.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final s = state.suggestions[index];
+              return ParkingSuggestionCard(suggestion: s, onTap: () {});
+            },
+          ),
+        ],
+      ),
     );
   }
 }

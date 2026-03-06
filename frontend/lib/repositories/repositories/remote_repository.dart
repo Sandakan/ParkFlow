@@ -242,11 +242,19 @@ class RemoteRepository implements RemoteRepositoryInterface {
   @override
   Future<GetParkingLotsResponseEntity> getParkingLots({
     String? search,
+    double? latitude,
+    double? longitude,
     String? accessToken,
   }) async {
     final Map<String, dynamic> queryParameters = {};
     if (search != null && search.isNotEmpty) {
       queryParameters['search'] = search;
+    }
+    if (latitude != null) {
+      queryParameters['latitude'] = latitude;
+    }
+    if (longitude != null) {
+      queryParameters['longitude'] = longitude;
     }
 
     final response = await httpAPI.doRequest(

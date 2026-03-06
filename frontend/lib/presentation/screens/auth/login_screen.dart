@@ -19,14 +19,26 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final form = FormGroup({
-    'email': FormControl<String>(
-      validators: [Validators.required, Validators.email],
-    ),
-    'password': FormControl<String>(
-      validators: [Validators.required, Validators.minLength(6)],
-    ),
-  });
+  late final FormGroup form;
+
+  @override
+  void initState() {
+    super.initState();
+    form = FormGroup({
+      'email': FormControl<String>(
+        validators: [Validators.required, Validators.email],
+      ),
+      'password': FormControl<String>(
+        validators: [Validators.required, Validators.minLength(6)],
+      ),
+    });
+  }
+
+  @override
+  void dispose() {
+    form.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +159,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               horizontal: 16.0,
                               vertical: 16.0,
                             ),
-                            onSubmitted: (_) => _submit(),
+                            onSubmitted: (_) => _submit(ref, form),
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.passwordRequired,
@@ -221,7 +233,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 width: double.infinity,
                                 height: 54.0,
                                 child: ElevatedButton(
-                                  onPressed: enabled ? _submit : null,
+                                  onPressed: enabled
+                                      ? () => _submit(ref, form)
+                                      : null,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: enabled
                                         ? theme.colorScheme.primary
@@ -299,10 +313,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  void _submit() {
+  void _submit(WidgetRef ref, FormGroup form) {
     if (form.valid) {
-      final email = form.control('email').value;
-      final password = form.control('password').value;
+      final email = form.control('email').value as String;
+      final password = form.control('password').value as String;
 
       ref.read(authProvider.notifier).login(email, password);
     } else {

@@ -601,11 +601,29 @@
 		"description": "Error snackbar message"
 	},
 	"settingsSaving": "Saving...",
+	"@settingsSaving": {
+		"description": "Status text shown when settings are being saved"
+	},
 	"settingsSystemControl": "System Control",
+	"@settingsSystemControl": {
+		"description": "Title for the system control settings section"
+	},
 	"settingsGlobalInference": "Enable Global Inference",
+	"@settingsGlobalInference": {
+		"description": "Label for the global AI inference toggle"
+	},
 	"settingsGlobalInferenceDesc": "Enable or disable AI inference globally for all available cameras.",
+	"@settingsGlobalInferenceDesc": {
+		"description": "Description for the global AI inference toggle"
+	},
 	"settingsInferenceRunning": "Running",
+	"@settingsInferenceRunning": {
+		"description": "Status label when inference is active"
+	},
 	"settingsInferenceStopped": "Stopped",
+	"@settingsInferenceStopped": {
+		"description": "Status label when inference is inactive"
+	},
 	"unknownLot": "Unknown Parking Lot",
 	"@unknownLot": {
 		"description": "Fallback text displayed when a parking lot name is missing or unknown"
@@ -743,6 +761,9 @@
 		}
 	},
 	"slotTypePrefix": "Type",
+	"@slotTypePrefix": {
+		"description": "Prefix used before a slot type label"
+	},
 	"selectParkingLotHint": "Select Parking Lot",
 	"@selectParkingLotHint": {
 		"description": "Hint text for the parking lot selection dropdown"
@@ -782,5 +803,67 @@
 	"colLabel": "Column",
 	"@colLabel": {
 		"description": "Label for logical column input"
+	},
+	"explore": "Explore",
+	"@explore": {
+		"description": "Label for the explore navigation"
+	},
+	"bookings": "Bookings",
+	"@bookings": {
+		"description": "Label for the bookings navigation"
+	},
+	"checkIn": "Check-in",
+	"@checkIn": {
+		"description": "Label for the check-in action"
+	},
+	"myVehicle": "My Vehicle",
+	"@myVehicle": {
+		"description": "Label for the my vehicle navigation"
+	},
+	"nearbyLots": "Nearby Parking Lots",
+	"@nearbyLots": {
+		"description": "Title for the nearby parking lots section"
+	},
+	"metersAway": "{distance}m away",
+	"@metersAway": {
+		"description": "Text showing distance to a parking lot",
+		"placeholders": {
+			"distance": {
+				"type": "String",
+				"example": "150"
+			}
+		}
+	},
+	"kmAway": "{distance}km away",
+	"@kmAway": {
+		"description": "Text showing distance to a parking lot in kilometers",
+		"placeholders": {
+			"distance": {
+				"type": "String",
+				"example": "1.5"
+			}
+		}
+	},
+	"noLotsNearby": "No parking lots found nearby.",
+	"@noLotsNearby": {
+		"description": "Text shown when no parking lots are found nearby"
+	},
+	"topRecommended": "Top Recommended P-Spots",
+	"@topRecommended": {
+		"description": "Title for the top recommended parking lots section"
+	},
+	"seeAll": "See all",
+	"@seeAll": {
+		"description": "Text for the see all button"
+	},
+	"availableSlotsCount": "{count} available",
+	"@availableSlotsCount": {
+		"description": "Text showing the number of available parking slots",
+		"placeholders": {
+			"count": {
+				"type": "String",
+				"example": "15"
+			}
+		}
 	}
 }

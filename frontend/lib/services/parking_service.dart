@@ -63,10 +63,16 @@ class ParkingService {
     }
   }
 
-  Future<List<ParkingLotModel>> fetchParkingLots({String? search}) async {
+  Future<List<ParkingLotModel>> fetchParkingLots({
+    String? search,
+    double? latitude,
+    double? longitude,
+  }) async {
     try {
       final response = await _remote.getParkingLots(
         search: search,
+        latitude: latitude,
+        longitude: longitude,
         accessToken: await _getToken(),
       );
       return response.lots;
@@ -129,9 +135,15 @@ class ParkingService {
 
   Stream<List<ParkingSlotModel>> streamParkingSlots({String? lotId}) {
     final controller = StreamController<List<ParkingSlotModel>>.broadcast();
-    final client = http.Client();
+    http.Client? client;
+    bool isCancelled = false;
 
     Future<void> connect() async {
+      if (isCancelled || controller.isClosed) return;
+
+      client?.close();
+      client = http.Client();
+
       try {
         final token = await _getToken();
         final url = Uri.parse(
@@ -145,57 +157,51 @@ class ParkingService {
         request.headers['Accept'] = 'text/event-stream';
         request.headers['Cache-Control'] = 'no-cache';
 
-        final response = await client.send(request);
+        final response = await client!.send(request);
 
         if (response.statusCode != 200) {
-          if (!controller.isClosed) {
-            controller.addError(
-              'Failed to connect to stream: ${response.statusCode}',
-            );
-          }
-          return;
+          talker.error('Failed to connect to stream: ${response.statusCode}');
+          await Future.delayed(const Duration(seconds: 3));
+          return connect();
         }
 
-        response.stream
-            .transform(utf8.decoder)
-            .transform(const LineSplitter())
-            .listen(
-              (line) {
-                if (line.startsWith('data: ')) {
-                  try {
-                    final jsonStr = line.substring(6);
-                    final List slotsData = json.decode(jsonStr) as List;
-                    final slots = slotsData
-                        .map((e) => ParkingSlotModel.fromJson(e))
-                        .toList();
-                    if (!controller.isClosed) {
-                      controller.add(slots);
-                    }
-                  } catch (e) {
-                    talker.error('Error parsing SSE data', e);
-                  }
-                }
-              },
-              onError: (e) {
-                talker.error('SSE Stream error', e);
-                if (!controller.isClosed) {
-                  controller.addError(e);
-                }
-              },
-              onDone: () {
-                talker.info('SSE Stream closed');
-              },
-              cancelOnError: true,
-            );
+        await for (final line
+            in response.stream
+                .transform(utf8.decoder)
+                .transform(const LineSplitter())) {
+          if (isCancelled || controller.isClosed) break;
+
+          if (line.startsWith('data: ')) {
+            try {
+              final jsonStr = line.substring(6);
+              final List slotsData = json.decode(jsonStr) as List;
+              final slots = slotsData
+                  .map((e) => ParkingSlotModel.fromJson(e))
+                  .toList();
+              if (!controller.isClosed) {
+                controller.add(slots);
+              }
+            } catch (e) {
+              talker.error('Error parsing SSE data', e);
+            }
+          }
+        }
       } catch (e) {
-        if (!controller.isClosed) controller.addError(e);
+        talker.error('SSE Stream error: $e');
+      } finally {
+        if (!isCancelled && !controller.isClosed) {
+          talker.info('SSE Stream disconnected, retrying in 3s...');
+          await Future.delayed(const Duration(seconds: 3));
+          await connect();
+        }
       }
     }
 
     connect();
 
     controller.onCancel = () {
-      client.close();
+      isCancelled = true;
+      client?.close();
       talker.info('Parking slots stream cancelled, client closed');
     };
 

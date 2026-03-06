@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'parking_notifier.dart';
+part of 'video_feed_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,51 +9,51 @@ part of 'parking_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(ParkingNotifier)
-final parkingProvider = ParkingNotifierProvider._();
+@ProviderFor(VideoFeed)
+final videoFeedProvider = VideoFeedProvider._();
 
-final class ParkingNotifierProvider
-    extends $NotifierProvider<ParkingNotifier, ParkingState> {
-  ParkingNotifierProvider._()
+final class VideoFeedProvider
+    extends $NotifierProvider<VideoFeed, VideoFeedState> {
+  VideoFeedProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'parkingProvider',
+        name: r'videoFeedProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$parkingNotifierHash();
+  String debugGetCreateSourceHash() => _$videoFeedHash();
 
   @$internal
   @override
-  ParkingNotifier create() => ParkingNotifier();
+  VideoFeed create() => VideoFeed();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ParkingState value) {
+  Override overrideWithValue(VideoFeedState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ParkingState>(value),
+      providerOverride: $SyncValueProvider<VideoFeedState>(value),
     );
   }
 }
 
-String _$parkingNotifierHash() => r'8e365688667359f78bbcf599a768f48e7abdff83';
+String _$videoFeedHash() => r'17ec4bf9f6cc926e77fac8e29a9fed4d6349ebcd';
 
-abstract class _$ParkingNotifier extends $Notifier<ParkingState> {
-  ParkingState build();
+abstract class _$VideoFeed extends $Notifier<VideoFeedState> {
+  VideoFeedState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<ParkingState, ParkingState>;
+    final ref = this.ref as $Ref<VideoFeedState, VideoFeedState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ParkingState, ParkingState>,
-              ParkingState,
+              AnyNotifier<VideoFeedState, VideoFeedState>,
+              VideoFeedState,
               Object?,
               Object?
             >;

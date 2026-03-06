@@ -622,4 +622,43 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get colLabel => 'Column';
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get bookings => 'Bookings';
+
+  @override
+  String get checkIn => 'Check-in';
+
+  @override
+  String get myVehicle => 'My Vehicle';
+
+  @override
+  String get nearbyLots => 'Nearby Parking Lots';
+
+  @override
+  String metersAway(String distance) {
+    return '${distance}m away';
+  }
+
+  @override
+  String kmAway(String distance) {
+    return '${distance}km away';
+  }
+
+  @override
+  String get noLotsNearby => 'No parking lots found nearby.';
+
+  @override
+  String get topRecommended => 'Top Recommended P-Spots';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String availableSlotsCount(String count) {
+    return '$count available';
+  }
 }

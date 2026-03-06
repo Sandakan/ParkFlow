@@ -13,31 +13,15 @@ import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:parkflow/presentation/widgets/admin/slot_grid_picker.dart';
 
-class AdminCameraInfoScreen extends ConsumerStatefulWidget {
+class AdminCameraInfoScreen extends ConsumerWidget {
   final String cameraId;
 
   const AdminCameraInfoScreen({required this.cameraId, super.key});
 
   @override
-  ConsumerState<AdminCameraInfoScreen> createState() =>
-      _AdminCameraInfoScreenState();
-}
-
-class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final state = ref.watch(cameraInfoProvider(widget.cameraId));
-    final notifier = ref.read(cameraInfoProvider(widget.cameraId).notifier);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(cameraInfoProvider(cameraId));
+    final notifier = ref.read(cameraInfoProvider(cameraId).notifier);
 
     final screenWidth = MediaQuery.of(context).size.width;
     final isWide = screenWidth > 800;
@@ -46,14 +30,13 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // 1. & 2. Video & Interaction Layer (Wrapped in AspectRatio for scaling accuracy)
           Center(
             child: AspectRatio(
               aspectRatio: 16 / 9,
               child: Stack(
                 children: [
                   Positioned.fill(
-                    child: CameraWebrtcPlayer(cameraId: widget.cameraId),
+                    child: CameraWebrtcPlayer(cameraId: cameraId),
                   ),
                   Positioned.fill(
                     child: SpotPickerCanvas(
@@ -66,7 +49,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                       onTap: (normalizedPoint) {
                         notifier.addDrawingPoint(normalizedPoint);
                         if (state.currentDrawingPoints.length == 3) {
-                          _promptSlotName(notifier);
+                          _promptSlotName(context, ref, notifier);
                         }
                       },
                     ),
@@ -76,7 +59,6 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
             ),
           ),
 
-          // 3. Header Layer
           Positioned(
             top: 0,
             left: 0,
@@ -84,7 +66,6 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
             child: _buildHeader(context, state, notifier),
           ),
 
-          // 4. Sidebar or Bottom Sheet Layer
           if (isWide)
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),
@@ -540,7 +521,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
         onPressed: () => _confirmDelete(context, slot, notifier),
       ),
       onTap: () {
-        // Handle slot click (e.g. highlight it on the canvas)
+        // TODO: Implement slot selection logic
       },
     );
   }
@@ -573,8 +554,12 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
     );
   }
 
-  void _promptSlotName(CameraInfo notifier) {
-    final existingSlots = ref.read(cameraInfoProvider(widget.cameraId)).slots;
+  void _promptSlotName(
+    BuildContext context,
+    WidgetRef ref,
+    CameraInfo notifier,
+  ) {
+    final existingSlots = ref.read(cameraInfoProvider(cameraId)).slots;
 
     final form = fb.group({
       'name': FormControl<String>(validators: [Validators.required]),

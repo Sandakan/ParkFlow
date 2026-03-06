@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/states/auth/auth_state.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:parkflow/utils/constants/app_colors.dart';
 
 class MainLayoutScreen extends ConsumerWidget {
   const MainLayoutScreen({required this.navigationShell, super.key});
@@ -21,6 +22,10 @@ class MainLayoutScreen extends ConsumerWidget {
       context,
       authState,
     );
+
+    if (destinations.length < 2) {
+      return Scaffold(body: navigationShell);
+    }
 
     if (isWide) {
       return Scaffold(
@@ -58,16 +63,114 @@ class MainLayoutScreen extends ConsumerWidget {
                   .toList(),
               selectedIndex: navigationShell.currentIndex,
               onDestinationSelected: (index) => _onTap(context, index),
+              trailing: authState.isAdmin
+                  ? Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: size.width >= 800
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                  ),
+                                  child: TextButton.icon(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: colorScheme.error,
+                                      minimumSize: const Size.fromHeight(40),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                      ),
+                                    ),
+                                    onPressed: () => ref
+                                        .read(authProvider.notifier)
+                                        .logout(),
+                                    icon: const Icon(Icons.logout, size: 20),
+                                    label: Text(
+                                      context.l10n.logout,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : IconButton(
+                                  icon: Icon(
+                                    Icons.logout,
+                                    color: colorScheme.error,
+                                  ),
+                                  onPressed: () =>
+                                      ref.read(authProvider.notifier).logout(),
+                                  tooltip: context.l10n.logout,
+                                ),
+                        ),
+                      ),
+                    )
+                  : null,
             ),
             const VerticalDivider(thickness: 1, width: 1),
             Expanded(child: navigationShell),
           ],
         ),
+        floatingActionButton: authState.isDriver
+            ? FloatingActionButton.extended(
+                onPressed: () {
+                  // TODO: Implement Check-in action
+                },
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+                elevation: 4,
+                icon: const Icon(Icons.qr_code_scanner),
+                label: Text(
+                  context.l10n.checkIn,
+                  style: const TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.3,
+                  ),
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.0),
+                ),
+              )
+            : null,
       );
     }
 
     return Scaffold(
+      appBar: authState.isAdmin
+          ? AppBar(
+              title: Text(context.l10n.appTitle),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.logout),
+                  onPressed: () => ref.read(authProvider.notifier).logout(),
+                  tooltip: context.l10n.logout,
+                ),
+              ],
+            )
+          : null,
       body: navigationShell,
+      floatingActionButton: authState.isDriver
+          ? Semantics(
+              label: context.l10n.checkIn,
+              child: FloatingActionButton(
+                onPressed: () {
+                  // TODO: Implement Check-in action
+                },
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14.0),
+                ),
+                child: const Icon(Icons.qr_code_scanner),
+              ),
+            )
+          : null,
+      floatingActionButtonLocation: authState.isDriver
+          ? FloatingActionButtonLocation.centerDocked
+          : null,
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -137,9 +240,19 @@ class MainLayoutScreen extends ConsumerWidget {
     } else if (authState.isDriver) {
       return [
         NavigationDestinationData(
-          icon: Icons.home_outlined,
-          selectedIcon: Icons.home,
-          label: context.l10n.home,
+          icon: Icons.dashboard_outlined,
+          selectedIcon: Icons.dashboard_rounded,
+          label: context.l10n.explore,
+        ),
+        NavigationDestinationData(
+          icon: Icons.bookmark_outline,
+          selectedIcon: Icons.bookmark_added,
+          label: context.l10n.bookings,
+        ),
+        NavigationDestinationData(
+          icon: Icons.directions_car_outlined,
+          selectedIcon: Icons.directions_car,
+          label: context.l10n.myVehicle,
         ),
         NavigationDestinationData(
           icon: Icons.person_outline,

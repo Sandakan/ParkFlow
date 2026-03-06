@@ -1000,37 +1000,37 @@ abstract class AppLocalizations {
   /// **'Failed to update settings'**
   String get settingsSaveError;
 
-  /// No description provided for @settingsSaving.
+  /// Status text shown when settings are being saved
   ///
   /// In en, this message translates to:
   /// **'Saving...'**
   String get settingsSaving;
 
-  /// No description provided for @settingsSystemControl.
+  /// Title for the system control settings section
   ///
   /// In en, this message translates to:
   /// **'System Control'**
   String get settingsSystemControl;
 
-  /// No description provided for @settingsGlobalInference.
+  /// Label for the global AI inference toggle
   ///
   /// In en, this message translates to:
   /// **'Enable Global Inference'**
   String get settingsGlobalInference;
 
-  /// No description provided for @settingsGlobalInferenceDesc.
+  /// Description for the global AI inference toggle
   ///
   /// In en, this message translates to:
   /// **'Enable or disable AI inference globally for all available cameras.'**
   String get settingsGlobalInferenceDesc;
 
-  /// No description provided for @settingsInferenceRunning.
+  /// Status label when inference is active
   ///
   /// In en, this message translates to:
   /// **'Running'**
   String get settingsInferenceRunning;
 
-  /// No description provided for @settingsInferenceStopped.
+  /// Status label when inference is inactive
   ///
   /// In en, this message translates to:
   /// **'Stopped'**
@@ -1222,7 +1222,7 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete {name}?'**
   String deleteSlotConfirmMessage(String name);
 
-  /// No description provided for @slotTypePrefix.
+  /// Prefix used before a slot type label
   ///
   /// In en, this message translates to:
   /// **'Type'**
@@ -1287,6 +1287,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Column'**
   String get colLabel;
+
+  /// Label for the explore navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get explore;
+
+  /// Label for the bookings navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get bookings;
+
+  /// Label for the check-in action
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get checkIn;
+
+  /// Label for the my vehicle navigation
+  ///
+  /// In en, this message translates to:
+  /// **'My Vehicle'**
+  String get myVehicle;
+
+  /// Title for the nearby parking lots section
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby Parking Lots'**
+  String get nearbyLots;
+
+  /// Text showing distance to a parking lot
+  ///
+  /// In en, this message translates to:
+  /// **'{distance}m away'**
+  String metersAway(String distance);
+
+  /// Text showing distance to a parking lot in kilometers
+  ///
+  /// In en, this message translates to:
+  /// **'{distance}km away'**
+  String kmAway(String distance);
+
+  /// Text shown when no parking lots are found nearby
+  ///
+  /// In en, this message translates to:
+  /// **'No parking lots found nearby.'**
+  String get noLotsNearby;
+
+  /// Title for the top recommended parking lots section
+  ///
+  /// In en, this message translates to:
+  /// **'Top Recommended P-Spots'**
+  String get topRecommended;
+
+  /// Text for the see all button
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// Text showing the number of available parking slots
+  ///
+  /// In en, this message translates to:
+  /// **'{count} available'**
+  String availableSlotsCount(String count);
 }
 
 class _AppLocalizationsDelegate

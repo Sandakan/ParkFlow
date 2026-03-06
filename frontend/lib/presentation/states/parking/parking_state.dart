@@ -11,8 +11,10 @@ abstract class ParkingState with _$ParkingState {
   const factory ParkingState({
     @Default(true) bool isLoading,
     @Default([]) List<ParkingSlotModel> slots,
+    @Default([]) List<ParkingLotModel> lots,
     @Default([]) List<ParkingSuggestionEntity> suggestions,
     ParkingLotModel? lot,
+    String? searchQuery,
     AppException? error,
   }) = _ParkingState;
 }

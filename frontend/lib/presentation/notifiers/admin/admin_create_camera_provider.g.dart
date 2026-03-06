@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'parking_notifier.dart';
+part of 'admin_create_camera_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,51 +9,51 @@ part of 'parking_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(ParkingNotifier)
-final parkingProvider = ParkingNotifierProvider._();
+@ProviderFor(AdminCreateCamera)
+final adminCreateCameraProvider = AdminCreateCameraProvider._();
 
-final class ParkingNotifierProvider
-    extends $NotifierProvider<ParkingNotifier, ParkingState> {
-  ParkingNotifierProvider._()
+final class AdminCreateCameraProvider
+    extends $NotifierProvider<AdminCreateCamera, bool> {
+  AdminCreateCameraProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'parkingProvider',
+        name: r'adminCreateCameraProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$parkingNotifierHash();
+  String debugGetCreateSourceHash() => _$adminCreateCameraHash();
 
   @$internal
   @override
-  ParkingNotifier create() => ParkingNotifier();
+  AdminCreateCamera create() => AdminCreateCamera();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ParkingState value) {
+  Override overrideWithValue(bool value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ParkingState>(value),
+      providerOverride: $SyncValueProvider<bool>(value),
     );
   }
 }
 
-String _$parkingNotifierHash() => r'8e365688667359f78bbcf599a768f48e7abdff83';
+String _$adminCreateCameraHash() => r'3407257ed867b34748510f1c3261614d35cbb3af';
 
-abstract class _$ParkingNotifier extends $Notifier<ParkingState> {
-  ParkingState build();
+abstract class _$AdminCreateCamera extends $Notifier<bool> {
+  bool build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<ParkingState, ParkingState>;
+    final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ParkingState, ParkingState>,
-              ParkingState,
+              AnyNotifier<bool, bool>,
+              bool,
               Object?,
               Object?
             >;

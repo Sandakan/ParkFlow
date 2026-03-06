@@ -79,7 +79,20 @@ class AdminSettingsBranch extends StatefulShellBranchData {
   branches: <TypedStatefulShellBranch<StatefulShellBranchData>>[
     TypedStatefulShellBranch<HomeBranch>(
       routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<HomeRoute>(path: HomeRoute.path),
+        TypedGoRoute<HomeRoute>(
+          path: HomeRoute.path,
+          routes: [TypedGoRoute<LotDetailsRoute>(path: 'details')],
+        ),
+      ],
+    ),
+    TypedStatefulShellBranch<BookingsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<BookingsRoute>(path: BookingsRoute.path),
+      ],
+    ),
+    TypedStatefulShellBranch<MyVehicleBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<MyVehicleRoute>(path: MyVehicleRoute.path),
       ],
     ),
     TypedStatefulShellBranch<ProfileBranch>(
@@ -106,8 +119,36 @@ class HomeBranch extends StatefulShellBranchData {
   const HomeBranch();
 }
 
+class BookingsBranch extends StatefulShellBranchData {
+  const BookingsBranch();
+}
+
+class MyVehicleBranch extends StatefulShellBranchData {
+  const MyVehicleBranch();
+}
+
 class ProfileBranch extends StatefulShellBranchData {
   const ProfileBranch();
+}
+
+class BookingsRoute extends GoRouteData with $BookingsRoute {
+  const BookingsRoute();
+  static const path = '/bookings';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const BookingsScreen();
+  }
+}
+
+class MyVehicleRoute extends GoRouteData with $MyVehicleRoute {
+  const MyVehicleRoute();
+  static const path = '/my-vehicle';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const MyVehicleScreen();
+  }
 }
 
 class ProfileRoute extends GoRouteData with $ProfileRoute {

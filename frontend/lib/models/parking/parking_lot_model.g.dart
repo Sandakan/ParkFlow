@@ -26,6 +26,7 @@ _ParkingLotModel _$ParkingLotModelFromJson(Map<String, dynamic> json) =>
               .toList(),
       slotWidthMeters: (json['slot_width_meters'] as num?)?.toDouble(),
       slotLengthMeters: (json['slot_length_meters'] as num?)?.toDouble(),
+      distanceMeters: (json['distanceMeters'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$ParkingLotModelToJson(_ParkingLotModel instance) =>
@@ -41,4 +42,5 @@ Map<String, dynamic> _$ParkingLotModelToJson(_ParkingLotModel instance) =>
       'entrance_logical_locations': instance.entranceLogicalLocations,
       'slot_width_meters': instance.slotWidthMeters,
       'slot_length_meters': instance.slotLengthMeters,
+      'distanceMeters': instance.distanceMeters,
     };

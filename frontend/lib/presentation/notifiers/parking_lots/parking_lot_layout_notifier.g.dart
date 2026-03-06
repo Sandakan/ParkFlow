@@ -58,7 +58,7 @@ final class ParkingLotLayoutProvider
   }
 }
 
-String _$parkingLotLayoutHash() => r'9fb8ad3b0f19bef783c62cc512248c07c3618018';
+String _$parkingLotLayoutHash() => r'9dd898f6342acd632474336fa7599e8586b5cd04';
 
 final class ParkingLotLayoutFamily extends $Family
     with

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
-import 'package:parkflow/services/parking_service.dart';
-import 'package:parkflow/presentation/notifiers/parking_lots/parking_lots_notifier.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/presentation/notifiers/parking_lots/parking_lot_layout_notifier.dart';
 import 'package:parkflow/presentation/widgets/parking/parking_lot_layout_grid.dart';
+import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
+import 'package:parkflow/presentation/notifiers/admin/admin_edit_parking_lot_provider.dart';
 
 class AdminEditParkingLotScreen extends ConsumerStatefulWidget {
   final String lotId;
@@ -21,207 +20,83 @@ class AdminEditParkingLotScreen extends ConsumerStatefulWidget {
 
 class _AdminEditParkingLotScreenState
     extends ConsumerState<AdminEditParkingLotScreen> {
-  bool _isLoading = true;
-  bool _isUpdating = false;
-
-  late final FormGroup form = fb.group({
-    'name': FormControl<String>(validators: [Validators.required]),
-    'address': FormControl<String>(validators: [Validators.required]),
-    'latitude': FormControl<String>(
-      validators: [
-        Validators.required,
-        Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
-      ],
-    ),
-    'longitude': FormControl<String>(
-      validators: [
-        Validators.required,
-        Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
-      ],
-    ),
-    'totalSlots': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-    'slotWidth': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
-    ),
-    'slotLength': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
-    ),
-    'entranceRow': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-    'entranceCol': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-  });
+  late final FormGroup form;
+  bool _formInitialized = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchLotData();
-  }
-
-  Future<void> _fetchLotData() async {
-    try {
-      final lot = await ref
-          .read(parkingServiceProvider)
-          .fetchParkingLot(widget.lotId);
-      form.patchValue({
-        'name': lot.name,
-        'address': lot.address,
-        'latitude': lot.latitude.toString(),
-        'longitude': lot.longitude.toString(),
-        'totalSlots': lot.totalSlots.toString(),
-        'slotWidth': (lot.slotWidthMeters ?? 5.0).toString(),
-        'slotLength': (lot.slotLengthMeters ?? 5.0).toString(),
-        'entranceRow':
-            (lot.entranceLogicalLocations?.isNotEmpty == true
-                    ? lot.entranceLogicalLocations![0][0]
-                    : 0)
-                .toString(),
-        'entranceCol':
-            (lot.entranceLogicalLocations?.isNotEmpty == true
-                    ? lot.entranceLogicalLocations![0][1]
-                    : 0)
-                .toString(),
-      });
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppException.getLocalizedErrorMessage(e, context.l10n),
-            ),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
-  Future<void> _submit() async {
-    if (form.invalid) {
-      form.markAllAsTouched();
-      return;
-    }
-
-    setState(() => _isUpdating = true);
-
-    try {
-      final request = UpdateParkingLotRequest(
-        name: form.control('name').value as String,
-        address: form.control('address').value as String,
-        latitude: double.parse(form.control('latitude').value as String),
-        longitude: double.parse(form.control('longitude').value as String),
-        totalSlots: int.parse(form.control('totalSlots').value as String),
-        slotWidthMeters: double.parse(
-          form.control('slotWidth').value as String,
-        ),
-        slotLengthMeters: double.parse(
-          form.control('slotLength').value as String,
-        ),
-        entranceLogicalLocations: [
-          [
-            int.parse(form.control('entranceRow').value as String),
-            int.parse(form.control('entranceCol').value as String),
-          ],
-        ],
-      );
-
-      await ref
-          .read(parkingServiceProvider)
-          .updateParkingLot(widget.lotId, request);
-      await ref.read(parkingLotsProvider.notifier).fetchLots();
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.lotUpdatedSuccess),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppException.getLocalizedErrorMessage(e, context.l10n),
-            ),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isUpdating = false);
-      }
-    }
-  }
-
-  Future<void> _deleteLot() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.deleteLotConfirmTitle),
-        content: Text(context.l10n.deleteLotConfirmMessage),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(context.l10n.cancelButton),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: Text(context.l10n.deleteButton),
-          ),
+    form = FormGroup({
+      'name': FormControl<String>(validators: [Validators.required]),
+      'address': FormControl<String>(validators: [Validators.required]),
+      'latitude': FormControl<String>(
+        validators: [
+          Validators.required,
+          Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
         ],
       ),
-    );
+      'longitude': FormControl<String>(
+        validators: [
+          Validators.required,
+          Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
+        ],
+      ),
+      'totalSlots': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d+$')],
+      ),
+      'slotWidth': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+      ),
+      'slotLength': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+      ),
+      'entranceRow': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d+$')],
+      ),
+      'entranceCol': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d+$')],
+      ),
+    });
+  }
 
-    if (confirmed != true || !mounted) return;
-
-    setState(() => _isUpdating = true);
-
-    try {
-      await ref.read(parkingServiceProvider).deleteParkingLot(widget.lotId);
-      await ref.read(parkingLotsProvider.notifier).fetchLots();
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.lotDeletedSuccess),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.of(context).pop();
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppException.getLocalizedErrorMessage(e, context.l10n),
-            ),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isUpdating = false);
-      }
-    }
+  @override
+  void dispose() {
+    form.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final editLotState = ref.watch(adminEditParkingLotProvider(widget.lotId));
+    final isLoading = editLotState.isLoading;
+    final isUpdating = editLotState.isUpdating;
+
+    ref.listen(adminEditParkingLotProvider(widget.lotId), (prev, next) {
+      if (next.lot != null && !_formInitialized) {
+        final lot = next.lot!;
+        form.patchValue({
+          'name': lot.name,
+          'address': lot.address,
+          'latitude': lot.latitude.toString(),
+          'longitude': lot.longitude.toString(),
+          'totalSlots': lot.totalSlots.toString(),
+          'slotWidth': (lot.slotWidthMeters ?? 5.0).toString(),
+          'slotLength': (lot.slotLengthMeters ?? 5.0).toString(),
+          'entranceRow':
+              (lot.entranceLogicalLocations?.isNotEmpty == true
+                      ? lot.entranceLogicalLocations![0][0]
+                      : 0)
+                  .toString(),
+          'entranceCol':
+              (lot.entranceLogicalLocations?.isNotEmpty == true
+                      ? lot.entranceLogicalLocations![0][1]
+                      : 0)
+                  .toString(),
+        });
+        _formInitialized = true;
+      }
+    });
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
@@ -230,14 +105,67 @@ class _AdminEditParkingLotScreenState
         scrolledUnderElevation: 0,
         actions: [
           IconButton(
-            onPressed: _isLoading || _isUpdating ? null : _deleteLot,
+            onPressed: isLoading || isUpdating
+                ? null
+                : () async {
+                    final l10n = context.l10n;
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Text(l10n.deleteLotConfirmTitle),
+                        content: Text(l10n.deleteLotConfirmMessage),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text(l10n.cancelButton),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppColors.error,
+                            ),
+                            child: Text(l10n.deleteButton),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmed != true) return;
+                    if (!context.mounted) return;
+                    try {
+                      await ref
+                          .read(
+                            adminEditParkingLotProvider(widget.lotId).notifier,
+                          )
+                          .deleteLot();
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.lotDeletedSuccess),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        Navigator.of(context).pop();
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              AppException.getLocalizedErrorMessage(e, l10n),
+                            ),
+                            backgroundColor: AppColors.error,
+                          ),
+                        );
+                      }
+                    }
+                  },
             icon: const Icon(Icons.delete_outline, color: AppColors.error),
             tooltip: context.l10n.deleteLot,
           ),
         ],
       ),
       body: SafeArea(
-        child: _isLoading
+        child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
                 padding: const EdgeInsets.all(24.0),
@@ -250,6 +178,7 @@ class _AdminEditParkingLotScreenState
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           _buildTextField(
+                            context: context,
                             formControlName: 'name',
                             label: context.l10n.lotNameLabel,
                             hint: context.l10n.lotNameHint,
@@ -257,6 +186,7 @@ class _AdminEditParkingLotScreenState
                           ),
                           const SizedBox(height: 16),
                           _buildTextField(
+                            context: context,
                             formControlName: 'address',
                             label: context.l10n.lotAddressLabel,
                             hint: context.l10n.lotAddressHint,
@@ -267,6 +197,7 @@ class _AdminEditParkingLotScreenState
                             children: [
                               Expanded(
                                 child: _buildTextField(
+                                  context: context,
                                   formControlName: 'latitude',
                                   label: context.l10n.latitudeLabel,
                                   hint: context.l10n.latitudeHint,
@@ -281,6 +212,7 @@ class _AdminEditParkingLotScreenState
                               const SizedBox(width: 16),
                               Expanded(
                                 child: _buildTextField(
+                                  context: context,
                                   formControlName: 'longitude',
                                   label: context.l10n.longitudeLabel,
                                   hint: context.l10n.longitudeHint,
@@ -296,6 +228,7 @@ class _AdminEditParkingLotScreenState
                           ),
                           const SizedBox(height: 16),
                           _buildTextField(
+                            context: context,
                             formControlName: 'totalSlots',
                             label: context.l10n.totalSlotsLabel,
                             hint: context.l10n.totalSlotsHint,
@@ -307,6 +240,7 @@ class _AdminEditParkingLotScreenState
                             children: [
                               Expanded(
                                 child: _buildTextField(
+                                  context: context,
                                   formControlName: 'slotWidth',
                                   label: context.l10n.slotWidthLabel,
                                   hint: 'e.g. 5.0',
@@ -320,6 +254,7 @@ class _AdminEditParkingLotScreenState
                               const SizedBox(width: 16),
                               Expanded(
                                 child: _buildTextField(
+                                  context: context,
                                   formControlName: 'slotLength',
                                   label: context.l10n.slotLengthLabel,
                                   hint: 'e.g. 5.0',
@@ -337,6 +272,7 @@ class _AdminEditParkingLotScreenState
                             children: [
                               Expanded(
                                 child: _buildTextField(
+                                  context: context,
                                   formControlName: 'entranceRow',
                                   label:
                                       '${context.l10n.entranceCoordsLabel} (${context.l10n.rowLabel})',
@@ -348,6 +284,7 @@ class _AdminEditParkingLotScreenState
                               const SizedBox(width: 16),
                               Expanded(
                                 child: _buildTextField(
+                                  context: context,
                                   formControlName: 'entranceCol',
                                   label:
                                       '${context.l10n.entranceCoordsLabel} (${context.l10n.colLabel})',
@@ -406,7 +343,93 @@ class _AdminEditParkingLotScreenState
                           ),
                           const SizedBox(height: 32),
                           ElevatedButton(
-                            onPressed: _isUpdating ? null : _submit,
+                            onPressed: isUpdating
+                                ? null
+                                : () async {
+                                    final l10n = context.l10n;
+                                    if (form.invalid) {
+                                      form.markAllAsTouched();
+                                      return;
+                                    }
+                                    try {
+                                      final request = UpdateParkingLotRequest(
+                                        name:
+                                            form.control('name').value
+                                                as String,
+                                        address:
+                                            form.control('address').value
+                                                as String,
+                                        latitude: double.parse(
+                                          form.control('latitude').value
+                                              as String,
+                                        ),
+                                        longitude: double.parse(
+                                          form.control('longitude').value
+                                              as String,
+                                        ),
+                                        totalSlots: int.parse(
+                                          form.control('totalSlots').value
+                                              as String,
+                                        ),
+                                        slotWidthMeters: double.parse(
+                                          form.control('slotWidth').value
+                                              as String,
+                                        ),
+                                        slotLengthMeters: double.parse(
+                                          form.control('slotLength').value
+                                              as String,
+                                        ),
+                                        entranceLogicalLocations: [
+                                          [
+                                            int.parse(
+                                              form.control('entranceRow').value
+                                                  as String,
+                                            ),
+                                            int.parse(
+                                              form.control('entranceCol').value
+                                                  as String,
+                                            ),
+                                          ],
+                                        ],
+                                      );
+                                      await ref
+                                          .read(
+                                            adminEditParkingLotProvider(
+                                              widget.lotId,
+                                            ).notifier,
+                                          )
+                                          .submit(request);
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              l10n.lotUpdatedSuccess,
+                                            ),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                        Navigator.of(context).pop();
+                                      }
+                                    } catch (e) {
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              AppException.getLocalizedErrorMessage(
+                                                e,
+                                                l10n,
+                                              ),
+                                            ),
+                                            backgroundColor: AppColors.error,
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
                               foregroundColor: AppColors.white,
@@ -416,7 +439,7 @@ class _AdminEditParkingLotScreenState
                               ),
                               elevation: 0,
                             ),
-                            child: _isUpdating
+                            child: isUpdating
                                 ? const SizedBox(
                                     height: 24,
                                     width: 24,
@@ -444,6 +467,7 @@ class _AdminEditParkingLotScreenState
   }
 
   Widget _buildTextField({
+    required BuildContext context,
     required String formControlName,
     required String label,
     required String hint,

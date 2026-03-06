@@ -251,10 +251,16 @@ async def create_parking_lot(
 @router.get(
     "/lots",
     response_model=APIResponse[dict],
-    description="Retrieve the list of parking lots optionally filtered by search query.",
+    description="Retrieve the list of parking lots optionally filtered by search query. Optionally sort by distance if location provided.",
 )
 async def get_parking_lots(
     search: Optional[str] = Query(None, description="Search term for parking lot name"),
+    latitude: Optional[float] = Query(
+        None, description="User latitude for distance sorting"
+    ),
+    longitude: Optional[float] = Query(
+        None, description="User longitude for distance sorting"
+    ),
     current_user: Any = Depends(get_current_user),
 ) -> Any:
     """
@@ -269,6 +275,22 @@ async def get_parking_lots(
 
     serialized_lots = []
     import random
+    import math
+
+    def haversine_distance(lat1, lon1, lat2, lon2):
+        R = 6371000  # radius of Earth in meters
+        phi1 = math.radians(lat1)
+        phi2 = math.radians(lat2)
+        delta_phi = math.radians(lat2 - lat1)
+        delta_lambda = math.radians(lon2 - lon1)
+
+        a = (
+            math.sin(delta_phi / 2.0) ** 2
+            + math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2.0) ** 2
+        )
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+        return R * c
 
     for lot in lots:
         is_open = (
@@ -282,6 +304,13 @@ async def get_parking_lots(
         revenue_today = metrics.get("revenue_today", random.randint(100, 10000))
         address = lot.get("address", "Unknown Address")
 
+        distance_meters = None
+        if latitude is not None and longitude is not None:
+            location = lot.get("location", {}).get("coordinates", [0, 0])
+            lot_lon = location[0]
+            lot_lat = location[1]
+            distance_meters = haversine_distance(latitude, longitude, lot_lat, lot_lon)
+
         serialized_lots.append(
             {
                 "id": str(lot.get("_id") or lot.get("parking_lot_id")),
@@ -292,7 +321,15 @@ async def get_parking_lots(
                 "occupancy": occupancy,
                 "revenueToday": revenue_today,
                 "address": address,
+                "distanceMeters": distance_meters,
             }
+        )
+
+    if latitude is not None and longitude is not None:
+        serialized_lots.sort(
+            key=lambda x: (
+                x["distanceMeters"] if x["distanceMeters"] is not None else float("inf")
+            )
         )
 
     return APIResponse.success_response(

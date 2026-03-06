@@ -31,6 +31,8 @@ abstract class RemoteRepositoryInterface {
   });
   Future<GetParkingLotsResponseEntity> getParkingLots({
     String? search,
+    double? latitude,
+    double? longitude,
     String? accessToken,
   });
   Future<GetParkingLotResponseEntity> getParkingLot(
