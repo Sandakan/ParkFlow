@@ -23,6 +23,7 @@ from app.api.routers import (
     parking,
     cameras,
     analytics,
+    reservations,
     settings as settings_router,
 )
 
@@ -121,6 +122,9 @@ app.include_router(inference.router, prefix="/api/v1/inference", tags=["AI Infer
 app.include_router(parking.router, prefix="/api/v1/parking", tags=["Parking"])
 app.include_router(cameras.router, prefix="/api/v1/cameras", tags=["Cameras"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytics"])
+app.include_router(
+    reservations.router, prefix="/api/v1/reservations", tags=["Reservations"]
+)
 app.include_router(settings_router.router, prefix="/api/v1/settings", tags=["Settings"])
 
 

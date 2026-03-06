@@ -708,113 +708,12 @@ async def test_detection(
     slot = await db.client["parkflow"].parking_slots.find_one(
         {"_id": ObjectId(slot_id)}
     )
-
     return APIResponse.success_response(
         message="Detection processed and fusion recalculated",
         data={
             "logical_slot_id": slot_id,
             "new_logical_status": slot.get("status") if slot else "unknown",
         },
-    )
-
-
-@router.post(
-    "/reservations",
-    response_model=APIResponse[dict],
-    description="Create a new reservation.",
-    status_code=status.HTTP_201_CREATED,
-)
-async def create_reservation(
-    request: CreateReservationRequest,
-    current_user: Any = Depends(get_current_user),
-) -> Any:
-    """
-    Create a new reservation.
-    """
-    from datetime import datetime, timezone
-    import uuid
-
-    now = datetime.now(timezone.utc)
-
-    # Simple QR code generation for demonstration
-    qr_code = str(uuid.uuid4())
-
-    new_reservation = {
-        "user_id": request.user_id,
-        "slot_id": request.slot_id,
-        "start_time": request.start_time,
-        "end_time": request.end_time,
-        "status": "active",
-        "qr_code_token": qr_code,
-        "created_at": now,
-        "updated_at": now,
-        "deleted_at": None,
-    }
-
-    result = await db.client["parkflow"].reservations.insert_one(new_reservation)
-
-    return APIResponse.success_response(
-        message="Reservation created successfully",
-        code=ResponseCode.SUCCESS,
-        data={"id": str(result.inserted_id), "qrCode": qr_code},
-        status_code=status.HTTP_201_CREATED,
-    )
-
-
-@router.get(
-    "/reservations",
-    response_model=APIResponse[dict],
-    description="Retrieve the list of reservations for the current user.",
-)
-async def get_reservations(
-    current_user: Any = Depends(get_current_user),
-) -> Any:
-    """
-    Get all reservations for current user.
-    """
-    # Assuming user_id is accessible from current_user
-    user_id = str(
-        getattr(
-            current_user,
-            "user_id",
-            current_user.get("_id") if isinstance(current_user, dict) else None,
-        )
-    )
-
-    query = {"deleted_at": None}
-    if current_user.role != "admin":
-        query["user_id"] = user_id
-
-    cursor = db.client["parkflow"].reservations.find(query)
-    reservations = await cursor.to_list(length=100)
-
-    serialized_reservations = []
-    for res in reservations:
-        serialized_reservations.append(
-            {
-                "id": str(res.get("_id")),
-                "userId": res.get("user_id"),
-                "slotId": res.get("slot_id"),
-                "startTime": (
-                    res.get("start_time").isoformat() if res.get("start_time") else None
-                ),
-                "endTime": (
-                    res.get("end_time").isoformat() if res.get("end_time") else None
-                ),
-                "status": res.get("status"),
-                "createdAt": (
-                    res.get("created_at").isoformat() if res.get("created_at") else None
-                ),
-                "updatedAt": (
-                    res.get("updated_at").isoformat() if res.get("updated_at") else None
-                ),
-            }
-        )
-
-    return APIResponse.success_response(
-        message="Reservations retrieved",
-        code=ResponseCode.SUCCESS,
-        data={"reservations": serialized_reservations},
     )
 
 

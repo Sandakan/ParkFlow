@@ -29,7 +29,7 @@ class UserService:
             email=user_in.email,
             password_hash=get_password_hash(user_in.password),
             role=user_in.role,
-            vehicle_details=user_in.vehicle_details,
+            vehicles=user_in.vehicles,
         )
         created_user = await user_repository.create(user_db)
         return created_user

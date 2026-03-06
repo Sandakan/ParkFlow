@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Literal, Optional
-from datetime import datetime
+from datetime import datetime, timezone
+from .user import VehicleDetails
 
 
 class ReservationInDB(BaseModel):
@@ -9,6 +10,10 @@ class ReservationInDB(BaseModel):
     slot_id: str
     start_time: datetime
     end_time: datetime
+    vehicle: VehicleDetails
+    duration_minutes: int
+    payment_method: Literal["cash", "digital_wallet"]
+    total_price: float
     status: Literal["active", "completed", "cancelled"] = "active"
     qr_code_token: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
