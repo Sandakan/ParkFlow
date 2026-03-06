@@ -6,6 +6,7 @@ import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/presentation/states/parking/parking_state.dart';
 import 'package:parkflow/models/parking/parking_lot_model.dart';
 import 'package:parkflow/presentation/widgets/parking/parking_lot_layout.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LotDetailsScreen extends ConsumerWidget {
   const LotDetailsScreen({super.key});
@@ -148,7 +149,12 @@ class LotDetailsScreen extends ConsumerWidget {
         children: [
           Expanded(
             child: OutlinedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                final url =
+                    'https://www.google.com/maps/search/?api=1&query=${lot.latitude},${lot.longitude}';
+                launchUrl(Uri.parse(url));
+              },
+
               icon: const Icon(Icons.directions),
               label: const Text('Navigate'),
               style: OutlinedButton.styleFrom(
