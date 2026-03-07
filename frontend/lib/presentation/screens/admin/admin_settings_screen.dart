@@ -4,6 +4,7 @@ import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/notifiers/settings/settings_notifier.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:parkflow/presentation/widgets/language_picker_button.dart';
 
 class AdminSettingsScreen extends ConsumerWidget {
   const AdminSettingsScreen({super.key});
@@ -69,6 +70,10 @@ class AdminSettingsScreen extends ConsumerWidget {
                                 state: state,
                                 notifier: notifier,
                               ),
+                              const SizedBox(height: 32),
+                              _SectionLabel(l10n.languageLabel),
+                              const SizedBox(height: 12),
+                              _LanguageCard(),
                               const SizedBox(height: 32),
                               _SectionLabel(l10n.logout.toUpperCase()),
                               const SizedBox(height: 12),
@@ -273,6 +278,66 @@ class _SystemControlCard extends StatelessWidget {
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageCard extends StatelessWidget {
+  const _LanguageCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    return Card(
+      elevation: 0,
+      color: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: AppColors.outlineVariant, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: const Icon(
+                Icons.translate_rounded,
+                color: AppColors.primary,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.languageSectionTitle,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    l10n.languageSubtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const LanguagePickerButton(),
           ],
         ),
       ),
@@ -641,7 +706,7 @@ class _LogoutCard extends ConsumerWidget {
           ),
         ),
         subtitle: Text(
-          'Sign out and secure your data',
+          l10n.settingsSignOutSubtitle,
           style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
         ),
         trailing: const Icon(Icons.chevron_right, size: 20),

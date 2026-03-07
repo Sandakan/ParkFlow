@@ -702,4 +702,43 @@ class AppLocalizationsSi extends AppLocalizations {
   @override
   String get permissionDenied =>
       'You don\'t have permission to perform this action.';
+
+  @override
+  String get languageLabel => 'භාෂාව';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageSinhala => 'සිංහල';
+
+  @override
+  String get languageTamil => 'தமிழ்';
+
+  @override
+  String get languageSectionTitle => 'භාෂාව තෝරන්න';
+
+  @override
+  String get languageSubtitle => 'ඔබේ කැමති භාෂාව තෝරන්න';
+
+  @override
+  String get profileParkingHistory => 'නැවැත්වීමේ ඉතිහාසය';
+
+  @override
+  String get profileViewPastBookings => 'පැරණි වෙන් කිරීම් බලන්න';
+
+  @override
+  String get profilePaymentMethods => 'ගෙවීම් ක්‍රම';
+
+  @override
+  String get profileManageCards => 'කාඩ්පත් සහ මුදල් කළමනාකරණය කරන්න';
+
+  @override
+  String get profileNotifications => 'දැනුම්දීම්';
+
+  @override
+  String get profileAlertsUpdates => 'ඇඟවීම් සහ යාවත්කාලීන කිරීම්';
+
+  @override
+  String get settingsSignOutSubtitle => 'පිටවී ඔබේ දත්ත සුරක්ෂිත කරන්න';
 }

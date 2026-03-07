@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'parking_notifier.dart';
+part of 'locale_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,51 +9,50 @@ part of 'parking_notifier.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(ParkingNotifier)
-final parkingProvider = ParkingNotifierProvider._();
+@ProviderFor(AppLocale)
+final appLocaleProvider = AppLocaleProvider._();
 
-final class ParkingNotifierProvider
-    extends $NotifierProvider<ParkingNotifier, ParkingState> {
-  ParkingNotifierProvider._()
+final class AppLocaleProvider extends $NotifierProvider<AppLocale, Locale> {
+  AppLocaleProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'parkingProvider',
+        name: r'appLocaleProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$parkingNotifierHash();
+  String debugGetCreateSourceHash() => _$appLocaleHash();
 
   @$internal
   @override
-  ParkingNotifier create() => ParkingNotifier();
+  AppLocale create() => AppLocale();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(ParkingState value) {
+  Override overrideWithValue(Locale value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<ParkingState>(value),
+      providerOverride: $SyncValueProvider<Locale>(value),
     );
   }
 }
 
-String _$parkingNotifierHash() => r'3628ae7511ce368526672e762d6790139bf776a3';
+String _$appLocaleHash() => r'c0a2f5a3112b93cefd0f89293c23621f2090d3f6';
 
-abstract class _$ParkingNotifier extends $Notifier<ParkingState> {
-  ParkingState build();
+abstract class _$AppLocale extends $Notifier<Locale> {
+  Locale build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<ParkingState, ParkingState>;
+    final ref = this.ref as $Ref<Locale, Locale>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<ParkingState, ParkingState>,
-              ParkingState,
+              AnyNotifier<Locale, Locale>,
+              Locale,
               Object?,
               Object?
             >;

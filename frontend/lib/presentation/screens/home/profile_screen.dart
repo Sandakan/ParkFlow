@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:parkflow/presentation/widgets/language_picker_button.dart';
 import 'package:parkflow/routes/router_provider.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -67,24 +68,25 @@ class ProfileScreen extends ConsumerWidget {
                 _buildSection(context, [
                   _buildListTile(
                     icon: Icons.history,
-                    title: 'Parking History',
-                    subtitle: 'View your past bookings',
+                    title: l10n.profileParkingHistory,
+                    subtitle: l10n.profileViewPastBookings,
                     onTap: () {},
                   ),
                   _buildListTile(
                     icon: Icons.payment,
-                    title: 'Payment Methods',
-                    subtitle: 'Manage cards and cash',
+                    title: l10n.profilePaymentMethods,
+                    subtitle: l10n.profileManageCards,
                     onTap: () {
                       const PaymentMethodsRoute().push(context);
                     },
                   ),
                   _buildListTile(
                     icon: Icons.notifications_none,
-                    title: 'Notifications',
-                    subtitle: 'Alerts and updates',
+                    title: l10n.profileNotifications,
+                    subtitle: l10n.profileAlertsUpdates,
                     onTap: () {},
                   ),
+                  _buildLanguageTile(context),
                 ]),
 
                 const SizedBox(height: 32),
@@ -99,7 +101,7 @@ class ProfileScreen extends ConsumerWidget {
                   child: _buildListTile(
                     icon: Icons.logout,
                     title: l10n.logout,
-                    subtitle: 'Sign out and secure your data',
+                    subtitle: l10n.settingsSignOutSubtitle,
                     color: AppColors.error,
                     onTap: () => ref.read(authProvider.notifier).logout(),
                   ),
@@ -121,6 +123,34 @@ class ProfileScreen extends ConsumerWidget {
         border: Border.all(color: AppColors.outlineVariant),
       ),
       child: Column(children: children),
+    );
+  }
+
+  Widget _buildLanguageTile(BuildContext context) {
+    final l10n = context.l10n;
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      leading: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: const Icon(Icons.translate, color: AppColors.primary, size: 24),
+      ),
+      title: Text(
+        l10n.languageLabel,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+          color: AppColors.black87,
+        ),
+      ),
+      subtitle: Text(
+        l10n.languageSubtitle,
+        style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+      ),
+      trailing: const LanguagePickerButton(),
     );
   }
 

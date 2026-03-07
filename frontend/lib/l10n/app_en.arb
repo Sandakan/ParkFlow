@@ -913,5 +913,57 @@
 	"permissionDenied": "You don't have permission to perform this action.",
 	"@permissionDenied": {
 		"description": "Error message for 403 Forbidden scenarios"
+	},
+	"languageLabel": "Language",
+	"@languageLabel": {
+		"description": "Label for the language selection"
+	},
+	"languageEnglish": "English",
+	"@languageEnglish": {
+		"description": "English language name"
+	},
+	"languageSinhala": "සිංහල",
+	"@languageSinhala": {
+		"description": "Sinhala language name"
+	},
+	"languageTamil": "தமிழ்",
+	"@languageTamil": {
+		"description": "Tamil language name"
+	},
+	"languageSectionTitle": "Display Language",
+	"@languageSectionTitle": {
+		"description": "Title for the language settings section"
+	},
+	"languageSubtitle": "Choose your preferred language",
+	"@languageSubtitle": {
+		"description": "Subtitle for the language selection"
+	},
+	"profileParkingHistory": "Parking History",
+	"@profileParkingHistory": {
+		"description": "Label for the parking history menu item"
+	},
+	"profileViewPastBookings": "View your past bookings",
+	"@profileViewPastBookings": {
+		"description": "Subtitle for the parking history menu item"
+	},
+	"profilePaymentMethods": "Payment Methods",
+	"@profilePaymentMethods": {
+		"description": "Label for the payment methods menu item"
+	},
+	"profileManageCards": "Manage cards and cash",
+	"@profileManageCards": {
+		"description": "Subtitle for the payment methods menu item"
+	},
+	"profileNotifications": "Notifications",
+	"@profileNotifications": {
+		"description": "Label for the notifications menu item"
+	},
+	"profileAlertsUpdates": "Alerts and updates",
+	"@profileAlertsUpdates": {
+		"description": "Subtitle for the notifications menu item"
+	},
+	"settingsSignOutSubtitle": "Sign out and secure your data",
+	"@settingsSignOutSubtitle": {
+		"description": "Subtitle for the logout button"
 	}
 }

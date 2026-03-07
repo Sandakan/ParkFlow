@@ -703,4 +703,44 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get permissionDenied =>
       'You don\'t have permission to perform this action.';
+
+  @override
+  String get languageLabel => 'மொழி';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageSinhala => 'සිංහල';
+
+  @override
+  String get languageTamil => 'தமிழ்';
+
+  @override
+  String get languageSectionTitle => 'மொழியைத் தேர்வு செய்யவும்';
+
+  @override
+  String get languageSubtitle =>
+      'உங்களுக்கு விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get profileParkingHistory => 'பார்க்கிங் வரலாறு';
+
+  @override
+  String get profileViewPastBookings => 'முந்தைய முன்பதிவுகளைப் பார்க்கவும்';
+
+  @override
+  String get profilePaymentMethods => 'பணப்பரிமாற்ற முறைகள்';
+
+  @override
+  String get profileManageCards => 'அட்டைகள் மற்றும் பணத்தை நிர்வகிக்கவும்';
+
+  @override
+  String get profileNotifications => 'அறிவிப்புகள்';
+
+  @override
+  String get profileAlertsUpdates => 'எச்சரிக்கைகள் மற்றும் புதுப்பிப்புகள்';
+
+  @override
+  String get settingsSignOutSubtitle => 'வெளியேறி உங்கள் தரவைப் பாதுகாக்கவும்';
 }

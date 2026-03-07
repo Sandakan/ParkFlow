@@ -23,5 +23,18 @@
 	"passwordMinLength": "கடவுச்சொல் குறைந்தது 6 எழுத்துகள் நீளமாக இருக்க வேண்டும்",
 	"invalidCredentials": "நீங்கள் உள்ளிட்ட மின்னஞ்சல் அல்லது கடவுச்சொல் தவறானது",
 	"adminDashboard": "நிர்வாக முகப்புப்பலகம்",
-	"adminWelcome": "வருக, நிர்வாகி"
+	"adminWelcome": "வருக, நிர்வாகி",
+	"languageLabel": "மொழி",
+	"languageEnglish": "English",
+	"languageSinhala": "සිංහල",
+	"languageTamil": "தமிழ்",
+	"languageSectionTitle": "மொழியைத் தேர்வு செய்யவும்",
+	"languageSubtitle": "உங்களுக்கு விருப்பமான மொழியைத் தேர்ந்தெடுக்கவும்",
+	"profileParkingHistory": "பார்க்கிங் வரலாறு",
+	"profileViewPastBookings": "முந்தைய முன்பதிவுகளைப் பார்க்கவும்",
+	"profilePaymentMethods": "பணப்பரிமாற்ற முறைகள்",
+	"profileManageCards": "அட்டைகள் மற்றும் பணத்தை நிர்வகிக்கவும்",
+	"profileNotifications": "அறிவிப்புகள்",
+	"profileAlertsUpdates": "எச்சரிக்கைகள் மற்றும் புதுப்பிப்புகள்",
+	"settingsSignOutSubtitle": "வெளியேறி உங்கள் தரவைப் பாதுகாக்கவும்"
 }

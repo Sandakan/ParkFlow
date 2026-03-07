@@ -23,5 +23,18 @@
 	"passwordMinLength": "මුරපදය අවම වශයෙන් අක්ෂර 6ක් දිග විය යුතුය",
 	"invalidCredentials": "ඔබ ඇතුළත් කළ විද්‍යුත් තැපෑල හෝ මුරපදය වැරදියි",
 	"adminDashboard": "පරිපාලක උපකරණ පුවරුව",
-	"adminWelcome": "සාදරයෙන් පිළිගනිමු, පරිපාලක"
+	"adminWelcome": "සාදරයෙන් පිළිගනිමු, පරිපාලක",
+	"languageLabel": "භාෂාව",
+	"languageEnglish": "English",
+	"languageSinhala": "සිංහල",
+	"languageTamil": "தமிழ்",
+	"languageSectionTitle": "භාෂාව තෝරන්න",
+	"languageSubtitle": "ඔබේ කැමති භාෂාව තෝරන්න",
+	"profileParkingHistory": "නැවැත්වීමේ ඉතිහාසය",
+	"profileViewPastBookings": "පැරණි වෙන් කිරීම් බලන්න",
+	"profilePaymentMethods": "ගෙවීම් ක්‍රම",
+	"profileManageCards": "කාඩ්පත් සහ මුදල් කළමනාකරණය කරන්න",
+	"profileNotifications": "දැනුම්දීම්",
+	"profileAlertsUpdates": "ඇඟවීම් සහ යාවත්කාලීන කිරීම්",
+	"settingsSignOutSubtitle": "පිටවී ඔබේ දත්ත සුරක්ෂිත කරන්න"
 }

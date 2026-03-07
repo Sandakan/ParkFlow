@@ -6,6 +6,7 @@ import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/repositories/repositories/env_repository.dart';
 import 'package:parkflow/repositories/providers/env_repository_provider.dart';
+import 'package:parkflow/presentation/providers/locale_provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 
@@ -47,6 +48,8 @@ class ParkFlowApp extends ConsumerWidget {
           useMaterial3: true,
         );
 
+        final currentLocale = ref.watch(appLocaleProvider);
+
         return MaterialApp.router(
           title: 'ParkFlow',
           debugShowCheckedModeBanner: false,
@@ -57,6 +60,7 @@ class ParkFlowApp extends ConsumerWidget {
               baseTheme.primaryTextTheme,
             ),
           ),
+          locale: currentLocale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           routerConfig: router,

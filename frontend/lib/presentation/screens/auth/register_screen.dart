@@ -10,6 +10,7 @@ import 'package:parkflow/presentation/widgets/forms/labeled_reactive_text_field.
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:parkflow/presentation/widgets/language_picker_button.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -84,8 +85,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         children: [
                           SizedBox(height: 12.0),
 
-                          // Logo — left aligned
-                          Assets.images.logoWhite.image(height: 48.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Assets.images.logoWhite.image(height: 48.0),
+                              const LanguagePickerButton(),
+                            ],
+                          ),
 
                           SizedBox(height: 32.0),
 

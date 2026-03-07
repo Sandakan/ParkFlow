@@ -1425,6 +1425,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You don\'t have permission to perform this action.'**
   String get permissionDenied;
+
+  /// Label for the language selection
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageLabel;
+
+  /// English language name
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// Sinhala language name
+  ///
+  /// In en, this message translates to:
+  /// **'සිංහල'**
+  String get languageSinhala;
+
+  /// Tamil language name
+  ///
+  /// In en, this message translates to:
+  /// **'தமிழ்'**
+  String get languageTamil;
+
+  /// Title for the language settings section
+  ///
+  /// In en, this message translates to:
+  /// **'Display Language'**
+  String get languageSectionTitle;
+
+  /// Subtitle for the language selection
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your preferred language'**
+  String get languageSubtitle;
+
+  /// Label for the parking history menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Parking History'**
+  String get profileParkingHistory;
+
+  /// Subtitle for the parking history menu item
+  ///
+  /// In en, this message translates to:
+  /// **'View your past bookings'**
+  String get profileViewPastBookings;
+
+  /// Label for the payment methods menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Methods'**
+  String get profilePaymentMethods;
+
+  /// Subtitle for the payment methods menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Manage cards and cash'**
+  String get profileManageCards;
+
+  /// Label for the notifications menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get profileNotifications;
+
+  /// Subtitle for the notifications menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts and updates'**
+  String get profileAlertsUpdates;
+
+  /// Subtitle for the logout button
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out and secure your data'**
+  String get settingsSignOutSubtitle;
 }
 
 class _AppLocalizationsDelegate

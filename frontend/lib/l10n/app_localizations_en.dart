@@ -702,4 +702,43 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get permissionDenied =>
       'You don\'t have permission to perform this action.';
+
+  @override
+  String get languageLabel => 'Language';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageSinhala => 'සිංහල';
+
+  @override
+  String get languageTamil => 'தமிழ்';
+
+  @override
+  String get languageSectionTitle => 'Display Language';
+
+  @override
+  String get languageSubtitle => 'Choose your preferred language';
+
+  @override
+  String get profileParkingHistory => 'Parking History';
+
+  @override
+  String get profileViewPastBookings => 'View your past bookings';
+
+  @override
+  String get profilePaymentMethods => 'Payment Methods';
+
+  @override
+  String get profileManageCards => 'Manage cards and cash';
+
+  @override
+  String get profileNotifications => 'Notifications';
+
+  @override
+  String get profileAlertsUpdates => 'Alerts and updates';
+
+  @override
+  String get settingsSignOutSubtitle => 'Sign out and secure your data';
 }
