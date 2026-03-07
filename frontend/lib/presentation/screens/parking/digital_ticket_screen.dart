@@ -177,7 +177,7 @@ class DigitalTicketScreen extends ConsumerWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 Text(
-                  '₹ ${res.totalPrice.toStringAsFixed(2)}',
+                  'LKR ${res.totalPrice.toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 24,

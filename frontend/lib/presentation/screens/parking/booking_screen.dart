@@ -398,7 +398,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 style: TextStyle(color: AppColors.textSecondary),
               ),
               Text(
-                '₹ ${pricePerHour.toStringAsFixed(2)}/hr',
+                'LKR ${pricePerHour.toStringAsFixed(2)}/hr',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
@@ -426,7 +426,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
               ),
               Text(
-                '₹ ${totalPrice.toStringAsFixed(2)}',
+                'LKR ${totalPrice.toStringAsFixed(2)}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 24,
