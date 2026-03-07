@@ -9,6 +9,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/models/parking/parking_lot_model.dart';
 import 'package:parkflow/models/parking/reservation_model.dart';
+import 'package:parkflow/routes/router_provider.dart';
+import 'package:parkflow/models/parking/parking_slot_model.dart';
 
 class DigitalTicketScreen extends ConsumerWidget {
   final String reservationId;
@@ -33,16 +35,33 @@ class DigitalTicketScreen extends ConsumerWidget {
       ),
       body: reservationsAsync.when(
         data: (reservations) {
-          final res = reservations.firstWhere((r) => r.id == reservationId);
-          final slotName = ref
-              .read(parkingProvider)
-              .slots
-              .firstWhere(
-                (s) => s.id == res.slotId,
-                orElse: () => throw 'Slot not found',
-              )
-              .name;
-          final lot = ref.read(parkingProvider).lot!;
+          final res = reservations.cast<ReservationModel?>().firstWhere(
+            (r) => r?.id == reservationId,
+            orElse: () => null,
+          );
+          if (res == null) {
+            return const Center(
+              child: Text(
+                'Reservation not found',
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }
+
+          final parkingState = ref.watch(parkingProvider);
+          final slot = parkingState.slots.cast<ParkingSlotModel?>().firstWhere(
+            (s) => s?.id == res.slotId,
+            orElse: () => null,
+          );
+          final slotName =
+              slot?.name ?? 'S-${res.slotId.substring(res.slotId.length - 4)}';
+          final lot = parkingState.lot;
+
+          if (lot == null) {
+            return const Center(
+              child: CircularProgressIndicator(color: AppColors.white),
+            );
+          }
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24),
@@ -71,7 +90,7 @@ class DigitalTicketScreen extends ConsumerWidget {
                     const SizedBox(height: 48),
                     _buildTicketCard(res, lot, slotName),
                     const SizedBox(height: 32),
-                    _buildNavigationButton(lot),
+                    _buildActionButtons(context, lot),
                     const SizedBox(height: 48),
                   ],
                 ),
@@ -207,26 +226,45 @@ class DigitalTicketScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildNavigationButton(ParkingLotModel lot) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: () {
-          final url =
-              'https://www.google.com/maps/search/?api=1&query=${lot.latitude},${lot.longitude}';
-          launchUrl(Uri.parse(url));
-        },
-        icon: const Icon(Icons.directions),
-        label: const Text('Navigate to Lot'),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.white,
-          side: const BorderSide(color: AppColors.white, width: 2),
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+  Widget _buildActionButtons(BuildContext context, ParkingLotModel lot) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () => const HomeRoute().go(context),
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            label: const Text('Book Again'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.white,
+              side: const BorderSide(color: AppColors.white, width: 2),
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
           ),
         ),
-      ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () {
+              final url =
+                  'https://www.google.com/maps/search/?api=1&query=${lot.latitude},${lot.longitude}';
+              launchUrl(Uri.parse(url));
+            },
+            icon: const Icon(Icons.directions_outlined),
+            label: const Text('Navigate'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.white,
+              side: const BorderSide(color: AppColors.white, width: 2),
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

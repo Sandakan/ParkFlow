@@ -22,6 +22,7 @@ import 'package:parkflow/repositories/entities/settings/update_inference_setting
 import 'package:parkflow/core/network/entities/get_parking_suggestions_response_entity.dart';
 import 'package:parkflow/repositories/entities/reservation/create_reservation_request_entity.dart';
 import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
+import 'package:parkflow/core/network/entities/slot_availability_response_entity.dart';
 
 abstract class RemoteRepositoryInterface {
   Future<List<ReservationModel>> getMyReservations({String? accessToken});
@@ -125,6 +126,20 @@ abstract class RemoteRepositoryInterface {
 
   Future<GetParkingSuggestionsResponseEntity> getParkingSuggestions(
     String lotId, {
+    String? accessToken,
+  });
+
+  Future<SlotAvailabilityResponseEntity> checkSlotAvailability(
+    String slotId, {
+    required DateTime startTime,
+    required int durationMinutes,
+    String? accessToken,
+  });
+
+  Future<SlotAvailabilityResponseEntity> checkLotAvailability(
+    String lotId, {
+    required DateTime startTime,
+    required int durationMinutes,
     String? accessToken,
   });
 }

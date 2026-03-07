@@ -31,6 +31,7 @@ const _$AppStatusCodeEnumMap = {
   AppStatusCode.reservationSlotOccupied: 'RESERVATION_SLOT_OCCUPIED',
   AppStatusCode.reservationLotNotFound: 'RESERVATION_LOT_NOT_FOUND',
   AppStatusCode.reservationCreated: 'RESERVATION_CREATED',
+  AppStatusCode.reservationSlotTimeConflict: 'RESERVATION_SLOT_TIME_CONFLICT',
   AppStatusCode.cameraNotFound: 'CAMERA_NOT_FOUND',
   AppStatusCode.cameraRtspNotConfigured: 'CAMERA_RTSP_NOT_CONFIGURED',
   AppStatusCode.cameraWebrtcFailed: 'CAMERA_WEBRTC_FAILED',

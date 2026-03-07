@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:parkflow/utils/helpers/talker.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
@@ -12,6 +14,8 @@ import 'package:parkflow/presentation/notifiers/parking/reservation_notifier.dar
 import 'package:intl/intl.dart';
 import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/presentation/widgets/common/app_buttons.dart';
+import 'package:parkflow/services/reservation_service.dart';
+import 'package:parkflow/core/network/entities/slot_availability_response_entity.dart';
 
 class BookingScreen extends ConsumerStatefulWidget {
   const BookingScreen({super.key});
@@ -21,9 +25,12 @@ class BookingScreen extends ConsumerStatefulWidget {
 }
 
 class _BookingScreenState extends ConsumerState<BookingScreen> {
-  bool _isSubmitting = false;
   final form = fb.group({
     'vehicle': FormControl<int>(validators: [Validators.required]),
+    'arrival_date': FormControl<DateTime>(
+      value: DateTime.now(),
+      validators: [Validators.required],
+    ),
     'arrival_time': FormControl<DateTime>(
       value: DateTime.now().add(const Duration(minutes: 15)),
       validators: [Validators.required],
@@ -37,10 +44,112 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     ),
   });
 
+  bool _isSlotAvailable = true;
+  bool _isCheckingAvailability = false;
+  bool _hasCheckedAvailability = false;
+  String? _suggestedSlotId;
+  Timer? _debounceTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    debugPrint('BookingScreen: initState - Setting up form listeners');
+    form.valueChanges.listen((value) {
+      debugPrint('BookingScreen: form.valueChanges emitted: $value');
+      _onDataChanged();
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    super.dispose();
+  }
+
+  void _onDataChanged() {
+    setState(() {
+      _hasCheckedAvailability = false;
+      _isSlotAvailable = true;
+      _suggestedSlotId = null;
+    });
+
+    _debounceCheckAvailability();
+  }
+
+  void _debounceCheckAvailability() {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(
+      const Duration(milliseconds: 500),
+      _checkAvailability,
+    );
+  }
+
+  Future<void> _checkAvailability() async {
+    final mode = form.control('slot_selection_mode').value as String?;
+    final slotId = form.control('selected_slot_id').value as String?;
+    final date = form.control('arrival_date').value as DateTime?;
+    final time = form.control('arrival_time').value as DateTime?;
+    final duration = form.control('duration').value as int?;
+
+    if (date == null || time == null || duration == null) return;
+    if (mode == 'manual' && slotId == null) return;
+
+    final startTime = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+
+    setState(() => _isCheckingAvailability = true);
+
+    try {
+      final lotId = ref.read(parkingProvider).lot?.id;
+      if (lotId == null) throw Exception('No lot selected');
+
+      final SlotAvailabilityResponseEntity response;
+      if (mode == 'manual') {
+        response = await ref
+            .read(reservationServiceProvider)
+            .checkSlotAvailability(
+              slotId: slotId!,
+              startTime: startTime,
+              durationMinutes: duration,
+            );
+      } else {
+        response = await ref
+            .read(reservationServiceProvider)
+            .checkLotAvailability(
+              lotId: lotId,
+              startTime: startTime,
+              durationMinutes: duration,
+            );
+      }
+
+      if (mounted) {
+        setState(() {
+          _isSlotAvailable = response.available;
+          _isCheckingAvailability = false;
+          _hasCheckedAvailability = true;
+          _suggestedSlotId = response.slotId;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isCheckingAvailability = false;
+          _isSlotAvailable = true;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final parkingState = ref.watch(parkingProvider);
+    final reservationState = ref.watch(reservationNotifierProvider);
     final user = ref.watch(authProvider).user;
     final lot = parkingState.lot;
 
@@ -106,6 +215,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     isRequired: true,
                   ),
                   const SizedBox(height: 12),
+                  _buildDatePicker(context),
+                  const SizedBox(height: 16),
                   _buildTimePickers(context),
                   const SizedBox(height: 32),
                   _SectionHeader(
@@ -125,8 +236,22 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   _buildPaymentPicker(),
                   const SizedBox(height: 48),
                   _buildPriceSummary(lot.pricePerHour),
+                  const SizedBox(height: 16),
+                  _buildConflictCheckIndicator(),
                   const SizedBox(height: 24),
-                  _buildSubmitButton(),
+                  if (!_isSlotAvailable) ...[
+                    _buildAvailabilityWarning(),
+                    const SizedBox(height: 16),
+                  ] else if (_hasCheckedAvailability &&
+                      !_isCheckingAvailability) ...[
+                    _buildAvailabilitySuccess(),
+                    const SizedBox(height: 16),
+                  ],
+                  if (reservationState is AsyncError) ...[
+                    _buildReservationError(reservationState.error!),
+                    const SizedBox(height: 16),
+                  ],
+                  _buildSubmitButton(reservationState.isLoading),
                   const SizedBox(height: 32),
                 ],
               ),
@@ -260,15 +385,47 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     );
   }
 
+  Widget _buildDatePicker(BuildContext context) {
+    return ReactiveValueListenableBuilder<DateTime>(
+      formControlName: 'arrival_date',
+      builder: (context, control, child) {
+        return SizedBox(
+          width: double.infinity,
+          child: _PickerTile(
+            label: 'Arrival Date',
+            isRequired: true,
+            value: DateFormat(
+              'EEEE, MMMM d, yyyy',
+            ).format(control.value ?? DateTime.now()),
+            onTap: () async {
+              final date = await showDatePicker(
+                context: context,
+                initialDate: control.value ?? DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime.now().add(const Duration(days: 30)),
+              );
+              if (date != null) {
+                control.updateValue(date);
+              }
+            },
+          ),
+        );
+      },
+    );
+  }
+
   IconData _getVehicleIcon(String type) {
     final t = type.toLowerCase();
     if (t.contains('car')) return Icons.directions_car_rounded;
-    if (t.contains('bike') || t.contains('cycle'))
+    if (t.contains('bike') || t.contains('cycle')) {
       return Icons.pedal_bike_rounded;
-    if (t.contains('three') || t.contains('tuk'))
+    }
+    if (t.contains('three') || t.contains('tuk')) {
       return Icons.electric_rickshaw_rounded;
-    if (t.contains('truck') || t.contains('van'))
+    }
+    if (t.contains('truck') || t.contains('van')) {
       return Icons.local_shipping_rounded;
+    }
     return Icons.directions_bus_rounded;
   }
 
@@ -293,12 +450,14 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     ),
                   );
                   if (time != null) {
-                    final now = DateTime.now();
+                    final selectedDate =
+                        form.control('arrival_date').value as DateTime? ??
+                        DateTime.now();
                     control.updateValue(
                       DateTime(
-                        now.year,
-                        now.month,
-                        now.day,
+                        selectedDate.year,
+                        selectedDate.month,
+                        selectedDate.day,
                         time.hour,
                         time.minute,
                       ),
@@ -379,9 +538,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               child: _ChoiceTile(
                 label: 'Smart Suggestion',
                 isSelected: form.control('slot_selection_mode').value == 'auto',
-                onTap: () => setState(
-                  () => form.control('slot_selection_mode').updateValue('auto'),
-                ),
+                onTap: () =>
+                    form.control('slot_selection_mode').updateValue('auto'),
               ),
             ),
             const SizedBox(width: 16),
@@ -390,14 +548,32 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 label: 'Manual Selection',
                 isSelected:
                     form.control('slot_selection_mode').value == 'manual',
-                onTap: () => setState(
-                  () =>
-                      form.control('slot_selection_mode').updateValue('manual'),
-                ),
+                onTap: () =>
+                    form.control('slot_selection_mode').updateValue('manual'),
               ),
             ),
           ],
         ),
+        if (form.control('slot_selection_mode').value == 'auto' &&
+            _hasCheckedAvailability &&
+            _isSlotAvailable &&
+            _suggestedSlotId != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 12),
+            child: Row(
+              children: [
+                Icon(Icons.auto_awesome, size: 16, color: AppColors.primary),
+                const SizedBox(width: 8),
+                Text(
+                  'Suggested Slot: $_suggestedSlotId',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
         if (form.control('slot_selection_mode').value == 'manual')
           ...?_buildManualSlotLayout(parkingState),
       ],
@@ -413,10 +589,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         isLoading: parkingState.isLoading,
         selectedSlotId: form.control('selected_slot_id').value as String?,
         onSlotSelected: (slot) {
+          debugPrint('BookingScreen: onSlotSelected - SlotId: ${slot.id}');
           if (!slot.isOccupied) {
-            setState(
-              () => form.control('selected_slot_id').updateValue(slot.id),
-            );
+            form.control('selected_slot_id').updateValue(slot.id);
           }
         },
       ),
@@ -430,9 +605,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           child: _ChoiceTile(
             label: 'Card',
             isSelected: form.control('payment_method').value == 'card',
-            onTap: () => setState(
-              () => form.control('payment_method').updateValue('card'),
-            ),
+            onTap: () => form.control('payment_method').updateValue('card'),
             icon: Icons.credit_card_outlined,
           ),
         ),
@@ -441,9 +614,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           child: _ChoiceTile(
             label: 'Cash',
             isSelected: form.control('payment_method').value == 'cash',
-            onTap: () => setState(
-              () => form.control('payment_method').updateValue('cash'),
-            ),
+            onTap: () => form.control('payment_method').updateValue('cash'),
             icon: Icons.money,
           ),
         ),
@@ -515,11 +686,129 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     );
   }
 
-  Widget _buildSubmitButton() {
+  Widget _buildConflictCheckIndicator() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Row(
+        children: [
+          Icon(
+            _isCheckingAvailability ? Icons.sync : Icons.info_outline,
+            size: 14,
+            color: _isCheckingAvailability
+                ? AppColors.primary
+                : AppColors.textSecondary,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              _isCheckingAvailability
+                  ? 'Verifying slot availability...'
+                  : 'Changing selections will automatically check for booking conflicts.',
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 11,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAvailabilitySuccess() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.green.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.check_circle_outline, color: Colors.green, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'This slot is available for the selected time window!',
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAvailabilityWarning() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.error.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.warning_amber_rounded, color: AppColors.error, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              'This slot is already booked for the selected time window. Please choose another slot or time.',
+              style: TextStyle(
+                color: AppColors.error,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReservationError(Object error) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.error.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.error_outline, color: AppColors.error, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              error.toString().replaceAll('Exception: ', ''),
+              style: TextStyle(
+                color: AppColors.error,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton(bool isLoading) {
+    final bool isFormValid =
+        form.valid &&
+        _hasCheckedAvailability &&
+        !_isCheckingAvailability &&
+        _isSlotAvailable;
+
     return AppPrimaryButton(
       label: 'Confirm Booking',
-      isLoading: _isSubmitting,
-      onPressed: form.valid ? _submitBooking : null,
+      onPressed: isFormValid ? _submitBooking : null,
+      isLoading: isLoading,
+      width: double.infinity,
     );
   }
 
@@ -527,49 +816,45 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     final user = ref.read(authProvider).user;
     if (user == null) return;
 
-    setState(() => _isSubmitting = true);
+    // Capture context variables to prevent "ref/context not available after unmount"
+    final lotProvider = ref.read(parkingProvider);
+    final notifier = ref.read(reservationNotifierProvider.notifier);
 
     try {
       final vehicleIndex = form.control('vehicle').value as int;
       final vehicle = user.vehicles[vehicleIndex];
-      final startTime = form.control('arrival_time').value as DateTime;
+      final date = form.control('arrival_date').value as DateTime;
+      final time = form.control('arrival_time').value as DateTime;
       final duration = form.control('duration').value as int;
+
+      final startTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
       final paymentMethod = form.control('payment_method').value as String;
       final slotId = form.control('selected_slot_id').value as String?;
 
-      final lotId = ref.read(parkingProvider).lot?.id;
+      final lotId = lotProvider.lot?.id;
 
-      final reservation = await ref
-          .read(reservationNotifierProvider.notifier)
-          .createReservation(
-            slotId: slotId ?? 'auto',
-            lotId: lotId,
-            vehicle: vehicle,
-            startTime: startTime,
-            durationMinutes: duration,
-            paymentMethod: paymentMethod,
-          );
+      final reservation = await notifier.createReservation(
+        slotId: slotId ?? 'auto',
+        lotId: lotId,
+        vehicle: vehicle,
+        startTime: startTime,
+        durationMinutes: duration,
+        paymentMethod: paymentMethod,
+      );
 
       if (!mounted) return;
 
       if (reservation != null) {
         DigitalTicketRoute(reservationId: reservation.id).go(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to create reservation. Please try again.'),
-          ),
-        );
       }
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error: $e')));
-    } finally {
-      if (mounted) {
-        setState(() => _isSubmitting = false);
-      }
+    } catch (e, stackTrace) {
+      talker.handle(e, stackTrace, 'BookingScreen: Error during submission');
     }
   }
 }
@@ -610,7 +895,7 @@ class _SectionHeader extends StatelessWidget {
           ),
         ),
         const Spacer(),
-        if (action != null) action!,
+        action ?? const SizedBox.shrink(),
       ],
     );
   }

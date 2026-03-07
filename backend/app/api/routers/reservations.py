@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.api.deps import get_current_user
 from app.schemas.response import APIResponse, ResponseCode
 from app.schemas.reservation import CreateReservationRequest, ReservationResponse
+from pydantic import BaseModel
 from app.models.reservation import ReservationInDB
 from app.core.database import db
 from datetime import datetime, timedelta, timezone
@@ -10,6 +11,49 @@ import uuid
 from bson import ObjectId
 
 router = APIRouter()
+
+
+class SlotAvailabilityResponse(BaseModel):
+    available: bool
+    slot_id: str | None = None
+
+
+async def _has_overlapping_reservation(
+    slot_id: str, start_time: datetime, end_time: datetime
+) -> bool:
+    # Overlap condition: (start1 < end2) AND (end1 > start2)
+    count = await db.client["parkflow"].reservations.count_documents(
+        {
+            "slot_id": slot_id,
+            "status": "active",
+            "deleted_at": None,
+            "$and": [
+                {"start_time": {"$lt": end_time}},
+                {"end_time": {"$gt": start_time}},
+            ],
+        }
+    )
+    return count > 0
+
+
+async def _find_available_slot(
+    lot_id: str, start_time: datetime, end_time: datetime
+) -> Any:
+    """
+    Finds a slot in the given lot that has no overlapping reservations
+    for the requested time window.
+    """
+    slots_cursor = db.client["parkflow"].parking_slots.find(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
+    slots = await slots_cursor.to_list(length=1000)
+
+    for slot in slots:
+        slot_id_str = str(slot["_id"])
+        if not await _has_overlapping_reservation(slot_id_str, start_time, end_time):
+            return slot
+
+    return None
 
 
 @router.post("/", response_model=APIResponse[ReservationResponse])
@@ -29,12 +73,12 @@ async def create_reservation(
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
 
-        slot = await db.client["parkflow"].parking_slots.find_one(
-            {"lot_id": request.lot_id, "status": "available", "deleted_at": None}
-        )
+        end_time = request.start_time + timedelta(minutes=request.duration_minutes)
+        slot = await _find_available_slot(request.lot_id, request.start_time, end_time)
+
         if not slot:
             return APIResponse.error_response(
-                message="No available slots in this lot",
+                message="No available slots in this lot for the selected time window",
                 code=ResponseCode.RESERVATION_NO_AVAILABLE_SLOTS,
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
@@ -60,6 +104,16 @@ async def create_reservation(
                 code=ResponseCode.RESERVATION_SLOT_OCCUPIED,
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
+
+    end_time = request.start_time + timedelta(minutes=request.duration_minutes)
+    if await _has_overlapping_reservation(
+        request.slot_id, request.start_time, end_time
+    ):
+        return APIResponse.error_response(
+            message="This slot is already booked for the selected time window",
+            code=ResponseCode.RESERVATION_SLOT_TIME_CONFLICT,
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
 
     lot = await db.client["parkflow"].parking_lots.find_one(
         {"_id": ObjectId(slot["lot_id"])}
@@ -156,4 +210,56 @@ async def get_my_reservations(
 
     return APIResponse.success_response(
         message="Reservations retrieved", code=ResponseCode.SUCCESS, data=serialized
+    )
+
+
+@router.get(
+    "/slots/{slot_id}/availability",
+    response_model=APIResponse[SlotAvailabilityResponse],
+)
+async def check_slot_availability(
+    slot_id: str,
+    start_time: datetime,
+    duration_minutes: int,
+    current_user: Any = Depends(get_current_user),
+) -> Any:
+    """
+    Check if a specific slot is available for a given time window.
+    """
+    end_time = start_time + timedelta(minutes=duration_minutes)
+    is_overlapping = await _has_overlapping_reservation(slot_id, start_time, end_time)
+
+    return APIResponse.success_response(
+        message="Availability checked",
+        code=ResponseCode.SUCCESS,
+        data=SlotAvailabilityResponse(
+            available=not is_overlapping,
+            slot_id=slot_id if not is_overlapping else None,
+        ),
+    )
+
+
+@router.get(
+    "/lots/{lot_id}/availability",
+    response_model=APIResponse[SlotAvailabilityResponse],
+)
+async def check_lot_availability(
+    lot_id: str,
+    start_time: datetime,
+    duration_minutes: int,
+    current_user: Any = Depends(get_current_user),
+) -> Any:
+    """
+    Check if any slot is available in the given lot for a given time window.
+    """
+    end_time = start_time + timedelta(minutes=duration_minutes)
+    slot = await _find_available_slot(lot_id, start_time, end_time)
+
+    return APIResponse.success_response(
+        message="Lot availability checked",
+        code=ResponseCode.SUCCESS,
+        data=SlotAvailabilityResponse(
+            available=slot is not None,
+            slot_id=str(slot["_id"]) if slot else None,
+        ),
     )

@@ -59,6 +59,8 @@ enum AppStatusCode {
   reservationLotNotFound,
   @JsonValue('RESERVATION_CREATED')
   reservationCreated,
+  @JsonValue('RESERVATION_SLOT_TIME_CONFLICT')
+  reservationSlotTimeConflict,
   // Cameras
   @JsonValue('CAMERA_NOT_FOUND')
   cameraNotFound,
@@ -119,6 +121,8 @@ enum AppStatusCode {
         return l10n.reservationLotNotFound;
       case AppStatusCode.reservationLotIdRequired:
         return l10n.reservationLotIdRequired;
+      case AppStatusCode.reservationSlotTimeConflict:
+        return 'This slot is already booked for the selected time window';
       case AppStatusCode.cameraNotFound:
         return l10n.cameraNotFound;
       case AppStatusCode.cameraRtspNotConfigured:

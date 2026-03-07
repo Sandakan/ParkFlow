@@ -6,6 +6,7 @@ import 'package:parkflow/repositories/providers/remote_repository_provider.dart'
 import 'package:parkflow/repositories/entities/reservation/create_reservation_request_entity.dart';
 import 'package:parkflow/models/auth/vehicle_model.dart';
 import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
+import 'package:parkflow/core/network/entities/slot_availability_response_entity.dart';
 
 part 'reservation_service.g.dart';
 
@@ -41,6 +42,32 @@ class ReservationService {
 
     return _remoteRepository.createReservation(
       request,
+      accessToken: await _getToken(),
+    );
+  }
+
+  Future<SlotAvailabilityResponseEntity> checkSlotAvailability({
+    required String slotId,
+    required DateTime startTime,
+    required int durationMinutes,
+  }) async {
+    return _remoteRepository.checkSlotAvailability(
+      slotId,
+      startTime: startTime,
+      durationMinutes: durationMinutes,
+      accessToken: await _getToken(),
+    );
+  }
+
+  Future<SlotAvailabilityResponseEntity> checkLotAvailability({
+    required String lotId,
+    required DateTime startTime,
+    required int durationMinutes,
+  }) async {
+    return _remoteRepository.checkLotAvailability(
+      lotId,
+      startTime: startTime,
+      durationMinutes: durationMinutes,
       accessToken: await _getToken(),
     );
   }

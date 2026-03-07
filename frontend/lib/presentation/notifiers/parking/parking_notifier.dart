@@ -30,10 +30,13 @@ class ParkingNotifier extends _$ParkingNotifier {
 
   Future<void> _init() async {
     try {
-      _lastPosition = await _determinePosition();
+      final position = await _determinePosition();
+      if (!ref.mounted) return;
+      _lastPosition = position;
       state = state.copyWith(userPosition: _lastPosition);
       await fetchLots();
     } catch (e) {
+      if (!ref.mounted) return;
       if (state.isLoading) {
         state = state.copyWith(isLoading: false, error: ErrorHandler.handle(e));
       }

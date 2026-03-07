@@ -28,6 +28,7 @@ import 'package:parkflow/core/network/entities/get_parking_suggestions_response_
 import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/repositories/entities/reservation/create_reservation_request_entity.dart';
 import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
+import 'package:parkflow/core/network/entities/slot_availability_response_entity.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -813,6 +814,66 @@ class RemoteRepository implements RemoteRepositoryInterface {
     try {
       final data = ReservationResponseEntity.fromJson(validatedResponse.data);
       return data;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<SlotAvailabilityResponseEntity> checkSlotAvailability(
+    String slotId, {
+    required DateTime startTime,
+    required int durationMinutes,
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'reservations/slots/$slotId/availability',
+      queryParameters: {
+        'start_time': startTime.toIso8601String(),
+        'duration_minutes': durationMinutes,
+      },
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return SlotAvailabilityResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<SlotAvailabilityResponseEntity> checkLotAvailability(
+    String lotId, {
+    required DateTime startTime,
+    required int durationMinutes,
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'reservations/lots/$lotId/availability',
+      queryParameters: {
+        'start_time': startTime.toIso8601String(),
+        'duration_minutes': durationMinutes,
+      },
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return SlotAvailabilityResponseEntity.fromJson(validatedResponse.data);
     } catch (e, stackTrace) {
       throw AppException(
         AppStatusCode.invalidResponse,
