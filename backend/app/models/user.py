@@ -6,7 +6,7 @@ import uuid
 
 class VehicleDetails(BaseModel):
     plate_number: str
-    type: Literal["car", "three-wheeler", "bike"]
+    type: Literal["car", "three-wheeler", "bike", "truck"]
 
 
 class PaymentMethod(BaseModel):

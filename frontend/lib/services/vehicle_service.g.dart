@@ -48,4 +48,4 @@ final class VehicleServiceProvider
   }
 }
 
-String _$vehicleServiceHash() => r'ab3fc9f894bce1f56f1f27c0cb13814581b1dbf1';
+String _$vehicleServiceHash() => r'd3a8d12881cae88f296656f9611e89d7ddc740e0';

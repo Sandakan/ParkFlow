@@ -11,15 +11,6 @@ class HomeRoute extends GoRouteData with $HomeRoute {
   }
 }
 
-class LotDetailsRoute extends GoRouteData with $LotDetailsRoute {
-  const LotDetailsRoute();
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const LotDetailsScreen();
-  }
-}
-
 @TypedGoRoute<BookingRoute>(path: BookingRoute.path)
 class BookingRoute extends GoRouteData with $BookingRoute {
   const BookingRoute();

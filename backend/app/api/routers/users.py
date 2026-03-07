@@ -67,9 +67,10 @@ async def update_user(
     Users can update their own profile, admins can update any profile.
     """
     if current_user.user_id != user_id and current_user.role != "admin":
-        raise HTTPException(
+        return APIResponse.error_response(
+            message="Not enough permissions to update other users",
+            code=ResponseCode.PERMISSION_DENIED,
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not enough permissions to update other users",
         )
     user = await user_service.update_user(user_id=user_id, user_in=user_in)
     return APIResponse.success_response(
@@ -90,9 +91,10 @@ async def add_vehicle(
     current_user: UserInDB = Depends(get_current_user),
 ) -> Any:
     if any(v.plate_number == vehicle_in.plate_number for v in current_user.vehicles):
-        raise HTTPException(
-            status_code=400,
-            detail="Vehicle with this license plate already exists",
+        return APIResponse.error_response(
+            message="Vehicle with this license plate already exists",
+            code=ResponseCode.VEHICLE_ALREADY_EXISTS,
+            status_code=status.HTTP_400_BAD_REQUEST,
         )
 
     current_user.vehicles.append(vehicle_in)
@@ -118,9 +120,10 @@ async def remove_vehicle(
 ) -> Any:
     new_vehicles = [v for v in current_user.vehicles if v.plate_number != plate_number]
     if len(new_vehicles) == len(current_user.vehicles):
-        raise HTTPException(
-            status_code=404,
-            detail="Vehicle not found",
+        return APIResponse.error_response(
+            message="Vehicle not found",
+            code=ResponseCode.VEHICLE_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
         )
 
     user = await user_service.update_user(
@@ -175,9 +178,10 @@ async def remove_payment_method(
 ) -> Any:
     new_methods = [pm for pm in current_user.payment_methods if pm.id != method_id]
     if len(new_methods) == len(current_user.payment_methods):
-        raise HTTPException(
-            status_code=404,
-            detail="Payment method not found",
+        return APIResponse.error_response(
+            message="Payment method not found",
+            code=ResponseCode.PAYMENT_METHOD_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
         )
 
     if (
@@ -208,9 +212,10 @@ async def set_default_payment_method(
 ) -> Any:
     method_exists = any(pm.id == method_id for pm in current_user.payment_methods)
     if not method_exists:
-        raise HTTPException(
-            status_code=404,
-            detail="Payment method not found",
+        return APIResponse.error_response(
+            message="Payment method not found",
+            code=ResponseCode.PAYMENT_METHOD_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
         )
 
     for pm in current_user.payment_methods:

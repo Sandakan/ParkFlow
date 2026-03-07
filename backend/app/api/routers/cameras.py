@@ -315,7 +315,7 @@ async def webrtc_offer(
     if not isinstance(rtsp_url, str) or not rtsp_url:
         return APIResponse.error_response(
             message="Camera RTSP URL not configured",
-            code=ResponseCode.ERROR,
+            code=ResponseCode.CAMERA_RTSP_NOT_CONFIGURED,
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -357,7 +357,7 @@ async def webrtc_offer(
         if resp.status_code not in (200, 201):
             return APIResponse.error_response(
                 message=f"RTSP Server WebRTC failed with {resp.status_code}: {resp.text}",
-                code=ResponseCode.ERROR,
+                code=ResponseCode.CAMERA_WEBRTC_FAILED,
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
@@ -10,6 +11,7 @@ import 'package:parkflow/presentation/widgets/parking/parking_lot_layout.dart';
 import 'package:parkflow/presentation/notifiers/parking/reservation_notifier.dart';
 import 'package:intl/intl.dart';
 import 'package:parkflow/routes/router_provider.dart';
+import 'package:parkflow/presentation/widgets/common/app_buttons.dart';
 
 class BookingScreen extends ConsumerStatefulWidget {
   const BookingScreen({super.key});
@@ -19,6 +21,7 @@ class BookingScreen extends ConsumerStatefulWidget {
 }
 
 class _BookingScreenState extends ConsumerState<BookingScreen> {
+  bool _isSubmitting = false;
   final form = fb.group({
     'vehicle': FormControl<int>(validators: [Validators.required]),
     'arrival_time': FormControl<DateTime>(
@@ -36,6 +39,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final parkingState = ref.watch(parkingProvider);
     final user = ref.watch(authProvider).user;
     final lot = parkingState.lot;
@@ -57,11 +61,15 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           children: [
             Text(
               lot.name,
-              style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w900,
+              ),
             ),
             Text(
               lot.address,
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: AppColors.textSecondary,
+              ),
             ),
           ],
         ),
@@ -84,7 +92,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     action: user?.vehicles.isEmpty ?? true
                         ? TextButton(
                             onPressed: () =>
-                                const MyVehicleRoute().push(context),
+                                const AddVehicleRoute().push(context),
                             child: const Text('Add Vehicle'),
                           )
                         : null,
@@ -132,13 +140,33 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   Widget _buildVehiclePicker(UserModel? user) {
     if (user == null || user.vehicles.isEmpty) {
       return Container(
-        padding: const EdgeInsets.all(24),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
         decoration: BoxDecoration(
           color: AppColors.surfaceVariant.withValues(alpha: 0.3),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(color: AppColors.outlineVariant),
         ),
-        child: const Center(child: Text('Please add a vehicle to continue')),
+        child: Column(
+          children: [
+            Icon(
+              Icons.directions_car_outlined,
+              size: 48,
+              color: AppColors.outlineVariant,
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'No vehicles found',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Add a vehicle to proceed with booking',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       );
     }
 
@@ -146,22 +174,25 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
       formControlName: 'vehicle',
       builder: (context, control, child) {
         return SizedBox(
-          height: 100,
-          child: ListView.builder(
+          height: 90,
+          child: ListView.separated(
             scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
             itemCount: user.vehicles.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 16),
             itemBuilder: (context, index) {
               final v = user.vehicles[index];
               final isSelected = control.value == index;
               return GestureDetector(
                 onTap: () => control.updateValue(index),
-                child: Container(
-                  width: 160,
-                  margin: const EdgeInsets.only(right: 12),
-                  padding: const EdgeInsets.all(16),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 180,
+                  padding: const EdgeInsets.all(20),
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: isSelected ? AppColors.primary : AppColors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(24),
                     border: Border.all(
                       color: isSelected
                           ? AppColors.primary
@@ -169,22 +200,53 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                       width: 2,
                     ),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Row(
+                    spacing: 12,
                     children: [
-                      Icon(
-                        v.type.toLowerCase() == 'car'
-                            ? Icons.directions_car
-                            : Icons.motorcycle,
-                        color: isSelected ? AppColors.white : AppColors.primary,
-                        size: 24,
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? AppColors.white.withValues(alpha: 0.2)
+                              : AppColors.primary.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          _getVehicleIcon(v.type),
+                          color: isSelected
+                              ? AppColors.white
+                              : AppColors.primary,
+                          size: 24,
+                        ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        v.plateNumber,
-                        style: TextStyle(
-                          color: isSelected ? AppColors.white : AppColors.black,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              v.plateNumber,
+                              style: TextStyle(
+                                color: isSelected
+                                    ? AppColors.white
+                                    : AppColors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Text(
+                              v.type.toUpperCase(),
+                              style: TextStyle(
+                                color: isSelected
+                                    ? AppColors.white.withValues(alpha: 0.8)
+                                    : AppColors.textSecondary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -196,6 +258,18 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         );
       },
     );
+  }
+
+  IconData _getVehicleIcon(String type) {
+    final t = type.toLowerCase();
+    if (t.contains('car')) return Icons.directions_car_rounded;
+    if (t.contains('bike') || t.contains('cycle'))
+      return Icons.pedal_bike_rounded;
+    if (t.contains('three') || t.contains('tuk'))
+      return Icons.electric_rickshaw_rounded;
+    if (t.contains('truck') || t.contains('van'))
+      return Icons.local_shipping_rounded;
+    return Icons.directions_bus_rounded;
   }
 
   Widget _buildTimePickers(BuildContext context) {
@@ -282,7 +356,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     onSelected: (selected) {
                       if (selected) {
                         control.updateValue(d);
-                        Navigator.pop(context);
+                        context.pop();
                       }
                     },
                   );
@@ -421,15 +495,16 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Total Price',
-                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
               ),
               Text(
                 'LKR ${totalPrice.toStringAsFixed(2)}',
-                style: const TextStyle(
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
-                  fontSize: 24,
                   color: AppColors.primary,
                 ),
               ),
@@ -441,59 +516,60 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   }
 
   Widget _buildSubmitButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: form.valid ? _submitBooking : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.white,
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 0,
-        ),
-        child: const Text(
-          'Confirm Booking',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-      ),
+    return AppPrimaryButton(
+      label: 'Confirm Booking',
+      isLoading: _isSubmitting,
+      onPressed: form.valid ? _submitBooking : null,
     );
   }
 
-  void _submitBooking() async {
+  Future<void> _submitBooking() async {
     final user = ref.read(authProvider).user;
     if (user == null) return;
 
-    final vehicleIndex = form.control('vehicle').value as int;
-    final vehicle = user.vehicles[vehicleIndex];
-    final startTime = form.control('arrival_time').value as DateTime;
-    final duration = form.control('duration').value as int;
-    final paymentMethod = form.control('payment_method').value as String;
-    final slotId = form.control('selected_slot_id').value as String?;
+    setState(() => _isSubmitting = true);
 
-    final lotId = ref.read(parkingProvider).lot?.id;
+    try {
+      final vehicleIndex = form.control('vehicle').value as int;
+      final vehicle = user.vehicles[vehicleIndex];
+      final startTime = form.control('arrival_time').value as DateTime;
+      final duration = form.control('duration').value as int;
+      final paymentMethod = form.control('payment_method').value as String;
+      final slotId = form.control('selected_slot_id').value as String?;
 
-    final reservation = await ref
-        .read(reservationNotifierProvider.notifier)
-        .createReservation(
-          slotId: slotId ?? 'auto',
-          lotId: lotId,
-          vehicle: vehicle,
-          startTime: startTime,
-          durationMinutes: duration,
-          paymentMethod: paymentMethod,
+      final lotId = ref.read(parkingProvider).lot?.id;
+
+      final reservation = await ref
+          .read(reservationNotifierProvider.notifier)
+          .createReservation(
+            slotId: slotId ?? 'auto',
+            lotId: lotId,
+            vehicle: vehicle,
+            startTime: startTime,
+            durationMinutes: duration,
+            paymentMethod: paymentMethod,
+          );
+
+      if (!mounted) return;
+
+      if (reservation != null) {
+        DigitalTicketRoute(reservationId: reservation.id).go(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to create reservation. Please try again.'),
+          ),
         );
-
-    if (reservation != null && mounted) {
-      DigitalTicketRoute(reservationId: reservation.id).go(context);
-    } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Failed to create reservation. Please try again.'),
-        ),
-      );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error: $e')));
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmitting = false);
+      }
     }
   }
 }
@@ -519,19 +595,22 @@ class _SectionHeader extends StatelessWidget {
         const SizedBox(width: 8),
         RichText(
           text: TextSpan(
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 16,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w500,
               color: AppColors.black,
             ),
             children: [
               TextSpan(text: title),
-              if (isRequired) const TextSpan(text: ' *'),
+              if (isRequired)
+                TextSpan(
+                  text: ' *',
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
             ],
           ),
         ),
         const Spacer(),
-        ?action,
+        if (action != null) action!,
       ],
     );
   }
@@ -566,17 +645,27 @@ class _PickerTile extends StatelessWidget {
           children: [
             RichText(
               text: TextSpan(
-                style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
                 children: [
                   TextSpan(text: label),
-                  if (isRequired) const TextSpan(text: ' *'),
+                  if (isRequired)
+                    TextSpan(
+                      text: ' *',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
                 ],
               ),
             ),
             const SizedBox(height: 4),
             Text(
               value,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -625,7 +714,7 @@ class _ChoiceTile extends StatelessWidget {
             ],
             Text(
               label,
-              style: TextStyle(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: isSelected ? AppColors.white : AppColors.black,
                 fontWeight: FontWeight.bold,
               ),

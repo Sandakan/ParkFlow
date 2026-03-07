@@ -37,7 +37,45 @@ enum AppStatusCode {
   @JsonValue('MESSAGE_ARCHIVE_FAILED')
   messageArchiveFailed,
   @JsonValue('MESSAGE_MARK_AS_READ_FAILED')
-  messageMarkAsReadFailed;
+  messageMarkAsReadFailed,
+  // Vehicles
+  @JsonValue('VEHICLE_ALREADY_EXISTS')
+  vehicleAlreadyExists,
+  @JsonValue('VEHICLE_NOT_FOUND')
+  vehicleNotFound,
+  // Payment Methods
+  @JsonValue('PAYMENT_METHOD_NOT_FOUND')
+  paymentMethodNotFound,
+  // Reservation
+  @JsonValue('RESERVATION_LOT_ID_REQUIRED')
+  reservationLotIdRequired,
+  @JsonValue('RESERVATION_NO_AVAILABLE_SLOTS')
+  reservationNoAvailableSlots,
+  @JsonValue('RESERVATION_SLOT_NOT_FOUND')
+  reservationSlotNotFound,
+  @JsonValue('RESERVATION_SLOT_OCCUPIED')
+  reservationSlotOccupied,
+  @JsonValue('RESERVATION_LOT_NOT_FOUND')
+  reservationLotNotFound,
+  @JsonValue('RESERVATION_CREATED')
+  reservationCreated,
+  // Cameras
+  @JsonValue('CAMERA_NOT_FOUND')
+  cameraNotFound,
+  @JsonValue('CAMERA_RTSP_NOT_CONFIGURED')
+  cameraRtspNotConfigured,
+  @JsonValue('CAMERA_WEBRTC_FAILED')
+  cameraWebrtcFailed,
+  @JsonValue('CAMERA_NO_UPDATE_DATA')
+  cameraNoUpdateData,
+  // Parking
+  @JsonValue('PARKING_LOT_NOT_FOUND')
+  parkingLotNotFound,
+  @JsonValue('PARKING_SLOT_NOT_FOUND')
+  parkingSlotNotFound,
+  // Permission
+  @JsonValue('PERMISSION_DENIED')
+  permissionDenied;
 
   String toLocalizedString(AppLocalizations l10n) {
     switch (this) {
@@ -53,6 +91,8 @@ enum AppStatusCode {
         return l10n.authTokenExpiredError;
       case AppStatusCode.sessionExpired:
         return l10n.sessionExpired;
+      case AppStatusCode.invalidResponse:
+        return 'Invalid server response';
       case AppStatusCode.invalidPageNumber:
         return l10n.invalidPageNumber;
       case AppStatusCode.currentPasswordInvalid:
@@ -63,6 +103,30 @@ enum AppStatusCode {
         return l10n.userAlreadyExists;
       case AppStatusCode.invalidCredentials:
         return l10n.invalidCredentials;
+      case AppStatusCode.vehicleAlreadyExists:
+        return l10n.vehicleAlreadyExists;
+      case AppStatusCode.vehicleNotFound:
+        return l10n.vehicleNotFound;
+      case AppStatusCode.paymentMethodNotFound:
+        return l10n.paymentMethodNotFound;
+      case AppStatusCode.reservationNoAvailableSlots:
+        return l10n.reservationNoAvailableSlots;
+      case AppStatusCode.reservationSlotOccupied:
+        return l10n.reservationSlotOccupied;
+      case AppStatusCode.reservationSlotNotFound:
+        return l10n.reservationSlotNotFound;
+      case AppStatusCode.reservationLotNotFound:
+        return l10n.reservationLotNotFound;
+      case AppStatusCode.reservationLotIdRequired:
+        return l10n.reservationLotIdRequired;
+      case AppStatusCode.cameraNotFound:
+        return l10n.cameraNotFound;
+      case AppStatusCode.cameraRtspNotConfigured:
+        return l10n.cameraRtspNotConfigured;
+      case AppStatusCode.cameraWebrtcFailed:
+        return l10n.cameraWebrtcFailed;
+      case AppStatusCode.permissionDenied:
+        return l10n.permissionDenied;
       default:
         return l10n.somethingWrongDescription;
     }

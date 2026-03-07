@@ -660,4 +660,46 @@ class AppLocalizationsSi extends AppLocalizations {
   String availableSlotsCount(String count) {
     return '$count available';
   }
+
+  @override
+  String get vehicleAlreadyExists =>
+      'A vehicle with this license plate is already registered.';
+
+  @override
+  String get vehicleNotFound => 'Vehicle not found.';
+
+  @override
+  String get paymentMethodNotFound => 'Payment method not found.';
+
+  @override
+  String get reservationNoAvailableSlots =>
+      'No available slots in this parking lot.';
+
+  @override
+  String get reservationSlotOccupied =>
+      'This parking slot is already occupied.';
+
+  @override
+  String get reservationSlotNotFound => 'Parking slot not found.';
+
+  @override
+  String get reservationLotNotFound => 'Parking lot not found.';
+
+  @override
+  String get reservationLotIdRequired =>
+      'Please select a parking lot for automatic slot selection.';
+
+  @override
+  String get cameraNotFound => 'Camera not found.';
+
+  @override
+  String get cameraRtspNotConfigured => 'Camera stream URL is not configured.';
+
+  @override
+  String get cameraWebrtcFailed =>
+      'Failed to establish camera stream connection.';
+
+  @override
+  String get permissionDenied =>
+      'You don\'t have permission to perform this action.';
 }

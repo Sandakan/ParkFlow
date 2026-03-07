@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/models/parking/parking_lot_model.dart';
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
-import 'package:parkflow/routes/router_provider.dart';
+import 'package:parkflow/presentation/widgets/parking/lot_details_sheet.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
@@ -32,7 +32,12 @@ class ParkingLotCard extends ConsumerWidget {
             onTap ??
             () {
               ref.read(parkingProvider.notifier).selectLot(lot);
-              const LotDetailsRoute().push(context);
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                builder: (context) => const LotDetailsSheet(),
+              );
             },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),

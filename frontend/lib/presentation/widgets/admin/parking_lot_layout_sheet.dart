@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:parkflow/models/parking/parking_lot_model.dart';
 import 'package:parkflow/presentation/notifiers/parking_lots/parking_lot_layout_notifier.dart';
 import 'package:parkflow/presentation/widgets/parking/parking_lot_layout_grid.dart';
@@ -76,7 +77,7 @@ class ParkingLotLayoutSheet extends ConsumerWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        if (isSheet) Navigator.pop(context);
+                        if (isSheet) context.pop();
                         AdminEditParkingLotRoute(lot.id).go(context);
                       },
                       icon: const Icon(
@@ -87,7 +88,7 @@ class ParkingLotLayoutSheet extends ConsumerWidget {
                     ),
                     if (isSheet)
                       IconButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () => context.pop(),
                         icon: const Icon(Icons.close),
                       ),
                   ],

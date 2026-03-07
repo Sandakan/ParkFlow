@@ -1,3 +1,4 @@
+import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
@@ -10,11 +11,15 @@ part 'reservation_service.g.dart';
 
 class ReservationService {
   final RemoteRepositoryInterface _remoteRepository;
+  final Ref _ref;
 
-  ReservationService(this._remoteRepository);
+  ReservationService(this._remoteRepository, this._ref);
+
+  Future<String?> _getToken() =>
+      _ref.read(authProvider.notifier).getValidAccessToken();
 
   Future<List<ReservationModel>> getMyReservations() async {
-    return _remoteRepository.getMyReservations();
+    return _remoteRepository.getMyReservations(accessToken: await _getToken());
   }
 
   Future<ReservationResponseEntity> createReservation({
@@ -34,11 +39,14 @@ class ReservationService {
       paymentMethod: paymentMethod,
     );
 
-    return _remoteRepository.createReservation(request);
+    return _remoteRepository.createReservation(
+      request,
+      accessToken: await _getToken(),
+    );
   }
 }
 
 @riverpod
 ReservationService reservationService(Ref ref) {
-  return ReservationService(ref.watch(remoteRepositoryProvider));
+  return ReservationService(ref.watch(remoteRepositoryProvider), ref);
 }

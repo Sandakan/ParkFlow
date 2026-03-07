@@ -17,6 +17,7 @@ class LabeledReactiveTextField<T> extends StatelessWidget {
   final Color? fillColor;
   final TextCapitalization textCapitalization;
   final bool autofocus;
+  final ReactiveFormFieldCallback<T>? onChanged;
 
   final bool isRequired;
 
@@ -36,6 +37,7 @@ class LabeledReactiveTextField<T> extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.isRequired = false,
     this.autofocus = false,
+    this.onChanged,
   });
 
   @override
@@ -75,6 +77,7 @@ class LabeledReactiveTextField<T> extends StatelessWidget {
           fillColor: fillColor,
           textCapitalization: textCapitalization,
           autofocus: autofocus,
+          onChanged: onChanged,
         ),
       ],
     );

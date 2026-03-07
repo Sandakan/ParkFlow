@@ -55,4 +55,4 @@ final class ReservationServiceProvider
 }
 
 String _$reservationServiceHash() =>
-    r'800ec24d788d8225b12fb5574bb434511a2d38e4';
+    r'b329696ae4c351f4dc232bea11e10b87ababae03';

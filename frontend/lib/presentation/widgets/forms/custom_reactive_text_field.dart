@@ -19,6 +19,7 @@ class CustomReactiveTextField<T> extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final TextCapitalization textCapitalization;
   final bool autofocus;
+  final ReactiveFormFieldCallback<T>? onChanged;
 
   const CustomReactiveTextField({
     super.key,
@@ -38,6 +39,7 @@ class CustomReactiveTextField<T> extends StatelessWidget {
     this.contentPadding,
     this.textCapitalization = TextCapitalization.none,
     this.autofocus = false,
+    this.onChanged,
   });
 
   @override
@@ -76,6 +78,7 @@ class CustomReactiveTextField<T> extends StatelessWidget {
       onSubmitted: onSubmitted,
       textCapitalization: textCapitalization,
       autofocus: autofocus,
+      onChanged: onChanged,
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,

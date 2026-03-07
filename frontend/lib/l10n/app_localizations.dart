@@ -1353,6 +1353,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} available'**
   String availableSlotsCount(String count);
+
+  /// Error message when a vehicle with the same plate already exists
+  ///
+  /// In en, this message translates to:
+  /// **'A vehicle with this license plate is already registered.'**
+  String get vehicleAlreadyExists;
+
+  /// Error message when a vehicle is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle not found.'**
+  String get vehicleNotFound;
+
+  /// Error message when a payment method is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method not found.'**
+  String get paymentMethodNotFound;
+
+  /// Error message when no slots are available for reservation
+  ///
+  /// In en, this message translates to:
+  /// **'No available slots in this parking lot.'**
+  String get reservationNoAvailableSlots;
+
+  /// Error message when a specific slot is already taken
+  ///
+  /// In en, this message translates to:
+  /// **'This parking slot is already occupied.'**
+  String get reservationSlotOccupied;
+
+  /// Error message when a reservation slot ID is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Parking slot not found.'**
+  String get reservationSlotNotFound;
+
+  /// Error message when a reservation lot ID is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Parking lot not found.'**
+  String get reservationLotNotFound;
+
+  /// Error message when lot_id is missing for auto reservation
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a parking lot for automatic slot selection.'**
+  String get reservationLotIdRequired;
+
+  /// Error message when a camera is not found
+  ///
+  /// In en, this message translates to:
+  /// **'Camera not found.'**
+  String get cameraNotFound;
+
+  /// Error message when RTSP URL is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Camera stream URL is not configured.'**
+  String get cameraRtspNotConfigured;
+
+  /// Error message when WebRTC negotiation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to establish camera stream connection.'**
+  String get cameraWebrtcFailed;
+
+  /// Error message for 403 Forbidden scenarios
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have permission to perform this action.'**
+  String get permissionDenied;
 }
 
 class _AppLocalizationsDelegate

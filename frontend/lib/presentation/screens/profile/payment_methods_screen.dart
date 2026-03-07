@@ -21,112 +21,301 @@ class PaymentMethodsScreen extends ConsumerWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.white,
-        elevation: 0,
         centerTitle: true,
+        scrolledUnderElevation: 0,
+        elevation: 0,
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 700),
-          child: paymentMethods.isEmpty
-              ? Center(
-                  child: Text(
-                    'No payment methods added yet.\nTap + to add one.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 16,
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 700),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: paymentMethods.isEmpty
+                  ? const _EmptyPaymentState(key: ValueKey('empty'))
+                  : _PaymentList(
+                      paymentMethods: paymentMethods,
+                      onDelete: (id) => ref
+                          .read(paymentProvider.notifier)
+                          .removePaymentMethod(id),
+                      onSetDefault: (id) => ref
+                          .read(paymentProvider.notifier)
+                          .setDefaultPaymentMethod(id),
+                      key: const ValueKey('list'),
                     ),
-                  ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: paymentMethods.length,
-                  itemBuilder: (context, index) {
-                    final method = paymentMethods[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: method.isDefault
-                            ? const BorderSide(
-                                color: AppColors.primary,
-                                width: 2,
-                              )
-                            : BorderSide.none,
-                      ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16),
-                        leading: CircleAvatar(
-                          backgroundColor: AppColors.primary.withValues(
-                            alpha: 0.1,
-                          ),
-                          child: Icon(
-                            method.type.toLowerCase() == 'card'
-                                ? Icons.credit_card
-                                : Icons.money,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                        title: Text(
-                          method.provider,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              method.type.toUpperCase() +
-                                  (method.last4 != null
-                                      ? ' •••• ${method.last4}'
-                                      : ''),
-                            ),
-                            if (method.isDefault)
-                              const Text(
-                                'Default',
-                                style: TextStyle(
-                                  color: AppColors.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                          ],
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (!method.isDefault)
-                              IconButton(
-                                icon: const Icon(Icons.star_border),
-                                tooltip: 'Set as Default',
-                                onPressed: () {
-                                  ref
-                                      .read(paymentProvider.notifier)
-                                      .setDefaultPaymentMethod(method.id);
-                                },
-                              ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.delete_outline,
-                                color: AppColors.error,
-                              ),
-                              onPressed: () {
-                                ref
-                                    .read(paymentProvider.notifier)
-                                    .removePaymentMethod(method.id);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
+            ),
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         heroTag: 'payment_methods_fab',
         onPressed: () => const AddPaymentMethodRoute().push(context),
         backgroundColor: AppColors.primary,
-        child: const Icon(Icons.add, color: AppColors.white),
+        foregroundColor: AppColors.white,
+        elevation: 4,
+        icon: const Icon(Icons.add),
+        label: const Text(
+          'Add Payment Method',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14.0),
+        ),
+      ),
+    );
+  }
+}
+
+class _PaymentList extends StatelessWidget {
+  final List<dynamic> paymentMethods;
+  final Function(String) onDelete;
+  final Function(String) onSetDefault;
+
+  const _PaymentList({
+    required this.paymentMethods,
+    required this.onDelete,
+    required this.onSetDefault,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 16,
+      ).copyWith(bottom: 80),
+      itemCount: paymentMethods.length,
+      itemBuilder: (context, index) {
+        final method = paymentMethods[index];
+        return _PaymentCard(
+          method: method,
+          onDelete: () => onDelete(method.id),
+          onSetDefault: () => onSetDefault(method.id),
+        );
+      },
+    );
+  }
+}
+
+class _PaymentCard extends StatelessWidget {
+  final dynamic method;
+  final VoidCallback onDelete;
+  final VoidCallback onSetDefault;
+
+  const _PaymentCard({
+    required this.method,
+    required this.onDelete,
+    required this.onSetDefault,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: method.isDefault
+              ? AppColors.primary
+              : AppColors.outlineVariant,
+          width: method.isDefault ? 1.5 : 1,
+        ),
+        boxShadow: method.isDefault
+            ? [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ]
+            : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () {},
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        AppColors.primary.withValues(alpha: 0.1),
+                        AppColors.primary.withValues(alpha: 0.05),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Icon(
+                    method.type.toLowerCase() == 'card'
+                        ? Icons.credit_card_rounded
+                        : Icons.wallet_rounded,
+                    color: AppColors.primary,
+                    size: 28,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            method.provider,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          if (method.isDefault) ...[
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Text(
+                                'DEFAULT',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        method.last4 != null
+                            ? '•••• ${method.last4}'
+                            : method.type.toUpperCase(),
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (!method.isDefault)
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        icon: const Icon(
+                          Icons.star_outline_rounded,
+                          color: AppColors.primary,
+                        ),
+                        onPressed: onSetDefault,
+                        tooltip: 'Set as Default',
+                      ),
+                    IconButton(
+                      visualDensity: VisualDensity.compact,
+                      icon: const Icon(
+                        Icons.delete_outline_rounded,
+                        color: AppColors.error,
+                      ),
+                      onPressed: () => _confirmDelete(context),
+                      tooltip: 'Remove',
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _confirmDelete(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Remove Payment Method'),
+        content: Text(
+          'Are you sure you want to remove ${method.provider} card ending in ${method.last4}?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              onDelete();
+              Navigator.of(context).pop();
+            },
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('Remove'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _EmptyPaymentState extends StatelessWidget {
+  const _EmptyPaymentState({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceVariant.withValues(alpha: 0.5),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.payment_rounded,
+              size: 80,
+              color: AppColors.outlineVariant,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            'No payment methods',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.black87,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Text(
+              'Add a card or bank account to enable automatic payments for your reservations.',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 15),
+            ),
+          ),
+        ],
       ),
     );
   }

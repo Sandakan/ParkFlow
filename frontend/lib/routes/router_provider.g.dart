@@ -492,16 +492,7 @@ RouteBase get $driverShellRoute => StatefulShellRouteData.$route(
   branches: [
     StatefulShellBranchData.$branch(
       routes: [
-        GoRouteData.$route(
-          path: '/home',
-          factory: $HomeRoute._fromState,
-          routes: [
-            GoRouteData.$route(
-              path: 'details',
-              factory: $LotDetailsRoute._fromState,
-            ),
-          ],
-        ),
+        GoRouteData.$route(path: '/home', factory: $HomeRoute._fromState),
       ],
     ),
     StatefulShellBranchData.$branch(
@@ -538,27 +529,6 @@ mixin $HomeRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/home');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $LotDetailsRoute on GoRouteData {
-  static LotDetailsRoute _fromState(GoRouterState state) =>
-      const LotDetailsRoute();
-
-  @override
-  String get location => GoRouteData.$location('/home/details');
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -79,10 +79,7 @@ class AdminSettingsBranch extends StatefulShellBranchData {
   branches: <TypedStatefulShellBranch<StatefulShellBranchData>>[
     TypedStatefulShellBranch<HomeBranch>(
       routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<HomeRoute>(
-          path: HomeRoute.path,
-          routes: [TypedGoRoute<LotDetailsRoute>(path: 'details')],
-        ),
+        TypedGoRoute<HomeRoute>(path: HomeRoute.path),
       ],
     ),
     TypedStatefulShellBranch<BookingsBranch>(

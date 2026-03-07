@@ -48,7 +48,7 @@ class ParkingLotLayout extends StatelessWidget {
     }
 
     return SizedBox(
-      height: 500,
+      height: 300,
       child: InteractiveViewer(
         constrained: false,
         boundaryMargin: const EdgeInsets.symmetric(

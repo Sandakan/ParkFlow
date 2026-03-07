@@ -6,7 +6,6 @@ import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/states/auth/auth_state.dart';
 import 'package:parkflow/presentation/screens/boot/boot_screen.dart';
 import 'package:parkflow/presentation/screens/home/home_screen.dart';
-import 'package:parkflow/presentation/screens/home/lot_details_screen.dart';
 import 'package:parkflow/presentation/screens/auth/login_screen.dart';
 import 'package:parkflow/presentation/screens/auth/register_screen.dart';
 import 'package:parkflow/presentation/screens/home/profile_screen.dart';

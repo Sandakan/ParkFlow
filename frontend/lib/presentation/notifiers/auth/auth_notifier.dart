@@ -83,6 +83,8 @@ class AuthNotifier extends _$AuthNotifier {
           email: userResponse.email,
           name: userResponse.name,
           role: userResponse.role,
+          vehicles: userResponse.vehicles,
+          paymentMethods: userResponse.paymentMethods,
         );
 
         state = AuthState.authenticated(user);
@@ -213,9 +215,11 @@ class AuthNotifier extends _$AuthNotifier {
       final user = await ref.read(authServiceProvider).checkAuthState();
       if (user != null) {
         setAuthenticatedUser(user);
+      } else {
+        talker.warning('[Auth] refreshUser: checkAuthState returned null');
       }
-    } catch (e) {
-      talker.error('[Auth] Refresh user failed: $e');
+    } catch (e, stackTrace) {
+      talker.error('[Auth] Refresh user failed', e, stackTrace);
     }
   }
 }

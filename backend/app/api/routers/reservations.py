@@ -23,16 +23,20 @@ async def create_reservation(
     """
     if request.slot_id == "auto":
         if not request.lot_id:
-            raise HTTPException(
-                status_code=400, detail="lot_id is required for auto slot selection"
+            return APIResponse.error_response(
+                message="lot_id is required for auto slot selection",
+                code=ResponseCode.RESERVATION_LOT_ID_REQUIRED,
+                status_code=status.HTTP_400_BAD_REQUEST,
             )
 
         slot = await db.client["parkflow"].parking_slots.find_one(
             {"lot_id": request.lot_id, "status": "available", "deleted_at": None}
         )
         if not slot:
-            raise HTTPException(
-                status_code=400, detail="No available slots in this lot"
+            return APIResponse.error_response(
+                message="No available slots in this lot",
+                code=ResponseCode.RESERVATION_NO_AVAILABLE_SLOTS,
+                status_code=status.HTTP_400_BAD_REQUEST,
             )
         request.slot_id = str(slot["_id"])
     else:
@@ -44,18 +48,28 @@ async def create_reservation(
             slot = None
 
         if not slot:
-            raise HTTPException(status_code=404, detail="Parking slot not found")
+            return APIResponse.error_response(
+                message="Parking slot not found",
+                code=ResponseCode.RESERVATION_SLOT_NOT_FOUND,
+                status_code=status.HTTP_404_NOT_FOUND,
+            )
 
         if slot.get("status") == "occupied":
-            raise HTTPException(
-                status_code=400, detail="Parking slot is already occupied"
+            return APIResponse.error_response(
+                message="Parking slot is already occupied",
+                code=ResponseCode.RESERVATION_SLOT_OCCUPIED,
+                status_code=status.HTTP_400_BAD_REQUEST,
             )
 
     lot = await db.client["parkflow"].parking_lots.find_one(
         {"_id": ObjectId(slot["lot_id"])}
     )
     if not lot:
-        raise HTTPException(status_code=404, detail="Parking lot not found")
+        return APIResponse.error_response(
+            message="Parking lot not found",
+            code=ResponseCode.RESERVATION_LOT_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
 
     price_per_hour = lot.get("price_per_hour", 0.0)
     total_price = (request.duration_minutes / 60.0) * price_per_hour
@@ -100,7 +114,7 @@ async def create_reservation(
 
     return APIResponse.success_response(
         message="Reservation created successfully",
-        code=ResponseCode.SUCCESS,
+        code=ResponseCode.RESERVATION_CREATED,
         data=ReservationResponse(**reservation_data),
         status_code=201,
     )

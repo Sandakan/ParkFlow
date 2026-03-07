@@ -865,5 +865,53 @@
 				"example": "15"
 			}
 		}
+	},
+	"vehicleAlreadyExists": "A vehicle with this license plate is already registered.",
+	"@vehicleAlreadyExists": {
+		"description": "Error message when a vehicle with the same plate already exists"
+	},
+	"vehicleNotFound": "Vehicle not found.",
+	"@vehicleNotFound": {
+		"description": "Error message when a vehicle is not found"
+	},
+	"paymentMethodNotFound": "Payment method not found.",
+	"@paymentMethodNotFound": {
+		"description": "Error message when a payment method is not found"
+	},
+	"reservationNoAvailableSlots": "No available slots in this parking lot.",
+	"@reservationNoAvailableSlots": {
+		"description": "Error message when no slots are available for reservation"
+	},
+	"reservationSlotOccupied": "This parking slot is already occupied.",
+	"@reservationSlotOccupied": {
+		"description": "Error message when a specific slot is already taken"
+	},
+	"reservationSlotNotFound": "Parking slot not found.",
+	"@reservationSlotNotFound": {
+		"description": "Error message when a reservation slot ID is invalid"
+	},
+	"reservationLotNotFound": "Parking lot not found.",
+	"@reservationLotNotFound": {
+		"description": "Error message when a reservation lot ID is invalid"
+	},
+	"reservationLotIdRequired": "Please select a parking lot for automatic slot selection.",
+	"@reservationLotIdRequired": {
+		"description": "Error message when lot_id is missing for auto reservation"
+	},
+	"cameraNotFound": "Camera not found.",
+	"@cameraNotFound": {
+		"description": "Error message when a camera is not found"
+	},
+	"cameraRtspNotConfigured": "Camera stream URL is not configured.",
+	"@cameraRtspNotConfigured": {
+		"description": "Error message when RTSP URL is missing"
+	},
+	"cameraWebrtcFailed": "Failed to establish camera stream connection.",
+	"@cameraWebrtcFailed": {
+		"description": "Error message when WebRTC negotiation fails"
+	},
+	"permissionDenied": "You don't have permission to perform this action.",
+	"@permissionDenied": {
+		"description": "Error message for 403 Forbidden scenarios"
 	}
 }

@@ -13,7 +13,7 @@ part of 'vehicle_notifier.dart';
 final vehicleProvider = VehicleNotifierProvider._();
 
 final class VehicleNotifierProvider
-    extends $NotifierProvider<VehicleNotifier, void> {
+    extends $NotifierProvider<VehicleNotifier, VehicleActionState> {
   VehicleNotifierProvider._()
     : super(
         from: null,
@@ -33,27 +33,27 @@ final class VehicleNotifierProvider
   VehicleNotifier create() => VehicleNotifier();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(void value) {
+  Override overrideWithValue(VehicleActionState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<void>(value),
+      providerOverride: $SyncValueProvider<VehicleActionState>(value),
     );
   }
 }
 
-String _$vehicleNotifierHash() => r'ebae6d2180ae762731fbd899388651f8ce6faacb';
+String _$vehicleNotifierHash() => r'52363c86cb0a0973928a3769ec46185e5edc361e';
 
-abstract class _$VehicleNotifier extends $Notifier<void> {
-  void build();
+abstract class _$VehicleNotifier extends $Notifier<VehicleActionState> {
+  VehicleActionState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<void, void>;
+    final ref = this.ref as $Ref<VehicleActionState, VehicleActionState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<void, void>,
-              void,
+              AnyNotifier<VehicleActionState, VehicleActionState>,
+              VehicleActionState,
               Object?,
               Object?
             >;

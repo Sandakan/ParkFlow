@@ -13,7 +13,7 @@ part of 'payment_notifier.dart';
 final paymentProvider = PaymentNotifierProvider._();
 
 final class PaymentNotifierProvider
-    extends $NotifierProvider<PaymentNotifier, void> {
+    extends $NotifierProvider<PaymentNotifier, PaymentActionState> {
   PaymentNotifierProvider._()
     : super(
         from: null,
@@ -33,27 +33,27 @@ final class PaymentNotifierProvider
   PaymentNotifier create() => PaymentNotifier();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(void value) {
+  Override overrideWithValue(PaymentActionState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<void>(value),
+      providerOverride: $SyncValueProvider<PaymentActionState>(value),
     );
   }
 }
 
-String _$paymentNotifierHash() => r'd82f2129abd39ce8f448426eea992b09b932044a';
+String _$paymentNotifierHash() => r'df727786ffae02faf7de41755cc1041c3fda6730';
 
-abstract class _$PaymentNotifier extends $Notifier<void> {
-  void build();
+abstract class _$PaymentNotifier extends $Notifier<PaymentActionState> {
+  PaymentActionState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<void, void>;
+    final ref = this.ref as $Ref<PaymentActionState, PaymentActionState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<void, void>,
-              void,
+              AnyNotifier<PaymentActionState, PaymentActionState>,
+              PaymentActionState,
               Object?,
               Object?
             >;

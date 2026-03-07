@@ -31,6 +31,7 @@ import 'package:parkflow/core/network/entities/reservation_response_entity.dart'
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
+import 'package:parkflow/utils/helpers/talker.dart';
 import 'package:parkflow/utils/http/http_api.dart';
 
 class RemoteRepository implements RemoteRepositoryInterface {
@@ -80,9 +81,11 @@ class RemoteRepository implements RemoteRepositoryInterface {
     if (!allowNonSuccessResponses &&
         baseResponse.statusCode != 200 &&
         baseResponse.statusCode != 201) {
+      final code = AppStatusCode.fromString(baseResponse.code);
       throw AppException(
-        AppStatusCode.serverError,
-        cause: 'Server returned ${baseResponse.statusCode}',
+        code == AppStatusCode.unknownError ? AppStatusCode.serverError : code,
+        cause:
+            'Server returned ${baseResponse.statusCode}: ${baseResponse.message}',
       );
     }
 
@@ -112,14 +115,12 @@ class RemoteRepository implements RemoteRepositoryInterface {
     );
 
     if (!validatedResponse.success) {
-      if (validatedResponse.code == 'INVALID_CREDENTIALS') {
-        throw AppException(
-          AppStatusCode.invalidCredentials,
-          cause: validatedResponse.message,
-        );
-      }
+      final code = AppStatusCode.fromString(validatedResponse.code);
+
       throw AppException(
-        AppStatusCode.invalidResponse,
+        code == AppStatusCode.unknownError
+            ? AppStatusCode.invalidResponse
+            : code,
         cause: validatedResponse.message,
       );
     }
@@ -161,8 +162,10 @@ class RemoteRepository implements RemoteRepositoryInterface {
       final data = GetUserResponseEntity.fromJson(validatedResponse.data);
       return data;
     } catch (e, stackTrace) {
+      talker.error('Get current user response parsing failed', e, stackTrace);
       throw AppException(
         AppStatusCode.invalidResponse,
+        customMessage: 'Parsing failed: $e',
         cause: e,
         stackTrace: stackTrace,
       );
@@ -184,10 +187,13 @@ class RemoteRepository implements RemoteRepositoryInterface {
     final validatedResponse = validateResponse(response);
 
     try {
-      return GetUserResponseEntity.fromJson(validatedResponse.data);
+      final data = GetUserResponseEntity.fromJson(validatedResponse.data);
+      return data;
     } catch (e, stackTrace) {
+      talker.error('Add vehicle response parsing failed', e, stackTrace);
       throw AppException(
         AppStatusCode.invalidResponse,
+        customMessage: 'Parsing failed: $e',
         cause: e,
         stackTrace: stackTrace,
       );
@@ -419,8 +425,10 @@ class RemoteRepository implements RemoteRepositoryInterface {
       final data = GetUserResponseEntity.fromJson(validatedResponse.data);
       return data;
     } catch (e, stackTrace) {
+      talker.error('Test token response parsing failed', e, stackTrace);
       throw AppException(
         AppStatusCode.invalidResponse,
+        customMessage: 'Parsing failed: $e',
         cause: e,
         stackTrace: stackTrace,
       );

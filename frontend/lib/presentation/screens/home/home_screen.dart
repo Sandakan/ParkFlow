@@ -14,8 +14,7 @@ import 'package:parkflow/models/parking/parking_lot_model.dart';
 
 import 'package:parkflow/presentation/notifiers/parking/home_search_controller.dart';
 import 'package:parkflow/presentation/widgets/parking/parking_lot_card.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:parkflow/routes/router_provider.dart';
+import 'package:parkflow/presentation/widgets/parking/lot_details_sheet.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -439,76 +438,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     WidgetRef ref,
     ParkingLotModel lot,
   ) {
+    ref.read(parkingProvider.notifier).selectLot(lot);
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: const BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                color: AppColors.outlineVariant,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            ParkingLotCard(lot: lot, isSelected: true),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      final url =
-                          'https://www.google.com/maps/search/?api=1&query=${lot.latitude},${lot.longitude}';
-                      launchUrl(Uri.parse(url));
-                    },
-                    icon: const Icon(Icons.directions),
-                    label: const Text('Navigate'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      ref.read(parkingProvider.notifier).selectLot(lot);
-                      Navigator.pop(context);
-                      const BookingRoute().push(context);
-                    },
-                    icon: const Icon(Icons.book_online),
-                    label: const Text('Book a Slot'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: AppColors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+      builder: (context) => const LotDetailsSheet(),
     );
   }
 
