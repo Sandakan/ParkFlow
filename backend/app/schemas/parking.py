@@ -40,7 +40,11 @@ class CreateCameraRequest(BaseModel):
 
 class UpdateCameraRequest(BaseModel):
     name: Optional[str] = Field(None, description="Name/Location of the camera")
-    rtsp_url: Optional[str] = Field(None, description="RTSP URL for the camera feed")
+    rtsp_url: Optional[str] = Field(
+        None, alias="rtspUrl", description="RTSP URL for the camera feed"
+    )
+
+    model_config = {"populate_by_name": True}
 
 
 class Point2D(BaseModel):
