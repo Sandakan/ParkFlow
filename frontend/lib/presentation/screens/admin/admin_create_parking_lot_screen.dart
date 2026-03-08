@@ -41,9 +41,6 @@ class _AdminCreateParkingLotScreenState
           Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
         ],
       ),
-      'totalSlots': FormControl<String>(
-        validators: [Validators.required, Validators.pattern(r'^\d+$')],
-      ),
       'slotWidth': FormControl<String>(
         value: '5.0',
         validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
@@ -135,14 +132,6 @@ class _AdminCreateParkingLotScreenState
                       ],
                     ),
                     const SizedBox(height: 16),
-                    LabeledReactiveTextField<String>(
-                      formControlName: 'totalSlots',
-                      label: context.l10n.totalSlotsLabel,
-                      hintText: context.l10n.totalSlotsHint,
-                      prefixIcon: Icons.format_list_numbered,
-                      keyboardType: TextInputType.number,
-                      isRequired: true,
-                    ),
                     const SizedBox(height: 16),
                     Row(
                       children: [
@@ -193,9 +182,6 @@ class _AdminCreateParkingLotScreenState
                                   ),
                                   longitude: double.parse(
                                     form.control('longitude').value as String,
-                                  ),
-                                  totalSlots: int.parse(
-                                    form.control('totalSlots').value as String,
                                   ),
                                   slotWidthMeters: double.parse(
                                     form.control('slotWidth').value as String,

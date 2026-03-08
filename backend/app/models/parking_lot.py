@@ -12,7 +12,6 @@ class ParkingLotInDB(BaseModel):
     parking_lot_id: str = Field(alias="_id")
     name: str
     location: Point
-    total_slots: int
     slot_width_meters: float = 5.0
     slot_length_meters: float = 5.0
     average_rating: float = 0.0

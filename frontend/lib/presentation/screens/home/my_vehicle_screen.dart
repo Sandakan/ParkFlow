@@ -188,13 +188,18 @@ class _VehicleCard extends StatelessWidget {
 
   IconData _getVehicleIcon(String type) {
     final t = type.toLowerCase();
-    if (t.contains('car')) return Icons.directions_car_rounded;
-    if (t.contains('bike') || t.contains('cycle'))
+    if (t.contains('car')) {
+      return Icons.directions_car_rounded;
+    }
+    if (t.contains('bike') || t.contains('cycle')) {
       return Icons.pedal_bike_rounded;
-    if (t.contains('three') || t.contains('tuk'))
+    }
+    if (t.contains('three') || t.contains('tuk')) {
       return Icons.electric_rickshaw_rounded;
-    if (t.contains('truck') || t.contains('van'))
+    }
+    if (t.contains('truck') || t.contains('van')) {
       return Icons.local_shipping_rounded;
+    }
     return Icons.directions_bus_rounded;
   }
 

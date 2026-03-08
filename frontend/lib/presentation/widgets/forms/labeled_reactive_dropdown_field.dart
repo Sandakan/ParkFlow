@@ -58,7 +58,6 @@ class LabeledReactiveDropdownField<T> extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 14,
               color: AppColors.black87,
-              fontFamily: 'Outfit',
             ),
             children: [
               if (isRequired)

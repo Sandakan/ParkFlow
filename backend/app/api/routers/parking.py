@@ -219,8 +219,7 @@ async def create_parking_lot(
     from pprint import pprint
     from bson import ObjectId
 
-    # Generating basic metadata structure similar to what get_lots randomly creates
-    metrics = {"cameras": 1, "occupancy": 0.0, "revenue_today": 0}
+    metrics = {"cameras": 0, "occupancy": 0.0, "revenue_today": 0}
 
     from datetime import datetime, timezone
 
@@ -232,7 +231,6 @@ async def create_parking_lot(
             "type": "Point",
             "coordinates": [request.longitude, request.latitude],
         },
-        "total_slots": request.total_slots,
         "slot_width_meters": request.slot_width_meters,
         "slot_length_meters": request.slot_length_meters,
         "status": "open",
@@ -298,13 +296,20 @@ async def get_parking_lots(
         return R * c
 
     for lot in lots:
+        lot_id_str = str(lot.get("_id") or lot.get("parking_lot_id"))
+        total_slots = await db.client["parkflow"].parking_slots.count_documents(
+            {"lot_id": lot_id_str, "deleted_at": None}
+        )
+
         is_open = (
             random.choice([True, False])
             if "status" not in lot
             else lot.get("status") == "open"
         )
         metrics = lot.get("metrics", {})
-        cameras_count = metrics.get("cameras", random.randint(1, 10))
+        cameras_count = await db.client["parkflow"].cameras.count_documents(
+            {"lot_id": lot_id_str, "deleted_at": None}
+        )
         occupancy = metrics.get("occupancy", random.uniform(0.1, 0.95))
         revenue_today = metrics.get("revenue_today", random.randint(100, 10000))
         address = lot.get("address", "Unknown Address")
@@ -322,7 +327,7 @@ async def get_parking_lots(
                 "name": lot.get("name", "Unnamed Lot"),
                 "isOpen": is_open,
                 "camerasCount": cameras_count,
-                "totalSlots": lot.get("total_slots", 0),
+                "totalSlots": total_slots,
                 "occupancy": occupancy,
                 "revenueToday": revenue_today,
                 "address": address,
@@ -376,6 +381,13 @@ async def get_parking_lot(
             status_code=status.HTTP_404_NOT_FOUND,
         )
 
+    total_slots = await db.client["parkflow"].parking_slots.count_documents(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
+    cameras_count = await db.client["parkflow"].cameras.count_documents(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
+
     return APIResponse.success_response(
         message="Parking lot retrieved",
         code=ResponseCode.SUCCESS,
@@ -385,7 +397,8 @@ async def get_parking_lot(
             "address": lot.get("address"),
             "latitude": lot.get("location", {}).get("coordinates", [0, 0])[1],
             "longitude": lot.get("location", {}).get("coordinates", [0, 0])[0],
-            "totalSlots": lot.get("total_slots", 0),
+            "totalSlots": total_slots,
+            "camerasCount": cameras_count,
             "slot_width_meters": lot.get("slot_width_meters", 5.0),
             "slot_length_meters": lot.get("slot_length_meters", 5.0),
             "rating": lot.get("average_rating", 0.0),
@@ -425,8 +438,6 @@ async def update_parking_lot(
             lat = request.latitude if request.latitude is not None else coords[1]
             update_data["location"] = {"type": "Point", "coordinates": [lon, lat]}
 
-    if request.total_slots is not None:
-        update_data["total_slots"] = request.total_slots
     if request.price_per_hour is not None:
         update_data["price_per_hour"] = request.price_per_hour
     if request.slot_width_meters is not None:

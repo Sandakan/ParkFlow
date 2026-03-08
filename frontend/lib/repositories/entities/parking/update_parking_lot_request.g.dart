@@ -13,7 +13,6 @@ _UpdateParkingLotRequest _$UpdateParkingLotRequestFromJson(
   address: json['address'] as String?,
   latitude: (json['latitude'] as num?)?.toDouble(),
   longitude: (json['longitude'] as num?)?.toDouble(),
-  totalSlots: (json['total_slots'] as num?)?.toInt(),
   entranceLogicalLocations:
       (json['entrance_logical_locations'] as List<dynamic>?)
           ?.map(
@@ -31,7 +30,6 @@ Map<String, dynamic> _$UpdateParkingLotRequestToJson(
   'address': instance.address,
   'latitude': instance.latitude,
   'longitude': instance.longitude,
-  'total_slots': instance.totalSlots,
   'entrance_logical_locations': instance.entranceLogicalLocations,
   'slot_width_meters': instance.slotWidthMeters,
   'slot_length_meters': instance.slotLengthMeters,

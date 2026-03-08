@@ -42,20 +42,11 @@ class _AdminEditParkingLotScreenState
           Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
         ],
       ),
-      'totalSlots': FormControl<String>(
-        validators: [Validators.required, Validators.pattern(r'^\d+$')],
-      ),
       'slotWidth': FormControl<String>(
         validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
       ),
       'slotLength': FormControl<String>(
         validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
-      ),
-      'entranceRow': FormControl<String>(
-        validators: [Validators.required, Validators.pattern(r'^\d+$')],
-      ),
-      'entranceCol': FormControl<String>(
-        validators: [Validators.required, Validators.pattern(r'^\d+$')],
       ),
     });
   }
@@ -80,19 +71,8 @@ class _AdminEditParkingLotScreenState
           'address': lot.address,
           'latitude': lot.latitude.toString(),
           'longitude': lot.longitude.toString(),
-          'totalSlots': lot.totalSlots.toString(),
           'slotWidth': (lot.slotWidthMeters ?? 5.0).toString(),
           'slotLength': (lot.slotLengthMeters ?? 5.0).toString(),
-          'entranceRow':
-              (lot.entranceLogicalLocations?.isNotEmpty == true
-                      ? lot.entranceLogicalLocations![0][0]
-                      : 0)
-                  .toString(),
-          'entranceCol':
-              (lot.entranceLogicalLocations?.isNotEmpty == true
-                      ? lot.entranceLogicalLocations![0][1]
-                      : 0)
-                  .toString(),
         });
         _formInitialized = true;
       }
@@ -232,14 +212,6 @@ class _AdminEditParkingLotScreenState
                             ],
                           ),
                           const SizedBox(height: 16),
-                          LabeledReactiveTextField<String>(
-                            formControlName: 'totalSlots',
-                            label: context.l10n.totalSlotsLabel,
-                            hintText: context.l10n.totalSlotsHint,
-                            prefixIcon: Icons.format_list_numbered,
-                            keyboardType: TextInputType.number,
-                            isRequired: true,
-                          ),
                           const SizedBox(height: 16),
                           Row(
                             children: [
@@ -273,33 +245,6 @@ class _AdminEditParkingLotScreenState
                             ],
                           ),
                           const SizedBox(height: 16),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: LabeledReactiveTextField<String>(
-                                  formControlName: 'entranceRow',
-                                  label:
-                                      '${context.l10n.entranceCoordsLabel} (${context.l10n.rowLabel})',
-                                  hintText: '0',
-                                  prefixIcon: Icons.door_front_door_outlined,
-                                  isRequired: true,
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: LabeledReactiveTextField<String>(
-                                  formControlName: 'entranceCol',
-                                  label:
-                                      '${context.l10n.entranceCoordsLabel} (${context.l10n.colLabel})',
-                                  hintText: '0',
-                                  prefixIcon: Icons.door_front_door_outlined,
-                                  isRequired: true,
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                            ],
-                          ),
                           const SizedBox(height: 32),
                           const Divider(),
                           const SizedBox(height: 16),
@@ -372,10 +317,6 @@ class _AdminEditParkingLotScreenState
                                           form.control('longitude').value
                                               as String,
                                         ),
-                                        totalSlots: int.parse(
-                                          form.control('totalSlots').value
-                                              as String,
-                                        ),
                                         slotWidthMeters: double.parse(
                                           form.control('slotWidth').value
                                               as String,
@@ -384,18 +325,6 @@ class _AdminEditParkingLotScreenState
                                           form.control('slotLength').value
                                               as String,
                                         ),
-                                        entranceLogicalLocations: [
-                                          [
-                                            int.parse(
-                                              form.control('entranceRow').value
-                                                  as String,
-                                            ),
-                                            int.parse(
-                                              form.control('entranceCol').value
-                                                  as String,
-                                            ),
-                                          ],
-                                        ],
                                       );
                                       await ref
                                           .read(

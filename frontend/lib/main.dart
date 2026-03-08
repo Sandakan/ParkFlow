@@ -39,6 +39,7 @@ class ParkFlowApp extends ConsumerWidget {
       splitScreenMode: true,
       builder: (context, child) {
         final baseTheme = ThemeData(
+          fontFamily: GoogleFonts.poppins().fontFamily,
           colorScheme: ColorScheme.fromSeed(
             seedColor: const Color(0xFF333233),
             primary: const Color(0xFF333233),

@@ -13,7 +13,6 @@ abstract class CreateParkingLotRequest with _$CreateParkingLotRequest {
     required String address,
     required double latitude,
     required double longitude,
-    @JsonKey(name: 'total_slots') required int totalSlots,
     @JsonKey(name: 'slot_width_meters') required double slotWidthMeters,
     @JsonKey(name: 'slot_length_meters') required double slotLengthMeters,
   }) = _CreateParkingLotRequest;
