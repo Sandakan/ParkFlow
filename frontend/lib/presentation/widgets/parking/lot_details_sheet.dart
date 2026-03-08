@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 import 'package:parkflow/presentation/states/parking/parking_state.dart';
 import 'package:parkflow/models/parking/parking_lot_model.dart';
 import 'package:parkflow/presentation/widgets/parking/parking_lot_layout.dart';
@@ -37,180 +38,182 @@ class LotDetailsSheet extends ConsumerWidget {
       maxChildSize: 0.9,
       expand: false,
       builder: (context, scrollController) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-          ),
-          child: Column(
-            children: [
-              // Drag Handle
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  margin: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: AppColors.outlineVariant,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-
-              // Content
-              Expanded(
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 700),
-                    child: Stack(
-                      children: [
-                        RefreshIndicator(
-                          onRefresh: () async =>
-                              ref.read(parkingProvider.notifier).fetchLots(),
-                          child: CustomScrollView(
-                            controller: scrollController,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            slivers: [
-                              // Title and Close button
-                              SliverToBoxAdapter(
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    24,
-                                    0,
-                                    8,
-                                    0,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          lot.name,
-                                          style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w900,
-                                            color: AppColors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () => context.pop(),
-                                        icon: const Icon(Icons.close),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SliverToBoxAdapter(
-                                child: _buildHeader(
-                                  context,
-                                  parkingState,
-                                  lot,
-                                  availableCount,
-                                ),
-                              ),
-                              if (parkingState.suggestions.isNotEmpty)
-                                SliverToBoxAdapter(
-                                  child: _buildSuggestions(
-                                    context,
-                                    parkingState,
-                                  ),
-                                ),
-                              SliverPadding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 8.0,
-                                ),
-                                sliver: SliverToBoxAdapter(
-                                  child: Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.apps,
-                                        size: 20,
-                                        color: AppColors.primary,
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Lot Layout',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColors.black,
-                                            ),
-                                      ),
-                                      const Spacer(),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Colors.green.withValues(
-                                            alpha: 0.1,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                        ),
-                                        child: const Row(
-                                          children: [
-                                            Icon(
-                                              Icons.circle,
-                                              size: 8,
-                                              color: Colors.green,
-                                            ),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              'Live',
-                                              style: TextStyle(
-                                                color: Colors.green,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              SliverPadding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  16,
-                                  0,
-                                  16,
-                                  40,
-                                ),
-                                sliver: SliverToBoxAdapter(
-                                  child: ParkingLotLayout(
-                                    slots: parkingState.slots,
-                                    suggestions: parkingState.suggestions,
-                                    isLoading: parkingState.isLoading,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Loading Spinner Overlay
-                        if (parkingState.isLoading &&
-                            parkingState.slots.isEmpty)
-                          const Center(child: CircularProgressIndicator()),
-                      ],
+        return PointerInterceptor(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+            ),
+            child: Column(
+              children: [
+                // Drag Handle
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.outlineVariant,
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
-              ),
 
-              // Bottom Actions
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 700),
-                child: _buildBottomActions(context, lot),
-              ),
-            ],
+                // Content
+                Expanded(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 700),
+                      child: Stack(
+                        children: [
+                          RefreshIndicator(
+                            onRefresh: () async =>
+                                ref.read(parkingProvider.notifier).fetchLots(),
+                            child: CustomScrollView(
+                              controller: scrollController,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              slivers: [
+                                // Title and Close button
+                                SliverToBoxAdapter(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                      24,
+                                      0,
+                                      8,
+                                      0,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            lot.name,
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w900,
+                                              color: AppColors.black,
+                                            ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () => context.pop(),
+                                          icon: const Icon(Icons.close),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SliverToBoxAdapter(
+                                  child: _buildHeader(
+                                    context,
+                                    parkingState,
+                                    lot,
+                                    availableCount,
+                                  ),
+                                ),
+                                if (parkingState.suggestions.isNotEmpty)
+                                  SliverToBoxAdapter(
+                                    child: _buildSuggestions(
+                                      context,
+                                      parkingState,
+                                    ),
+                                  ),
+                                SliverPadding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0,
+                                    vertical: 8.0,
+                                  ),
+                                  sliver: SliverToBoxAdapter(
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.apps,
+                                          size: 20,
+                                          color: AppColors.primary,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          'Lot Layout',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleSmall
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors.black,
+                                              ),
+                                        ),
+                                        const Spacer(),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.green.withValues(
+                                              alpha: 0.1,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                          child: const Row(
+                                            children: [
+                                              Icon(
+                                                Icons.circle,
+                                                size: 8,
+                                                color: Colors.green,
+                                              ),
+                                              SizedBox(width: 4),
+                                              Text(
+                                                'Live',
+                                                style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SliverPadding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16,
+                                    0,
+                                    16,
+                                    40,
+                                  ),
+                                  sliver: SliverToBoxAdapter(
+                                    child: ParkingLotLayout(
+                                      slots: parkingState.slots,
+                                      suggestions: parkingState.suggestions,
+                                      isLoading: parkingState.isLoading,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          // Loading Spinner Overlay
+                          if (parkingState.isLoading &&
+                              parkingState.slots.isEmpty)
+                            const Center(child: CircularProgressIndicator()),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Bottom Actions
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 700),
+                  child: _buildBottomActions(context, lot),
+                ),
+              ],
+            ),
           ),
         );
       },

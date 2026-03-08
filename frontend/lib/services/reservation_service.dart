@@ -1,4 +1,5 @@
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
+import 'package:parkflow/utils/helpers/talker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
@@ -31,11 +32,19 @@ class ReservationService {
     required int durationMinutes,
     required String paymentMethod,
   }) async {
+    talker.debug(
+      'ReservationService: Creating reservation with local startTime: $startTime',
+    );
+    talker.debug('ReservationService: startTime.toUtc(): ${startTime.toUtc()}');
+    talker.debug(
+      'ReservationService: startTime.toUtc().toIso8601String(): ${startTime.toUtc().toIso8601String()}',
+    );
+
     final request = CreateReservationRequestEntity(
       slotId: slotId,
       lotId: lotId,
       vehicle: vehicle,
-      startTime: startTime.toIso8601String(),
+      startTime: startTime.toUtc().toIso8601String(),
       durationMinutes: durationMinutes,
       paymentMethod: paymentMethod,
     );

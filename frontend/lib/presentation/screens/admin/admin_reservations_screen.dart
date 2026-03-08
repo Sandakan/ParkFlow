@@ -7,6 +7,7 @@ import 'package:parkflow/services/reservation_service.dart';
 import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
 import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:intl/intl.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class AdminReservationsScreen extends ConsumerStatefulWidget {
   const AdminReservationsScreen({super.key});
@@ -42,18 +43,32 @@ class _AdminReservationsScreenState
 
   Future<void> _handleScannedCode(String token) async {
     try {
-      final response =
-          await ref.read(reservationServiceProvider).scanReservationQr(token);
+      final response = await ref
+          .read(reservationServiceProvider)
+          .scanReservationQr(token);
       if (!mounted) return;
 
       _showReservationDetails(response);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-      setState(() => _isProcessing = false);
+      _showScanError(e.toString());
     }
+  }
+
+  void _showScanError(String message) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _ScanErrorSheet(
+        message: message,
+        onDismiss: () {
+          setState(() => _isProcessing = false);
+        },
+      ),
+    ).then((_) {
+      if (mounted) setState(() => _isProcessing = false);
+    });
   }
 
   void _showReservationDetails(ReservationResponseEntity response) {
@@ -79,18 +94,26 @@ class _AdminReservationsScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.reservations),
-      ),
+      appBar: AppBar(title: Text(context.l10n.reservations)),
       body: Column(
         children: [
           Expanded(
             flex: 2,
             child: Stack(
               children: [
-                MobileScanner(
-                  controller: _scannerController,
-                  onDetect: _onDetect,
+                VisibilityDetector(
+                  key: const Key('admin_reservations_scanner'),
+                  onVisibilityChanged: (visibilityInfo) {
+                    if (visibilityInfo.visibleFraction == 0) {
+                      _scannerController.stop();
+                    } else if (visibilityInfo.visibleFraction > 0) {
+                      _scannerController.start();
+                    }
+                  },
+                  child: MobileScanner(
+                    controller: _scannerController,
+                    onDetect: _onDetect,
+                  ),
                 ),
                 Center(
                   child: Container(
@@ -114,22 +137,25 @@ class _AdminReservationsScreenState
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.qr_code_scanner,
-                      size: 64, color: AppColors.primary),
+                  Icon(
+                    Icons.qr_code_scanner,
+                    size: 64,
+                    color: AppColors.primary,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'Scan Reservation QR Code',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Position the QR code within the frame to check-in or check-out.',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
@@ -171,16 +197,19 @@ class _ReservationDetailsSheet extends StatelessWidget {
             children: [
               Text(
                 'Reservation Details',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
-                  color: (isCheckIn ? Colors.blue : Colors.green)
-                      .withValues(alpha: 0.1),
+                  color: (isCheckIn ? Colors.blue : Colors.green).withValues(
+                    alpha: 0.1,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -202,14 +231,18 @@ class _ReservationDetailsSheet extends StatelessWidget {
             value: '${reservation.lotName} - ${reservation.slotName}',
           ),
           _DetailRow(
-              label: 'Start Time',
-              value: formatter.format(reservation.startTime)),
+            label: 'Start Time',
+            value: formatter.format(reservation.startTime.toLocal()),
+          ),
           _DetailRow(
-              label: 'End Time', value: formatter.format(reservation.endTime)),
+            label: 'End Time',
+            value: formatter.format(reservation.endTime.toLocal()),
+          ),
           if (reservation.checkInTime != null)
             _DetailRow(
-                label: 'Checked-in At',
-                value: formatter.format(reservation.checkInTime!)),
+              label: 'Checked-in At',
+              value: formatter.format(reservation.checkInTime!.toLocal()),
+            ),
           const Divider(height: 32),
           if (!isCheckIn) ...[
             Row(
@@ -218,24 +251,24 @@ class _ReservationDetailsSheet extends StatelessWidget {
                 Text(
                   'Total Billed Amount',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text(
                   'LKR ${reservation.totalBilledPrice}',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
             Text(
               'Select Payment Method',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
             Row(
@@ -248,7 +281,8 @@ class _ReservationDetailsSheet extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
@@ -263,7 +297,8 @@ class _ReservationDetailsSheet extends StatelessWidget {
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
@@ -279,11 +314,13 @@ class _ReservationDetailsSheet extends StatelessWidget {
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                child: const Text('Confirm Check-in',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Confirm Check-in',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ],
@@ -299,8 +336,9 @@ class _ReservationDetailsSheet extends StatelessWidget {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Check-in confirmed successfully!'),
-          backgroundColor: Colors.green),
+        content: Text('Check-in confirmed successfully!'),
+        backgroundColor: Colors.green,
+      ),
     );
   }
 
@@ -317,8 +355,9 @@ class _ReservationDetailsSheet extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Payment'),
-        content:
-            const Text('Payment processing completed successfully (Mock).'),
+        content: const Text(
+          'Payment processing completed successfully (Mock).',
+        ),
         actions: [
           TextButton(
             onPressed: () {
@@ -360,18 +399,103 @@ class _DetailRow extends StatelessWidget {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           Expanded(
             child: Text(
               value,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ScanErrorSheet extends StatelessWidget {
+  final String message;
+  final VoidCallback onDismiss;
+
+  const _ScanErrorSheet({required this.message, required this.onDismiss});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.error.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.error_outline_rounded,
+              color: AppColors.error,
+              size: 48,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Scanning Error',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.error,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            message
+                .replaceAll('Exception: ', '')
+                .replaceAll('AppException: ', ''),
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+          ),
+          const SizedBox(height: 32),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                onDismiss();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: const Text(
+                'Try Again',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'package:parkflow/presentation/notifiers/parking/reservation_notifier.dar
 import 'package:parkflow/presentation/widgets/parking/ongoing_booking_card.dart';
 import 'package:parkflow/presentation/widgets/parking/reservation_card.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
 class BookingsScreen extends ConsumerWidget {
@@ -53,22 +54,32 @@ class BookingsScreen extends ConsumerWidget {
                   );
                 }
 
-                final now = DateTime.now();
-
                 final ongoing = reservations
                     .where(
                       (r) =>
-                          r.startTime.isBefore(now) && r.endTime.isAfter(now),
+                          r.detailedStatus == ReservationStatus.ongoing ||
+                          r.detailedStatus == ReservationStatus.overstay,
                     )
                     .firstOrNull;
 
                 final upcomingSorted =
-                    reservations.where((r) => r.startTime.isAfter(now)).toList()
+                    reservations
+                        .where(
+                          (r) => r.detailedStatus == ReservationStatus.upcoming,
+                        )
+                        .toList()
                       ..sort((a, b) => a.startTime.compareTo(b.startTime));
                 final topUpcoming = upcomingSorted.take(3).toList();
 
-                final allBookings = [...reservations]
-                  ..sort((a, b) => b.startTime.compareTo(a.startTime));
+                final previousAndOther =
+                    reservations
+                        .where(
+                          (r) =>
+                              r.id != ongoing?.id &&
+                              !topUpcoming.any((t) => t.id == r.id),
+                        )
+                        .toList()
+                      ..sort((a, b) => b.startTime.compareTo(a.startTime));
 
                 return CustomScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
@@ -119,7 +130,7 @@ class BookingsScreen extends ConsumerWidget {
                         ),
                       ),
                     ],
-                    if (allBookings.isNotEmpty) ...[
+                    if (previousAndOther.isNotEmpty) ...[
                       SliverPadding(
                         padding: const EdgeInsets.only(
                           left: 20,
@@ -145,10 +156,10 @@ class BookingsScreen extends ConsumerWidget {
                             index,
                           ) {
                             return ReservationCard(
-                              reservation: allBookings[index],
+                              reservation: previousAndOther[index],
                               isHorizontal: false,
                             );
-                          }, childCount: allBookings.length),
+                          }, childCount: previousAndOther.length),
                         ),
                       ),
                     ],

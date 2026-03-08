@@ -18,6 +18,7 @@ class OngoingBookingCard extends StatefulWidget {
 class _OngoingBookingCardState extends State<OngoingBookingCard> {
   late Timer _timer;
   late Duration _timeLeft;
+  bool _isOverstay = false;
 
   @override
   void initState() {
@@ -33,11 +34,19 @@ class _OngoingBookingCardState extends State<OngoingBookingCard> {
   }
 
   void _calculateTimeLeft() {
-    final now = DateTime.now();
-    _timeLeft = widget.reservation.endTime.difference(now);
-    if (_timeLeft.isNegative) {
-      _timeLeft = Duration.zero;
-    }
+    final now = DateTime.now().toUtc();
+    final endTime = widget.reservation.endTime.toUtc();
+    final difference = endTime.difference(now);
+
+    setState(() {
+      if (difference.isNegative) {
+        _timeLeft = now.difference(endTime);
+        _isOverstay = true;
+      } else {
+        _timeLeft = difference;
+        _isOverstay = false;
+      }
+    });
   }
 
   String _formatTimeLeft(Duration duration) {
@@ -136,16 +145,23 @@ class _OngoingBookingCardState extends State<OngoingBookingCard> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          context.l10n.timeLeft,
+                          _isOverstay
+                              ? context.l10n.statusOverstay
+                              : context.l10n.timeLeft,
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.6),
+                            color: Colors.white.withValues(
+                              alpha: _isOverstay ? 0.9 : 0.6,
+                            ),
                             fontSize: 12,
+                            fontWeight: _isOverstay ? FontWeight.bold : null,
                           ),
                         ),
                         Text(
                           _formatTimeLeft(_timeLeft),
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: _isOverstay
+                                ? Colors.orangeAccent
+                                : Colors.white,
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
                           ),
@@ -157,7 +173,11 @@ class _OngoingBookingCardState extends State<OngoingBookingCard> {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    const Icon(Icons.location_on, color: Colors.white70, size: 16),
+                    const Icon(
+                      Icons.location_on,
+                      color: Colors.white70,
+                      size: 16,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -180,7 +200,9 @@ class _OngoingBookingCardState extends State<OngoingBookingCard> {
                     _InfoItem(
                       icon: Icons.access_time,
                       label: 'End Time',
-                      value: timeFormat.format(widget.reservation.endTime),
+                      value: timeFormat.format(
+                        widget.reservation.endTime.toLocal(),
+                      ),
                     ),
                     _InfoItem(
                       icon: Icons.payments_outlined,
@@ -264,7 +286,10 @@ class _StatusIndicator extends StatelessWidget {
           Container(
             width: 8,
             height: 8,
-            decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color: statusColor,
+              shape: BoxShape.circle,
+            ),
           ),
           const SizedBox(width: 8),
           Text(

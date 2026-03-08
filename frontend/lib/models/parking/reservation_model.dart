@@ -45,7 +45,9 @@ enum ReservationStatus {
 
 extension ReservationModelX on ReservationModel {
   ReservationStatus get detailedStatus {
-    final now = DateTime.now();
+    final now = DateTime.now().toUtc();
+    final start = startTime.toUtc();
+    final end = endTime.toUtc();
 
     if (status.toLowerCase() == 'cancelled') {
       return ReservationStatus.cancelled;
@@ -56,10 +58,10 @@ extension ReservationModelX on ReservationModel {
 
     // Status is active
     if (checkInTime == null) {
-      if (startTime.isAfter(now)) {
+      if (start.isAfter(now)) {
         return ReservationStatus.upcoming;
-      } else if (now.isBefore(endTime)) {
-        return ReservationStatus.noShow;
+      } else if (now.isBefore(end)) {
+        return ReservationStatus.upcoming;
       } else {
         return ReservationStatus.expired;
       }
@@ -69,7 +71,7 @@ extension ReservationModelX on ReservationModel {
         return ReservationStatus.completed;
       }
 
-      if (now.isBefore(endTime)) {
+      if (now.isBefore(end)) {
         return ReservationStatus.ongoing;
       } else {
         return ReservationStatus.overstay;

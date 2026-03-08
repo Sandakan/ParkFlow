@@ -32,7 +32,7 @@ class ReservationCard extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                dateFormat.format(reservation.startTime),
+                dateFormat.format(reservation.startTime.toLocal()),
                 style: const TextStyle(
                   fontWeight: FontWeight.w800,
                   fontSize: 16,
@@ -46,7 +46,7 @@ class ReservationCard extends StatelessWidget {
         ),
         SizedBox(height: isHorizontal ? 2 : 4),
         Text(
-          timeFormat.format(reservation.startTime),
+          timeFormat.format(reservation.startTime.toLocal()),
           style: TextStyle(
             fontSize: 14,
             color: AppColors.textSecondary,

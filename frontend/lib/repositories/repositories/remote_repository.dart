@@ -834,7 +834,7 @@ class RemoteRepository implements RemoteRepositoryInterface {
       HttpMethodEnum.get,
       'reservations/slots/$slotId/availability',
       queryParameters: {
-        'start_time': startTime.toIso8601String(),
+        'start_time': startTime.toUtc().toIso8601String(),
         'duration_minutes': durationMinutes,
       },
       accessToken: accessToken,
@@ -864,7 +864,7 @@ class RemoteRepository implements RemoteRepositoryInterface {
       HttpMethodEnum.get,
       'reservations/lots/$lotId/availability',
       queryParameters: {
-        'start_time': startTime.toIso8601String(),
+        'start_time': startTime.toUtc().toIso8601String(),
         'duration_minutes': durationMinutes,
       },
       accessToken: accessToken,
@@ -882,6 +882,7 @@ class RemoteRepository implements RemoteRepositoryInterface {
       );
     }
   }
+
   @override
   Future<ReservationResponseEntity> scanReservationQr(
     String token, {

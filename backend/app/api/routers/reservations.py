@@ -9,6 +9,7 @@ from app.core.database import db
 from datetime import datetime, timedelta, timezone
 import uuid
 from bson import ObjectId
+from loguru import logger
 
 router = APIRouter()
 
@@ -129,11 +130,17 @@ async def create_reservation(
     total_price = (request.duration_minutes / 60.0) * price_per_hour
 
     now = datetime.now(timezone.utc)
+    if request.start_time.tzinfo is None:
+        request.start_time = request.start_time.replace(tzinfo=timezone.utc)
+
     start_time_utc = request.start_time
-    if start_time_utc.tzinfo is None:
-        start_time_utc = start_time_utc.replace(tzinfo=timezone.utc)
+
+    logger.debug(f"Creating Reservation - RAW start_time: {request.start_time}")
+    logger.debug(f"Creating Reservation - UTC start_time: {start_time_utc}")
+    logger.debug(f"Creating Reservation - NOW (UTC): {now}")
 
     if start_time_utc < now - timedelta(minutes=5):
+        logger.debug("Reservation creation failed: past time")
         return APIResponse.error_response(
             message="Reservation start time cannot be in the past",
             code=ResponseCode.RESERVATION_PAST_TIME,
@@ -142,6 +149,8 @@ async def create_reservation(
 
     qr_code = str(uuid.uuid4())
     end_time = request.start_time + timedelta(minutes=request.duration_minutes)
+    if end_time.tzinfo is None:
+        end_time = end_time.replace(tzinfo=timezone.utc)
 
     reservation_dict = {
         "user_id": current_user.user_id,
@@ -238,11 +247,24 @@ async def scan_reservation_qr(
 
     # Check-in logic
     if reservation.get("check_in_time") is None:
-        start_time = reservation["start_time"].replace(tzinfo=timezone.utc)
-        end_time = reservation["end_time"].replace(tzinfo=timezone.utc)
+        start_time = reservation["start_time"]
+        if start_time.tzinfo is None:
+            start_time = start_time.replace(tzinfo=timezone.utc)
+
+        end_time = reservation["end_time"]
+        if end_time.tzinfo is None:
+            end_time = end_time.replace(tzinfo=timezone.utc)
+
+        logger.debug("Scanning Reservation QR")
+        logger.debug(f"Current Time (UTC): {now}")
+        logger.debug(f"Reservation Start Time (UTC): {start_time}")
+        logger.debug(f"Reservation End Time (UTC): {end_time}")
+        logger.debug(f"Difference (now - start): {now - start_time}")
+        logger.debug(f"Check-in window start: {start_time - timedelta(minutes=15)}")
 
         # Allow check-in 15 minutes before start time until the end time
         if now < start_time - timedelta(minutes=15):
+            logger.debug("Result: TOO EARLY")
             return APIResponse.error_response(
                 message="Too early for check-in. Please wait until 15 minutes before your scheduled time.",
                 code=ResponseCode.ERROR,
@@ -250,6 +272,7 @@ async def scan_reservation_qr(
             )
 
         if now > end_time:
+            logger.debug(f"Result: EXPIRED (now > end_time: {now} > {end_time})")
             return APIResponse.error_response(
                 message="Reservation has already expired.",
                 code=ResponseCode.ERROR,

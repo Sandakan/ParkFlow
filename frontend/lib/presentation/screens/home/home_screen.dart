@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:pointer_interceptor/pointer_interceptor.dart';
 
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
@@ -298,7 +299,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 700),
                 child: Column(
-                  children: [_buildSearchBar(context, searchController, ref)],
+                  children: [
+                    PointerInterceptor(
+                      child: _buildSearchBar(context, searchController, ref),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -312,27 +317,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 700),
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: parkingState.lots.length,
-                    onPageChanged: (index) {
-                      _centerOnLot(parkingState.lots[index]);
-                    },
-                    itemBuilder: (context, index) {
-                      final lot = parkingState.lots[index];
-                      return AnimatedPadding(
-                        duration: const Duration(milliseconds: 300),
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: ParkingLotCard(
-                          lot: lot,
-                          isSelected: false,
-                          onTap: () {
-                            _centerOnLot(lot);
-                            _showLotBottomSheet(context, ref, lot);
-                          },
-                        ),
-                      );
-                    },
+                  child: PointerInterceptor(
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: parkingState.lots.length,
+                      onPageChanged: (index) {
+                        _centerOnLot(parkingState.lots[index]);
+                      },
+                      itemBuilder: (context, index) {
+                        final lot = parkingState.lots[index];
+                        return AnimatedPadding(
+                          duration: const Duration(milliseconds: 300),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: ParkingLotCard(
+                            lot: lot,
+                            isSelected: false,
+                            onTap: () {
+                              _centerOnLot(lot);
+                              _showLotBottomSheet(context, ref, lot);
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -386,13 +393,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
           if (parkingState.isLoading)
-            const Positioned(
+            Positioned(
               top: 0,
               left: 0,
               right: 0,
-              child: LinearProgressIndicator(
-                backgroundColor: Colors.transparent,
-                color: AppColors.primary,
+              child: PointerInterceptor(
+                child: LinearProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  color: AppColors.primary,
+                ),
               ),
             ),
         ],

@@ -74,11 +74,7 @@ class DigitalTicketScreen extends ConsumerWidget {
                 constraints: const BoxConstraints(maxWidth: 600),
                 child: Column(
                   children: [
-                    Icon(
-                      statusHeader.icon,
-                      color: statusHeader.color,
-                      size: 80,
-                    )
+                    Icon(statusHeader.icon, color: statusHeader.color, size: 80)
                         .animate()
                         .scale(duration: 600.ms, curve: Curves.easeOutBack)
                         .fadeIn(),
@@ -190,13 +186,17 @@ class DigitalTicketScreen extends ConsumerWidget {
                     _TicketDetail(
                       label: context.l10n.checkInLabel,
                       value: res.checkInTime != null
-                          ? DateFormat('HH:mm').format(res.checkInTime!)
+                          ? DateFormat(
+                              'HH:mm',
+                            ).format(res.checkInTime!.toLocal())
                           : '--:--',
                     ),
                     _TicketDetail(
                       label: context.l10n.checkOutLabel,
                       value: res.checkOutTime != null
-                          ? DateFormat('HH:mm').format(res.checkOutTime!)
+                          ? DateFormat(
+                              'HH:mm',
+                            ).format(res.checkOutTime!.toLocal())
                           : '--:--',
                     ),
                   ],
@@ -313,7 +313,11 @@ class DigitalTicketScreen extends ConsumerWidget {
       ],
     );
   }
-  _StatusHeader _getStatusHeader(BuildContext context, ReservationStatus status) {
+
+  _StatusHeader _getStatusHeader(
+    BuildContext context,
+    ReservationStatus status,
+  ) {
     switch (status) {
       case ReservationStatus.upcoming:
         return _StatusHeader(
