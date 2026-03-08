@@ -45,32 +45,38 @@ class AdminParkingLotsScreen extends ConsumerWidget {
 
                 // Main List
                 Expanded(
-                  child: state.isLoading && state.lots.isEmpty
-                      ? const Center(child: CircularProgressIndicator())
-                      : state.error != null
-                      ? _ErrorState(error: state.error!)
-                      : state.lots.isEmpty
-                      ? const _EmptyState()
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                          ).copyWith(bottom: 80),
-                          itemCount: state.lots.length,
-                          itemBuilder: (context, index) {
-                            final lot = state.lots[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: LotCard(
-                                lot: lot,
-                                onTap: () {
-                                  AdminParkingLotDetailsRoute(
-                                    lot.id,
-                                  ).go(context);
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                  child: RefreshIndicator(
+                    onRefresh: () => ref
+                        .read(parkingLotsProvider.notifier)
+                        .fetchLots(query: state.searchQuery),
+                    child: state.isLoading && state.lots.isEmpty
+                        ? const Center(child: CircularProgressIndicator())
+                        : state.error != null
+                        ? _ErrorState(error: state.error!)
+                        : state.lots.isEmpty
+                        ? const _EmptyState()
+                        : ListView.builder(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                            ).copyWith(bottom: 80),
+                            itemCount: state.lots.length,
+                            itemBuilder: (context, index) {
+                              final lot = state.lots[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: LotCard(
+                                  lot: lot,
+                                  onTap: () {
+                                    AdminParkingLotDetailsRoute(
+                                      lot.id,
+                                    ).go(context);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                  ),
                 ),
               ],
             ),
@@ -107,24 +113,30 @@ class _EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.local_parking_outlined,
-            size: 80,
-            color: AppColors.outlineVariant,
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.local_parking_outlined,
+                size: 80,
+                color: AppColors.outlineVariant,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                context.l10n.noLotsFound,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            context.l10n.noLotsFound,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: AppColors.textSecondary,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -136,29 +148,39 @@ class _ErrorState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, color: AppColors.error, size: 60),
-            const SizedBox(height: 16),
-            Text(
-              context.l10n.errorLoadingLots,
-              style: theme.textTheme.titleMedium,
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  color: AppColors.error,
+                  size: 60,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  context.l10n.errorLoadingLots,
+                  style: theme.textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  error,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              error,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

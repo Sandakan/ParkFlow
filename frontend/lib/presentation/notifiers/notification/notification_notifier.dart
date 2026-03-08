@@ -40,7 +40,9 @@ class NotificationNotifier extends _$NotificationNotifier {
     final remoteRepo = ref.read(remoteRepositoryProvider);
     final token = await ref.read(authProvider.notifier).getValidAccessToken();
     final response = await remoteRepo.getNotifications(accessToken: token);
-    return List<NotificationEntity>.from(response);
+    return response
+        .map((json) => NotificationEntity.fromJson(json as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> markAsRead(String id) async {

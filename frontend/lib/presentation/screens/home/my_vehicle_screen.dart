@@ -70,7 +70,7 @@ class MyVehicleScreen extends ConsumerWidget {
   }
 }
 
-class _VehicleList extends StatelessWidget {
+class _VehicleList extends ConsumerWidget {
   final List<dynamic> vehicles;
   final Function(String) onDelete;
 
@@ -81,20 +81,24 @@ class _VehicleList extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 16,
-      ).copyWith(bottom: 80),
-      itemCount: vehicles.length,
-      itemBuilder: (context, index) {
-        final vehicle = vehicles[index];
-        return _VehicleCard(
-          vehicle: vehicle,
-          onDelete: () => onDelete(vehicle.plateNumber),
-        );
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    return RefreshIndicator(
+      onRefresh: () => ref.read(authProvider.notifier).refreshUser(),
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ).copyWith(bottom: 80),
+        itemCount: vehicles.length,
+        itemBuilder: (context, index) {
+          final vehicle = vehicles[index];
+          return _VehicleCard(
+            vehicle: vehicle,
+            onDelete: () => onDelete(vehicle.plateNumber),
+          );
+        },
+      ),
     );
   }
 }
@@ -231,43 +235,53 @@ class _VehicleCard extends StatelessWidget {
   }
 }
 
-class _EmptyVehiclesState extends StatelessWidget {
+class _EmptyVehiclesState extends ConsumerWidget {
   final dynamic l10n;
   const _EmptyVehiclesState({required this.l10n, super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return RefreshIndicator(
+      onRefresh: () => ref.read(authProvider.notifier).refreshUser(),
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
         children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: AppColors.surfaceVariant.withValues(alpha: 0.5),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.directions_car_outlined,
-              size: 80,
-              color: AppColors.outlineVariant,
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            'No vehicles added yet',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.black87,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
-              'Add your vehicles to enjoy seamless parking bookings.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textSecondary, fontSize: 15),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceVariant.withValues(alpha: 0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.directions_car_outlined,
+                    size: 80,
+                    color: AppColors.outlineVariant,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'No vehicles added yet',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.black87,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Text(
+                    'Add your vehicles to enjoy seamless parking bookings.',
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(color: AppColors.textSecondary, fontSize: 15),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

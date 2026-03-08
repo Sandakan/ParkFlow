@@ -32,7 +32,24 @@ class BookingsScreen extends ConsumerWidget {
             onRefresh: () => ref.refresh(reservationNotifierProvider.future),
             child: reservationsState.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
+              error: (err, stack) => ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                  ),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        'Error: $err',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: AppColors.error),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               data: (reservations) {
                 if (reservations.isEmpty) {
                   return ListView(
