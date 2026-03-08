@@ -916,4 +916,39 @@ class RemoteRepository implements RemoteRepositoryInterface {
       );
     }
   }
+
+  @override
+  Future<List<dynamic>> getNotifications({String? accessToken}) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'notifications/',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return validatedResponse.data as List<dynamic>;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<void> markNotificationAsRead(
+    String notificationId, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.patch,
+      'notifications/$notificationId/read',
+      accessToken: accessToken,
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
 }

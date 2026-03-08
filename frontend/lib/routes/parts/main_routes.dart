@@ -43,7 +43,11 @@ part of '../router_provider.dart';
         TypedGoRoute<AdminReservationsRoute>(path: AdminReservationsRoute.path),
       ],
     ),
-
+    TypedStatefulShellBranch<AdminNotificationsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<AdminNotificationsRoute>(path: AdminNotificationsRoute.path),
+      ],
+    ),
     TypedStatefulShellBranch<AdminSettingsBranch>(
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<AdminSettingsRoute>(path: AdminSettingsRoute.path),
@@ -80,6 +84,10 @@ class AdminAnalyticsBranch extends StatefulShellBranchData {
   const AdminAnalyticsBranch();
 }
 
+class AdminNotificationsBranch extends StatefulShellBranchData {
+  const AdminNotificationsBranch();
+}
+
 class AdminSettingsBranch extends StatefulShellBranchData {
   const AdminSettingsBranch();
 }
@@ -94,6 +102,11 @@ class AdminSettingsBranch extends StatefulShellBranchData {
     TypedStatefulShellBranch<BookingsBranch>(
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<BookingsRoute>(path: BookingsRoute.path),
+      ],
+    ),
+    TypedStatefulShellBranch<NotificationsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<NotificationsRoute>(path: NotificationsRoute.path),
       ],
     ),
     TypedStatefulShellBranch<MyVehicleBranch>(
@@ -129,12 +142,36 @@ class BookingsBranch extends StatefulShellBranchData {
   const BookingsBranch();
 }
 
+class NotificationsBranch extends StatefulShellBranchData {
+  const NotificationsBranch();
+}
+
 class MyVehicleBranch extends StatefulShellBranchData {
   const MyVehicleBranch();
 }
 
 class ProfileBranch extends StatefulShellBranchData {
   const ProfileBranch();
+}
+
+class AdminNotificationsRoute extends GoRouteData with $AdminNotificationsRoute {
+  const AdminNotificationsRoute();
+  static const path = '/admin/notifications';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NotificationScreen();
+  }
+}
+
+class NotificationsRoute extends GoRouteData with $NotificationsRoute {
+  const NotificationsRoute();
+  static const path = '/notifications';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NotificationScreen();
+  }
 }
 
 class BookingsRoute extends GoRouteData with $BookingsRoute {

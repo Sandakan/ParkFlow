@@ -14,6 +14,7 @@ import uuid
 import json
 import asyncio
 from bson import ObjectId
+from app.services.notification_service import notification_service
 from loguru import logger
 
 router = APIRouter()
@@ -187,6 +188,22 @@ async def create_reservation(
         )
     except Exception as e:
         logger.error(f"Failed to publish reservation update: {e}")
+
+    await notification_service.send_notification(
+        title="Reservation Created",
+        message=f"Your booking for {lot.get('name')} has been confirmed.",
+        user_id=current_user.user_id,
+        notification_type="success",
+        payload={"reservation_id": str(result.inserted_id), "action": "created"},
+    )
+
+    await notification_service.send_notification(
+        title="Reservation Created",
+        message=f"Your booking for {lot.get('name')} has been confirmed.",
+        user_id=current_user.user_id,
+        notification_type="success",
+        payload={"reservation_id": str(result.inserted_id), "action": "created"},
+    )
 
     reservation_data = {
         "id": str(result.inserted_id),
@@ -365,6 +382,14 @@ async def scan_reservation_qr(
         res_data["check_in_time"] = now
         message = "Checked in successfully"
 
+        await notification_service.send_notification(
+            title="Checked In",
+            message=f"You have successfully checked in at {res_data['lot_name']}.",
+            user_id=reservation["user_id"],
+            notification_type="info",
+            payload={"reservation_id": str(res_id), "action": "check_in"},
+        )
+
     elif reservation.get("check_out_time") is None:
         check_in_time = reservation["check_in_time"].replace(tzinfo=timezone.utc)
         update_data["check_out_time"] = now
@@ -393,6 +418,14 @@ async def scan_reservation_qr(
         res_data["total_billed_price"] = total_billed
 
         message = "Checked out successfully"
+
+        await notification_service.send_notification(
+            title="Checked Out",
+            message=f"You have checked out from {res_data['lot_name']}. Total: LKR {total_billed}",
+            user_id=reservation["user_id"],
+            notification_type="success",
+            payload={"reservation_id": str(res_id), "action": "check_out"},
+        )
     else:
         return APIResponse.error_response(
             message="Reservation already processed",

@@ -281,6 +281,14 @@ RouteBase get $adminShellRoute => StatefulShellRouteData.$route(
     StatefulShellBranchData.$branch(
       routes: [
         GoRouteData.$route(
+          path: '/admin/notifications',
+          factory: $AdminNotificationsRoute._fromState,
+        ),
+      ],
+    ),
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
           path: '/admin/settings',
           factory: $AdminSettingsRoute._fromState,
         ),
@@ -495,6 +503,27 @@ mixin $AdminReservationsRoute on GoRouteData {
   void replace(BuildContext context) => context.replace(location);
 }
 
+mixin $AdminNotificationsRoute on GoRouteData {
+  static AdminNotificationsRoute _fromState(GoRouterState state) =>
+      const AdminNotificationsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/admin/notifications');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
 mixin $AdminSettingsRoute on GoRouteData {
   static AdminSettingsRoute _fromState(GoRouterState state) =>
       const AdminSettingsRoute();
@@ -529,6 +558,14 @@ RouteBase get $driverShellRoute => StatefulShellRouteData.$route(
         GoRouteData.$route(
           path: '/bookings',
           factory: $BookingsRoute._fromState,
+        ),
+      ],
+    ),
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
+          path: '/notifications',
+          factory: $NotificationsRoute._fromState,
         ),
       ],
     ),
@@ -578,6 +615,27 @@ mixin $BookingsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/bookings');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $NotificationsRoute on GoRouteData {
+  static NotificationsRoute _fromState(GoRouterState state) =>
+      const NotificationsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/notifications');
 
   @override
   void go(BuildContext context) => context.go(location);

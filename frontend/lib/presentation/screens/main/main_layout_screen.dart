@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
+import 'package:parkflow/presentation/notifiers/notification/notification_notifier.dart';
 import 'package:parkflow/presentation/states/auth/auth_state.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
@@ -20,6 +21,7 @@ class MainLayoutScreen extends ConsumerWidget {
     final List<NavigationDestinationData> destinations = _getDestinations(
       context,
       authState,
+      ref,
     );
 
     if (destinations.length < 2) {
@@ -51,16 +53,24 @@ class MainLayoutScreen extends ConsumerWidget {
                 ).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                 size: 24,
               ),
+              selectedIndex: navigationShell.currentIndex,
               destinations: destinations
                   .map(
                     (d) => NavigationRailDestination(
-                      icon: Icon(d.icon),
-                      selectedIcon: Icon(d.selectedIcon),
+                      icon: Badge(
+                        label: d.badgeCount != null ? Text(d.badgeCount.toString()) : null,
+                        isLabelVisible: d.badgeCount != null,
+                        child: Icon(d.icon),
+                      ),
+                      selectedIcon: Badge(
+                        label: d.badgeCount != null ? Text(d.badgeCount.toString()) : null,
+                        isLabelVisible: d.badgeCount != null,
+                        child: Icon(d.selectedIcon),
+                      ),
                       label: Text(d.label),
                     ),
                   )
                   .toList(),
-              selectedIndex: navigationShell.currentIndex,
               onDestinationSelected: (index) => _onTap(context, index),
             ),
             const VerticalDivider(thickness: 1, width: 1),
@@ -100,8 +110,16 @@ class MainLayoutScreen extends ConsumerWidget {
             items: destinations
                 .map(
                   (d) => BottomNavigationBarItem(
-                    icon: Icon(d.icon),
-                    activeIcon: Icon(d.selectedIcon),
+                    icon: Badge(
+                      label: d.badgeCount != null ? Text(d.badgeCount.toString()) : null,
+                      isLabelVisible: d.badgeCount != null,
+                      child: Icon(d.icon),
+                    ),
+                    activeIcon: Badge(
+                      label: d.badgeCount != null ? Text(d.badgeCount.toString()) : null,
+                      isLabelVisible: d.badgeCount != null,
+                      child: Icon(d.selectedIcon),
+                    ),
                     label: d.label,
                   ),
                 )
@@ -117,8 +135,13 @@ class MainLayoutScreen extends ConsumerWidget {
   List<NavigationDestinationData> _getDestinations(
     BuildContext context,
     AuthState authState,
+    WidgetRef ref,
   ) {
     if (authState.isAdmin) {
+      final unreadCount = ref.watch(notificationProvider).maybeWhen(
+            data: (notifications) => notifications.where((n) => n.readAt == null).length,
+            orElse: () => 0,
+          );
       return [
         NavigationDestinationData(
           icon: Icons.bar_chart_outlined,
@@ -141,12 +164,22 @@ class MainLayoutScreen extends ConsumerWidget {
           label: context.l10n.reservations,
         ),
         NavigationDestinationData(
+          icon: Icons.notifications_outlined,
+          selectedIcon: Icons.notifications,
+          label: context.l10n.notifications,
+          badgeCount: unreadCount > 0 ? unreadCount : null,
+        ),
+        NavigationDestinationData(
           icon: Icons.settings_outlined,
           selectedIcon: Icons.settings,
           label: context.l10n.settings,
         ),
       ];
     } else if (authState.isDriver) {
+      final unreadCount = ref.watch(notificationProvider).maybeWhen(
+            data: (notifications) => notifications.where((n) => n.readAt == null).length,
+            orElse: () => 0,
+          );
       return [
         NavigationDestinationData(
           icon: Icons.dashboard_outlined,
@@ -157,6 +190,12 @@ class MainLayoutScreen extends ConsumerWidget {
           icon: Icons.bookmark_outline,
           selectedIcon: Icons.bookmark_added,
           label: context.l10n.bookings,
+        ),
+        NavigationDestinationData(
+          icon: Icons.notifications_outlined,
+          selectedIcon: Icons.notifications,
+          label: context.l10n.notifications,
+          badgeCount: unreadCount > 0 ? unreadCount : null,
         ),
         NavigationDestinationData(
           icon: Icons.directions_car_outlined,
@@ -185,10 +224,12 @@ class NavigationDestinationData {
   final IconData icon;
   final IconData selectedIcon;
   final String label;
+  final int? badgeCount;
 
   NavigationDestinationData({
     required this.icon,
     required this.selectedIcon,
     required this.label,
+    this.badgeCount,
   });
 }

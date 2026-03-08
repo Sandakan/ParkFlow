@@ -1064,5 +1064,13 @@
 	"ticketSubtitleOverstay": "You have exceeded your reserved time.",
 	"ticketSubtitleNoShow": "Please check in before the time expires.",
 	"ticketSubtitleCompleted": "Your parking session has ended.",
-	"ticketSubtitleCancelled": "This booking is no longer valid."
+	"ticketSubtitleCancelled": "This booking is no longer valid.",
+	"notifications": "Notifications",
+	"@notifications": {
+		"description": "Label for the notifications navigation"
+	},
+	"noNotifications": "No notifications yet",
+	"@noNotifications": {
+		"description": "Message shown when there are no notifications"
+	}
 }

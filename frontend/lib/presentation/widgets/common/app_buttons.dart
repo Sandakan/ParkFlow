@@ -65,15 +65,19 @@ class AppPrimaryButton extends StatelessWidget {
                     Icon(icon, size: 20),
                     const SizedBox(width: 8),
                   ],
-                  Text(
-                    label,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: isEnabled
-                          ? (foregroundColor ?? AppColors.white)
-                          : (foregroundColor ?? AppColors.white).withValues(
-                              alpha: 0.8,
-                            ),
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isEnabled
+                            ? (foregroundColor ?? AppColors.white)
+                            : (foregroundColor ?? AppColors.white).withValues(
+                                alpha: 0.8,
+                              ),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
                 ],
@@ -143,15 +147,19 @@ class AppSecondaryButton extends StatelessWidget {
                     Icon(icon, size: 20),
                     const SizedBox(width: 8),
                   ],
-                  Text(
-                    label,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: isEnabled
-                          ? (foregroundColor ?? AppColors.primary)
-                          : (foregroundColor ?? AppColors.primary).withValues(
-                              alpha: 0.4,
-                            ),
+                  Flexible(
+                    child: Text(
+                      label,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isEnabled
+                            ? (foregroundColor ?? AppColors.primary)
+                            : (foregroundColor ?? AppColors.primary).withValues(
+                                alpha: 0.4,
+                              ),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
                 ],

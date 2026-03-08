@@ -57,5 +57,10 @@
 		<string>This app needs microphone access for voice features and streaming.</string>
 		<key>GoogleMapsApiKey</key>
 		<string>$(MAPS_API_KEY)</string>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>fetch</string>
+			<string>remote-notification</string>
+		</array>
 	</dict>
 </plist>

@@ -410,6 +410,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.5,
                               ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
                           ],
                         ),
@@ -604,11 +606,15 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               children: [
                 Icon(Icons.auto_awesome, size: 16, color: AppColors.primary),
                 const SizedBox(width: 8),
-                Text(
-                  'Suggested Slot: $_suggestedSlotId',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    'Suggested Slot: $_suggestedSlotId',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
                 ),
               ],
@@ -678,10 +684,15 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Base Rate',
-                style: TextStyle(color: AppColors.textSecondary),
+              Expanded(
+                child: Text(
+                  'Base Rate',
+                  style: TextStyle(color: AppColors.textSecondary),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
+              const SizedBox(width: 8),
               Text(
                 'LKR ${pricePerHour.toStringAsFixed(2)}/hr',
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -692,10 +703,15 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Duration',
-                style: TextStyle(color: AppColors.textSecondary),
+              Expanded(
+                child: Text(
+                  'Duration',
+                  style: TextStyle(color: AppColors.textSecondary),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
+              const SizedBox(width: 8),
               Text(
                 '$duration min',
                 style: const TextStyle(fontWeight: FontWeight.bold),
@@ -706,18 +722,23 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Total Price',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+              Expanded(
+                child: Text(
+                  'Total Price',
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
+              const SizedBox(width: 8),
               Text(
                 'LKR ${totalPrice.toStringAsFixed(2)}',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  color: AppColors.primary,
-                ),
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primary,
+                    ),
               ),
             ],
           ),
@@ -949,20 +970,24 @@ class _SectionHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 20, color: AppColors.primary),
         const SizedBox(width: 8),
-        RichText(
-          text: TextSpan(
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-              color: AppColors.black,
+        Expanded(
+          child: RichText(
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            text: TextSpan(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+                color: AppColors.black,
+              ),
+              children: [
+                TextSpan(text: title),
+                if (isRequired)
+                  TextSpan(
+                    text: ' *',
+                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  ),
+              ],
             ),
-            children: [
-              TextSpan(text: title),
-              if (isRequired)
-                TextSpan(
-                  text: ' *',
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
-                ),
-            ],
           ),
         ),
         const Spacer(),
@@ -1022,6 +1047,8 @@ class _PickerTile extends StatelessWidget {
               style: Theme.of(
                 context,
               ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
             ),
           ],
         ),
@@ -1068,11 +1095,15 @@ class _ChoiceTile extends StatelessWidget {
               ),
               const SizedBox(width: 8),
             ],
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: isSelected ? AppColors.white : AppColors.black,
-                fontWeight: FontWeight.bold,
+            Flexible(
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: isSelected ? AppColors.white : AppColors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
               ),
             ),
           ],

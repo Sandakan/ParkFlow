@@ -27,6 +27,7 @@ import 'package:parkflow/presentation/screens/parking/digital_ticket_screen.dart
 import 'package:parkflow/presentation/screens/profile/payment_methods_screen.dart';
 import 'package:parkflow/presentation/screens/profile/add_vehicle_screen.dart';
 import 'package:parkflow/presentation/screens/profile/add_payment_method_screen.dart';
+import 'package:parkflow/presentation/screens/home/notification_screen.dart';
 
 part 'router_provider.g.dart';
 part 'parts/boot_routes.dart';

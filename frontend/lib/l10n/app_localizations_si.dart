@@ -860,4 +860,10 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get ticketSubtitleCancelled => 'This booking is no longer valid.';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get noNotifications => 'No notifications yet';
 }

@@ -1725,6 +1725,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This booking is no longer valid.'**
   String get ticketSubtitleCancelled;
+
+  /// Label for the notifications navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// Message shown when there are no notifications
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotifications;
 }
 
 class _AppLocalizationsDelegate

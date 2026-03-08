@@ -46,6 +46,8 @@ class LabeledReactiveTextField<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         RichText(
+          overflow: TextOverflow.ellipsis,
+          maxLines: 1,
           text: TextSpan(
             text: label,
             style: const TextStyle(

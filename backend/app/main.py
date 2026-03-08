@@ -25,6 +25,7 @@ from app.api.routers import (
     analytics,
     reservations,
     settings as settings_router,
+    notifications,
 )
 
 from app.schemas.response import APIResponse, ResponseCode
@@ -108,9 +109,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 app.add_middleware(
     CORSMiddleware,
-    # TODO: Remove this in production when webrtc_test.html testing is not needed
-    allow_origins=["null"],
-    allow_origin_regex=r"http://localhost:?\d*|http://127.0.0.1:?\d*",
+    allow_origin_regex=r"https?://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -126,6 +125,9 @@ app.include_router(
     reservations.router, prefix="/api/v1/reservations", tags=["Reservations"]
 )
 app.include_router(settings_router.router, prefix="/api/v1/settings", tags=["Settings"])
+app.include_router(
+    notifications.router, prefix="/api/v1/notifications", tags=["Notifications"]
+)
 
 
 @app.get("/favicon.ico", include_in_schema=False)
