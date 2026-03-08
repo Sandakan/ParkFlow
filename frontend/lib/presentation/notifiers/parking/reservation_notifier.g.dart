@@ -14,7 +14,7 @@ final reservationNotifierProvider = ReservationNotifierProvider._();
 
 final class ReservationNotifierProvider
     extends
-        $AsyncNotifierProvider<ReservationNotifier, List<ReservationModel>> {
+        $StreamNotifierProvider<ReservationNotifier, List<ReservationModel>> {
   ReservationNotifierProvider._()
     : super(
         from: null,
@@ -35,11 +35,11 @@ final class ReservationNotifierProvider
 }
 
 String _$reservationNotifierHash() =>
-    r'5df00a8fd8e0b4aebb8d602294fe50c06012bb0f';
+    r'd54d76dac7603fc1c1aaab7a17da011abc9fd3b2';
 
 abstract class _$ReservationNotifier
-    extends $AsyncNotifier<List<ReservationModel>> {
-  FutureOr<List<ReservationModel>> build();
+    extends $StreamNotifier<List<ReservationModel>> {
+  Stream<List<ReservationModel>> build();
   @$mustCallSuper
   @override
   void runBuild() {

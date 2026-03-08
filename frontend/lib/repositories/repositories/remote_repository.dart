@@ -886,11 +886,21 @@ class RemoteRepository implements RemoteRepositoryInterface {
   @override
   Future<ReservationResponseEntity> scanReservationQr(
     String token, {
+    bool confirm = false,
+    String? paymentMethod,
     String? accessToken,
   }) async {
+    final Map<String, dynamic> queryParameters = {
+      'confirm': confirm,
+    };
+    if (paymentMethod != null) {
+      queryParameters['payment_method'] = paymentMethod;
+    }
+
     final response = await httpAPI.doRequest(
       HttpMethodEnum.post,
       'reservations/scan/$token',
+      queryParameters: queryParameters,
       accessToken: accessToken,
     );
 

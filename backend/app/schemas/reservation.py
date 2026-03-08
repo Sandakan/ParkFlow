@@ -32,6 +32,9 @@ class ReservationResponse(BaseModel):
     status: str
     qr_code_token: str
     lot_name: str
+    lot_address: str
+    lot_latitude: float
+    lot_longitude: float
     slot_name: str
     created_at: datetime
     updated_at: datetime

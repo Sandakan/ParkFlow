@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:parkflow/repositories/providers/env_repository_provider.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/utils/helpers/talker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,9 +17,10 @@ part 'reservation_service.g.dart';
 
 class ReservationService {
   final RemoteRepositoryInterface _remoteRepository;
+  final String _baseUrl;
   final Ref _ref;
 
-  ReservationService(this._remoteRepository, this._ref);
+  ReservationService(this._remoteRepository, this._baseUrl, this._ref);
 
   Future<String?> _getToken() =>
       _ref.read(authProvider.notifier).getValidAccessToken();
@@ -81,15 +86,97 @@ class ReservationService {
     );
   }
 
-  Future<ReservationResponseEntity> scanReservationQr(String token) async {
+  Future<ReservationResponseEntity> scanReservationQr(
+    String token, {
+    bool confirm = false,
+    String? paymentMethod,
+  }) async {
     return _remoteRepository.scanReservationQr(
       token,
+      confirm: confirm,
+      paymentMethod: paymentMethod,
       accessToken: await _getToken(),
     );
+  }
+
+  Stream<List<ReservationModel>> streamMyReservations() {
+    final controller = StreamController<List<ReservationModel>>.broadcast();
+    http.Client? client;
+    bool isCancelled = false;
+
+    Future<void> connect() async {
+      if (isCancelled || controller.isClosed) return;
+
+      client?.close();
+      client = http.Client();
+
+      try {
+        final token = await _getToken();
+        final url = Uri.parse('$_baseUrl/reservations/stream');
+
+        final request = http.Request('GET', url);
+        if (token != null) {
+          request.headers['Authorization'] = 'Bearer $token';
+        }
+        request.headers['Accept'] = 'text/event-stream';
+        request.headers['Cache-Control'] = 'no-cache';
+
+        final response = await client!.send(request);
+
+        if (response.statusCode != 200) {
+          talker.error(
+            'Reservation SSE: Failed to connect stream: ${response.statusCode}',
+          );
+          await Future.delayed(const Duration(seconds: 3));
+          return connect();
+        }
+
+        await for (final line
+            in response.stream
+                .transform(utf8.decoder)
+                .transform(const LineSplitter())) {
+          if (isCancelled || controller.isClosed) break;
+
+          if (line.startsWith('data: ')) {
+            try {
+              final jsonStr = line.substring(6);
+              final List data = json.decode(jsonStr) as List;
+              final reservations =
+                  data.map((e) => ReservationModel.fromJson(e)).toList();
+              if (!controller.isClosed) {
+                controller.add(reservations);
+              }
+            } catch (e) {
+              talker.error('Reservation SSE: Error parsing data', e);
+            }
+          }
+        }
+      } catch (e) {
+        talker.error('Reservation SSE: Stream error: $e');
+      } finally {
+        if (!isCancelled && !controller.isClosed) {
+          talker.info('Reservation SSE: Disconnected, retrying in 3s...');
+          await Future.delayed(const Duration(seconds: 3));
+          await connect();
+        }
+      }
+    }
+
+    connect();
+
+    controller.onCancel = () {
+      isCancelled = true;
+      client?.close();
+      talker.info('Reservation SSE: stream cancelled');
+    };
+
+    return controller.stream;
   }
 }
 
 @riverpod
 ReservationService reservationService(Ref ref) {
-  return ReservationService(ref.watch(remoteRepositoryProvider), ref);
+  final remote = ref.watch(remoteRepositoryProvider);
+  final env = ref.watch(envRepositoryProvider);
+  return ReservationService(remote, env.getBaseUrl(), ref);
 }

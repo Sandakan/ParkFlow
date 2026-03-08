@@ -145,6 +145,8 @@ abstract class RemoteRepositoryInterface {
 
   Future<ReservationResponseEntity> scanReservationQr(
     String token, {
+    bool confirm = false,
+    String? paymentMethod,
     String? accessToken,
   });
 }

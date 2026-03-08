@@ -6,11 +6,8 @@ import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
-import 'package:parkflow/models/parking/parking_lot_model.dart';
 import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/routes/router_provider.dart';
-import 'package:parkflow/models/parking/parking_slot_model.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
 class DigitalTicketScreen extends ConsumerWidget {
@@ -49,21 +46,6 @@ class DigitalTicketScreen extends ConsumerWidget {
             );
           }
 
-          final parkingState = ref.watch(parkingProvider);
-          final slot = parkingState.slots.cast<ParkingSlotModel?>().firstWhere(
-            (s) => s?.id == res.slotId,
-            orElse: () => null,
-          );
-          final slotName =
-              slot?.name ?? 'S-${res.slotId.substring(res.slotId.length - 4)}';
-          final lot = parkingState.lot;
-
-          if (lot == null) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppColors.white),
-            );
-          }
-
           final status = res.detailedStatus;
           final statusHeader = _getStatusHeader(context, status);
 
@@ -98,9 +80,9 @@ class DigitalTicketScreen extends ConsumerWidget {
                       textAlign: TextAlign.center,
                     ).animate().fadeIn(delay: 400.ms),
                     const SizedBox(height: 48),
-                    _buildTicketCard(context, res, lot, slotName),
+                    _buildTicketCard(context, res),
                     const SizedBox(height: 32),
-                    _buildActionButtons(context, lot),
+                    _buildActionButtons(context, res),
                     const SizedBox(height: 48),
                   ],
                 ),
@@ -124,8 +106,6 @@ class DigitalTicketScreen extends ConsumerWidget {
   Widget _buildTicketCard(
     BuildContext context,
     ReservationModel res,
-    ParkingLotModel lot,
-    String slotName,
   ) {
     return Container(
       decoration: BoxDecoration(
@@ -139,14 +119,14 @@ class DigitalTicketScreen extends ConsumerWidget {
             child: Column(
               children: [
                 Text(
-                  lot.name,
+                  res.lotName,
                   style: const TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 20,
                   ),
                 ),
                 Text(
-                  lot.address,
+                  res.lotAddress,
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 13,
@@ -172,7 +152,7 @@ class DigitalTicketScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _TicketDetail(label: 'Slot', value: slotName),
+                    _TicketDetail(label: 'Slot', value: res.slotName),
                     _TicketDetail(
                       label: 'Vehicle',
                       value: res.vehicle.plateNumber,
@@ -272,7 +252,7 @@ class DigitalTicketScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, ParkingLotModel lot) {
+  Widget _buildActionButtons(BuildContext context, ReservationModel res) {
     return Row(
       children: [
         Expanded(
@@ -295,7 +275,7 @@ class DigitalTicketScreen extends ConsumerWidget {
           child: OutlinedButton.icon(
             onPressed: () {
               final url =
-                  'https://www.google.com/maps/search/?api=1&query=${lot.latitude},${lot.longitude}';
+                  'https://www.google.com/maps/search/?api=1&query=${res.lotLatitude},${res.lotLongitude}';
               launchUrl(Uri.parse(url));
             },
             icon: const Icon(Icons.directions_outlined),

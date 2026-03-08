@@ -8,8 +8,8 @@ part 'reservation_notifier.g.dart';
 @Riverpod(name: 'reservationNotifierProvider')
 class ReservationNotifier extends _$ReservationNotifier {
   @override
-  FutureOr<List<ReservationModel>> build() async {
-    return ref.watch(reservationServiceProvider).getMyReservations();
+  Stream<List<ReservationModel>> build() {
+    return ref.watch(reservationServiceProvider).streamMyReservations();
   }
 
   Future<ReservationModel?> createReservation({

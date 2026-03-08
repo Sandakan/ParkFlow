@@ -45,10 +45,10 @@ class _AdminReservationsScreenState
     try {
       final response = await ref
           .read(reservationServiceProvider)
-          .scanReservationQr(token);
+          .scanReservationQr(token, confirm: false);
       if (!mounted) return;
 
-      _showReservationDetails(response);
+      _showReservationDetails(response, token);
     } catch (e) {
       if (!mounted) return;
       _showScanError(e.toString());
@@ -71,7 +71,10 @@ class _AdminReservationsScreenState
     });
   }
 
-  void _showReservationDetails(ReservationResponseEntity response) {
+  void _showReservationDetails(
+    ReservationResponseEntity response,
+    String qrToken,
+  ) {
     final reservation = response.reservation;
 
     showModalBottomSheet(
@@ -82,6 +85,7 @@ class _AdminReservationsScreenState
       ),
       builder: (context) => _ReservationDetailsSheet(
         reservation: reservation,
+        qrToken: qrToken,
         onProcessed: () {
           setState(() => _isProcessing = false);
         },
@@ -131,33 +135,38 @@ class _AdminReservationsScreenState
           Expanded(
             flex: 1,
             child: Container(
-              padding: const EdgeInsets.all(24),
               width: double.infinity,
               color: Theme.of(context).colorScheme.surface,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.qr_code_scanner,
-                    size: 64,
-                    color: AppColors.primary,
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.qr_code_scanner,
+                        size: 64,
+                        color: AppColors.primary,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Scan Reservation QR Code',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Position the QR code within the frame to check-in or check-out.',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Scan Reservation QR Code',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Position the QR code within the frame to check-in or check-out.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -167,50 +176,125 @@ class _AdminReservationsScreenState
   }
 }
 
-class _ReservationDetailsSheet extends StatelessWidget {
+class _ReservationDetailsSheet extends ConsumerStatefulWidget {
   final ReservationModel reservation;
+  final String qrToken;
   final VoidCallback onProcessed;
 
   const _ReservationDetailsSheet({
     required this.reservation,
+    required this.qrToken,
     required this.onProcessed,
   });
 
   @override
+  ConsumerState<_ReservationDetailsSheet> createState() =>
+      _ReservationDetailsSheetState();
+}
+
+class _ReservationDetailsSheetState
+    extends ConsumerState<_ReservationDetailsSheet> {
+  String? _selectedPaymentMethod;
+  bool _isConfirming = false;
+  late ReservationModel _reservation;
+
+  @override
+  void initState() {
+    super.initState();
+    _reservation = widget.reservation;
+    _selectedPaymentMethod = _reservation.paymentMethod;
+  }
+
+  Future<void> _handleConfirm() async {
+    setState(() => _isConfirming = true);
+    try {
+      await ref.read(reservationServiceProvider).scanReservationQr(
+        widget.qrToken,
+        confirm: true,
+        paymentMethod: _selectedPaymentMethod,
+      );
+
+      if (!mounted) return;
+
+      Navigator.pop(context);
+      widget.onProcessed();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Processed successfully!'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => _isConfirming = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.toString().replaceAll('Exception: ', '')),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final bool isCheckIn = reservation.checkInTime == null;
+    final bool isCheckIn = _reservation.checkInTime == null;
     final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
 
-    return Padding(
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      ),
       padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
         left: 24,
         right: 24,
-        top: 24,
+        top: 12,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 24),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Reservation Details',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                isCheckIn ? 'Check-in Preview' : 'Checkout Preview',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.black,
+                ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: (isCheckIn ? Colors.blue : Colors.green).withValues(
                     alpha: 0.1,
                   ),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: (isCheckIn ? Colors.blue : Colors.green).withValues(
+                      alpha: 0.5,
+                    ),
+                  ),
                 ),
                 child: Text(
                   isCheckIn ? 'PENDING' : 'ACTIVE',
@@ -224,159 +308,182 @@ class _ReservationDetailsSheet extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 24),
-          _DetailRow(label: 'User ID', value: reservation.userId),
-          _DetailRow(label: 'Vehicle', value: reservation.vehicle.plateNumber),
+          _DetailRow(label: 'Vehicle', value: _reservation.vehicle.plateNumber),
           _DetailRow(
             label: 'Slot',
-            value: '${reservation.lotName} - ${reservation.slotName}',
+            value: '${_reservation.lotName} - ${_reservation.slotName}',
           ),
           _DetailRow(
             label: 'Start Time',
-            value: formatter.format(reservation.startTime.toLocal()),
+            value: formatter.format(_reservation.startTime.toLocal()),
           ),
           _DetailRow(
             label: 'End Time',
-            value: formatter.format(reservation.endTime.toLocal()),
+            value: formatter.format(_reservation.endTime.toLocal()),
           ),
-          if (reservation.checkInTime != null)
+          if (_reservation.checkInTime != null)
             _DetailRow(
               label: 'Checked-in At',
-              value: formatter.format(reservation.checkInTime!.toLocal()),
+              value: formatter.format(_reservation.checkInTime!.toLocal()),
             ),
-          const Divider(height: 32),
+          const Divider(height: 32, thickness: 1),
           if (!isCheckIn) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Total Billed Amount',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: TextStyle(
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
+                    color: AppColors.textSecondary,
                   ),
                 ),
                 Text(
-                  'LKR ${reservation.totalBilledPrice}',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  'LKR ${_reservation.totalBilledPrice}',
+                  style: const TextStyle(
+                    fontSize: 24,
                     color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            Text(
+            const Text(
               'Select Payment Method',
-              style: Theme.of(
-                context,
-              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+                color: AppColors.black,
+              ),
             ),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _handlePayment(context, 'cash'),
-                    icon: const Icon(Icons.money),
-                    label: const Text('Cash'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                  child: _PaymentMethodButton(
+                    label: 'Cash',
+                    icon: Icons.money_rounded,
+                    isSelected: _selectedPaymentMethod == 'cash',
+                    onTap: () => setState(() => _selectedPaymentMethod = 'cash'),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () => _handlePayment(context, 'card'),
-                    icon: const Icon(Icons.credit_card),
-                    label: const Text('Card'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                  child: _PaymentMethodButton(
+                    label: 'Card',
+                    icon: Icons.credit_card_rounded,
+                    isSelected: _selectedPaymentMethod == 'card',
+                    onTap: () => setState(() => _selectedPaymentMethod = 'card'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _PaymentMethodButton(
+                    label: 'Wallet',
+                    icon: Icons.account_balance_wallet_rounded,
+                    isSelected: _selectedPaymentMethod == 'wallet',
+                    onTap: () => setState(() => _selectedPaymentMethod = 'wallet'),
                   ),
                 ),
               ],
             ),
-          ] else ...[
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => _handleCheckIn(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Confirm Check-in',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            const SizedBox(height: 24),
+          ],
+          SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: _isConfirming ? null : _handleConfirm,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
+              child: _isConfirming
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+                      ),
+                    )
+                  : Text(
+                      isCheckIn ? 'Confirm Check-in' : 'Confirm Checkout',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
             ),
-          ],
-          const SizedBox(height: 32),
-        ],
-      ),
-    );
-  }
-
-  void _handleCheckIn(BuildContext context) {
-    Navigator.pop(context);
-    onProcessed();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Check-in confirmed successfully!'),
-        backgroundColor: Colors.green,
-      ),
-    );
-  }
-
-  void _handlePayment(BuildContext context, String method) {
-    if (method == 'card') {
-      _showMockPayment(context);
-    } else {
-      _completeProcess(context, 'Cash payment completed.');
-    }
-  }
-
-  void _showMockPayment(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Payment'),
-        content: const Text(
-          'Payment processing completed successfully (Mock).',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close dialog
-              _completeProcess(context, 'Card payment completed.');
-            },
-            child: const Text('OK'),
           ),
         ],
       ),
     );
   }
+}
 
-  void _completeProcess(BuildContext context, String message) {
-    Navigator.pop(context); // Close sheet
-    onProcessed();
+class _PaymentMethodButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.green),
+  const _PaymentMethodButton({
+    required this.label,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.outlineVariant,
+            width: 2,
+          ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppColors.primary.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ]
+              : null,
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? AppColors.white : AppColors.textSecondary,
+              size: 24,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                color: isSelected ? AppColors.white : AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
