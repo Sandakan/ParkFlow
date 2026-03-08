@@ -741,4 +741,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsSignOutSubtitle => 'Sign out and secure your data';
+
+  @override
+  String get upcomingBookings => 'Upcoming Bookings';
+
+  @override
+  String get previousBookings => 'Previous Bookings';
+
+  @override
+  String get noBookingsFound => 'No bookings found';
+
+  @override
+  String durationHours(String hours, String minutes) {
+    return '${hours}h ${minutes}m';
+  }
+
+  @override
+  String ticketId(String id) {
+    return 'Ticket ID: $id';
+  }
+
+  @override
+  String lkrAmount(String amount) {
+    return 'LKR $amount';
+  }
+
+  @override
+  String get statusActive => 'Active';
+
+  @override
+  String get statusCompleted => 'Completed';
+
+  @override
+  String get statusCancelled => 'Cancelled';
 }

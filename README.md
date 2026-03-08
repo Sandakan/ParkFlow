@@ -60,6 +60,15 @@ _Docs available at: <http://localhost:8200/docs>_
    flutter run
    ```
 
+#### 3. API Key Configuration (Maps)
+
+Before running the frontend, ensure you have set up your Google Maps API key locally:
+
+- **Android**: Add `MAPS_API_KEY=your_key` to `frontend/android/local.properties`.
+- **iOS**: Create `frontend/ios/Flutter/Secrets.xcconfig` and add `MAPS_API_KEY=your_key`.
+
+For more details, see the [Frontend README](frontend/README.md).
+
 ### With Docker (Backend Only)
 
 #### 1. Start Backend Infrastructure

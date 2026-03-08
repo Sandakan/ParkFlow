@@ -741,4 +741,37 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get settingsSignOutSubtitle => 'පිටවී ඔබේ දත්ත සුරක්ෂිත කරන්න';
+
+  @override
+  String get upcomingBookings => 'ඉදිරි වෙන් කිරීම්';
+
+  @override
+  String get previousBookings => 'පෙර වෙන් කිරීම්';
+
+  @override
+  String get noBookingsFound => 'වෙන් කිරීම් කිසිවක් හමු නොවීය';
+
+  @override
+  String durationHours(String hours, String minutes) {
+    return '$hoursපැ $minutesමි';
+  }
+
+  @override
+  String ticketId(String id) {
+    return 'ටිකට්පත් අංකය: $id';
+  }
+
+  @override
+  String lkrAmount(String amount) {
+    return 'රු $amount';
+  }
+
+  @override
+  String get statusActive => 'සක්‍රීයයි';
+
+  @override
+  String get statusCompleted => 'සම්පූර්ණයි';
+
+  @override
+  String get statusCancelled => 'අවලංගුයි';
 }

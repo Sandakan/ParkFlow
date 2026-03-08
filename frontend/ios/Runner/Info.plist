@@ -51,5 +51,7 @@
 		<string>This app needs access to location when open to show nearby parking lots.</string>
 		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>This app needs access to location to show nearby parking lots.</string>
+		<key>GoogleMapsApiKey</key>
+		<string>$(MAPS_API_KEY)</string>
 	</dict>
 </plist>

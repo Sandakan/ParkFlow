@@ -743,4 +743,37 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get settingsSignOutSubtitle => 'வெளியேறி உங்கள் தரவைப் பாதுகாக்கவும்';
+
+  @override
+  String get upcomingBookings => 'வரவிருக்கும் முன்பதிவுகள்';
+
+  @override
+  String get previousBookings => 'முந்தைய முன்பதிவுகள்';
+
+  @override
+  String get noBookingsFound => 'முன்பதிவுகள் எதுவும் இல்லை';
+
+  @override
+  String durationHours(String hours, String minutes) {
+    return '$hoursமணி $minutesநி';
+  }
+
+  @override
+  String ticketId(String id) {
+    return 'டிக்கெட் ஐடி: $id';
+  }
+
+  @override
+  String lkrAmount(String amount) {
+    return 'ரூ $amount';
+  }
+
+  @override
+  String get statusActive => 'செயலில் உள்ளது';
+
+  @override
+  String get statusCompleted => 'முடிந்தது';
+
+  @override
+  String get statusCancelled => 'ரத்து செய்யப்பட்டது';
 }

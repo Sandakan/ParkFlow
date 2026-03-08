@@ -965,5 +965,59 @@
 	"settingsSignOutSubtitle": "Sign out and secure your data",
 	"@settingsSignOutSubtitle": {
 		"description": "Subtitle for the logout button"
+	},
+	"upcomingBookings": "Upcoming Bookings",
+	"@upcomingBookings": {
+		"description": "Title for the upcoming bookings section"
+	},
+	"previousBookings": "Previous Bookings",
+	"@previousBookings": {
+		"description": "Title for the previous bookings section"
+	},
+	"noBookingsFound": "No bookings found",
+	"@noBookingsFound": {
+		"description": "Message shown when no bookings are found"
+	},
+	"durationHours": "{hours}h {minutes}m",
+	"@durationHours": {
+		"description": "Format for duration in hours and minutes",
+		"placeholders": {
+			"hours": {
+				"type": "String"
+			},
+			"minutes": {
+				"type": "String"
+			}
+		}
+	},
+	"ticketId": "Ticket ID: {id}",
+	"@ticketId": {
+		"description": "Label for the ticket ID",
+		"placeholders": {
+			"id": {
+				"type": "String"
+			}
+		}
+	},
+	"lkrAmount": "LKR {amount}",
+	"@lkrAmount": {
+		"description": "Format for LKR amount",
+		"placeholders": {
+			"amount": {
+				"type": "String"
+			}
+		}
+	},
+	"statusActive": "Active",
+	"@statusActive": {
+		"description": "Label for active reservation status"
+	},
+	"statusCompleted": "Completed",
+	"@statusCompleted": {
+		"description": "Label for completed reservation status"
+	},
+	"statusCancelled": "Cancelled",
+	"@statusCancelled": {
+		"description": "Label for cancelled reservation status"
 	}
 }

@@ -1503,6 +1503,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign out and secure your data'**
   String get settingsSignOutSubtitle;
+
+  /// Title for the upcoming bookings section
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Bookings'**
+  String get upcomingBookings;
+
+  /// Title for the previous bookings section
+  ///
+  /// In en, this message translates to:
+  /// **'Previous Bookings'**
+  String get previousBookings;
+
+  /// Message shown when no bookings are found
+  ///
+  /// In en, this message translates to:
+  /// **'No bookings found'**
+  String get noBookingsFound;
+
+  /// Format for duration in hours and minutes
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h {minutes}m'**
+  String durationHours(String hours, String minutes);
+
+  /// Label for the ticket ID
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket ID: {id}'**
+  String ticketId(String id);
+
+  /// Format for LKR amount
+  ///
+  /// In en, this message translates to:
+  /// **'LKR {amount}'**
+  String lkrAmount(String amount);
+
+  /// Label for active reservation status
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get statusActive;
+
+  /// Label for completed reservation status
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statusCompleted;
+
+  /// Label for cancelled reservation status
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get statusCancelled;
 }
 
 class _AppLocalizationsDelegate
