@@ -96,38 +96,7 @@ class _OngoingBookingCardState extends State<OngoingBookingCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: Colors.greenAccent,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            context.l10n.statusActive.toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    _StatusIndicator(status: widget.reservation.detailedStatus),
                     Text(
                       context.l10n.ongoingBooking,
                       style: TextStyle(
@@ -270,5 +239,71 @@ class _InfoItem extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _StatusIndicator extends StatelessWidget {
+  final ReservationStatus status;
+
+  const _StatusIndicator({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final statusColor = _getStatusColor();
+    final statusLabel = _getStatusLabel(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: statusColor.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(color: statusColor, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            statusLabel.toUpperCase(),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getStatusColor() {
+    switch (status) {
+      case ReservationStatus.ongoing:
+        return Colors.greenAccent;
+      case ReservationStatus.overstay:
+        return Colors.redAccent;
+      case ReservationStatus.noShow:
+        return Colors.orangeAccent;
+      default:
+        return Colors.white70;
+    }
+  }
+
+  String _getStatusLabel(BuildContext context) {
+    switch (status) {
+      case ReservationStatus.ongoing:
+        return context.l10n.statusOngoing;
+      case ReservationStatus.overstay:
+        return context.l10n.statusOverstay;
+      case ReservationStatus.noShow:
+        return context.l10n.statusNoShow;
+      default:
+        return context.l10n.statusActive;
+    }
   }
 }

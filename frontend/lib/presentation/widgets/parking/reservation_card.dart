@@ -20,8 +20,9 @@ class ReservationCard extends StatelessWidget {
     final dateFormat = DateFormat('MMM dd, yyyy');
     final timeFormat = DateFormat('hh:mm a');
 
-    final statusColor = _getStatusColor(reservation.status);
-    final statusText = _getStatusText(context, reservation.status);
+    final detailedStatus = reservation.detailedStatus;
+    final statusColor = _getStatusColor(detailedStatus);
+    final statusText = _getStatusText(context, detailedStatus);
 
     final cardContent = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,29 +132,39 @@ class ReservationCard extends StatelessWidget {
     );
   }
 
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return AppColors.availableText;
-      case 'completed':
-        return AppColors.primary;
-      case 'cancelled':
-        return AppColors.error;
-      default:
+  Color _getStatusColor(ReservationStatus status) {
+    switch (status) {
+      case ReservationStatus.upcoming:
+        return Colors.blue;
+      case ReservationStatus.noShow:
+        return Colors.orange;
+      case ReservationStatus.ongoing:
+        return Colors.green;
+      case ReservationStatus.overstay:
+      case ReservationStatus.expired:
+        return Colors.red;
+      case ReservationStatus.completed:
+      case ReservationStatus.cancelled:
         return AppColors.textSecondary;
     }
   }
 
-  String _getStatusText(BuildContext context, String status) {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return context.l10n.statusActive;
-      case 'completed':
+  String _getStatusText(BuildContext context, ReservationStatus status) {
+    switch (status) {
+      case ReservationStatus.upcoming:
+        return context.l10n.statusUpcoming;
+      case ReservationStatus.noShow:
+        return context.l10n.statusNoShow;
+      case ReservationStatus.expired:
+        return context.l10n.statusExpired;
+      case ReservationStatus.ongoing:
+        return context.l10n.statusOngoing;
+      case ReservationStatus.overstay:
+        return context.l10n.statusOverstay;
+      case ReservationStatus.completed:
         return context.l10n.statusCompleted;
-      case 'cancelled':
+      case ReservationStatus.cancelled:
         return context.l10n.statusCancelled;
-      default:
-        return status;
     }
   }
 }

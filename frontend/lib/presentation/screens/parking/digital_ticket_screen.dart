@@ -64,6 +64,9 @@ class DigitalTicketScreen extends ConsumerWidget {
             );
           }
 
+          final status = res.detailedStatus;
+          final statusHeader = _getStatusHeader(context, status);
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Center(
@@ -71,23 +74,33 @@ class DigitalTicketScreen extends ConsumerWidget {
                 constraints: const BoxConstraints(maxWidth: 600),
                 child: Column(
                   children: [
-                    const Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                          size: 80,
-                        )
+                    Icon(
+                      statusHeader.icon,
+                      color: statusHeader.color,
+                      size: 80,
+                    )
                         .animate()
                         .scale(duration: 600.ms, curve: Curves.easeOutBack)
                         .fadeIn(),
                     const SizedBox(height: 16),
-                    const Text(
-                      'Booking Confirmed!',
-                      style: TextStyle(
+                    Text(
+                      statusHeader.title,
+                      style: const TextStyle(
                         color: AppColors.white,
                         fontSize: 24,
                         fontWeight: FontWeight.w900,
                       ),
                     ).animate().fadeIn(delay: 300.ms),
+                    const SizedBox(height: 4),
+                    Text(
+                      statusHeader.subtitle,
+                      style: TextStyle(
+                        color: AppColors.white.withValues(alpha: 0.8),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ).animate().fadeIn(delay: 400.ms),
                     const SizedBox(height: 48),
                     _buildTicketCard(context, res, lot, slotName),
                     const SizedBox(height: 32),
@@ -300,6 +313,73 @@ class DigitalTicketScreen extends ConsumerWidget {
       ],
     );
   }
+  _StatusHeader _getStatusHeader(BuildContext context, ReservationStatus status) {
+    switch (status) {
+      case ReservationStatus.upcoming:
+        return _StatusHeader(
+          icon: Icons.check_circle,
+          color: Colors.green,
+          title: context.l10n.ticketStatusConfirmed,
+          subtitle: context.l10n.ticketSubtitleConfirmed,
+        );
+      case ReservationStatus.ongoing:
+        return _StatusHeader(
+          icon: Icons.timer,
+          color: Colors.blue,
+          title: context.l10n.ticketStatusOngoing,
+          subtitle: context.l10n.ticketSubtitleOngoing,
+        );
+      case ReservationStatus.overstay:
+        return _StatusHeader(
+          icon: Icons.warning_amber_rounded,
+          color: Colors.redAccent,
+          title: context.l10n.ticketStatusOverstay,
+          subtitle: context.l10n.ticketSubtitleOverstay,
+        );
+      case ReservationStatus.expired:
+        return _StatusHeader(
+          icon: Icons.history,
+          color: Colors.orange,
+          title: context.l10n.ticketStatusExpired,
+          subtitle: context.l10n.ticketSubtitleExpired,
+        );
+      case ReservationStatus.noShow:
+        return _StatusHeader(
+          icon: Icons.person_off_rounded,
+          color: Colors.orange,
+          title: context.l10n.statusNoShow,
+          subtitle: context.l10n.ticketSubtitleNoShow,
+        );
+      case ReservationStatus.completed:
+        return _StatusHeader(
+          icon: Icons.task_alt,
+          color: Colors.green,
+          title: context.l10n.ticketStatusCompleted,
+          subtitle: context.l10n.ticketSubtitleCompleted,
+        );
+      case ReservationStatus.cancelled:
+        return _StatusHeader(
+          icon: Icons.cancel_outlined,
+          color: Colors.redAccent,
+          title: context.l10n.ticketStatusCancelled,
+          subtitle: context.l10n.ticketSubtitleCancelled,
+        );
+    }
+  }
+}
+
+class _StatusHeader {
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String subtitle;
+
+  _StatusHeader({
+    required this.icon,
+    required this.color,
+    required this.title,
+    required this.subtitle,
+  });
 }
 
 class _TicketDetail extends StatelessWidget {

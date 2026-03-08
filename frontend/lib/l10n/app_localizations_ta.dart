@@ -805,4 +805,58 @@ class AppLocalizationsTa extends AppLocalizations {
   String minsLeft(String mins) {
     return '$mins நிமிடங்கள் மீதமுள்ளன';
   }
+
+  @override
+  String get statusUpcoming => 'Upcoming';
+
+  @override
+  String get statusOngoing => 'Ongoing';
+
+  @override
+  String get statusOverstay => 'Overstay';
+
+  @override
+  String get statusNoShow => 'No Show';
+
+  @override
+  String get statusExpired => 'Expired';
+
+  @override
+  String get ticketStatusConfirmed => 'Booking Confirmed!';
+
+  @override
+  String get ticketStatusOngoing => 'Parking in Progress';
+
+  @override
+  String get ticketStatusExpired => 'Booking Expired';
+
+  @override
+  String get ticketStatusOverstay => 'Overstay Warning';
+
+  @override
+  String get ticketStatusCompleted => 'Parking Completed';
+
+  @override
+  String get ticketStatusCancelled => 'Booking Cancelled';
+
+  @override
+  String get ticketSubtitleConfirmed => 'Present this QR code at the entrance.';
+
+  @override
+  String get ticketSubtitleOngoing => 'You are currently parked in this lot.';
+
+  @override
+  String get ticketSubtitleExpired => 'The reservation window has passed.';
+
+  @override
+  String get ticketSubtitleOverstay => 'You have exceeded your reserved time.';
+
+  @override
+  String get ticketSubtitleNoShow => 'Please check in before the time expires.';
+
+  @override
+  String get ticketSubtitleCompleted => 'Your parking session has ended.';
+
+  @override
+  String get ticketSubtitleCancelled => 'This booking is no longer valid.';
 }

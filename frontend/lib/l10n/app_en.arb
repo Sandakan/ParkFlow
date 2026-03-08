@@ -1042,5 +1042,23 @@
 				"type": "String"
 			}
 		}
-	}
+	},
+	"statusUpcoming": "Upcoming",
+	"statusOngoing": "Ongoing",
+	"statusOverstay": "Overstay",
+	"statusNoShow": "No Show",
+	"statusExpired": "Expired",
+	"ticketStatusConfirmed": "Booking Confirmed!",
+	"ticketStatusOngoing": "Parking in Progress",
+	"ticketStatusExpired": "Booking Expired",
+	"ticketStatusOverstay": "Overstay Warning",
+	"ticketStatusCompleted": "Parking Completed",
+	"ticketStatusCancelled": "Booking Cancelled",
+	"ticketSubtitleConfirmed": "Present this QR code at the entrance.",
+	"ticketSubtitleOngoing": "You are currently parked in this lot.",
+	"ticketSubtitleExpired": "The reservation window has passed.",
+	"ticketSubtitleOverstay": "You have exceeded your reserved time.",
+	"ticketSubtitleNoShow": "Please check in before the time expires.",
+	"ticketSubtitleCompleted": "Your parking session has ended.",
+	"ticketSubtitleCancelled": "This booking is no longer valid."
 }

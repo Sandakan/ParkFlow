@@ -1611,6 +1611,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{mins} mins left'**
   String minsLeft(String mins);
+
+  /// No description provided for @statusUpcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get statusUpcoming;
+
+  /// No description provided for @statusOngoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Ongoing'**
+  String get statusOngoing;
+
+  /// No description provided for @statusOverstay.
+  ///
+  /// In en, this message translates to:
+  /// **'Overstay'**
+  String get statusOverstay;
+
+  /// No description provided for @statusNoShow.
+  ///
+  /// In en, this message translates to:
+  /// **'No Show'**
+  String get statusNoShow;
+
+  /// No description provided for @statusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get statusExpired;
+
+  /// No description provided for @ticketStatusConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Confirmed!'**
+  String get ticketStatusConfirmed;
+
+  /// No description provided for @ticketStatusOngoing.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking in Progress'**
+  String get ticketStatusOngoing;
+
+  /// No description provided for @ticketStatusExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Expired'**
+  String get ticketStatusExpired;
+
+  /// No description provided for @ticketStatusOverstay.
+  ///
+  /// In en, this message translates to:
+  /// **'Overstay Warning'**
+  String get ticketStatusOverstay;
+
+  /// No description provided for @ticketStatusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking Completed'**
+  String get ticketStatusCompleted;
+
+  /// No description provided for @ticketStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Cancelled'**
+  String get ticketStatusCancelled;
+
+  /// No description provided for @ticketSubtitleConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Present this QR code at the entrance.'**
+  String get ticketSubtitleConfirmed;
+
+  /// No description provided for @ticketSubtitleOngoing.
+  ///
+  /// In en, this message translates to:
+  /// **'You are currently parked in this lot.'**
+  String get ticketSubtitleOngoing;
+
+  /// No description provided for @ticketSubtitleExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The reservation window has passed.'**
+  String get ticketSubtitleExpired;
+
+  /// No description provided for @ticketSubtitleOverstay.
+  ///
+  /// In en, this message translates to:
+  /// **'You have exceeded your reserved time.'**
+  String get ticketSubtitleOverstay;
+
+  /// No description provided for @ticketSubtitleNoShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check in before the time expires.'**
+  String get ticketSubtitleNoShow;
+
+  /// No description provided for @ticketSubtitleCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Your parking session has ended.'**
+  String get ticketSubtitleCompleted;
+
+  /// No description provided for @ticketSubtitleCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'This booking is no longer valid.'**
+  String get ticketSubtitleCancelled;
 }
 
 class _AppLocalizationsDelegate

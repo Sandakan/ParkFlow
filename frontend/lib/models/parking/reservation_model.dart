@@ -32,3 +32,48 @@ abstract class ReservationModel with _$ReservationModel {
   factory ReservationModel.fromJson(Map<String, dynamic> json) =>
       _$ReservationModelFromJson(json);
 }
+
+enum ReservationStatus {
+  upcoming,
+  noShow,
+  expired,
+  ongoing,
+  overstay,
+  completed,
+  cancelled,
+}
+
+extension ReservationModelX on ReservationModel {
+  ReservationStatus get detailedStatus {
+    final now = DateTime.now();
+
+    if (status.toLowerCase() == 'cancelled') {
+      return ReservationStatus.cancelled;
+    }
+    if (status.toLowerCase() == 'completed') {
+      return ReservationStatus.completed;
+    }
+
+    // Status is active
+    if (checkInTime == null) {
+      if (startTime.isAfter(now)) {
+        return ReservationStatus.upcoming;
+      } else if (now.isBefore(endTime)) {
+        return ReservationStatus.noShow;
+      } else {
+        return ReservationStatus.expired;
+      }
+    } else {
+      // Checked in
+      if (checkOutTime != null) {
+        return ReservationStatus.completed;
+      }
+
+      if (now.isBefore(endTime)) {
+        return ReservationStatus.ongoing;
+      } else {
+        return ReservationStatus.overstay;
+      }
+    }
+  }
+}
