@@ -197,14 +197,6 @@ async def create_reservation(
         payload={"reservation_id": str(result.inserted_id), "action": "created"},
     )
 
-    await notification_service.send_notification(
-        title="Reservation Created",
-        message=f"Your booking for {lot.get('name')} has been confirmed.",
-        user_id=current_user.user_id,
-        notification_type="success",
-        payload={"reservation_id": str(result.inserted_id), "action": "created"},
-    )
-
     reservation_data = {
         "id": str(result.inserted_id),
         "user_id": current_user.user_id,
@@ -452,12 +444,6 @@ async def scan_reservation_qr(
         )
     except Exception as e:
         logger.error(f"Failed to publish reservation update: {e}")
-
-    return APIResponse.success_response(
-        message=message,
-        code=ResponseCode.SUCCESS,
-        data=ReservationResponse(**res_data),
-    )
 
     return APIResponse.success_response(
         message=message,

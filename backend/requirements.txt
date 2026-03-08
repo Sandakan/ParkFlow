@@ -15,3 +15,4 @@ ultralytics>=8.4.14
 shapely>=2.0.0
 httpx>=0.24.0
 sse-starlette>=1.6.0
+fastapi-mail>=1.4.1
