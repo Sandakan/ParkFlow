@@ -38,12 +38,13 @@ class ReservationCard extends StatelessWidget {
                   fontSize: 16,
                   color: AppColors.black,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             _StatusBadge(color: statusColor, text: statusText),
           ],
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: isHorizontal ? 2 : 4),
         Text(
           timeFormat.format(reservation.startTime),
           style: TextStyle(
@@ -52,7 +53,7 @@ class ReservationCard extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: isHorizontal ? 4 : 8),
         Row(
           children: [
             const Icon(Icons.location_on, size: 16, color: AppColors.primary),
@@ -65,11 +66,12 @@ class ReservationCard extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   color: AppColors.black,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: isHorizontal ? 8 : 12),
         Row(
           children: [
             const Icon(
@@ -78,13 +80,17 @@ class ReservationCard extends StatelessWidget {
               color: AppColors.primary,
             ),
             const SizedBox(width: 8),
-            Text(
-              '${reservation.vehicle.type} (${reservation.vehicle.plateNumber})',
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            Expanded(
+              child: Text(
+                '${reservation.vehicle.type} (${reservation.vehicle.plateNumber})',
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: isHorizontal ? 4 : 8),
         Row(
           children: [
             const Icon(Icons.timer, size: 16, color: AppColors.primary),
@@ -126,7 +132,10 @@ class ReservationCard extends StatelessWidget {
           onTap: () =>
               DigitalTicketRoute(reservationId: reservation.id).push(context),
           borderRadius: BorderRadius.circular(20),
-          child: Padding(padding: const EdgeInsets.all(20), child: cardContent),
+          child: Padding(
+            padding: EdgeInsets.all(isHorizontal ? 16 : 20),
+            child: cardContent,
+          ),
         ),
       ),
     );
