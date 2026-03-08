@@ -58,6 +58,12 @@ class ResponseCode(str, Enum):
     PERMISSION_DENIED = "PERMISSION_DENIED"
     BAD_REQUEST = "BAD_REQUEST"
 
+    # Forgot Password
+    OTP_SENT = "OTP_SENT"
+    OTP_VERIFIED = "OTP_VERIFIED"
+    PASSWORD_RESET_SUCCESS = "PASSWORD_RESET_SUCCESS"
+    INVALID_OTP = "INVALID_OTP"
+
 
 class APIResponse(BaseModel, Generic[T]):
     success: bool

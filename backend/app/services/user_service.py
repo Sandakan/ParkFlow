@@ -68,5 +68,10 @@ class UserService:
             return None
         return user
 
+    async def reset_password(self, user_id: str, new_password: str) -> Optional[UserInDB]:
+        hashed_password = get_password_hash(new_password)
+        updated_user = await user_repository.update(user_id, {"password_hash": hashed_password})
+        return updated_user
+
 
 user_service = UserService()

@@ -8,6 +8,9 @@ import 'package:parkflow/presentation/screens/boot/boot_screen.dart';
 import 'package:parkflow/presentation/screens/home/home_screen.dart';
 import 'package:parkflow/presentation/screens/auth/login_screen.dart';
 import 'package:parkflow/presentation/screens/auth/register_screen.dart';
+import 'package:parkflow/presentation/screens/auth/forgot_password_screen.dart';
+import 'package:parkflow/presentation/screens/auth/verify_otp_screen.dart';
+import 'package:parkflow/presentation/screens/auth/reset_password_screen.dart';
 import 'package:parkflow/presentation/screens/home/profile_screen.dart';
 import 'package:parkflow/presentation/screens/home/bookings_screen.dart';
 import 'package:parkflow/presentation/screens/home/my_vehicle_screen.dart';
@@ -64,7 +67,11 @@ GoRouter router(Ref ref) {
 
       final isGoingToLogin = state.matchedLocation == LoginRoute.path;
       final isGoingToRegister = state.matchedLocation == RegisterRoute.path;
+      final isGoingToForgotPassword = state.matchedLocation == ForgotPasswordRoute.path;
+      final isGoingToVerifyOtp = state.matchedLocation == VerifyOtpRoute.path;
+      final isGoingToResetPassword = state.matchedLocation == ResetPasswordRoute.path;
       final isBooting = state.matchedLocation == BootRoute.path;
+      final isAuthPage = isGoingToLogin || isGoingToRegister || isGoingToForgotPassword || isGoingToVerifyOtp || isGoingToResetPassword;
 
       final isAuth = authState.user != null;
       final isAdmin = authState.isAdmin;
@@ -81,7 +88,7 @@ GoRouter router(Ref ref) {
         return null;
       }
 
-      if (!isAuth && !isGoingToLogin && !isGoingToRegister) {
+      if (!isAuth && !isAuthPage) {
         return LoginRoute.path;
       }
 

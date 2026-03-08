@@ -10,6 +10,9 @@ List<RouteBase> get $appRoutes => [
   $bootRoute,
   $loginRoute,
   $registerRoute,
+  $forgotPasswordRoute,
+  $verifyOtpRoute,
+  $resetPasswordRoute,
   $bookingRoute,
   $digitalTicketRoute,
   $paymentMethodsRoute,
@@ -74,6 +77,95 @@ mixin $RegisterRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/register');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $forgotPasswordRoute => GoRouteData.$route(
+  path: '/forgot-password',
+  factory: $ForgotPasswordRoute._fromState,
+);
+
+mixin $ForgotPasswordRoute on GoRouteData {
+  static ForgotPasswordRoute _fromState(GoRouterState state) =>
+      const ForgotPasswordRoute();
+
+  @override
+  String get location => GoRouteData.$location('/forgot-password');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $verifyOtpRoute => GoRouteData.$route(
+  path: '/verify-otp',
+  factory: $VerifyOtpRoute._fromState,
+);
+
+mixin $VerifyOtpRoute on GoRouteData {
+  static VerifyOtpRoute _fromState(GoRouterState state) =>
+      VerifyOtpRoute(email: state.uri.queryParameters['email']!);
+
+  VerifyOtpRoute get _self => this as VerifyOtpRoute;
+
+  @override
+  String get location =>
+      GoRouteData.$location('/verify-otp', queryParams: {'email': _self.email});
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $resetPasswordRoute => GoRouteData.$route(
+  path: '/reset-password',
+  factory: $ResetPasswordRoute._fromState,
+);
+
+mixin $ResetPasswordRoute on GoRouteData {
+  static ResetPasswordRoute _fromState(GoRouterState state) =>
+      ResetPasswordRoute(
+        email: state.uri.queryParameters['email']!,
+        otp: state.uri.queryParameters['otp']!,
+      );
+
+  ResetPasswordRoute get _self => this as ResetPasswordRoute;
+
+  @override
+  String get location => GoRouteData.$location(
+    '/reset-password',
+    queryParams: {'email': _self.email, 'otp': _self.otp},
+  );
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -788,4 +880,4 @@ final class RouterProvider
   }
 }
 
-String _$routerHash() => r'e0a6a3f0198e95feb9fcdfb20d345b3b0a66f370';
+String _$routerHash() => r'5d2bc741a0607364fb495d955342719774741805';

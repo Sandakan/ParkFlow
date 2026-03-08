@@ -525,9 +525,7 @@ class AdminCameraInfoScreen extends ConsumerWidget {
         icon: const Icon(Icons.delete_outline, color: Colors.red),
         onPressed: () => _confirmDelete(context, slot, notifier),
       ),
-      onTap: () {
-        // TODO: Implement slot selection logic
-      },
+      onTap: () {},
     );
   }
 

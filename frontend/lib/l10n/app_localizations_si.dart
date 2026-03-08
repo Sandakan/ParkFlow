@@ -869,4 +869,47 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get markAllAsRead => 'සියල්ල කියවූ ලෙස ලකුණු කරන්න';
+
+  @override
+  String get forgotPasswordTitle => 'මුරපදය අමතකද?';
+
+  @override
+  String get forgotPasswordSubtitle => 'ඔබේ විද්‍යුත් තැපෑල ඇතුළත් කරන්න.';
+
+  @override
+  String get sendOtpButton => 'OTP එවන්න';
+
+  @override
+  String get verifyOtpTitle => 'OTP සත්‍යාපනය';
+
+  @override
+  String get verifyOtpSubtitle =>
+      'ඔබේ විද්‍යුත් තැපෑලට ලැබුණු අංක 6 කේතය ඇතුළත් කරන්න.';
+
+  @override
+  String get verifyOtpButton => 'කේතය පරීක්ෂා කරන්න';
+
+  @override
+  String get resetPasswordTitle => 'මුරපදය නැවත සකසන්න';
+
+  @override
+  String get resetPasswordSubtitle => 'අලුත් මුරපදයක් ඇතුළත් කරන්න.';
+
+  @override
+  String get newPasswordLabel => 'අලුත් මුරපදය';
+
+  @override
+  String get newPasswordHint => '••••••••';
+
+  @override
+  String get resetPasswordButton => 'මුරපදය වෙනස් කරන්න';
+
+  @override
+  String get passwordResetSuccess => 'මුරපදය සාර්ථකව වෙනස් කරන ලදී';
+
+  @override
+  String get otpRequired => 'OTP කේතය අවශ්‍යයි';
+
+  @override
+  String get otpInvalid => 'OTP කේතය අංක 6ක් විය යුතුය';
 }

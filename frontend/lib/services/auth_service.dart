@@ -7,6 +7,9 @@ import 'package:parkflow/models/auth/user_model.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/core/network/entities/login_request_entity.dart';
 import 'package:parkflow/core/network/entities/register_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/forgot_password_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/verify_otp_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/reset_password_request_entity.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/handlers/error_handler.dart';
 
@@ -63,6 +66,37 @@ class AuthService {
 
   Future<void> logout() async {
     await _storage.clearAllAuthData();
+  }
+
+  Future<void> forgotPassword(String email) async {
+    try {
+      final request = ForgotPasswordRequestEntity(email: email);
+      await _remote.forgotPassword(request);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> verifyOtp(String email, String otp) async {
+    try {
+      final request = VerifyOtpRequestEntity(email: email, otp: otp);
+      await _remote.verifyOtp(request);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> resetPassword(String email, String otp, String password) async {
+    try {
+      final request = ResetPasswordRequestEntity(
+        email: email,
+        otp: otp,
+        password: password,
+      );
+      await _remote.resetPassword(request);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
   }
 
   Future<UserModel?> checkAuthState() async {

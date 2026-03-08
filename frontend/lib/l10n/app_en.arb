@@ -1076,5 +1076,19 @@
 	"markAllAsRead": "Mark all as read",
 	"@markAllAsRead": {
 		"description": "Text for the mark all notifications as read button"
-	}
+	},
+	"forgotPasswordTitle": "Forgot Password",
+	"forgotPasswordSubtitle": "Enter your email to receive a password reset OTP.",
+	"sendOtpButton": "Send OTP",
+	"verifyOtpTitle": "Verify OTP",
+	"verifyOtpSubtitle": "Enter the 6-digit code sent to your email.",
+	"verifyOtpButton": "Verify Code",
+	"resetPasswordTitle": "Reset Password",
+	"resetPasswordSubtitle": "Enter a new password for your account.",
+	"newPasswordLabel": "New Password",
+	"newPasswordHint": "••••••••",
+	"resetPasswordButton": "Reset Password",
+	"passwordResetSuccess": "Password reset successfully",
+	"otpRequired": "OTP is required",
+	"otpInvalid": "OTP must be 6 digits"
 }

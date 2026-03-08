@@ -49,5 +49,19 @@
 	"ongoingBooking": "தற்போதைய முன்பதிவு",
 	"timeLeft": "மீதமுள்ள நேரம்",
 	"minsLeft": "{mins} நிமிடங்கள் மீதமுள்ளன",
-	"markAllAsRead": "அனைத்தையும் படித்ததாகக் குறிக்கவும்"
+	"markAllAsRead": "அனைத்தையும் படித்ததாகக் குறிக்கவும்",
+	"forgotPasswordTitle": "கடவுச்சொல் மறந்துவிட்டதா?",
+	"forgotPasswordSubtitle": "உங்கள் மின்னஞ்சலை உள்ளிடவும்.",
+	"sendOtpButton": "OTP ஐ அனுப்பவும்",
+	"verifyOtpTitle": "OTP ஐ சரிபார்க்கவும்",
+	"verifyOtpSubtitle": "உங்கள் மின்னஞ்சலுக்கு ஒரு OTP அனுப்பப்பட்டுள்ளது.",
+	"verifyOtpButton": "குறியீட்டைச் சரிபார்க்கவும்",
+	"resetPasswordTitle": "கடவுச்சொல்லை மாற்றவும்",
+	"resetPasswordSubtitle": "புதிய கடவுச்சொல்லை உள்ளிடவும்.",
+	"newPasswordLabel": "புதிய கடவுச்சொல்",
+	"newPasswordHint": "••••••••",
+	"resetPasswordButton": "கடவுச்சொல்லை மாற்றவும்",
+	"passwordResetSuccess": "கடவுச்சொல் மாற்றப்பட்டது",
+	"otpRequired": "OTP தேவை",
+	"otpInvalid": "OTP 6 இலக்கங்களாக இருக்க வேண்டும்"
 }

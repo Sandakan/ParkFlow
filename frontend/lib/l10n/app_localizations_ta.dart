@@ -871,4 +871,47 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get markAllAsRead => 'அனைத்தையும் படித்ததாகக் குறிக்கவும்';
+
+  @override
+  String get forgotPasswordTitle => 'கடவுச்சொல் மறந்துவிட்டதா?';
+
+  @override
+  String get forgotPasswordSubtitle => 'உங்கள் மின்னஞ்சலை உள்ளிடவும்.';
+
+  @override
+  String get sendOtpButton => 'OTP ஐ அனுப்பவும்';
+
+  @override
+  String get verifyOtpTitle => 'OTP ஐ சரிபார்க்கவும்';
+
+  @override
+  String get verifyOtpSubtitle =>
+      'உங்கள் மின்னஞ்சலுக்கு ஒரு OTP அனுப்பப்பட்டுள்ளது.';
+
+  @override
+  String get verifyOtpButton => 'குறியீட்டைச் சரிபார்க்கவும்';
+
+  @override
+  String get resetPasswordTitle => 'கடவுச்சொல்லை மாற்றவும்';
+
+  @override
+  String get resetPasswordSubtitle => 'புதிய கடவுச்சொல்லை உள்ளிடவும்.';
+
+  @override
+  String get newPasswordLabel => 'புதிய கடவுச்சொல்';
+
+  @override
+  String get newPasswordHint => '••••••••';
+
+  @override
+  String get resetPasswordButton => 'கடவுச்சொல்லை மாற்றவும்';
+
+  @override
+  String get passwordResetSuccess => 'கடவுச்சொல் மாற்றப்பட்டது';
+
+  @override
+  String get otpRequired => 'OTP தேவை';
+
+  @override
+  String get otpInvalid => 'OTP 6 இலக்கங்களாக இருக்க வேண்டும்';
 }

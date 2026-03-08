@@ -204,6 +204,40 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AuthState.unauthenticated();
   }
 
+  Future<void> forgotPassword(String email) async {
+    state = const AuthState.loading();
+    try {
+      await ref.read(authServiceProvider).forgotPassword(email);
+      state = const AuthState.unauthenticated(); // Or keep it as is, we just need to handle navigation in UI
+    } catch (e) {
+      state = AuthState.error(ErrorHandler.handle(e));
+      rethrow;
+    }
+  }
+
+  Future<void> verifyOtp(String email, String otp) async {
+    state = const AuthState.loading();
+    try {
+      await ref.read(authServiceProvider).verifyOtp(email, otp);
+      state = const AuthState.unauthenticated();
+    } catch (e) {
+      state = AuthState.error(ErrorHandler.handle(e));
+      rethrow;
+    }
+  }
+
+  Future<void> resetPassword(String email, String otp, String password) async {
+    state = const AuthState.loading();
+    try {
+      await ref.read(authServiceProvider).resetPassword(email, otp, password);
+      // After successful reset, we can redirect back to login
+      state = const AuthState.unauthenticated();
+    } catch (e) {
+      state = AuthState.error(ErrorHandler.handle(e));
+      rethrow;
+    }
+  }
+
   void clearError() {
     if (state is AuthError) {
       state = const AuthState.unauthenticated();

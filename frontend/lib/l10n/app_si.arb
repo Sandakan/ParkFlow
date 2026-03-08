@@ -49,5 +49,19 @@
 	"ongoingBooking": "දැනට පවතින වෙන් කිරීම",
 	"timeLeft": "ඉතිරි කාලය",
 	"minsLeft": "මිනිත්තු {mins}ක් ඉතිරිව ඇත",
-	"markAllAsRead": "සියල්ල කියවූ ලෙස ලකුණු කරන්න"
+	"markAllAsRead": "සියල්ල කියවූ ලෙස ලකුණු කරන්න",
+	"forgotPasswordTitle": "මුරපදය අමතකද?",
+	"forgotPasswordSubtitle": "ඔබේ විද්‍යුත් තැපෑල ඇතුළත් කරන්න.",
+	"sendOtpButton": "OTP එවන්න",
+	"verifyOtpTitle": "OTP සත්‍යාපනය",
+	"verifyOtpSubtitle": "ඔබේ විද්‍යුත් තැපෑලට ලැබුණු අංක 6 කේතය ඇතුළත් කරන්න.",
+	"verifyOtpButton": "කේතය පරීක්ෂා කරන්න",
+	"resetPasswordTitle": "මුරපදය නැවත සකසන්න",
+	"resetPasswordSubtitle": "අලුත් මුරපදයක් ඇතුළත් කරන්න.",
+	"newPasswordLabel": "අලුත් මුරපදය",
+	"newPasswordHint": "••••••••",
+	"resetPasswordButton": "මුරපදය වෙනස් කරන්න",
+	"passwordResetSuccess": "මුරපදය සාර්ථකව වෙනස් කරන ලදී",
+	"otpRequired": "OTP කේතය අවශ්‍යයි",
+	"otpInvalid": "OTP කේතය අංක 6ක් විය යුතුය"
 }

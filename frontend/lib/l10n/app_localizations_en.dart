@@ -869,4 +869,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get markAllAsRead => 'Mark all as read';
+
+  @override
+  String get forgotPasswordTitle => 'Forgot Password';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'Enter your email to receive a password reset OTP.';
+
+  @override
+  String get sendOtpButton => 'Send OTP';
+
+  @override
+  String get verifyOtpTitle => 'Verify OTP';
+
+  @override
+  String get verifyOtpSubtitle => 'Enter the 6-digit code sent to your email.';
+
+  @override
+  String get verifyOtpButton => 'Verify Code';
+
+  @override
+  String get resetPasswordTitle => 'Reset Password';
+
+  @override
+  String get resetPasswordSubtitle => 'Enter a new password for your account.';
+
+  @override
+  String get newPasswordLabel => 'New Password';
+
+  @override
+  String get newPasswordHint => '••••••••';
+
+  @override
+  String get resetPasswordButton => 'Reset Password';
+
+  @override
+  String get passwordResetSuccess => 'Password reset successfully';
+
+  @override
+  String get otpRequired => 'OTP is required';
+
+  @override
+  String get otpInvalid => 'OTP must be 6 digits';
 }

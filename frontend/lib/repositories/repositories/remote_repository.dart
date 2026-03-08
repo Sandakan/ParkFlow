@@ -29,6 +29,9 @@ import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/repositories/entities/reservation/create_reservation_request_entity.dart';
 import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
 import 'package:parkflow/core/network/entities/slot_availability_response_entity.dart';
+import 'package:parkflow/repositories/entities/auth/forgot_password_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/verify_otp_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/reset_password_request_entity.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -98,6 +101,39 @@ class RemoteRepository implements RemoteRepositoryInterface {
     }
 
     return baseResponse;
+  }
+
+  @override
+  Future<void> forgotPassword(ForgotPasswordRequestEntity request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'auth/forgot-password',
+      data: request.toJson(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> verifyOtp(VerifyOtpRequestEntity request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'auth/verify-otp',
+      data: request.toJson(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> resetPassword(ResetPasswordRequestEntity request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'auth/reset-password',
+      data: request.toJson(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
   }
 
   @override

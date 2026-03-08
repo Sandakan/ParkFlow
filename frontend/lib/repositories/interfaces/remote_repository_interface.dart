@@ -23,8 +23,15 @@ import 'package:parkflow/core/network/entities/get_parking_suggestions_response_
 import 'package:parkflow/repositories/entities/reservation/create_reservation_request_entity.dart';
 import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
 import 'package:parkflow/core/network/entities/slot_availability_response_entity.dart';
+import 'package:parkflow/repositories/entities/auth/forgot_password_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/verify_otp_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/reset_password_request_entity.dart';
 
 abstract class RemoteRepositoryInterface {
+  Future<void> forgotPassword(ForgotPasswordRequestEntity request);
+  Future<void> verifyOtp(VerifyOtpRequestEntity request);
+  Future<void> resetPassword(ResetPasswordRequestEntity request);
+
   Future<List<ReservationModel>> getMyReservations({String? accessToken});
   Future<ReservationResponseEntity> createReservation(
     CreateReservationRequestEntity request, {
