@@ -109,11 +109,6 @@ class AdminSettingsBranch extends StatefulShellBranchData {
         TypedGoRoute<NotificationsRoute>(path: NotificationsRoute.path),
       ],
     ),
-    TypedStatefulShellBranch<MyVehicleBranch>(
-      routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<MyVehicleRoute>(path: MyVehicleRoute.path),
-      ],
-    ),
     TypedStatefulShellBranch<ProfileBranch>(
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<ProfileRoute>(path: ProfileRoute.path),
@@ -146,9 +141,6 @@ class NotificationsBranch extends StatefulShellBranchData {
   const NotificationsBranch();
 }
 
-class MyVehicleBranch extends StatefulShellBranchData {
-  const MyVehicleBranch();
-}
 
 class ProfileBranch extends StatefulShellBranchData {
   const ProfileBranch();
@@ -184,15 +176,6 @@ class BookingsRoute extends GoRouteData with $BookingsRoute {
   }
 }
 
-class MyVehicleRoute extends GoRouteData with $MyVehicleRoute {
-  const MyVehicleRoute();
-  static const path = '/my-vehicle';
-
-  @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MyVehicleScreen();
-  }
-}
 
 class ProfileRoute extends GoRouteData with $ProfileRoute {
   const ProfileRoute();

@@ -152,4 +152,5 @@ abstract class RemoteRepositoryInterface {
 
   Future<List<dynamic>> getNotifications({String? accessToken});
   Future<void> markNotificationAsRead(String notificationId, {String? accessToken});
+  Future<void> markAllNotificationsAsRead({String? accessToken});
 }

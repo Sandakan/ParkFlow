@@ -866,4 +866,7 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get noNotifications => 'No notifications yet';
+
+  @override
+  String get markAllAsRead => 'සියල්ල කියවූ ලෙස ලකුණු කරන්න';
 }

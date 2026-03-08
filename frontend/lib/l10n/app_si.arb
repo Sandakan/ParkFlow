@@ -48,5 +48,6 @@
 	"statusCancelled": "අවලංගුයි",
 	"ongoingBooking": "දැනට පවතින වෙන් කිරීම",
 	"timeLeft": "ඉතිරි කාලය",
-	"minsLeft": "මිනිත්තු {mins}ක් ඉතිරිව ඇත"
+	"minsLeft": "මිනිත්තු {mins}ක් ඉතිරිව ඇත",
+	"markAllAsRead": "සියල්ල කියවූ ලෙස ලකුණු කරන්න"
 }

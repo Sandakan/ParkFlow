@@ -65,6 +65,28 @@ async def mark_notification_as_read(
     )
 
 
+@router.patch("/read-all", response_model=APIResponse[int])
+async def mark_all_notifications_as_read(
+    current_user: Any = Depends(get_current_user),
+) -> Any:
+    now = datetime.now(timezone.utc)
+    query = {
+        "user_id": current_user.user_id,
+        "read_at": None,
+        "deleted_at": None,
+    }
+
+    result = await db.client["parkflow"].notifications.update_many(
+        query,
+        {"$set": {"read_at": now, "updated_at": now}},
+    )
+
+    return APIResponse.success_response(
+        message=f"{result.modified_count} notifications marked as read",
+        data=result.modified_count,
+    )
+
+
 @router.get("/stream")
 async def notifications_stream(
     request: Request,

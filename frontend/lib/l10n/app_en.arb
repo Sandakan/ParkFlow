@@ -1072,5 +1072,9 @@
 	"noNotifications": "No notifications yet",
 	"@noNotifications": {
 		"description": "Message shown when there are no notifications"
+	},
+	"markAllAsRead": "Mark all as read",
+	"@markAllAsRead": {
+		"description": "Text for the mark all notifications as read button"
 	}
 }

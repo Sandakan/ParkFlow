@@ -951,4 +951,15 @@ class RemoteRepository implements RemoteRepositoryInterface {
 
     validateResponse(response, throwOnNullData: false);
   }
+
+  @override
+  Future<void> markAllNotificationsAsRead({String? accessToken}) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.patch,
+      'notifications/read-all',
+      accessToken: accessToken,
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
 }

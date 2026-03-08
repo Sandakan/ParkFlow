@@ -73,6 +73,14 @@ class ProfileScreen extends ConsumerWidget {
                     onTap: () {},
                   ),
                   _buildListTile(
+                    icon: Icons.directions_car,
+                    title: l10n.myVehicle,
+                    subtitle: 'Manage your vehicles',
+                    onTap: () {
+                      const MyVehicleRoute().push(context);
+                    },
+                  ),
+                  _buildListTile(
                     icon: Icons.payment,
                     title: l10n.profilePaymentMethods,
                     subtitle: l10n.profileManageCards,

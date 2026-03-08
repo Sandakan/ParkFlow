@@ -198,11 +198,6 @@ class MainLayoutScreen extends ConsumerWidget {
           badgeCount: unreadCount > 0 ? unreadCount : null,
         ),
         NavigationDestinationData(
-          icon: Icons.directions_car_outlined,
-          selectedIcon: Icons.directions_car,
-          label: context.l10n.myVehicle,
-        ),
-        NavigationDestinationData(
           icon: Icons.person_outline,
           selectedIcon: Icons.person,
           label: context.l10n.profile,

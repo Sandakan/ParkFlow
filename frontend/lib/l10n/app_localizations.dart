@@ -1737,6 +1737,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No notifications yet'**
   String get noNotifications;
+
+  /// Text for the mark all notifications as read button
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get markAllAsRead;
 }
 
 class _AppLocalizationsDelegate

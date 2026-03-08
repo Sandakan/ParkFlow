@@ -868,4 +868,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get noNotifications => 'No notifications yet';
+
+  @override
+  String get markAllAsRead => 'அனைத்தையும் படித்ததாகக் குறிக்கவும்';
 }

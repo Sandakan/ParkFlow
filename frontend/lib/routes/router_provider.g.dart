@@ -15,6 +15,7 @@ List<RouteBase> get $appRoutes => [
   $paymentMethodsRoute,
   $addVehicleRoute,
   $addPaymentMethodRoute,
+  $myVehicleRoute,
   $adminShellRoute,
   $driverShellRoute,
 ];
@@ -204,6 +205,32 @@ mixin $AddPaymentMethodRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/add-payment-method');
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $myVehicleRoute => GoRouteData.$route(
+  path: '/my-vehicle',
+  factory: $MyVehicleRoute._fromState,
+);
+
+mixin $MyVehicleRoute on GoRouteData {
+  static MyVehicleRoute _fromState(GoRouterState state) =>
+      const MyVehicleRoute();
+
+  @override
+  String get location => GoRouteData.$location('/my-vehicle');
 
   @override
   void go(BuildContext context) => context.go(location);
@@ -571,14 +598,6 @@ RouteBase get $driverShellRoute => StatefulShellRouteData.$route(
     ),
     StatefulShellBranchData.$branch(
       routes: [
-        GoRouteData.$route(
-          path: '/my-vehicle',
-          factory: $MyVehicleRoute._fromState,
-        ),
-      ],
-    ),
-    StatefulShellBranchData.$branch(
-      routes: [
         GoRouteData.$route(path: '/profile', factory: $ProfileRoute._fromState),
       ],
     ),
@@ -636,27 +655,6 @@ mixin $NotificationsRoute on GoRouteData {
 
   @override
   String get location => GoRouteData.$location('/notifications');
-
-  @override
-  void go(BuildContext context) => context.go(location);
-
-  @override
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  @override
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  @override
-  void replace(BuildContext context) => context.replace(location);
-}
-
-mixin $MyVehicleRoute on GoRouteData {
-  static MyVehicleRoute _fromState(GoRouterState state) =>
-      const MyVehicleRoute();
-
-  @override
-  String get location => GoRouteData.$location('/my-vehicle');
 
   @override
   void go(BuildContext context) => context.go(location);

@@ -26,6 +26,28 @@ class NotificationScreen extends ConsumerWidget {
         backgroundColor: AppColors.white,
         elevation: 0,
         centerTitle: false,
+        actions: [
+          state.when(
+            data: (notifications) {
+              final hasUnread = notifications.any((n) => n.readAt == null);
+              if (!hasUnread) return const SizedBox.shrink();
+              
+              return TextButton(
+                onPressed: () => ref.read(notificationProvider.notifier).markAllAsRead(),
+                child: Text(
+                  l10n.markAllAsRead,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            },
+            loading: () => const SizedBox.shrink(),
+            error: (_, _) => const SizedBox.shrink(),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: state.when(
         data: (notifications) {

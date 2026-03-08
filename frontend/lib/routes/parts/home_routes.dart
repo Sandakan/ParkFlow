@@ -67,3 +67,13 @@ class AddPaymentMethodRoute extends GoRouteData with $AddPaymentMethodRoute {
     return const AddPaymentMethodScreen();
   }
 }
+@TypedGoRoute<MyVehicleRoute>(path: MyVehicleRoute.path)
+class MyVehicleRoute extends GoRouteData with $MyVehicleRoute {
+  const MyVehicleRoute();
+  static const path = '/my-vehicle';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const MyVehicleScreen();
+  }
+}

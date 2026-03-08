@@ -62,6 +62,18 @@ class NotificationNotifier extends _$NotificationNotifier {
     });
   }
 
+  Future<void> markAllAsRead() async {
+    final remoteRepo = ref.read(remoteRepositoryProvider);
+    final token = await ref.read(authProvider.notifier).getValidAccessToken();
+    await remoteRepo.markAllNotificationsAsRead(accessToken: token);
+
+    state.whenData((notifications) {
+      state = AsyncData(
+        notifications.map((n) => n.copyWith(readAt: DateTime.now())).toList(),
+      );
+    });
+  }
+
   int get unreadCount {
     return state.asData?.value.where((n) => n.readAt == null).length ?? 0;
   }
