@@ -774,4 +774,33 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get statusCancelled => 'අවලංගුයි';
+
+  @override
+  String get ongoingBooking => 'දැනට පවතින වෙන් කිරීම';
+
+  @override
+  String get timeLeft => 'ඉතිරි කාලය';
+
+  @override
+  String get baseRateLabel => 'Base Rate (LKR/hr)';
+
+  @override
+  String get baseRateHint => 'e.g. 50.0';
+
+  @override
+  String get originalPriceLabel => 'Original Price';
+
+  @override
+  String get finalPriceLabel => 'Final Price';
+
+  @override
+  String get checkInLabel => 'Check-in';
+
+  @override
+  String get checkOutLabel => 'Check-out';
+
+  @override
+  String minsLeft(String mins) {
+    return 'මිනිත්තු $minsක් ඉතිරිව ඇත';
+  }
 }

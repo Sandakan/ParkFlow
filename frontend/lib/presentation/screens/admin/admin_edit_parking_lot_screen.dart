@@ -48,6 +48,9 @@ class _AdminEditParkingLotScreenState
       'slotLength': FormControl<String>(
         validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
       ),
+      'baseRate': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+      ),
     });
   }
 
@@ -73,6 +76,7 @@ class _AdminEditParkingLotScreenState
           'longitude': lot.longitude.toString(),
           'slotWidth': (lot.slotWidthMeters ?? 5.0).toString(),
           'slotLength': (lot.slotLengthMeters ?? 5.0).toString(),
+          'baseRate': lot.baseRate.toString(),
         });
         _formInitialized = true;
       }
@@ -245,6 +249,17 @@ class _AdminEditParkingLotScreenState
                             ],
                           ),
                           const SizedBox(height: 16),
+                          LabeledReactiveTextField<String>(
+                            formControlName: 'baseRate',
+                            label: context.l10n.baseRateLabel,
+                            hintText: context.l10n.baseRateHint,
+                            prefixIcon: Icons.monetization_on_outlined,
+                            isRequired: true,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
                           const SizedBox(height: 32),
                           const Divider(),
                           const SizedBox(height: 16),
@@ -323,6 +338,10 @@ class _AdminEditParkingLotScreenState
                                         ),
                                         slotLengthMeters: double.parse(
                                           form.control('slotLength').value
+                                              as String,
+                                        ),
+                                        baseRate: double.parse(
+                                          form.control('baseRate').value
                                               as String,
                                         ),
                                       );

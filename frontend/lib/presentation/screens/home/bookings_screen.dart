@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/presentation/notifiers/parking/reservation_notifier.dart';
+import 'package:parkflow/presentation/widgets/parking/ongoing_booking_card.dart';
 import 'package:parkflow/presentation/widgets/parking/reservation_card.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
@@ -13,6 +14,7 @@ class BookingsScreen extends ConsumerWidget {
     final reservationsState = ref.watch(reservationNotifierProvider);
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: Text(
           context.l10n.bookings,
@@ -52,32 +54,41 @@ class BookingsScreen extends ConsumerWidget {
                 }
 
                 final now = DateTime.now();
-                final allUpcoming =
-                    reservations.where((r) => r.endTime.isAfter(now)).toList()
-                      ..sort((a, b) => a.startTime.compareTo(b.startTime));
 
-                final topUpcoming = allUpcoming.take(3).toList();
-                final restUpcoming = allUpcoming.skip(3).toList();
-
-                final past = reservations
+                final ongoing = reservations
                     .where(
                       (r) =>
-                          r.endTime.isBefore(now) ||
-                          r.endTime.isAtSameMomentAs(now),
+                          r.startTime.isBefore(now) && r.endTime.isAfter(now),
                     )
-                    .toList();
+                    .firstOrNull;
 
-                final history = [...restUpcoming, ...past]
+                final upcomingSorted =
+                    reservations.where((r) => r.startTime.isAfter(now)).toList()
+                      ..sort((a, b) => a.startTime.compareTo(b.startTime));
+                final topUpcoming = upcomingSorted.take(3).toList();
+
+                final allBookings = [...reservations]
                   ..sort((a, b) => b.startTime.compareTo(a.startTime));
 
                 return CustomScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   slivers: [
+                    if (ongoing != null) ...[
+                      SliverPadding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 24,
+                        ),
+                        sliver: SliverToBoxAdapter(
+                          child: OngoingBookingCard(reservation: ongoing),
+                        ),
+                      ),
+                    ],
                     if (topUpcoming.isNotEmpty) ...[
                       SliverPadding(
-                        padding: const EdgeInsets.only(
+                        padding: EdgeInsets.only(
                           left: 20,
-                          top: 24,
+                          top: ongoing == null ? 24 : 8,
                           bottom: 12,
                         ),
                         sliver: SliverToBoxAdapter(
@@ -108,7 +119,7 @@ class BookingsScreen extends ConsumerWidget {
                         ),
                       ),
                     ],
-                    if (history.isNotEmpty) ...[
+                    if (allBookings.isNotEmpty) ...[
                       SliverPadding(
                         padding: const EdgeInsets.only(
                           left: 20,
@@ -134,16 +145,10 @@ class BookingsScreen extends ConsumerWidget {
                             index,
                           ) {
                             return ReservationCard(
-                              reservation: history[index],
+                              reservation: allBookings[index],
                               isHorizontal: false,
                             );
-                          }, childCount: history.length),
-                        ),
-                      ),
-                    ] else if (topUpcoming.isEmpty) ...[
-                      SliverToBoxAdapter(
-                        child: Center(
-                          child: Text(context.l10n.noBookingsFound),
+                          }, childCount: allBookings.length),
                         ),
                       ),
                     ],

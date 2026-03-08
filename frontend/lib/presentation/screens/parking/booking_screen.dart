@@ -25,24 +25,39 @@ class BookingScreen extends ConsumerStatefulWidget {
 }
 
 class _BookingScreenState extends ConsumerState<BookingScreen> {
-  final form = fb.group({
-    'vehicle': FormControl<int>(validators: [Validators.required]),
-    'arrival_date': FormControl<DateTime>(
-      value: DateTime.now(),
-      validators: [Validators.required],
-    ),
-    'arrival_time': FormControl<DateTime>(
-      value: DateTime.now().add(const Duration(minutes: 15)),
-      validators: [Validators.required],
-    ),
-    'duration': FormControl<int>(value: 60, validators: [Validators.required]),
-    'slot_selection_mode': FormControl<String>(value: 'auto'),
-    'selected_slot_id': FormControl<String>(),
-    'payment_method': FormControl<String>(
-      value: 'card',
-      validators: [Validators.required],
-    ),
-  });
+  late final FormGroup form;
+
+  @override
+  void initState() {
+    super.initState();
+    debugPrint('BookingScreen: initState - Setting up form listeners');
+
+    form = FormGroup({
+      'vehicle': FormControl<int>(validators: [Validators.required]),
+      'arrival_date': FormControl<DateTime>(
+        value: DateTime.now(),
+        validators: [Validators.required],
+      ),
+      'arrival_time': FormControl<DateTime>(
+        value: DateTime.now().add(const Duration(minutes: 15)),
+        validators: [Validators.required],
+      ),
+      'duration': FormControl<int>(value: 60, validators: [Validators.required]),
+      'slot_selection_mode': FormControl<String>(value: 'auto'),
+      'selected_slot_id': FormControl<String>(),
+      'payment_method': FormControl<String>(
+        value: 'card',
+        validators: [Validators.required],
+      ),
+    }, validators: [
+      Validators.delegate(_futureDateTimeValidator),
+    ]);
+
+    form.valueChanges.listen((value) {
+      debugPrint('BookingScreen: form.valueChanges emitted: $value');
+      _onDataChanged();
+    });
+  }
 
   bool _isSlotAvailable = true;
   bool _isCheckingAvailability = false;
@@ -50,14 +65,28 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   String? _suggestedSlotId;
   Timer? _debounceTimer;
 
-  @override
-  void initState() {
-    super.initState();
-    debugPrint('BookingScreen: initState - Setting up form listeners');
-    form.valueChanges.listen((value) {
-      debugPrint('BookingScreen: form.valueChanges emitted: $value');
-      _onDataChanged();
-    });
+  static Map<String, dynamic>? _futureDateTimeValidator(
+    AbstractControl<dynamic> control,
+  ) {
+    final group = control as FormGroup;
+    final date = group.control('arrival_date').value as DateTime?;
+    final time = group.control('arrival_time').value as DateTime?;
+
+    if (date == null || time == null) return null;
+
+    final combined = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
+
+    if (combined.isBefore(DateTime.now().add(const Duration(minutes: 1)))) {
+      return {'pastDateTime': true};
+    }
+
+    return null;
   }
 
   @override
@@ -235,7 +264,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   const SizedBox(height: 12),
                   _buildPaymentPicker(),
                   const SizedBox(height: 48),
-                  _buildPriceSummary(lot.pricePerHour),
+                  _buildPriceSummary(lot.baseRate),
                   const SizedBox(height: 16),
                   _buildConflictCheckIndicator(),
                   const SizedBox(height: 24),
@@ -251,6 +280,17 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     _buildReservationError(reservationState.error!),
                     const SizedBox(height: 16),
                   ],
+                  ReactiveFormConsumer(
+                    builder: (context, form, child) {
+                      if (form.hasError('pastDateTime')) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: _buildPastTimeWarning(),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
                   _buildSubmitButton(reservationState.isLoading),
                   const SizedBox(height: 32),
                 ],
@@ -797,18 +837,49 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     );
   }
 
-  Widget _buildSubmitButton(bool isLoading) {
-    final bool isFormValid =
-        form.valid &&
-        _hasCheckedAvailability &&
-        !_isCheckingAvailability &&
-        _isSlotAvailable;
+  Widget _buildPastTimeWarning() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.error.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.history_toggle_off, color: AppColors.error, size: 20),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              'Reservation time cannot be in the past. Please select a future time.',
+              style: TextStyle(
+                color: AppColors.error,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-    return AppPrimaryButton(
-      label: 'Confirm Booking',
-      onPressed: isFormValid ? _submitBooking : null,
-      isLoading: isLoading,
-      width: double.infinity,
+  Widget _buildSubmitButton(bool isLoading) {
+    return ReactiveFormConsumer(
+      builder: (context, form, child) {
+        final bool isFormValid =
+            form.valid &&
+            _hasCheckedAvailability &&
+            !_isCheckingAvailability &&
+            _isSlotAvailable;
+
+        return AppPrimaryButton(
+          label: 'Confirm Booking',
+          onPressed: isFormValid ? _submitBooking : null,
+          isLoading: isLoading,
+          width: double.infinity,
+        );
+      },
     );
   }
 

@@ -19,6 +19,7 @@ abstract class GetParkingLotResponseEntity with _$GetParkingLotResponseEntity {
     List<List<int>>? entranceLogicalLocations,
     @JsonKey(name: 'slot_width_meters') double? slotWidthMeters,
     @JsonKey(name: 'slot_length_meters') double? slotLengthMeters,
+    @JsonKey(name: 'base_rate') double? baseRate,
   }) = _GetParkingLotResponseEntity;
 
   factory GetParkingLotResponseEntity.fromJson(Map<String, dynamic> json) =>
@@ -36,6 +37,7 @@ abstract class GetParkingLotResponseEntity with _$GetParkingLotResponseEntity {
       camerasCount: 0,
       occupancy: 0.0,
       revenueToday: 0,
+      baseRate: baseRate ?? 100.0,
       entranceLogicalLocations:
           entranceLogicalLocations ??
           [

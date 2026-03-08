@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UpdateParkingLotRequest {
 
- String? get name; String? get address; double? get latitude; double? get longitude;@JsonKey(name: 'entrance_logical_locations') List<List<int>>? get entranceLogicalLocations;@JsonKey(name: 'slot_width_meters') double? get slotWidthMeters;@JsonKey(name: 'slot_length_meters') double? get slotLengthMeters;
+ String? get name; String? get address; double? get latitude; double? get longitude;@JsonKey(name: 'entrance_logical_locations') List<List<int>>? get entranceLogicalLocations;@JsonKey(name: 'slot_width_meters') double? get slotWidthMeters;@JsonKey(name: 'slot_length_meters') double? get slotLengthMeters;@JsonKey(name: 'base_rate') double? get baseRate;
 /// Create a copy of UpdateParkingLotRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UpdateParkingLotRequestCopyWith<UpdateParkingLotRequest> get copyWith => _$Upda
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateParkingLotRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&const DeepCollectionEquality().equals(other.entranceLogicalLocations, entranceLogicalLocations)&&(identical(other.slotWidthMeters, slotWidthMeters) || other.slotWidthMeters == slotWidthMeters)&&(identical(other.slotLengthMeters, slotLengthMeters) || other.slotLengthMeters == slotLengthMeters));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateParkingLotRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&const DeepCollectionEquality().equals(other.entranceLogicalLocations, entranceLogicalLocations)&&(identical(other.slotWidthMeters, slotWidthMeters) || other.slotWidthMeters == slotWidthMeters)&&(identical(other.slotLengthMeters, slotLengthMeters) || other.slotLengthMeters == slotLengthMeters)&&(identical(other.baseRate, baseRate) || other.baseRate == baseRate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,address,latitude,longitude,const DeepCollectionEquality().hash(entranceLogicalLocations),slotWidthMeters,slotLengthMeters);
+int get hashCode => Object.hash(runtimeType,name,address,latitude,longitude,const DeepCollectionEquality().hash(entranceLogicalLocations),slotWidthMeters,slotLengthMeters,baseRate);
 
 @override
 String toString() {
-  return 'UpdateParkingLotRequest(name: $name, address: $address, latitude: $latitude, longitude: $longitude, entranceLogicalLocations: $entranceLogicalLocations, slotWidthMeters: $slotWidthMeters, slotLengthMeters: $slotLengthMeters)';
+  return 'UpdateParkingLotRequest(name: $name, address: $address, latitude: $latitude, longitude: $longitude, entranceLogicalLocations: $entranceLogicalLocations, slotWidthMeters: $slotWidthMeters, slotLengthMeters: $slotLengthMeters, baseRate: $baseRate)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UpdateParkingLotRequestCopyWith<$Res>  {
   factory $UpdateParkingLotRequestCopyWith(UpdateParkingLotRequest value, $Res Function(UpdateParkingLotRequest) _then) = _$UpdateParkingLotRequestCopyWithImpl;
 @useResult
 $Res call({
- String? name, String? address, double? latitude, double? longitude,@JsonKey(name: 'entrance_logical_locations') List<List<int>>? entranceLogicalLocations,@JsonKey(name: 'slot_width_meters') double? slotWidthMeters,@JsonKey(name: 'slot_length_meters') double? slotLengthMeters
+ String? name, String? address, double? latitude, double? longitude,@JsonKey(name: 'entrance_logical_locations') List<List<int>>? entranceLogicalLocations,@JsonKey(name: 'slot_width_meters') double? slotWidthMeters,@JsonKey(name: 'slot_length_meters') double? slotLengthMeters,@JsonKey(name: 'base_rate') double? baseRate
 });
 
 
@@ -65,7 +65,7 @@ class _$UpdateParkingLotRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateParkingLotRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? address = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? entranceLogicalLocations = freezed,Object? slotWidthMeters = freezed,Object? slotLengthMeters = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? address = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? entranceLogicalLocations = freezed,Object? slotWidthMeters = freezed,Object? slotLengthMeters = freezed,Object? baseRate = freezed,}) {
   return _then(_self.copyWith(
 name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
@@ -74,6 +74,7 @@ as double?,longitude: freezed == longitude ? _self.longitude : longitude // igno
 as double?,entranceLogicalLocations: freezed == entranceLogicalLocations ? _self.entranceLogicalLocations : entranceLogicalLocations // ignore: cast_nullable_to_non_nullable
 as List<List<int>>?,slotWidthMeters: freezed == slotWidthMeters ? _self.slotWidthMeters : slotWidthMeters // ignore: cast_nullable_to_non_nullable
 as double?,slotLengthMeters: freezed == slotLengthMeters ? _self.slotLengthMeters : slotLengthMeters // ignore: cast_nullable_to_non_nullable
+as double?,baseRate: freezed == baseRate ? _self.baseRate : baseRate // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
 }
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? address,  double? latitude,  double? longitude, @JsonKey(name: 'entrance_logical_locations')  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters')  double? slotWidthMeters, @JsonKey(name: 'slot_length_meters')  double? slotLengthMeters)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? address,  double? latitude,  double? longitude, @JsonKey(name: 'entrance_logical_locations')  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters')  double? slotWidthMeters, @JsonKey(name: 'slot_length_meters')  double? slotLengthMeters, @JsonKey(name: 'base_rate')  double? baseRate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UpdateParkingLotRequest() when $default != null:
-return $default(_that.name,_that.address,_that.latitude,_that.longitude,_that.entranceLogicalLocations,_that.slotWidthMeters,_that.slotLengthMeters);case _:
+return $default(_that.name,_that.address,_that.latitude,_that.longitude,_that.entranceLogicalLocations,_that.slotWidthMeters,_that.slotLengthMeters,_that.baseRate);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.name,_that.address,_that.latitude,_that.longitude,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? address,  double? latitude,  double? longitude, @JsonKey(name: 'entrance_logical_locations')  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters')  double? slotWidthMeters, @JsonKey(name: 'slot_length_meters')  double? slotLengthMeters)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? address,  double? latitude,  double? longitude, @JsonKey(name: 'entrance_logical_locations')  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters')  double? slotWidthMeters, @JsonKey(name: 'slot_length_meters')  double? slotLengthMeters, @JsonKey(name: 'base_rate')  double? baseRate)  $default,) {final _that = this;
 switch (_that) {
 case _UpdateParkingLotRequest():
-return $default(_that.name,_that.address,_that.latitude,_that.longitude,_that.entranceLogicalLocations,_that.slotWidthMeters,_that.slotLengthMeters);case _:
+return $default(_that.name,_that.address,_that.latitude,_that.longitude,_that.entranceLogicalLocations,_that.slotWidthMeters,_that.slotLengthMeters,_that.baseRate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.name,_that.address,_that.latitude,_that.longitude,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? address,  double? latitude,  double? longitude, @JsonKey(name: 'entrance_logical_locations')  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters')  double? slotWidthMeters, @JsonKey(name: 'slot_length_meters')  double? slotLengthMeters)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? address,  double? latitude,  double? longitude, @JsonKey(name: 'entrance_logical_locations')  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters')  double? slotWidthMeters, @JsonKey(name: 'slot_length_meters')  double? slotLengthMeters, @JsonKey(name: 'base_rate')  double? baseRate)?  $default,) {final _that = this;
 switch (_that) {
 case _UpdateParkingLotRequest() when $default != null:
-return $default(_that.name,_that.address,_that.latitude,_that.longitude,_that.entranceLogicalLocations,_that.slotWidthMeters,_that.slotLengthMeters);case _:
+return $default(_that.name,_that.address,_that.latitude,_that.longitude,_that.entranceLogicalLocations,_that.slotWidthMeters,_that.slotLengthMeters,_that.baseRate);case _:
   return null;
 
 }
@@ -215,7 +216,7 @@ return $default(_that.name,_that.address,_that.latitude,_that.longitude,_that.en
 @JsonSerializable()
 
 class _UpdateParkingLotRequest extends UpdateParkingLotRequest {
-  const _UpdateParkingLotRequest({this.name, this.address, this.latitude, this.longitude, @JsonKey(name: 'entrance_logical_locations') final  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters') this.slotWidthMeters, @JsonKey(name: 'slot_length_meters') this.slotLengthMeters}): _entranceLogicalLocations = entranceLogicalLocations,super._();
+  const _UpdateParkingLotRequest({this.name, this.address, this.latitude, this.longitude, @JsonKey(name: 'entrance_logical_locations') final  List<List<int>>? entranceLogicalLocations, @JsonKey(name: 'slot_width_meters') this.slotWidthMeters, @JsonKey(name: 'slot_length_meters') this.slotLengthMeters, @JsonKey(name: 'base_rate') this.baseRate}): _entranceLogicalLocations = entranceLogicalLocations,super._();
   factory _UpdateParkingLotRequest.fromJson(Map<String, dynamic> json) => _$UpdateParkingLotRequestFromJson(json);
 
 @override final  String? name;
@@ -233,6 +234,7 @@ class _UpdateParkingLotRequest extends UpdateParkingLotRequest {
 
 @override@JsonKey(name: 'slot_width_meters') final  double? slotWidthMeters;
 @override@JsonKey(name: 'slot_length_meters') final  double? slotLengthMeters;
+@override@JsonKey(name: 'base_rate') final  double? baseRate;
 
 /// Create a copy of UpdateParkingLotRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -247,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateParkingLotRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&const DeepCollectionEquality().equals(other._entranceLogicalLocations, _entranceLogicalLocations)&&(identical(other.slotWidthMeters, slotWidthMeters) || other.slotWidthMeters == slotWidthMeters)&&(identical(other.slotLengthMeters, slotLengthMeters) || other.slotLengthMeters == slotLengthMeters));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateParkingLotRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.address, address) || other.address == address)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&const DeepCollectionEquality().equals(other._entranceLogicalLocations, _entranceLogicalLocations)&&(identical(other.slotWidthMeters, slotWidthMeters) || other.slotWidthMeters == slotWidthMeters)&&(identical(other.slotLengthMeters, slotLengthMeters) || other.slotLengthMeters == slotLengthMeters)&&(identical(other.baseRate, baseRate) || other.baseRate == baseRate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,address,latitude,longitude,const DeepCollectionEquality().hash(_entranceLogicalLocations),slotWidthMeters,slotLengthMeters);
+int get hashCode => Object.hash(runtimeType,name,address,latitude,longitude,const DeepCollectionEquality().hash(_entranceLogicalLocations),slotWidthMeters,slotLengthMeters,baseRate);
 
 @override
 String toString() {
-  return 'UpdateParkingLotRequest(name: $name, address: $address, latitude: $latitude, longitude: $longitude, entranceLogicalLocations: $entranceLogicalLocations, slotWidthMeters: $slotWidthMeters, slotLengthMeters: $slotLengthMeters)';
+  return 'UpdateParkingLotRequest(name: $name, address: $address, latitude: $latitude, longitude: $longitude, entranceLogicalLocations: $entranceLogicalLocations, slotWidthMeters: $slotWidthMeters, slotLengthMeters: $slotLengthMeters, baseRate: $baseRate)';
 }
 
 
@@ -267,7 +269,7 @@ abstract mixin class _$UpdateParkingLotRequestCopyWith<$Res> implements $UpdateP
   factory _$UpdateParkingLotRequestCopyWith(_UpdateParkingLotRequest value, $Res Function(_UpdateParkingLotRequest) _then) = __$UpdateParkingLotRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String? name, String? address, double? latitude, double? longitude,@JsonKey(name: 'entrance_logical_locations') List<List<int>>? entranceLogicalLocations,@JsonKey(name: 'slot_width_meters') double? slotWidthMeters,@JsonKey(name: 'slot_length_meters') double? slotLengthMeters
+ String? name, String? address, double? latitude, double? longitude,@JsonKey(name: 'entrance_logical_locations') List<List<int>>? entranceLogicalLocations,@JsonKey(name: 'slot_width_meters') double? slotWidthMeters,@JsonKey(name: 'slot_length_meters') double? slotLengthMeters,@JsonKey(name: 'base_rate') double? baseRate
 });
 
 
@@ -284,7 +286,7 @@ class __$UpdateParkingLotRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateParkingLotRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? address = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? entranceLogicalLocations = freezed,Object? slotWidthMeters = freezed,Object? slotLengthMeters = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? address = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? entranceLogicalLocations = freezed,Object? slotWidthMeters = freezed,Object? slotLengthMeters = freezed,Object? baseRate = freezed,}) {
   return _then(_UpdateParkingLotRequest(
 name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,address: freezed == address ? _self.address : address // ignore: cast_nullable_to_non_nullable
@@ -293,6 +295,7 @@ as double?,longitude: freezed == longitude ? _self.longitude : longitude // igno
 as double?,entranceLogicalLocations: freezed == entranceLogicalLocations ? _self._entranceLogicalLocations : entranceLogicalLocations // ignore: cast_nullable_to_non_nullable
 as List<List<int>>?,slotWidthMeters: freezed == slotWidthMeters ? _self.slotWidthMeters : slotWidthMeters // ignore: cast_nullable_to_non_nullable
 as double?,slotLengthMeters: freezed == slotLengthMeters ? _self.slotLengthMeters : slotLengthMeters // ignore: cast_nullable_to_non_nullable
+as double?,baseRate: freezed == baseRate ? _self.baseRate : baseRate // ignore: cast_nullable_to_non_nullable
 as double?,
   ));
 }

@@ -125,10 +125,21 @@ async def create_reservation(
             status_code=status.HTTP_404_NOT_FOUND,
         )
 
-    price_per_hour = lot.get("price_per_hour", 0.0)
+    price_per_hour = lot.get("base_rate", 0.0)
     total_price = (request.duration_minutes / 60.0) * price_per_hour
 
     now = datetime.now(timezone.utc)
+    start_time_utc = request.start_time
+    if start_time_utc.tzinfo is None:
+        start_time_utc = start_time_utc.replace(tzinfo=timezone.utc)
+
+    if start_time_utc < now - timedelta(minutes=5):
+        return APIResponse.error_response(
+            message="Reservation start time cannot be in the past",
+            code=ResponseCode.RESERVATION_PAST_TIME,
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
     qr_code = str(uuid.uuid4())
     end_time = request.start_time + timedelta(minutes=request.duration_minutes)
 
@@ -141,6 +152,11 @@ async def create_reservation(
         "duration_minutes": request.duration_minutes,
         "payment_method": request.payment_method,
         "total_price": total_price,
+        "base_rate": price_per_hour,
+        "actual_end_time": end_time,
+        "total_billed_price": total_price,
+        "check_in_time": None,
+        "check_out_time": None,
         "status": "active",
         "qr_code_token": qr_code,
         "created_at": now,
@@ -160,8 +176,13 @@ async def create_reservation(
         "duration_minutes": request.duration_minutes,
         "payment_method": request.payment_method,
         "total_price": total_price,
+        "base_rate": price_per_hour,
+        "actual_end_time": end_time,
+        "total_billed_price": total_price,
         "status": "active",
         "qr_code_token": qr_code,
+        "lot_name": lot.get("name", "Unknown Lot"),
+        "slot_name": slot.get("slot_number", "Unknown Slot"),
         "created_at": now,
         "updated_at": now,
     }
@@ -171,6 +192,109 @@ async def create_reservation(
         code=ResponseCode.RESERVATION_CREATED,
         data=ReservationResponse(**reservation_data),
         status_code=201,
+    )
+
+
+@router.post("/scan/{token}", response_model=APIResponse[ReservationResponse])
+async def scan_reservation_qr(
+    token: str,
+    current_user: Any = Depends(get_current_user),
+) -> Any:
+    """
+    Scan a reservation QR code to log check-in or check-out.
+    """
+    now = datetime.now(timezone.utc)
+    reservation = await db.client["parkflow"].reservations.find_one(
+        {"qr_code_token": token, "deleted_at": None}
+    )
+
+    if not reservation:
+        return APIResponse.error_response(
+            message="Reservation not found",
+            code=ResponseCode.RESERVATION_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    res_id = reservation["_id"]
+    status_val = reservation.get("status")
+
+    if status_val == "completed":
+        return APIResponse.error_response(
+            message="Reservation is already completed",
+            code=ResponseCode.ERROR,
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+    update_data = {"updated_at": now}
+
+    if reservation.get("check_in_time") is None:
+        update_data["check_in_time"] = now
+        message = "Checked in successfully"
+    elif reservation.get("check_out_time") is None:
+        update_data["check_out_time"] = now
+        update_data["actual_end_time"] = now
+        update_data["status"] = "completed"
+
+        start_time = reservation["start_time"].replace(tzinfo=timezone.utc)
+        duration_hours = (now - start_time).total_seconds() / 3600.0
+        update_data["total_billed_price"] = max(
+            0.0, duration_hours * reservation.get("base_rate", 0.0)
+        )
+        message = "Checked out successfully"
+    else:
+        return APIResponse.error_response(
+            message="Reservation already processed",
+            code=ResponseCode.ERROR,
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+    await db.client["parkflow"].reservations.update_one(
+        {"_id": res_id}, {"$set": update_data}
+    )
+
+    updated_res = await db.client["parkflow"].reservations.find_one({"_id": res_id})
+
+    res_data = {
+        "id": str(updated_res["_id"]),
+        "user_id": updated_res["user_id"],
+        "slot_id": updated_res["slot_id"],
+        "start_time": updated_res["start_time"],
+        "end_time": updated_res["end_time"],
+        "vehicle": updated_res["vehicle"],
+        "duration_minutes": updated_res["duration_minutes"],
+        "payment_method": updated_res["payment_method"],
+        "total_price": updated_res["total_price"],
+        "base_rate": updated_res.get("base_rate", 0.0),
+        "check_in_time": updated_res.get("check_in_time"),
+        "check_out_time": updated_res.get("check_out_time"),
+        "actual_end_time": updated_res.get("actual_end_time", updated_res["end_time"]),
+        "total_billed_price": updated_res.get(
+            "total_billed_price", updated_res["total_price"]
+        ),
+        "status": updated_res.get("status", "active"),
+        "qr_code_token": updated_res["qr_code_token"],
+        "lot_name": "Unknown Lot",
+        "slot_name": "Unknown Slot",
+        "created_at": updated_res["created_at"],
+        "updated_at": updated_res["updated_at"],
+    }
+    res_slot = await db.client["parkflow"].parking_slots.find_one(
+        {"_id": ObjectId(updated_res["slot_id"])}
+    )
+    if res_slot:
+        res_data["slot_name"] = res_slot.get("slot_number", "Unknown Slot")
+        res_lot = await db.client["parkflow"].parking_lots.find_one(
+            {"_id": ObjectId(res_slot["lot_id"])}
+        )
+        if res_lot:
+            res_data["lot_name"] = res_lot.get("name", "Unknown Lot")
+            if not res_data.get("base_rate"):
+                res_data["base_rate"] = res_lot.get("base_rate", 0.0)
+
+    return APIResponse.success_response(
+        message=message,
+        code=ResponseCode.SUCCESS,
+        data=ReservationResponse(**res_data),
     )
 
 
@@ -201,11 +325,36 @@ async def get_my_reservations(
             "duration_minutes": res["duration_minutes"],
             "payment_method": res["payment_method"],
             "total_price": res["total_price"],
-            "status": res["status"],
+            "base_rate": res.get("base_rate", 0.0),
+            "check_in_time": res.get("check_in_time"),
+            "check_out_time": res.get("check_out_time"),
+            "actual_end_time": res.get("actual_end_time", res["end_time"]),
+            "total_billed_price": res.get("total_billed_price", res["total_price"]),
+            "status": res.get("status", "active"),
             "qr_code_token": res["qr_code_token"],
+            "lot_name": "Unknown Lot",
+            "slot_name": "Unknown Slot",
             "created_at": res["created_at"],
             "updated_at": res["updated_at"],
         }
+
+        res_slot = await db.client["parkflow"].parking_slots.find_one(
+            {"_id": ObjectId(res["slot_id"])}
+        )
+        if res_slot:
+            res_data["slot_name"] = res_slot.get("slot_number", "Unknown Slot")
+            res_lot = await db.client["parkflow"].parking_lots.find_one(
+                {"_id": ObjectId(res_slot["lot_id"])}
+            )
+            if res_lot:
+                res_data["lot_name"] = res_lot.get("name", "Unknown Lot")
+                if not res_data.get("base_rate"):
+                    res_data["base_rate"] = res_lot.get("base_rate", 0.0)
+                    res_data["total_price"] = (
+                        res_data["duration_minutes"] / 60.0
+                    ) * res_data["base_rate"]
+                    res_data["total_billed_price"] = res_data["total_price"]
+
         serialized.append(ReservationResponse(**res_data))
 
     return APIResponse.success_response(

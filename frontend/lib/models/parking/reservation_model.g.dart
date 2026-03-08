@@ -17,8 +17,19 @@ _ReservationModel _$ReservationModelFromJson(Map<String, dynamic> json) =>
       durationMinutes: (json['duration_minutes'] as num).toInt(),
       paymentMethod: json['payment_method'] as String,
       totalPrice: (json['total_price'] as num).toDouble(),
+      baseRate: (json['base_rate'] as num).toDouble(),
+      checkInTime: json['check_in_time'] == null
+          ? null
+          : DateTime.parse(json['check_in_time'] as String),
+      checkOutTime: json['check_out_time'] == null
+          ? null
+          : DateTime.parse(json['check_out_time'] as String),
+      actualEndTime: DateTime.parse(json['actual_end_time'] as String),
+      totalBilledPrice: (json['total_billed_price'] as num).toDouble(),
       status: json['status'] as String,
       qrCodeToken: json['qr_code_token'] as String,
+      lotName: json['lot_name'] as String,
+      slotName: json['slot_name'] as String,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
@@ -34,8 +45,15 @@ Map<String, dynamic> _$ReservationModelToJson(_ReservationModel instance) =>
       'duration_minutes': instance.durationMinutes,
       'payment_method': instance.paymentMethod,
       'total_price': instance.totalPrice,
+      'base_rate': instance.baseRate,
+      'check_in_time': instance.checkInTime?.toIso8601String(),
+      'check_out_time': instance.checkOutTime?.toIso8601String(),
+      'actual_end_time': instance.actualEndTime.toIso8601String(),
+      'total_billed_price': instance.totalBilledPrice,
       'status': instance.status,
       'qr_code_token': instance.qrCodeToken,
+      'lot_name': instance.lotName,
+      'slot_name': instance.slotName,
       'created_at': instance.createdAt.toIso8601String(),
       'updated_at': instance.updatedAt.toIso8601String(),
     };

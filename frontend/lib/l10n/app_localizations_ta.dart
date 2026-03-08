@@ -776,4 +776,33 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get statusCancelled => 'ரத்து செய்யப்பட்டது';
+
+  @override
+  String get ongoingBooking => 'தற்போதைய முன்பதிவு';
+
+  @override
+  String get timeLeft => 'மீதமுள்ள நேரம்';
+
+  @override
+  String get baseRateLabel => 'Base Rate (LKR/hr)';
+
+  @override
+  String get baseRateHint => 'e.g. 50.0';
+
+  @override
+  String get originalPriceLabel => 'Original Price';
+
+  @override
+  String get finalPriceLabel => 'Final Price';
+
+  @override
+  String get checkInLabel => 'Check-in';
+
+  @override
+  String get checkOutLabel => 'Check-out';
+
+  @override
+  String minsLeft(String mins) {
+    return '$mins நிமிடங்கள் மீதமுள்ளன';
+  }
 }

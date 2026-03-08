@@ -45,5 +45,8 @@
 	"lkrAmount": "ரூ {amount}",
 	"statusActive": "செயலில் உள்ளது",
 	"statusCompleted": "முடிந்தது",
-	"statusCancelled": "ரத்து செய்யப்பட்டது"
+	"statusCancelled": "ரத்து செய்யப்பட்டது",
+	"ongoingBooking": "தற்போதைய முன்பதிவு",
+	"timeLeft": "மீதமுள்ள நேரம்",
+	"minsLeft": "{mins} நிமிடங்கள் மீதமுள்ளன"
 }

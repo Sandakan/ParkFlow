@@ -234,7 +234,7 @@ async def create_parking_lot(
         "slot_width_meters": request.slot_width_meters,
         "slot_length_meters": request.slot_length_meters,
         "status": "open",
-        "price_per_hour": request.price_per_hour,
+        "base_rate": request.base_rate,
         "metrics": metrics,
         "created_at": now,
         "updated_at": now,
@@ -401,6 +401,7 @@ async def get_parking_lot(
             "camerasCount": cameras_count,
             "slot_width_meters": lot.get("slot_width_meters", 5.0),
             "slot_length_meters": lot.get("slot_length_meters", 5.0),
+            "base_rate": lot.get("base_rate", 0.0),
             "rating": lot.get("average_rating", 0.0),
             "ratingCount": lot.get("rating_count", 0),
         },
@@ -438,8 +439,8 @@ async def update_parking_lot(
             lat = request.latitude if request.latitude is not None else coords[1]
             update_data["location"] = {"type": "Point", "coordinates": [lon, lat]}
 
-    if request.price_per_hour is not None:
-        update_data["price_per_hour"] = request.price_per_hour
+    if request.base_rate is not None:
+        update_data["base_rate"] = request.base_rate
     if request.slot_width_meters is not None:
         update_data["slot_width_meters"] = request.slot_width_meters
     if request.slot_length_meters is not None:

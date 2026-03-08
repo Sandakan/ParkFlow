@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReservationModel {
 
- String get id;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'slot_id') String get slotId;@JsonKey(name: 'start_time') DateTime get startTime;@JsonKey(name: 'end_time') DateTime get endTime; VehicleModel get vehicle;@JsonKey(name: 'duration_minutes') int get durationMinutes;@JsonKey(name: 'payment_method') String get paymentMethod;@JsonKey(name: 'total_price') double get totalPrice; String get status;@JsonKey(name: 'qr_code_token') String get qrCodeToken;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ String get id;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'slot_id') String get slotId;@JsonKey(name: 'start_time') DateTime get startTime;@JsonKey(name: 'end_time') DateTime get endTime; VehicleModel get vehicle;@JsonKey(name: 'duration_minutes') int get durationMinutes;@JsonKey(name: 'payment_method') String get paymentMethod;@JsonKey(name: 'total_price') double get totalPrice;@JsonKey(name: 'base_rate') double get baseRate;@JsonKey(name: 'check_in_time') DateTime? get checkInTime;@JsonKey(name: 'check_out_time') DateTime? get checkOutTime;@JsonKey(name: 'actual_end_time') DateTime get actualEndTime;@JsonKey(name: 'total_billed_price') double get totalBilledPrice; String get status;@JsonKey(name: 'qr_code_token') String get qrCodeToken;@JsonKey(name: 'lot_name') String get lotName;@JsonKey(name: 'slot_name') String get slotName;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
 /// Create a copy of ReservationModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ReservationModelCopyWith<ReservationModel> get copyWith => _$ReservationModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReservationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.slotId, slotId) || other.slotId == slotId)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.status, status) || other.status == status)&&(identical(other.qrCodeToken, qrCodeToken) || other.qrCodeToken == qrCodeToken)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReservationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.slotId, slotId) || other.slotId == slotId)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.baseRate, baseRate) || other.baseRate == baseRate)&&(identical(other.checkInTime, checkInTime) || other.checkInTime == checkInTime)&&(identical(other.checkOutTime, checkOutTime) || other.checkOutTime == checkOutTime)&&(identical(other.actualEndTime, actualEndTime) || other.actualEndTime == actualEndTime)&&(identical(other.totalBilledPrice, totalBilledPrice) || other.totalBilledPrice == totalBilledPrice)&&(identical(other.status, status) || other.status == status)&&(identical(other.qrCodeToken, qrCodeToken) || other.qrCodeToken == qrCodeToken)&&(identical(other.lotName, lotName) || other.lotName == lotName)&&(identical(other.slotName, slotName) || other.slotName == slotName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,slotId,startTime,endTime,vehicle,durationMinutes,paymentMethod,totalPrice,status,qrCodeToken,createdAt,updatedAt);
+int get hashCode => Object.hashAll([runtimeType,id,userId,slotId,startTime,endTime,vehicle,durationMinutes,paymentMethod,totalPrice,baseRate,checkInTime,checkOutTime,actualEndTime,totalBilledPrice,status,qrCodeToken,lotName,slotName,createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'ReservationModel(id: $id, userId: $userId, slotId: $slotId, startTime: $startTime, endTime: $endTime, vehicle: $vehicle, durationMinutes: $durationMinutes, paymentMethod: $paymentMethod, totalPrice: $totalPrice, status: $status, qrCodeToken: $qrCodeToken, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ReservationModel(id: $id, userId: $userId, slotId: $slotId, startTime: $startTime, endTime: $endTime, vehicle: $vehicle, durationMinutes: $durationMinutes, paymentMethod: $paymentMethod, totalPrice: $totalPrice, baseRate: $baseRate, checkInTime: $checkInTime, checkOutTime: $checkOutTime, actualEndTime: $actualEndTime, totalBilledPrice: $totalBilledPrice, status: $status, qrCodeToken: $qrCodeToken, lotName: $lotName, slotName: $slotName, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ReservationModelCopyWith<$Res>  {
   factory $ReservationModelCopyWith(ReservationModel value, $Res Function(ReservationModel) _then) = _$ReservationModelCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'slot_id') String slotId,@JsonKey(name: 'start_time') DateTime startTime,@JsonKey(name: 'end_time') DateTime endTime, VehicleModel vehicle,@JsonKey(name: 'duration_minutes') int durationMinutes,@JsonKey(name: 'payment_method') String paymentMethod,@JsonKey(name: 'total_price') double totalPrice, String status,@JsonKey(name: 'qr_code_token') String qrCodeToken,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'slot_id') String slotId,@JsonKey(name: 'start_time') DateTime startTime,@JsonKey(name: 'end_time') DateTime endTime, VehicleModel vehicle,@JsonKey(name: 'duration_minutes') int durationMinutes,@JsonKey(name: 'payment_method') String paymentMethod,@JsonKey(name: 'total_price') double totalPrice,@JsonKey(name: 'base_rate') double baseRate,@JsonKey(name: 'check_in_time') DateTime? checkInTime,@JsonKey(name: 'check_out_time') DateTime? checkOutTime,@JsonKey(name: 'actual_end_time') DateTime actualEndTime,@JsonKey(name: 'total_billed_price') double totalBilledPrice, String status,@JsonKey(name: 'qr_code_token') String qrCodeToken,@JsonKey(name: 'lot_name') String lotName,@JsonKey(name: 'slot_name') String slotName,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -65,7 +65,7 @@ class _$ReservationModelCopyWithImpl<$Res>
 
 /// Create a copy of ReservationModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? slotId = null,Object? startTime = null,Object? endTime = null,Object? vehicle = null,Object? durationMinutes = null,Object? paymentMethod = null,Object? totalPrice = null,Object? status = null,Object? qrCodeToken = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? slotId = null,Object? startTime = null,Object? endTime = null,Object? vehicle = null,Object? durationMinutes = null,Object? paymentMethod = null,Object? totalPrice = null,Object? baseRate = null,Object? checkInTime = freezed,Object? checkOutTime = freezed,Object? actualEndTime = null,Object? totalBilledPrice = null,Object? status = null,Object? qrCodeToken = null,Object? lotName = null,Object? slotName = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -76,8 +76,15 @@ as DateTime,vehicle: null == vehicle ? _self.vehicle : vehicle // ignore: cast_n
 as VehicleModel,durationMinutes: null == durationMinutes ? _self.durationMinutes : durationMinutes // ignore: cast_nullable_to_non_nullable
 as int,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
 as String,totalPrice: null == totalPrice ? _self.totalPrice : totalPrice // ignore: cast_nullable_to_non_nullable
+as double,baseRate: null == baseRate ? _self.baseRate : baseRate // ignore: cast_nullable_to_non_nullable
+as double,checkInTime: freezed == checkInTime ? _self.checkInTime : checkInTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,checkOutTime: freezed == checkOutTime ? _self.checkOutTime : checkOutTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,actualEndTime: null == actualEndTime ? _self.actualEndTime : actualEndTime // ignore: cast_nullable_to_non_nullable
+as DateTime,totalBilledPrice: null == totalBilledPrice ? _self.totalBilledPrice : totalBilledPrice // ignore: cast_nullable_to_non_nullable
 as double,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,qrCodeToken: null == qrCodeToken ? _self.qrCodeToken : qrCodeToken // ignore: cast_nullable_to_non_nullable
+as String,lotName: null == lotName ? _self.lotName : lotName // ignore: cast_nullable_to_non_nullable
+as String,slotName: null == slotName ? _self.slotName : slotName // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
@@ -174,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'slot_id')  String slotId, @JsonKey(name: 'start_time')  DateTime startTime, @JsonKey(name: 'end_time')  DateTime endTime,  VehicleModel vehicle, @JsonKey(name: 'duration_minutes')  int durationMinutes, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'total_price')  double totalPrice,  String status, @JsonKey(name: 'qr_code_token')  String qrCodeToken, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'slot_id')  String slotId, @JsonKey(name: 'start_time')  DateTime startTime, @JsonKey(name: 'end_time')  DateTime endTime,  VehicleModel vehicle, @JsonKey(name: 'duration_minutes')  int durationMinutes, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'total_price')  double totalPrice, @JsonKey(name: 'base_rate')  double baseRate, @JsonKey(name: 'check_in_time')  DateTime? checkInTime, @JsonKey(name: 'check_out_time')  DateTime? checkOutTime, @JsonKey(name: 'actual_end_time')  DateTime actualEndTime, @JsonKey(name: 'total_billed_price')  double totalBilledPrice,  String status, @JsonKey(name: 'qr_code_token')  String qrCodeToken, @JsonKey(name: 'lot_name')  String lotName, @JsonKey(name: 'slot_name')  String slotName, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReservationModel() when $default != null:
-return $default(_that.id,_that.userId,_that.slotId,_that.startTime,_that.endTime,_that.vehicle,_that.durationMinutes,_that.paymentMethod,_that.totalPrice,_that.status,_that.qrCodeToken,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.userId,_that.slotId,_that.startTime,_that.endTime,_that.vehicle,_that.durationMinutes,_that.paymentMethod,_that.totalPrice,_that.baseRate,_that.checkInTime,_that.checkOutTime,_that.actualEndTime,_that.totalBilledPrice,_that.status,_that.qrCodeToken,_that.lotName,_that.slotName,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -195,10 +202,10 @@ return $default(_that.id,_that.userId,_that.slotId,_that.startTime,_that.endTime
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'slot_id')  String slotId, @JsonKey(name: 'start_time')  DateTime startTime, @JsonKey(name: 'end_time')  DateTime endTime,  VehicleModel vehicle, @JsonKey(name: 'duration_minutes')  int durationMinutes, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'total_price')  double totalPrice,  String status, @JsonKey(name: 'qr_code_token')  String qrCodeToken, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'slot_id')  String slotId, @JsonKey(name: 'start_time')  DateTime startTime, @JsonKey(name: 'end_time')  DateTime endTime,  VehicleModel vehicle, @JsonKey(name: 'duration_minutes')  int durationMinutes, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'total_price')  double totalPrice, @JsonKey(name: 'base_rate')  double baseRate, @JsonKey(name: 'check_in_time')  DateTime? checkInTime, @JsonKey(name: 'check_out_time')  DateTime? checkOutTime, @JsonKey(name: 'actual_end_time')  DateTime actualEndTime, @JsonKey(name: 'total_billed_price')  double totalBilledPrice,  String status, @JsonKey(name: 'qr_code_token')  String qrCodeToken, @JsonKey(name: 'lot_name')  String lotName, @JsonKey(name: 'slot_name')  String slotName, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ReservationModel():
-return $default(_that.id,_that.userId,_that.slotId,_that.startTime,_that.endTime,_that.vehicle,_that.durationMinutes,_that.paymentMethod,_that.totalPrice,_that.status,_that.qrCodeToken,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.userId,_that.slotId,_that.startTime,_that.endTime,_that.vehicle,_that.durationMinutes,_that.paymentMethod,_that.totalPrice,_that.baseRate,_that.checkInTime,_that.checkOutTime,_that.actualEndTime,_that.totalBilledPrice,_that.status,_that.qrCodeToken,_that.lotName,_that.slotName,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -215,10 +222,10 @@ return $default(_that.id,_that.userId,_that.slotId,_that.startTime,_that.endTime
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'slot_id')  String slotId, @JsonKey(name: 'start_time')  DateTime startTime, @JsonKey(name: 'end_time')  DateTime endTime,  VehicleModel vehicle, @JsonKey(name: 'duration_minutes')  int durationMinutes, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'total_price')  double totalPrice,  String status, @JsonKey(name: 'qr_code_token')  String qrCodeToken, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'slot_id')  String slotId, @JsonKey(name: 'start_time')  DateTime startTime, @JsonKey(name: 'end_time')  DateTime endTime,  VehicleModel vehicle, @JsonKey(name: 'duration_minutes')  int durationMinutes, @JsonKey(name: 'payment_method')  String paymentMethod, @JsonKey(name: 'total_price')  double totalPrice, @JsonKey(name: 'base_rate')  double baseRate, @JsonKey(name: 'check_in_time')  DateTime? checkInTime, @JsonKey(name: 'check_out_time')  DateTime? checkOutTime, @JsonKey(name: 'actual_end_time')  DateTime actualEndTime, @JsonKey(name: 'total_billed_price')  double totalBilledPrice,  String status, @JsonKey(name: 'qr_code_token')  String qrCodeToken, @JsonKey(name: 'lot_name')  String lotName, @JsonKey(name: 'slot_name')  String slotName, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ReservationModel() when $default != null:
-return $default(_that.id,_that.userId,_that.slotId,_that.startTime,_that.endTime,_that.vehicle,_that.durationMinutes,_that.paymentMethod,_that.totalPrice,_that.status,_that.qrCodeToken,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.userId,_that.slotId,_that.startTime,_that.endTime,_that.vehicle,_that.durationMinutes,_that.paymentMethod,_that.totalPrice,_that.baseRate,_that.checkInTime,_that.checkOutTime,_that.actualEndTime,_that.totalBilledPrice,_that.status,_that.qrCodeToken,_that.lotName,_that.slotName,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -230,7 +237,7 @@ return $default(_that.id,_that.userId,_that.slotId,_that.startTime,_that.endTime
 @JsonSerializable()
 
 class _ReservationModel implements ReservationModel {
-  const _ReservationModel({required this.id, @JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'slot_id') required this.slotId, @JsonKey(name: 'start_time') required this.startTime, @JsonKey(name: 'end_time') required this.endTime, required this.vehicle, @JsonKey(name: 'duration_minutes') required this.durationMinutes, @JsonKey(name: 'payment_method') required this.paymentMethod, @JsonKey(name: 'total_price') required this.totalPrice, required this.status, @JsonKey(name: 'qr_code_token') required this.qrCodeToken, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
+  const _ReservationModel({required this.id, @JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'slot_id') required this.slotId, @JsonKey(name: 'start_time') required this.startTime, @JsonKey(name: 'end_time') required this.endTime, required this.vehicle, @JsonKey(name: 'duration_minutes') required this.durationMinutes, @JsonKey(name: 'payment_method') required this.paymentMethod, @JsonKey(name: 'total_price') required this.totalPrice, @JsonKey(name: 'base_rate') required this.baseRate, @JsonKey(name: 'check_in_time') this.checkInTime, @JsonKey(name: 'check_out_time') this.checkOutTime, @JsonKey(name: 'actual_end_time') required this.actualEndTime, @JsonKey(name: 'total_billed_price') required this.totalBilledPrice, required this.status, @JsonKey(name: 'qr_code_token') required this.qrCodeToken, @JsonKey(name: 'lot_name') required this.lotName, @JsonKey(name: 'slot_name') required this.slotName, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
   factory _ReservationModel.fromJson(Map<String, dynamic> json) => _$ReservationModelFromJson(json);
 
 @override final  String id;
@@ -242,8 +249,15 @@ class _ReservationModel implements ReservationModel {
 @override@JsonKey(name: 'duration_minutes') final  int durationMinutes;
 @override@JsonKey(name: 'payment_method') final  String paymentMethod;
 @override@JsonKey(name: 'total_price') final  double totalPrice;
+@override@JsonKey(name: 'base_rate') final  double baseRate;
+@override@JsonKey(name: 'check_in_time') final  DateTime? checkInTime;
+@override@JsonKey(name: 'check_out_time') final  DateTime? checkOutTime;
+@override@JsonKey(name: 'actual_end_time') final  DateTime actualEndTime;
+@override@JsonKey(name: 'total_billed_price') final  double totalBilledPrice;
 @override final  String status;
 @override@JsonKey(name: 'qr_code_token') final  String qrCodeToken;
+@override@JsonKey(name: 'lot_name') final  String lotName;
+@override@JsonKey(name: 'slot_name') final  String slotName;
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
 
@@ -260,16 +274,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReservationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.slotId, slotId) || other.slotId == slotId)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.status, status) || other.status == status)&&(identical(other.qrCodeToken, qrCodeToken) || other.qrCodeToken == qrCodeToken)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReservationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.slotId, slotId) || other.slotId == slotId)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.vehicle, vehicle) || other.vehicle == vehicle)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod)&&(identical(other.totalPrice, totalPrice) || other.totalPrice == totalPrice)&&(identical(other.baseRate, baseRate) || other.baseRate == baseRate)&&(identical(other.checkInTime, checkInTime) || other.checkInTime == checkInTime)&&(identical(other.checkOutTime, checkOutTime) || other.checkOutTime == checkOutTime)&&(identical(other.actualEndTime, actualEndTime) || other.actualEndTime == actualEndTime)&&(identical(other.totalBilledPrice, totalBilledPrice) || other.totalBilledPrice == totalBilledPrice)&&(identical(other.status, status) || other.status == status)&&(identical(other.qrCodeToken, qrCodeToken) || other.qrCodeToken == qrCodeToken)&&(identical(other.lotName, lotName) || other.lotName == lotName)&&(identical(other.slotName, slotName) || other.slotName == slotName)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,slotId,startTime,endTime,vehicle,durationMinutes,paymentMethod,totalPrice,status,qrCodeToken,createdAt,updatedAt);
+int get hashCode => Object.hashAll([runtimeType,id,userId,slotId,startTime,endTime,vehicle,durationMinutes,paymentMethod,totalPrice,baseRate,checkInTime,checkOutTime,actualEndTime,totalBilledPrice,status,qrCodeToken,lotName,slotName,createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'ReservationModel(id: $id, userId: $userId, slotId: $slotId, startTime: $startTime, endTime: $endTime, vehicle: $vehicle, durationMinutes: $durationMinutes, paymentMethod: $paymentMethod, totalPrice: $totalPrice, status: $status, qrCodeToken: $qrCodeToken, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'ReservationModel(id: $id, userId: $userId, slotId: $slotId, startTime: $startTime, endTime: $endTime, vehicle: $vehicle, durationMinutes: $durationMinutes, paymentMethod: $paymentMethod, totalPrice: $totalPrice, baseRate: $baseRate, checkInTime: $checkInTime, checkOutTime: $checkOutTime, actualEndTime: $actualEndTime, totalBilledPrice: $totalBilledPrice, status: $status, qrCodeToken: $qrCodeToken, lotName: $lotName, slotName: $slotName, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -280,7 +294,7 @@ abstract mixin class _$ReservationModelCopyWith<$Res> implements $ReservationMod
   factory _$ReservationModelCopyWith(_ReservationModel value, $Res Function(_ReservationModel) _then) = __$ReservationModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'slot_id') String slotId,@JsonKey(name: 'start_time') DateTime startTime,@JsonKey(name: 'end_time') DateTime endTime, VehicleModel vehicle,@JsonKey(name: 'duration_minutes') int durationMinutes,@JsonKey(name: 'payment_method') String paymentMethod,@JsonKey(name: 'total_price') double totalPrice, String status,@JsonKey(name: 'qr_code_token') String qrCodeToken,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'slot_id') String slotId,@JsonKey(name: 'start_time') DateTime startTime,@JsonKey(name: 'end_time') DateTime endTime, VehicleModel vehicle,@JsonKey(name: 'duration_minutes') int durationMinutes,@JsonKey(name: 'payment_method') String paymentMethod,@JsonKey(name: 'total_price') double totalPrice,@JsonKey(name: 'base_rate') double baseRate,@JsonKey(name: 'check_in_time') DateTime? checkInTime,@JsonKey(name: 'check_out_time') DateTime? checkOutTime,@JsonKey(name: 'actual_end_time') DateTime actualEndTime,@JsonKey(name: 'total_billed_price') double totalBilledPrice, String status,@JsonKey(name: 'qr_code_token') String qrCodeToken,@JsonKey(name: 'lot_name') String lotName,@JsonKey(name: 'slot_name') String slotName,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -297,7 +311,7 @@ class __$ReservationModelCopyWithImpl<$Res>
 
 /// Create a copy of ReservationModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? slotId = null,Object? startTime = null,Object? endTime = null,Object? vehicle = null,Object? durationMinutes = null,Object? paymentMethod = null,Object? totalPrice = null,Object? status = null,Object? qrCodeToken = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? slotId = null,Object? startTime = null,Object? endTime = null,Object? vehicle = null,Object? durationMinutes = null,Object? paymentMethod = null,Object? totalPrice = null,Object? baseRate = null,Object? checkInTime = freezed,Object? checkOutTime = freezed,Object? actualEndTime = null,Object? totalBilledPrice = null,Object? status = null,Object? qrCodeToken = null,Object? lotName = null,Object? slotName = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_ReservationModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
@@ -308,8 +322,15 @@ as DateTime,vehicle: null == vehicle ? _self.vehicle : vehicle // ignore: cast_n
 as VehicleModel,durationMinutes: null == durationMinutes ? _self.durationMinutes : durationMinutes // ignore: cast_nullable_to_non_nullable
 as int,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
 as String,totalPrice: null == totalPrice ? _self.totalPrice : totalPrice // ignore: cast_nullable_to_non_nullable
+as double,baseRate: null == baseRate ? _self.baseRate : baseRate // ignore: cast_nullable_to_non_nullable
+as double,checkInTime: freezed == checkInTime ? _self.checkInTime : checkInTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,checkOutTime: freezed == checkOutTime ? _self.checkOutTime : checkOutTime // ignore: cast_nullable_to_non_nullable
+as DateTime?,actualEndTime: null == actualEndTime ? _self.actualEndTime : actualEndTime // ignore: cast_nullable_to_non_nullable
+as DateTime,totalBilledPrice: null == totalBilledPrice ? _self.totalBilledPrice : totalBilledPrice // ignore: cast_nullable_to_non_nullable
 as double,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,qrCodeToken: null == qrCodeToken ? _self.qrCodeToken : qrCodeToken // ignore: cast_nullable_to_non_nullable
+as String,lotName: null == lotName ? _self.lotName : lotName // ignore: cast_nullable_to_non_nullable
+as String,slotName: null == slotName ? _self.slotName : slotName // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,

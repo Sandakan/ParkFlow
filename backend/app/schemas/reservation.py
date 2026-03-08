@@ -24,7 +24,14 @@ class ReservationResponse(BaseModel):
     duration_minutes: int
     payment_method: str
     total_price: float
+    base_rate: float
+    check_in_time: Optional[datetime] = None
+    check_out_time: Optional[datetime] = None
+    actual_end_time: datetime
+    total_billed_price: float
     status: str
     qr_code_token: str
+    lot_name: str
+    slot_name: str
     created_at: datetime
     updated_at: datetime

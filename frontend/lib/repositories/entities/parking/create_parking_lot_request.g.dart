@@ -15,6 +15,7 @@ _CreateParkingLotRequest _$CreateParkingLotRequestFromJson(
   longitude: (json['longitude'] as num).toDouble(),
   slotWidthMeters: (json['slot_width_meters'] as num).toDouble(),
   slotLengthMeters: (json['slot_length_meters'] as num).toDouble(),
+  baseRate: (json['base_rate'] as num).toDouble(),
 );
 
 Map<String, dynamic> _$CreateParkingLotRequestToJson(
@@ -26,4 +27,5 @@ Map<String, dynamic> _$CreateParkingLotRequestToJson(
   'longitude': instance.longitude,
   'slot_width_meters': instance.slotWidthMeters,
   'slot_length_meters': instance.slotLengthMeters,
+  'base_rate': instance.baseRate,
 };

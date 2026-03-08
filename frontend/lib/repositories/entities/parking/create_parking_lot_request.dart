@@ -15,6 +15,7 @@ abstract class CreateParkingLotRequest with _$CreateParkingLotRequest {
     required double longitude,
     @JsonKey(name: 'slot_width_meters') required double slotWidthMeters,
     @JsonKey(name: 'slot_length_meters') required double slotLengthMeters,
+    @JsonKey(name: 'base_rate') required double baseRate,
   }) = _CreateParkingLotRequest;
 
   factory CreateParkingLotRequest.fromJson(Map<String, dynamic> json) =>

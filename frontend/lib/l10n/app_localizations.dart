@@ -1557,6 +1557,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancelled'**
   String get statusCancelled;
+
+  /// Header for the current active booking
+  ///
+  /// In en, this message translates to:
+  /// **'Current Ongoing Booking'**
+  String get ongoingBooking;
+
+  /// Label for remaining time
+  ///
+  /// In en, this message translates to:
+  /// **'Time Left'**
+  String get timeLeft;
+
+  /// No description provided for @baseRateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Base Rate (LKR/hr)'**
+  String get baseRateLabel;
+
+  /// No description provided for @baseRateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 50.0'**
+  String get baseRateHint;
+
+  /// No description provided for @originalPriceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Original Price'**
+  String get originalPriceLabel;
+
+  /// No description provided for @finalPriceLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Final Price'**
+  String get finalPriceLabel;
+
+  /// No description provided for @checkInLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in'**
+  String get checkInLabel;
+
+  /// No description provided for @checkOutLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Check-out'**
+  String get checkOutLabel;
+
+  /// Text showing minutes remaining
+  ///
+  /// In en, this message translates to:
+  /// **'{mins} mins left'**
+  String minsLeft(String mins);
 }
 
 class _AppLocalizationsDelegate

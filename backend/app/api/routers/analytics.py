@@ -111,7 +111,7 @@ async def get_analytics_overview(
         l_id = str(slot.get("lot_id"))
         if l_id in lot_map:
             slot_id_to_price[str(slot["_id"])] = lot_map[l_id].get(
-                "price_per_hour", 0.0
+                "base_rate", 0.0
             )
 
     async def calculate_revenue(start_date: datetime) -> float:
@@ -237,7 +237,7 @@ async def get_occupancy_trend(
         l_id = str(slot.get("lot_id"))
         if l_id in lot_map:
             slot_id_to_price[str(slot["_id"])] = lot_map[l_id].get(
-                "price_per_hour", 0.0
+                "base_rate", 0.0
             )
 
     async def build_series(start: datetime, end: datetime) -> list:

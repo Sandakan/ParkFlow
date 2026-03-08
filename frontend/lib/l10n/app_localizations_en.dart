@@ -774,4 +774,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusCancelled => 'Cancelled';
+
+  @override
+  String get ongoingBooking => 'Current Ongoing Booking';
+
+  @override
+  String get timeLeft => 'Time Left';
+
+  @override
+  String get baseRateLabel => 'Base Rate (LKR/hr)';
+
+  @override
+  String get baseRateHint => 'e.g. 50.0';
+
+  @override
+  String get originalPriceLabel => 'Original Price';
+
+  @override
+  String get finalPriceLabel => 'Final Price';
+
+  @override
+  String get checkInLabel => 'Check-in';
+
+  @override
+  String get checkOutLabel => 'Check-out';
+
+  @override
+  String minsLeft(String mins) {
+    return '$mins mins left';
+  }
 }

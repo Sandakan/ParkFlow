@@ -7,8 +7,8 @@ class CreateParkingLotRequest(BaseModel):
     address: str = Field(..., description="Physical address of the parking lot")
     latitude: float = Field(..., description="Latitude of the location")
     longitude: float = Field(..., description="Longitude of the location")
-    price_per_hour: float = Field(
-        default=0.0, description="Price per hour for parking in this lot", ge=0
+    base_rate: float = Field(
+        default=0.0, description="Price per hour (base rate) for parking in this lot", ge=0
     )
     slot_width_meters: float = Field(
         default=5.0, description="Average width of a parking slot in meters"
@@ -25,8 +25,8 @@ class UpdateParkingLotRequest(BaseModel):
     )
     latitude: Optional[float] = Field(None, description="Latitude of the location")
     longitude: Optional[float] = Field(None, description="Longitude of the location")
-    price_per_hour: Optional[float] = Field(
-        None, description="Price per hour for parking in this lot", ge=0
+    base_rate: Optional[float] = Field(
+        None, description="Price per hour (base rate) for parking in this lot", ge=0
     )
     slot_width_meters: Optional[float] = None
     slot_length_meters: Optional[float] = None

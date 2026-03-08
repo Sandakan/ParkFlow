@@ -11,6 +11,7 @@ import 'package:parkflow/models/parking/parking_lot_model.dart';
 import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/models/parking/parking_slot_model.dart';
+import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
 class DigitalTicketScreen extends ConsumerWidget {
   final String reservationId;
@@ -88,7 +89,7 @@ class DigitalTicketScreen extends ConsumerWidget {
                       ),
                     ).animate().fadeIn(delay: 300.ms),
                     const SizedBox(height: 48),
-                    _buildTicketCard(res, lot, slotName),
+                    _buildTicketCard(context, res, lot, slotName),
                     const SizedBox(height: 32),
                     _buildActionButtons(context, lot),
                     const SizedBox(height: 48),
@@ -112,6 +113,7 @@ class DigitalTicketScreen extends ConsumerWidget {
   }
 
   Widget _buildTicketCard(
+    BuildContext context,
     ReservationModel res,
     ParkingLotModel lot,
     String slotName,
@@ -173,12 +175,16 @@ class DigitalTicketScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _TicketDetail(
-                      label: 'Arrival',
-                      value: DateFormat('HH:mm').format(res.startTime),
+                      label: context.l10n.checkInLabel,
+                      value: res.checkInTime != null
+                          ? DateFormat('HH:mm').format(res.checkInTime!)
+                          : '--:--',
                     ),
                     _TicketDetail(
-                      label: 'Duration',
-                      value: '${res.durationMinutes} min',
+                      label: context.l10n.checkOutLabel,
+                      value: res.checkOutTime != null
+                          ? DateFormat('HH:mm').format(res.checkOutTime!)
+                          : '--:--',
                     ),
                   ],
                 ),
@@ -188,20 +194,47 @@ class DigitalTicketScreen extends ConsumerWidget {
           _buildDashedLine(),
           Padding(
             padding: const EdgeInsets.all(32),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                const Text(
-                  'Total Paid',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      context.l10n.originalPriceLabel,
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      'LKR ${res.totalPrice.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  'LKR ${res.totalPrice.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w900,
-                    fontSize: 24,
-                    color: AppColors.primary,
-                  ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      context.l10n.finalPriceLabel,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    Text(
+                      'LKR ${res.totalBilledPrice.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 26,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

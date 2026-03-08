@@ -49,6 +49,10 @@ class _AdminCreateParkingLotScreenState
         value: '5.0',
         validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
       ),
+      'baseRate': FormControl<String>(
+        value: '100.0',
+        validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+      ),
     });
   }
 
@@ -131,14 +135,12 @@ class _AdminCreateParkingLotScreenState
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
                           child: LabeledReactiveTextField<String>(
                             formControlName: 'slotWidth',
-                            label: 'Slot Width (m)',
+                            label: context.l10n.slotWidthLabel,
                             hintText: 'e.g. 5.0',
                             prefixIcon: Icons.width_full_outlined,
                             isRequired: true,
@@ -151,7 +153,7 @@ class _AdminCreateParkingLotScreenState
                         Expanded(
                           child: LabeledReactiveTextField<String>(
                             formControlName: 'slotLength',
-                            label: 'Slot Length (m)',
+                            label: context.l10n.slotLengthLabel,
                             hintText: 'e.g. 5.0',
                             prefixIcon: Icons.height_outlined,
                             isRequired: true,
@@ -161,6 +163,17 @@ class _AdminCreateParkingLotScreenState
                           ),
                         ),
                       ],
+                    ),
+                    const SizedBox(height: 16),
+                    LabeledReactiveTextField<String>(
+                      formControlName: 'baseRate',
+                      label: context.l10n.baseRateLabel,
+                      hintText: context.l10n.baseRateHint,
+                      prefixIcon: Icons.monetization_on_outlined,
+                      isRequired: true,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(
@@ -188,6 +201,9 @@ class _AdminCreateParkingLotScreenState
                                   ),
                                   slotLengthMeters: double.parse(
                                     form.control('slotLength').value as String,
+                                  ),
+                                  baseRate: double.parse(
+                                    form.control('baseRate').value as String,
                                   ),
                                 );
                                 await ref

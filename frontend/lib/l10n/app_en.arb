@@ -1019,5 +1019,28 @@
 	"statusCancelled": "Cancelled",
 	"@statusCancelled": {
 		"description": "Label for cancelled reservation status"
+	},
+	"ongoingBooking": "Current Ongoing Booking",
+	"@ongoingBooking": {
+		"description": "Header for the current active booking"
+	},
+	"timeLeft": "Time Left",
+	"@timeLeft": {
+		"description": "Label for remaining time"
+	},
+	"baseRateLabel": "Base Rate (LKR/hr)",
+	"baseRateHint": "e.g. 50.0",
+	"originalPriceLabel": "Original Price",
+	"finalPriceLabel": "Final Price",
+	"checkInLabel": "Check-in",
+	"checkOutLabel": "Check-out",
+	"minsLeft": "{mins} mins left",
+	"@minsLeft": {
+		"description": "Text showing minutes remaining",
+		"placeholders": {
+			"mins": {
+				"type": "String"
+			}
+		}
 	}
 }
