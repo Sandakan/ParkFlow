@@ -212,6 +212,10 @@
 	"@cameras": {
 		"description": "Label for the cameras navigation"
 	},
+	"reservations": "Reservations",
+	"@reservations": {
+		"description": "Label for the reservations navigation"
+	},
 	"analytics": "Analytics",
 	"@analytics": {
 		"description": "Label for the analytics navigation"

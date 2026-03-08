@@ -135,21 +135,27 @@ class _SlotWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isReserved = slot.status == 'reserved';
+
     final bgColor = isSelected
         ? AppColors.primary
         : slot.isOccupied
-        ? AppColors.occupiedBackground
-        : isSuggestion
-        ? AppColors.primary.withValues(alpha: 0.08)
-        : AppColors.availableBackground;
+            ? AppColors.occupiedBackground
+            : isReserved
+                ? AppColors.reservedBackground
+                : isSuggestion
+                    ? AppColors.primary.withValues(alpha: 0.08)
+                    : AppColors.availableBackground;
 
     final borderColor = isSelected
         ? AppColors.primary
         : slot.isOccupied
-        ? AppColors.occupiedBorder
-        : isSuggestion
-        ? AppColors.primary
-        : AppColors.availableBorder;
+            ? AppColors.occupiedBorder
+            : isReserved
+                ? AppColors.reservedBorder
+                : isSuggestion
+                    ? AppColors.primary
+                    : AppColors.availableBorder;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
@@ -170,15 +176,19 @@ class _SlotWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            slot.isOccupied ? Icons.directions_car : Icons.local_parking,
+            slot.isOccupied
+                ? Icons.directions_car
+                : (isReserved ? Icons.event_seat : Icons.local_parking),
             size: 32,
             color: isSelected
                 ? AppColors.white
                 : slot.isOccupied
-                ? AppColors.occupiedText
-                : isSuggestion
-                ? AppColors.primary
-                : AppColors.availableText,
+                    ? AppColors.occupiedText
+                    : isReserved
+                        ? AppColors.reservedText
+                        : isSuggestion
+                            ? AppColors.primary
+                            : AppColors.availableText,
           ),
           const SizedBox(height: 8),
           Text(

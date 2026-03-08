@@ -38,6 +38,11 @@ part of '../router_provider.dart';
         ),
       ],
     ),
+    TypedStatefulShellBranch<AdminReservationsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<AdminReservationsRoute>(path: AdminReservationsRoute.path),
+      ],
+    ),
 
     TypedStatefulShellBranch<AdminSettingsBranch>(
       routes: <TypedRoute<RouteData>>[
@@ -65,6 +70,10 @@ class AdminParkingLotsBranch extends StatefulShellBranchData {
 
 class AdminCamerasBranch extends StatefulShellBranchData {
   const AdminCamerasBranch();
+}
+
+class AdminReservationsBranch extends StatefulShellBranchData {
+  const AdminReservationsBranch();
 }
 
 class AdminAnalyticsBranch extends StatefulShellBranchData {

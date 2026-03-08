@@ -882,4 +882,27 @@ class RemoteRepository implements RemoteRepositoryInterface {
       );
     }
   }
+  @override
+  Future<ReservationResponseEntity> scanReservationQr(
+    String token, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'reservations/scan/$token',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return ReservationResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
 }

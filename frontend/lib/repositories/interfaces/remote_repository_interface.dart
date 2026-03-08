@@ -142,4 +142,9 @@ abstract class RemoteRepositoryInterface {
     required int durationMinutes,
     String? accessToken,
   });
+
+  Future<ReservationResponseEntity> scanReservationQr(
+    String token, {
+    String? accessToken,
+  });
 }

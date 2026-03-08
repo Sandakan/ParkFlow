@@ -174,6 +174,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get cameras => 'Cameras';
 
   @override
+  String get reservations => 'Reservations';
+
+  @override
   String get analytics => 'Analytics';
 
   @override

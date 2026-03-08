@@ -273,6 +273,14 @@ RouteBase get $adminShellRoute => StatefulShellRouteData.$route(
     StatefulShellBranchData.$branch(
       routes: [
         GoRouteData.$route(
+          path: '/admin/reservations',
+          factory: $AdminReservationsRoute._fromState,
+        ),
+      ],
+    ),
+    StatefulShellBranchData.$branch(
+      routes: [
+        GoRouteData.$route(
           path: '/admin/settings',
           factory: $AdminSettingsRoute._fromState,
         ),
@@ -451,6 +459,27 @@ mixin $AdminCameraInfoRoute on GoRouteData {
   String get location => GoRouteData.$location(
     '/admin/cameras/${Uri.encodeComponent(_self.cameraId)}',
   );
+
+  @override
+  void go(BuildContext context) => context.go(location);
+
+  @override
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  @override
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  @override
+  void replace(BuildContext context) => context.replace(location);
+}
+
+mixin $AdminReservationsRoute on GoRouteData {
+  static AdminReservationsRoute _fromState(GoRouterState state) =>
+      const AdminReservationsRoute();
+
+  @override
+  String get location => GoRouteData.$location('/admin/reservations');
 
   @override
   void go(BuildContext context) => context.go(location);

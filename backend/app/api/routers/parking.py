@@ -95,6 +95,7 @@ async def get_parking_slots(
         mappings = await cursor.to_list(length=1000)
 
         serialized_slots = []
+        now = datetime.now(timezone.utc)
         for m in mappings:
             # Fetch logical slot info
             from bson import ObjectId
@@ -103,11 +104,28 @@ async def get_parking_slots(
                 {"_id": ObjectId(m["slot_id"])}
             )
             if slot:
+                slot_id_str = str(slot["_id"])
+                status_val = slot.get("status", "vacant")
+
+                if status_val == "vacant":
+                    active_res = await db.client["parkflow"].reservations.find_one(
+                        {
+                            "slot_id": slot_id_str,
+                            "status": "active",
+                            "deleted_at": None,
+                            "start_time": {"$lte": now + timedelta(minutes=15)},
+                            "end_time": {"$gt": now},
+                        }
+                    )
+                    if active_res:
+                        status_val = "reserved"
+
                 serialized_slots.append(
                     {
-                        "id": str(slot["_id"]),
+                        "id": slot_id_str,
                         "name": slot.get("slot_number", "Unnamed"),
-                        "isOccupied": slot.get("status") == "occupied",
+                        "isOccupied": status_val == "occupied",
+                        "status": status_val,
                         "camera_id": camera_id,
                         "coordinates": m.get("coordinates", []),
                         "logical_row": slot.get("logical_row", 0),
@@ -131,12 +149,30 @@ async def get_parking_slots(
         slots = await cursor.to_list(length=1000)
 
         serialized_slots = []
+        now = datetime.now(timezone.utc)
         for slot in slots:
+            slot_id_str = str(slot.get("_id") or slot.get("parking_slot_id"))
+            status_val = slot.get("status", "vacant")
+
+            if status_val == "vacant":
+                active_res = await db.client["parkflow"].reservations.find_one(
+                    {
+                        "slot_id": slot_id_str,
+                        "status": "active",
+                        "deleted_at": None,
+                        "start_time": {"$lte": now + timedelta(minutes=15)},
+                        "end_time": {"$gt": now},
+                    }
+                )
+                if active_res:
+                    status_val = "reserved"
+
             serialized_slots.append(
                 {
-                    "id": str(slot.get("_id") or slot.get("parking_slot_id")),
+                    "id": slot_id_str,
                     "name": slot.get("slot_number", "Unnamed"),
-                    "isOccupied": slot.get("status") == "occupied",
+                    "isOccupied": status_val == "occupied",
+                    "status": status_val,
                     "logical_row": slot.get("logical_row", 0),
                     "logical_col": slot.get("logical_col", 0),
                     "lot_id": slot.get("lot_id"),

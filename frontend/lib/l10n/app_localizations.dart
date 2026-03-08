@@ -418,6 +418,12 @@ abstract class AppLocalizations {
   /// **'Cameras'**
   String get cameras;
 
+  /// Label for the reservations navigation
+  ///
+  /// In en, this message translates to:
+  /// **'Reservations'**
+  String get reservations;
+
   /// Label for the analytics navigation
   ///
   /// In en, this message translates to:

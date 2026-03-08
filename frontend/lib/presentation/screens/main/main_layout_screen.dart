@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/states/auth/auth_state.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
-import 'package:parkflow/utils/constants/app_colors.dart';
 
 class MainLayoutScreen extends ConsumerWidget {
   const MainLayoutScreen({required this.navigationShell, super.key});
@@ -68,53 +67,14 @@ class MainLayoutScreen extends ConsumerWidget {
             Expanded(child: navigationShell),
           ],
         ),
-        floatingActionButton: authState.isDriver
-            ? FloatingActionButton.extended(
-                onPressed: () {
-                  // TODO: Implement Check-in action
-                },
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
-                elevation: 4,
-                icon: const Icon(Icons.qr_code_scanner),
-                label: Text(
-                  context.l10n.checkIn,
-                  style: const TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.3,
-                  ),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.0),
-                ),
-              )
-            : null,
+        floatingActionButton: null,
       );
     }
 
     return Scaffold(
       body: navigationShell,
-      floatingActionButton: authState.isDriver
-          ? Semantics(
-              label: context.l10n.checkIn,
-              child: FloatingActionButton(
-                onPressed: () {
-                  // TODO: Implement Check-in action
-                },
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14.0),
-                ),
-                child: const Icon(Icons.qr_code_scanner),
-              ),
-            )
-          : null,
-      floatingActionButtonLocation: authState.isDriver
-          ? FloatingActionButtonLocation.centerDocked
-          : null,
+      floatingActionButton: null,
+      floatingActionButtonLocation: null,
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -174,6 +134,11 @@ class MainLayoutScreen extends ConsumerWidget {
           icon: Icons.videocam_outlined,
           selectedIcon: Icons.videocam,
           label: context.l10n.cameras,
+        ),
+        NavigationDestinationData(
+          icon: Icons.qr_code_scanner_outlined,
+          selectedIcon: Icons.qr_code_scanner,
+          label: context.l10n.reservations,
         ),
         NavigationDestinationData(
           icon: Icons.settings_outlined,

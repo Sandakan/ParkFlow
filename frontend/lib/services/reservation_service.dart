@@ -71,6 +71,13 @@ class ReservationService {
       accessToken: await _getToken(),
     );
   }
+
+  Future<ReservationResponseEntity> scanReservationQr(String token) async {
+    return _remoteRepository.scanReservationQr(
+      token,
+      accessToken: await _getToken(),
+    );
+  }
 }
 
 @riverpod

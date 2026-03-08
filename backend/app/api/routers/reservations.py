@@ -1,6 +1,6 @@
 from typing import Any, List
 from fastapi import APIRouter, Depends, HTTPException, status
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, get_current_admin
 from app.schemas.response import APIResponse, ResponseCode
 from app.schemas.reservation import CreateReservationRequest, ReservationResponse
 from pydantic import BaseModel
@@ -198,10 +198,11 @@ async def create_reservation(
 @router.post("/scan/{token}", response_model=APIResponse[ReservationResponse])
 async def scan_reservation_qr(
     token: str,
-    current_user: Any = Depends(get_current_user),
+    current_admin: Any = Depends(get_current_admin),
 ) -> Any:
     """
     Scan a reservation QR code to log check-in or check-out.
+    Only accessible by administrators (operators).
     """
     now = datetime.now(timezone.utc)
     reservation = await db.client["parkflow"].reservations.find_one(
@@ -225,21 +226,50 @@ async def scan_reservation_qr(
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
-    update_data = {"updated_at": now}
+    if status_val == "cancelled":
+        return APIResponse.error_response(
+            message="Reservation has been cancelled",
+            code=ResponseCode.ERROR,
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
 
+    update_data = {"updated_at": now}
+    message = ""
+
+    # Check-in logic
     if reservation.get("check_in_time") is None:
+        start_time = reservation["start_time"].replace(tzinfo=timezone.utc)
+        end_time = reservation["end_time"].replace(tzinfo=timezone.utc)
+
+        # Allow check-in 15 minutes before start time until the end time
+        if now < start_time - timedelta(minutes=15):
+            return APIResponse.error_response(
+                message="Too early for check-in. Please wait until 15 minutes before your scheduled time.",
+                code=ResponseCode.ERROR,
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if now > end_time:
+            return APIResponse.error_response(
+                message="Reservation has already expired.",
+                code=ResponseCode.ERROR,
+                status_code=status.HTTP_400_BAD_REQUEST,
+            )
+
         update_data["check_in_time"] = now
         message = "Checked in successfully"
+
     elif reservation.get("check_out_time") is None:
+        check_in_time = reservation["check_in_time"].replace(tzinfo=timezone.utc)
         update_data["check_out_time"] = now
         update_data["actual_end_time"] = now
         update_data["status"] = "completed"
 
-        start_time = reservation["start_time"].replace(tzinfo=timezone.utc)
-        duration_hours = (now - start_time).total_seconds() / 3600.0
-        update_data["total_billed_price"] = max(
-            0.0, duration_hours * reservation.get("base_rate", 0.0)
-        )
+        duration_seconds = (now - check_in_time).total_seconds()
+        duration_hours = duration_seconds / 3600.0
+
+        base_rate = reservation.get("base_rate", 0.0)
+        update_data["total_billed_price"] = round(duration_hours * base_rate, 2)
         message = "Checked out successfully"
     else:
         return APIResponse.error_response(
@@ -278,6 +308,7 @@ async def scan_reservation_qr(
         "created_at": updated_res["created_at"],
         "updated_at": updated_res["updated_at"],
     }
+
     res_slot = await db.client["parkflow"].parking_slots.find_one(
         {"_id": ObjectId(updated_res["slot_id"])}
     )

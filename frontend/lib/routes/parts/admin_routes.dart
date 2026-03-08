@@ -98,3 +98,13 @@ class AdminSettingsRoute extends GoRouteData with $AdminSettingsRoute {
     return const AdminSettingsScreen();
   }
 }
+
+class AdminReservationsRoute extends GoRouteData with $AdminReservationsRoute {
+  const AdminReservationsRoute();
+  static const path = '/admin/reservations';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const AdminReservationsScreen();
+  }
+}

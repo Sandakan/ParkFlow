@@ -10,6 +10,7 @@ abstract class ParkingSlotModel with _$ParkingSlotModel {
     required String id,
     required String name,
     required bool isOccupied,
+    @Default('vacant') String status,
     @JsonKey(name: 'lot_id') String? lotId,
     @JsonKey(name: 'slot_type') String? slotType,
     @JsonKey(name: 'camera_id') String? cameraId,
