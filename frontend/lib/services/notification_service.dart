@@ -16,13 +16,18 @@ NotificationService notificationService(Ref ref) {
 
 class NotificationService {
   final Ref _ref;
-  final _talker = Talker();
-  final _notificationsPlugin = FlutterLocalNotificationsPlugin();
+  final Talker _talker;
+  final FlutterLocalNotificationsPlugin _notificationsPlugin;
   
   StreamController<NotificationEntity>? _sseController;
   http.Client? _client;
 
-  NotificationService(this._ref) {
+  NotificationService(
+    this._ref, {
+    FlutterLocalNotificationsPlugin? notificationsPlugin,
+    Talker? talker,
+  })  : _notificationsPlugin = notificationsPlugin ?? FlutterLocalNotificationsPlugin(),
+        _talker = talker ?? Talker() {
     _initNativeNotifications();
   }
 

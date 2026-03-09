@@ -1,3 +1,4 @@
+// ignore_for_file: invalid_use_of_visible_for_overriding_member
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +6,7 @@ import 'package:parkflow/presentation/widgets/parking/parking_lot_card.dart';
 import 'package:parkflow/models/parking/parking_lot_model.dart';
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/l10n/app_localizations.dart';
+import 'package:parkflow/presentation/states/parking/parking_state.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mocktail/mocktail.dart';
 import '../../helpers/test_helpers.dart';
@@ -28,6 +30,10 @@ void main() {
         latitude: 0,
         longitude: 0,
       ),
+    );
+
+    when(() => mockParkingNotifier.build()).thenReturn(
+      const ParkingState(isLoading: false),
     );
 
     when(
