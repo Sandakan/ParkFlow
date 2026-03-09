@@ -74,21 +74,21 @@ docker_run_test: docker run -p 8001:8000 parkflow:test
 docker_run_prod: docker run -p 8080:8000 parkflow:prod
 
 # Docker Compose commands (recommended for easier management)
-compose_up: cd ../backend && docker compose up -d backend
-compose_up_dev: cd ../backend && docker compose up -d backend
-compose_up_test: cd ../backend && docker compose --profile testing up -d backend
-compose_up_prod: cd ../backend && docker compose --profile production up -d backend
+compose_up: cd ../backend && docker compose up -d
+compose_up_dev: cd ../backend && docker compose up -d
+compose_up_test: cd ../backend && docker compose --profile testing up -d
+compose_up_prod: cd ../backend && docker compose --profile production up -d
 
-compose_build: cd ../backend && docker compose build backend
-compose_build_dev: cd ../backend && docker compose build backend
-compose_build_test: cd ../backend && docker compose build backend
-compose_build_prod: cd ../backend && docker compose build backend
+compose_build: cd ../backend && docker compose build
+compose_build_dev: cd ../backend && docker compose build
+compose_build_test: cd ../backend && docker compose build
+compose_build_prod: cd ../backend && docker compose build
 
 compose_down: cd ../backend && docker compose down
 compose_down_all: cd ../backend && docker compose down --volumes --remove-orphans
 
 # Docker Compose watch mode (auto-rebuild on file changes)
-compose_watch: cd ../backend && docker compose up --build --watch backend
-compose_watch_dev: cd ../backend && docker compose up --build --watch backend
-compose_watch_test: cd ../backend && docker compose up --build --watch backend
-compose_watch_prod: cd ../backend && docker compose up --build --watch backend
+compose_watch: cd ../backend && docker compose down && docker compose up --build --watch
+compose_watch_dev: cd ../backend && docker compose down && docker compose up --build --watch
+compose_watch_test: cd ../backend && docker compose down && docker compose up --build --watch
+compose_watch_prod: cd ../backend && docker compose down && docker compose up --build --watch

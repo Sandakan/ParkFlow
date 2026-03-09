@@ -1,15 +1,36 @@
+import asyncio
+import json
+from datetime import datetime, timezone
+from typing import Any, AsyncGenerator
+
+import cv2
 from bson import ObjectId
-from fastapi import APIRouter, File, UploadFile, HTTPException, Depends
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 from fastapi.responses import StreamingResponse
+from sse_starlette.sse import EventSourceResponse
+
+from app.ai.detector import run_frame
 from app.ai.inference import process_parking_image
 from app.ai.stream_manager import ParkingStreamManager
-from app.api.deps import get_current_user
-from app.schemas.response import APIResponse, ResponseCode
-from app.models.parking_slot import ParkingSlotInDB
+from app.ai.redis_state import (
+    push_detection,
+    get_stable_state,
+    get_confirmed_state,
+    set_confirmed_state,
+)
+from app.ai.inference_manager import inference_manager
+from app.api.deps import get_current_user, get_current_admin
+from app.core.database import db, update_camera_status, get_inference_settings
+from app.core.redis import redis_cache
+from app.core.logging import logger
+from app.core.utils import get_internal_rtsp_url
 from app.models.parking_lot import ParkingLotInDB
-from app.core.database import db
+from app.models.parking_slot import ParkingSlotInDB
+from app.schemas.response import APIResponse, ResponseCode
 
 router = APIRouter()
+
+_INFERENCE_INTERVAL = 0.15
 
 
 @router.post("/image", response_model=APIResponse[dict])
@@ -18,19 +39,16 @@ async def process_image(
     file: UploadFile = File(...),
     current_user: dict = Depends(get_current_user),
 ):
-    """
-    Upload a single image of a parking lot.
-    The system will fetch the dynamic bounding boxes for the lot_id from the DB,
-    run the YOLO inference, and return the occupancy statistics.
-    """
+    """Upload a single image; returns occupancy statistics via YOLO inference."""
     if not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="File must be an image")
 
-    # Read the image bytes
     image_bytes = await file.read()
+    settings_obj = await get_inference_settings()
 
-    # Fetch all parking slots (polygons) from the DB for this lot_id (not deleted)
-    cursor = db.client["parkflow"].parking_slots.find({"lot_id": lot_id, "deleted_at": None})
+    cursor = db.client["parkflow"].parking_slots.find(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
     slots = await cursor.to_list(length=1000)
 
     if not slots:
@@ -40,8 +58,9 @@ async def process_image(
             status_code=404,
         )
 
-    # Process the image with our AI logic
-    occupancy_data, annotated_image = process_parking_image(image_bytes, slots)
+    occupancy_data, annotated_image = process_parking_image(
+        image_bytes, slots, inference_settings=settings_obj
+    )
 
     if "error" in occupancy_data:
         return APIResponse.error_response(
@@ -56,21 +75,17 @@ async def process_image(
 
 
 @router.get("/stream/raw/{lot_id}")
-async def stream_raw(
-    lot_id: str,
-):  # , current_user: dict = Depends(get_current_active_user)):
-    """
-    Streams the raw (unprocessed) video feed for the specified lot_id.
-    """
-    # Fetch the first camera for this lot to get the RTSP URL (not deleted)
-    camera = await db.client["parkflow"].cameras.find_one({"lot_id": lot_id, "deleted_at": None})
+async def stream_raw(lot_id: str):
+    """Raw (unprocessed) MJPEG feed for a lot."""
+    camera = await db.client["parkflow"].cameras.find_one(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
     if not camera or "rtsp_url" not in camera:
         raise HTTPException(
             status_code=404, detail="No active camera or stream URL found for this lot"
         )
 
-    rtsp_url = camera["rtsp_url"]
-
+    rtsp_url = get_internal_rtsp_url(camera["rtsp_url"])
     return StreamingResponse(
         ParkingStreamManager.stream_raw_video(rtsp_url),
         media_type="multipart/x-mixed-replace; boundary=frame",
@@ -78,23 +93,19 @@ async def stream_raw(
 
 
 @router.get("/stream/processed/{lot_id}")
-async def stream_processed(
-    lot_id: str,
-):  # , current_user: dict = Depends(get_current_active_user)):
-    """
-    Streams the processed video feed (with YOLO bounding boxes) for the lot_id.
-    """
-    # Fetch the first camera for this lot to get the RTSP URL (not deleted)
-    camera = await db.client["parkflow"].cameras.find_one({"lot_id": lot_id, "deleted_at": None})
+async def stream_processed(lot_id: str):
+    """YOLO-annotated MJPEG feed for a lot."""
+    camera = await db.client["parkflow"].cameras.find_one(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
     if not camera or "rtsp_url" not in camera:
         raise HTTPException(
             status_code=404, detail="No active camera or stream URL found for this lot"
         )
 
-    rtsp_url = camera["rtsp_url"]
-
-    # Fetch the dynamic bounding boxes for inference (not deleted)
-    cursor = db.client["parkflow"].parking_slots.find({"lot_id": lot_id, "deleted_at": None})
+    cursor = db.client["parkflow"].parking_slots.find(
+        {"lot_id": lot_id, "deleted_at": None}
+    )
     slots = await cursor.to_list(length=1000)
 
     if not slots:
@@ -102,7 +113,277 @@ async def stream_processed(
             status_code=404, detail="No parking slots defined for this lot"
         )
 
+    rtsp_url = get_internal_rtsp_url(camera["rtsp_url"])
+    settings_obj = await get_inference_settings()
     return StreamingResponse(
-        ParkingStreamManager.stream_processed_video(rtsp_url, slots),
+        ParkingStreamManager.stream_processed_video(
+            rtsp_url, slots, inference_settings=settings_obj
+        ),
         media_type="multipart/x-mixed-replace; boundary=frame",
+    )
+
+
+async def _detection_stream(
+    camera_id: str, request: Request
+) -> AsyncGenerator[dict, None]:
+    """
+    Reads frames from the camera RTSP stream, runs YOLO inference via a thread
+    executor, performs Shapely overlap checks against slot mappings, and yields
+    SSE-compatible dicts until the client disconnects.
+    """
+    try:
+        oid = ObjectId(camera_id)
+    except Exception:
+        oid = None
+
+    camera = None
+    if oid is not None:
+        camera = await db.client["parkflow"].cameras.find_one(
+            {"_id": oid, "deleted_at": None}
+        )
+    if not camera:
+        camera = await db.client["parkflow"].cameras.find_one(
+            {"_id": camera_id, "deleted_at": None}
+        )
+    if not camera:
+        logger.warning("SSE stream requested for unknown camera_id={}", camera_id)
+        yield {"event": "error", "data": json.dumps({"error": "Camera not found"})}
+        return
+
+    rtsp_url: str = camera.get("rtsp_url", "")
+    if not rtsp_url:
+        yield {
+            "event": "error",
+            "data": json.dumps({"error": "Camera has no RTSP URL"}),
+        }
+        return
+
+    cursor = db.client["parkflow"].camera_slot_mappings.find(
+        {"camera_id": camera_id, "deleted_at": None}
+    )
+    mappings = await cursor.to_list(length=200)
+
+    if not mappings:
+        logger.info("No slot mappings found for camera_id={}. Closing SSE.", camera_id)
+        yield {
+            "event": "error",
+            "data": json.dumps(
+                {"error": "No slot mappings configured for this camera"}
+            ),
+        }
+        return
+
+    rtsp_url = get_internal_rtsp_url(rtsp_url)
+    settings_obj = await get_inference_settings()
+    logger.info(
+        "Starting AI detection stream for camera_id={} ({} mappings) from {}",
+        camera_id,
+        len(mappings),
+        rtsp_url,
+    )
+
+    cap = cv2.VideoCapture(rtsp_url)
+    if not cap.isOpened():
+        logger.error("Could not open RTSP stream: {}", rtsp_url)
+        yield {
+            "event": "error",
+            "data": json.dumps({"error": "Could not connect to camera stream"}),
+        }
+        return
+
+    # drain buffered frames manually on every iteration below.
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+
+    await update_camera_status(camera_id, True)
+
+    frame_count = 0
+    frame_skip = settings_obj.frame_skip
+    stability_buffer = settings_obj.stability_buffer
+    redis = redis_cache.client
+
+    try:
+        while True:
+            if await request.is_disconnected():
+                logger.info("SSE client disconnected for camera_id={}", camera_id)
+                break
+
+            # Drain any frames queued in the OpenCV/FFmpeg buffer so we
+            # always run inference on the most recent frame, not a stale one.
+            # grab() fetches without decoding; retrieve() decodes only
+            for _ in range(4):
+                cap.grab()
+            ret, frame = cap.retrieve()
+            if not ret:
+                logger.warning("Lost frame from camera_id={}, retrying...", camera_id)
+                await asyncio.sleep(1.0)
+                cap.release()
+                cap = cv2.VideoCapture(rtsp_url)
+                cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+                continue
+
+            frame_count += 1
+            if frame_skip > 1 and frame_count % frame_skip != 0:
+                continue
+
+            frame_result = await asyncio.get_event_loop().run_in_executor(
+                None,
+                run_frame,
+                frame,
+                mappings,
+                settings_obj.confidence_threshold,
+                settings_obj.iou_threshold,
+            )
+
+            now_ts = datetime.now(timezone.utc)
+
+            raw_detections = [
+                {
+                    "label": d.label,
+                    "confidence": round(d.confidence, 3),
+                    "x1": round(d.x1, 4),
+                    "y1": round(d.y1, 4),
+                    "x2": round(d.x2, 4),
+                    "y2": round(d.y2, 4),
+                }
+                for d in frame_result.detections
+            ]
+
+            stable_slot_hits = []
+
+            for hit in frame_result.slot_hits:
+                m_id = hit.mapping_id
+                current_raw_state = hit.is_occupied
+
+                await push_detection(
+                    redis, camera_id, m_id, current_raw_state, buffer_size=30
+                )
+
+                stable_state = await get_stable_state(
+                    redis, camera_id, m_id, threshold=stability_buffer
+                )
+
+                confirmed_state = await get_confirmed_state(redis, camera_id, m_id)
+
+                if stable_state is not None and stable_state != confirmed_state:
+                    await set_confirmed_state(redis, camera_id, m_id, stable_state)
+
+                    from app.api.routers.parking import _update_logical_slot_status
+
+                    await db.client["parkflow"].camera_slot_mappings.update_one(
+                        {"_id": ObjectId(m_id)},
+                        {
+                            "$set": {
+                                "is_occupied": stable_state,
+                                "updated_at": now_ts,
+                            }
+                        },
+                    )
+                    await _update_logical_slot_status(hit.slot_id)
+
+                    await db.client["parkflow"].occupancy_logs.insert_one(
+                        {
+                            "slot_id": hit.slot_id,
+                            "mapping_id": m_id,
+                            "event_type": ("check-in" if stable_state else "check-out"),
+                            "confidence_score": next(
+                                (
+                                    d.confidence
+                                    for d in frame_result.detections
+                                    if stable_state
+                                ),
+                                1.0,
+                            ),
+                            "created_at": now_ts,
+                        }
+                    )
+                    confirmed_state = stable_state
+
+                stable_slot_hits.append(
+                    {
+                        "slot_id": hit.slot_id,
+                        "mapping_id": m_id,
+                        "is_occupied": confirmed_state,
+                    }
+                )
+
+            payload = {
+                "camera_id": camera_id,
+                "timestamp": now_ts.isoformat(),
+                "detections": raw_detections,
+                "slot_hits": stable_slot_hits,
+            }
+
+            yield {"data": json.dumps(payload)}
+            await asyncio.sleep(_INFERENCE_INTERVAL)
+
+    finally:
+        cap.release()
+        logger.info("Released RTSP capture for camera_id={}", camera_id)
+
+
+@router.get(
+    "/stream/{camera_id}",
+    summary="SSE stream of AI parking detections for a camera",
+    description=(
+        "Streams Server-Sent Events with YOLO vehicle detections and "
+        "slot occupancy hits. Requires the camera to have slot mappings configured."
+    ),
+)
+async def detection_stream_sse(
+    camera_id: str,
+    request: Request,
+    current_user: Any = Depends(get_current_user),
+) -> EventSourceResponse:
+    return EventSourceResponse(
+        _detection_stream(camera_id, request),
+        media_type="text/event-stream",
+    )
+
+
+@router.post(
+    "/control/start-all",
+    response_model=APIResponse[dict],
+    summary="Start background inference for all cameras",
+)
+async def start_all_inference(
+    admin=Depends(get_current_admin),
+):
+    """Start global background inference for every camera that has slot mappings."""
+    await inference_manager.start_all()
+    running = inference_manager.running_camera_ids()
+    return APIResponse.success_response(
+        message="Inference started for all eligible cameras",
+        data={"running_cameras": running, "count": len(running)},
+    )
+
+
+@router.post(
+    "/control/stop-all",
+    response_model=APIResponse[dict],
+    summary="Stop all running background inference tasks",
+)
+async def stop_all_inference(
+    admin=Depends(get_current_admin),
+):
+    """Cancel all active background inference tasks."""
+    await inference_manager.stop_all()
+    return APIResponse.success_response(
+        message="All inference tasks stopped",
+        data={"running_cameras": [], "count": 0},
+    )
+
+
+@router.get(
+    "/control/status",
+    response_model=APIResponse[dict],
+    summary="Get the list of cameras currently running background inference",
+)
+async def inference_status(
+    admin=Depends(get_current_admin),
+):
+    """Returns which cameras have an active background inference task."""
+    running = inference_manager.running_camera_ids()
+    return APIResponse.success_response(
+        message="Inference status",
+        data={"running_cameras": running, "count": len(running)},
     )

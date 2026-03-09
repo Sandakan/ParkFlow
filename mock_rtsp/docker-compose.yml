@@ -9,7 +9,7 @@ services:
       - PYTHONUNBUFFERED=1
       - RTSP_HOST=mediamtx
     networks:
-      - backend_default
+      - parkflow-backend
     restart: unless-stopped
     develop:
       watch:
@@ -25,5 +25,5 @@ services:
           target: /assets/
 
 networks:
-  backend_default:
-    external: true
+  parkflow-backend:
+    external: true # created by the backend compose stack

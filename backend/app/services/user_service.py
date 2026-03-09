@@ -19,7 +19,7 @@ class UserService:
         user = await self.get_user_by_email(email=user_in.email)
         if user:
             raise AppException(
-                message="The user with this username already exists in the system.",
+                message="The user with this email already exists in the system.",
                 code=ResponseCode.USER_ALREADY_EXISTS,
                 status_code=400,
             )

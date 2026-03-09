@@ -16,10 +16,16 @@ import 'package:parkflow/core/network/entities/get_parking_lot_response_entity.d
 import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
 import 'package:parkflow/repositories/entities/parking/create_camera_request.dart';
+import 'package:parkflow/repositories/entities/parking/update_camera_request.dart';
 import 'package:parkflow/core/network/entities/get_cameras_response_entity.dart';
 import 'package:parkflow/repositories/entities/camera/create_webrtc_offer_request.dart';
 import 'package:parkflow/core/network/entities/get_webrtc_offer_response_entity.dart';
 import 'package:parkflow/repositories/entities/parking/create_parking_slot_request.dart';
+import 'package:parkflow/core/network/entities/get_analytics_overview_response_entity.dart';
+import 'package:parkflow/core/network/entities/get_occupancy_trend_response_entity.dart';
+import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dart';
+import 'package:parkflow/repositories/entities/settings/get_inference_settings_response_entity.dart';
+import 'package:parkflow/repositories/entities/settings/update_inference_settings_request.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
@@ -398,6 +404,32 @@ class RemoteRepository implements RemoteRepositoryInterface {
   }
 
   @override
+  Future<void> updateCamera(
+    String cameraId,
+    UpdateCameraRequest request,
+  ) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.patch,
+      'cameras/$cameraId',
+      data: request.toJson(),
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> deleteCamera(String cameraId) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.delete,
+      'cameras/$cameraId',
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
   Future<GetWebrtcOfferResponseEntity> sendWebrtcOffer(
     String cameraId,
     CreateWebrtcOfferRequest request,
@@ -423,5 +455,128 @@ class RemoteRepository implements RemoteRepositoryInterface {
         stackTrace: stackTrace,
       );
     }
+  }
+
+  @override
+  Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview() async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'analytics/overview',
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetAnalyticsOverviewResponseEntity.fromJson(
+        validatedResponse.data,
+      );
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(
+    String period,
+  ) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'analytics/occupancy-trend',
+      queryParameters: {'period': period},
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetOccupancyTrendResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetAiHealthResponseEntity> getAiHealth() async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'analytics/ai-health',
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetAiHealthResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<bool> checkCameraHealth(String cameraId) async {
+    try {
+      final response = await httpAPI.doRequest(
+        HttpMethodEnum.get,
+        'cameras/$cameraId/health',
+        accessToken: await _getToken(),
+      );
+
+      final validatedResponse = validateResponse(response);
+
+      return (validatedResponse.data as Map<String, dynamic>)['isAlive'] ??
+          false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<GetInferenceSettingsResponseEntity> getInferenceSettings() async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'settings/inference',
+      accessToken: await _getToken(),
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetInferenceSettingsResponseEntity.fromJson(
+        validatedResponse.data,
+      );
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<void> updateInferenceSettings(
+    UpdateInferenceSettingsRequest request,
+  ) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.put,
+      'settings/inference',
+      data: request.toJson(),
+      accessToken: await _getToken(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
   }
 }

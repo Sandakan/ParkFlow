@@ -13,8 +13,7 @@ class CameraCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Assume health is fine if rtspUrl is not empty, can be enhanced later based on backend pings
-    final bool isHealthy = camera.rtspUrl.isNotEmpty;
+    final bool isHealthy = camera.isAlive;
 
     return Card(
       elevation: 0,
@@ -61,7 +60,7 @@ class CameraCard extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      camera.lotName ?? 'Unknown Parking Lot',
+                      camera.lotName ?? context.l10n.unknownLot,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: AppColors.textSecondary,
                         fontWeight: FontWeight.w500,

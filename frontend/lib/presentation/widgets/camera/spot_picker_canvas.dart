@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/presentation/notifiers/cameras/camera_info_notifier.dart';
 import 'package:parkflow/models/parking/parking_slot_model.dart';
+import 'package:parkflow/models/parking/ai_detection_event.dart';
 
 class SpotPickerCanvas extends StatelessWidget {
   final InteractionMode mode;
   final List<Offset> normalizedCurrentPoints;
   final List<ParkingSlotModel> slots;
   final bool showAiDetections;
+  final List<DetectedBox> aiDetections;
+  final Map<String, bool> aiSlotHits;
   final Function(Offset normalizedPoint) onTap;
 
   const SpotPickerCanvas({
@@ -15,6 +18,8 @@ class SpotPickerCanvas extends StatelessWidget {
     required this.normalizedCurrentPoints,
     required this.slots,
     required this.showAiDetections,
+    required this.aiDetections,
+    required this.aiSlotHits,
     required this.onTap,
     super.key,
   });
@@ -44,6 +49,8 @@ class SpotPickerCanvas extends StatelessWidget {
                 normalizedCurrentPoints: normalizedCurrentPoints,
                 slots: slots,
                 showAiDetections: showAiDetections,
+                aiDetections: aiDetections,
+                aiSlotHits: aiSlotHits,
               ),
             ),
           ),
@@ -58,12 +65,16 @@ class _SpotPainter extends CustomPainter {
   final List<Offset> normalizedCurrentPoints;
   final List<ParkingSlotModel> slots;
   final bool showAiDetections;
+  final List<DetectedBox> aiDetections;
+  final Map<String, bool> aiSlotHits;
 
   _SpotPainter({
     required this.mode,
     required this.normalizedCurrentPoints,
     required this.slots,
     required this.showAiDetections,
+    required this.aiDetections,
+    required this.aiSlotHits,
   });
 
   @override
@@ -77,7 +88,7 @@ class _SpotPainter extends CustomPainter {
       ..color = AppColors.primary.withValues(alpha: 0.2)
       ..style = PaintingStyle.fill;
 
-    // 1. Draw existing slots
+    // 1. Draw existing slots — color overridden by live AI hits when active
     for (final slot in slots) {
       if (slot.coordinates == null || slot.coordinates!.isEmpty) continue;
 
@@ -92,36 +103,39 @@ class _SpotPainter extends CustomPainter {
       }
       path.close();
 
-      // Determine Colors based on type and status
+      // If AI stream is active and has a hit for this slot, use AI color;
+      // otherwise fall back to DB-persisted status color.
       Color baseColor;
-      if (slot.isOccupied) {
+      if (showAiDetections && aiSlotHits.containsKey(slot.id)) {
+        baseColor = aiSlotHits[slot.id]! ? Colors.red : Colors.green;
+      } else if (slot.isOccupied) {
         baseColor = Colors.red;
       } else {
         switch (slot.slotType) {
           case 'disabled':
             baseColor = Colors.blue;
-            break;
           case 'ev':
             baseColor = Colors.green;
-            break;
           default:
             baseColor = AppColors.primary;
         }
       }
 
-      final currentFillPaint = Paint()
-        ..color = baseColor.withValues(alpha: 0.3)
-        ..style = PaintingStyle.fill;
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = baseColor.withValues(alpha: 0.3)
+          ..style = PaintingStyle.fill,
+      );
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = baseColor
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.0,
+      );
 
-      final currentStrokePaint = Paint()
-        ..color = baseColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0;
-
-      canvas.drawPath(path, currentFillPaint);
-      canvas.drawPath(path, currentStrokePaint);
-
-      // Draw slot name
+      // Slot name label
       final textPainter = TextPainter(
         text: TextSpan(
           text: slot.name,
@@ -134,10 +148,9 @@ class _SpotPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       );
       textPainter.layout();
-      // Center of polygon roughly
-      double avgX =
+      final avgX =
           points.map((p) => p.dx).reduce((a, b) => a + b) / points.length;
-      double avgY =
+      final avgY =
           points.map((p) => p.dy).reduce((a, b) => a + b) / points.length;
       textPainter.paint(
         canvas,
@@ -155,19 +168,16 @@ class _SpotPainter extends CustomPainter {
         ..color = AppColors.primary
         ..style = PaintingStyle.fill;
 
-      // Draw points
       for (final point in currentPoints) {
         canvas.drawCircle(point, 4.0, pointPaint);
       }
 
-      // Draw lines between points
       if (currentPoints.length > 1) {
         for (int i = 0; i < currentPoints.length - 1; i++) {
           canvas.drawLine(currentPoints[i], currentPoints[i + 1], strokePaint);
         }
       }
 
-      // If full shape, close it
       if (currentPoints.length == 4) {
         canvas.drawLine(currentPoints.last, currentPoints.first, strokePaint);
 
@@ -180,30 +190,65 @@ class _SpotPainter extends CustomPainter {
       }
     }
 
-    // 3. Draw AI Detections (mocked)
-    if (showAiDetections) {
-      final aiPaint = Paint()
-        ..color = Colors.red
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0;
+    // 3. Draw live YOLO detection bounding boxes
+    if (showAiDetections && aiDetections.isNotEmpty) {
+      for (final det in aiDetections) {
+        final labelLower = det.label.toLowerCase();
 
-      final rect = Rect.fromLTWH(
-        size.width * 0.4,
-        size.height * 0.4,
-        size.width * 0.2,
-        size.height * 0.2,
-      );
-      canvas.drawRect(rect, aiPaint);
+        Color color;
+        if (labelLower == 'space-empty') {
+          color = Colors.greenAccent;
+        } else if (labelLower == 'space-occupied') {
+          color = Colors.redAccent;
+        } else {
+          color = Colors.yellowAccent;
+        }
 
-      final textPainter = TextPainter(
-        text: const TextSpan(
-          text: 'Car 0.98',
-          style: TextStyle(color: Colors.red, fontSize: 12),
-        ),
-        textDirection: TextDirection.ltr,
-      );
-      textPainter.layout();
-      textPainter.paint(canvas, Offset(rect.left, rect.top - 16));
+        final boxPaint = Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2.0;
+
+        final rect = Rect.fromLTRB(
+          det.x1 * size.width,
+          det.y1 * size.height,
+          det.x2 * size.width,
+          det.y2 * size.height,
+        );
+        canvas.drawRect(rect, boxPaint);
+
+        // Label above box
+        final labelText =
+            '${det.label} ${(det.confidence * 100).toStringAsFixed(0)}%';
+        final labelPainter = TextPainter(
+          text: TextSpan(
+            text: labelText,
+            style: TextStyle(
+              color: color,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        );
+        labelPainter.layout();
+
+        // Small background chip for readability
+        final labelBg = Rect.fromLTWH(
+          rect.left,
+          rect.top - labelPainter.height - 4,
+          labelPainter.width + 6,
+          labelPainter.height + 4,
+        );
+        canvas.drawRect(
+          labelBg,
+          Paint()..color = Colors.black.withValues(alpha: 0.6),
+        );
+        labelPainter.paint(
+          canvas,
+          Offset(rect.left + 3, rect.top - labelPainter.height - 2),
+        );
+      }
     }
   }
 
@@ -212,6 +257,8 @@ class _SpotPainter extends CustomPainter {
     return oldDelegate.mode != mode ||
         oldDelegate.normalizedCurrentPoints != normalizedCurrentPoints ||
         oldDelegate.slots != slots ||
-        oldDelegate.showAiDetections != showAiDetections;
+        oldDelegate.showAiDetections != showAiDetections ||
+        oldDelegate.aiDetections != aiDetections ||
+        oldDelegate.aiSlotHits != aiSlotHits;
   }
 }

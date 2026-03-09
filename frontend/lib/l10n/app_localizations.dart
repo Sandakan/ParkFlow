@@ -562,127 +562,127 @@ abstract class AppLocalizations {
   /// **'This field is required'**
   String get fieldRequired;
 
-  /// No description provided for @invalidNumber.
+  /// Error message when a number field has an invalid value
   ///
   /// In en, this message translates to:
   /// **'Invalid number'**
   String get invalidNumber;
 
-  /// No description provided for @editLotTitle.
+  /// The title for the edit parking lot screen
   ///
   /// In en, this message translates to:
   /// **'Edit Parking Lot'**
   String get editLotTitle;
 
-  /// No description provided for @updateButton.
+  /// Button text to save changes to an existing item
   ///
   /// In en, this message translates to:
   /// **'Update'**
   String get updateButton;
 
-  /// No description provided for @lotUpdatedSuccess.
+  /// Success message shown after updating a parking lot
   ///
   /// In en, this message translates to:
   /// **'Parking lot updated successfully'**
   String get lotUpdatedSuccess;
 
-  /// No description provided for @deleteLot.
+  /// Label for the delete lot action
   ///
   /// In en, this message translates to:
   /// **'Delete Lot'**
   String get deleteLot;
 
-  /// No description provided for @deleteLotConfirmTitle.
+  /// Title for the delete parking lot confirmation dialog
   ///
   /// In en, this message translates to:
   /// **'Delete Parking Lot?'**
   String get deleteLotConfirmTitle;
 
-  /// No description provided for @deleteLotConfirmMessage.
+  /// Message for the delete parking lot confirmation dialog
   ///
   /// In en, this message translates to:
   /// **'Are you sure you want to delete this parking lot? This action cannot be undone.'**
   String get deleteLotConfirmMessage;
 
-  /// No description provided for @deleteButton.
+  /// Button text to confirm deletion
   ///
   /// In en, this message translates to:
   /// **'Delete'**
   String get deleteButton;
 
-  /// No description provided for @cancelButton.
+  /// Button text to cancel an action
   ///
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancelButton;
 
-  /// No description provided for @lotDeletedSuccess.
+  /// Success message shown after deleting a parking lot
   ///
   /// In en, this message translates to:
   /// **'Parking lot deleted successfully'**
   String get lotDeletedSuccess;
 
-  /// No description provided for @camerasTabLabel.
+  /// Label for the cameras tab in the navigation
   ///
   /// In en, this message translates to:
   /// **'Cameras'**
   String get camerasTabLabel;
 
-  /// No description provided for @searchCameraHint.
+  /// Hint text for the camera search field
   ///
   /// In en, this message translates to:
   /// **'Search cameras...'**
   String get searchCameraHint;
 
-  /// No description provided for @createNewCamera.
+  /// Button label to open the create camera dialog
   ///
   /// In en, this message translates to:
   /// **'Create Camera'**
   String get createNewCamera;
 
-  /// No description provided for @noCamerasFound.
+  /// Message shown when no cameras match the search criteria
   ///
   /// In en, this message translates to:
   /// **'No cameras found'**
   String get noCamerasFound;
 
-  /// No description provided for @errorLoadingCameras.
+  /// Message shown when there's an error fetching camera data
   ///
   /// In en, this message translates to:
   /// **'Error loading cameras'**
   String get errorLoadingCameras;
 
-  /// No description provided for @rtspHealth.
+  /// Label for the RTSP stream health status
   ///
   /// In en, this message translates to:
   /// **'Health'**
   String get rtspHealth;
 
-  /// No description provided for @statusConnected.
+  /// Label when a camera stream is connected
   ///
   /// In en, this message translates to:
   /// **'Connected'**
   String get statusConnected;
 
-  /// No description provided for @statusDisconnected.
+  /// Label when a camera stream is disconnected
   ///
   /// In en, this message translates to:
   /// **'Disconnected'**
   String get statusDisconnected;
 
-  /// No description provided for @createCameraTitle.
+  /// Title for the create new camera screen
   ///
   /// In en, this message translates to:
   /// **'Create New Camera'**
   String get createCameraTitle;
 
-  /// No description provided for @cameraNameLabel.
+  /// Label for the camera name input field
   ///
   /// In en, this message translates to:
   /// **'Camera Name'**
   String get cameraNameLabel;
 
-  /// No description provided for @cameraNameHint.
+  /// Hint text for the camera name input field
   ///
   /// In en, this message translates to:
   /// **'Front Gate'**
@@ -699,6 +699,546 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The user with this email already exists in the system.'**
   String get userAlreadyExists;
+
+  /// The title shown at the top of the analytics screen
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get analyticsTitle;
+
+  /// Label for the section showing high-level system health metrics
+  ///
+  /// In en, this message translates to:
+  /// **'System Vitals'**
+  String get analyticsOverview;
+
+  /// Label for the card showing total number of parking slots
+  ///
+  /// In en, this message translates to:
+  /// **'Total Capacity'**
+  String get analyticsTotalCapacity;
+
+  /// Label for the card showing number of currently occupied slots
+  ///
+  /// In en, this message translates to:
+  /// **'Current Occupancy'**
+  String get analyticsOccupancy;
+
+  /// Label for the card showing percentage of active cameras
+  ///
+  /// In en, this message translates to:
+  /// **'Stream Health'**
+  String get analyticsStreamHealth;
+
+  /// Label for the card showing average time a vehicle stays in a slot
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. Dwell Time'**
+  String get analyticsAvgDwell;
+
+  /// The unit for dwell time (minutes)
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get analyticsDwellUnit;
+
+  /// Label for the chart section showing occupancy over time
+  ///
+  /// In en, this message translates to:
+  /// **'Occupancy Trends'**
+  String get analyticsOccupancyTrend;
+
+  /// Label for the 24 hour time period filter
+  ///
+  /// In en, this message translates to:
+  /// **'24h'**
+  String get analyticsPeriod24h;
+
+  /// Label for the 7 day time period filter
+  ///
+  /// In en, this message translates to:
+  /// **'7d'**
+  String get analyticsPeriod7d;
+
+  /// Label for the 30 day time period filter
+  ///
+  /// In en, this message translates to:
+  /// **'30d'**
+  String get analyticsPeriod30d;
+
+  /// Legend label for the current period data in charts
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get analyticsTodayLabel;
+
+  /// Legend label for the comparison period data in charts
+  ///
+  /// In en, this message translates to:
+  /// **'Prior Period'**
+  String get analyticsPriorLabel;
+
+  /// Label for the turnover metric (vehicles per slot)
+  ///
+  /// In en, this message translates to:
+  /// **'Turnover Rate'**
+  String get analyticsTurnoverRate;
+
+  /// Label for the turnover count for the current day
+  ///
+  /// In en, this message translates to:
+  /// **'Turnover Today'**
+  String get analyticsTurnoverToday;
+
+  /// Label for the section showing AI model performance metrics
+  ///
+  /// In en, this message translates to:
+  /// **'AI Engine Health'**
+  String get analyticsAiHealth;
+
+  /// The average confidence score of the AI detection model
+  ///
+  /// In en, this message translates to:
+  /// **'Detection Confidence'**
+  String get analyticsConfidenceMean;
+
+  /// Current CPU usage percentage of the AI inference server
+  ///
+  /// In en, this message translates to:
+  /// **'CPU Load'**
+  String get analyticsCpuLoad;
+
+  /// The time taken for a single frame to be processed by the AI model
+  ///
+  /// In en, this message translates to:
+  /// **'Inference Latency'**
+  String get analyticsInferenceLatency;
+
+  /// Text shown when a chart has no data points to display
+  ///
+  /// In en, this message translates to:
+  /// **'No data yet'**
+  String get analyticsNoData;
+
+  /// Button text to manually reload the analytics data
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get analyticsRefresh;
+
+  /// Noun suffix for slot counts
+  ///
+  /// In en, this message translates to:
+  /// **'slots'**
+  String get analyticsSlots;
+
+  /// Status label for occupied slots
+  ///
+  /// In en, this message translates to:
+  /// **'occupied'**
+  String get analyticsOccupied;
+
+  /// Status label for available slots
+  ///
+  /// In en, this message translates to:
+  /// **'vacant'**
+  String get analyticsVacant;
+
+  /// Suffix for the number of active camera streams
+  ///
+  /// In en, this message translates to:
+  /// **'cameras active'**
+  String get analyticsCameras;
+
+  /// Sub-label for the occupancy trend chart explaining the comparison
+  ///
+  /// In en, this message translates to:
+  /// **'Occupancy over time vs. prior period'**
+  String get analyticsOccupancyTrendSubtitle;
+
+  /// Subtitle for detection confidence showing the number of logs analyzed
+  ///
+  /// In en, this message translates to:
+  /// **'samples'**
+  String get analyticsSampleCount;
+
+  /// Label for the section containing revenue and pricing metrics
+  ///
+  /// In en, this message translates to:
+  /// **'Financials'**
+  String get analyticsFinancials;
+
+  /// Total earnings for the current day
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue Today'**
+  String get analyticsRevenueToday;
+
+  /// Total earnings for the current month
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue Month'**
+  String get analyticsRevenueMonth;
+
+  /// The currency unit used for revenue (Sri Lankan Rupee)
+  ///
+  /// In en, this message translates to:
+  /// **'LKR'**
+  String get analyticsRevenueUnit;
+
+  /// Label for the section showing how parking operations impact efficiency
+  ///
+  /// In en, this message translates to:
+  /// **'Operational Impact'**
+  String get analyticsOperationalImpact;
+
+  /// Label for the chart section showing revenue earnings over time
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue Trend'**
+  String get analyticsRevenueTrend;
+
+  /// Subtitle for the settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'AI Inference & System Configuration'**
+  String get settingsSubtitle;
+
+  /// Label for the AI inference configuration panel
+  ///
+  /// In en, this message translates to:
+  /// **'Inference Precision'**
+  String get settingsPrecisionPanel;
+
+  /// Slider label for detection confidence
+  ///
+  /// In en, this message translates to:
+  /// **'Confidence Threshold'**
+  String get settingsConfidenceThreshold;
+
+  /// Description for confidence threshold
+  ///
+  /// In en, this message translates to:
+  /// **'Lower values catch more objects but increase false positives.'**
+  String get settingsConfidenceThresholdDesc;
+
+  /// Slider label for IoU threshold
+  ///
+  /// In en, this message translates to:
+  /// **'IoU (Overlap) Threshold'**
+  String get settingsIouThreshold;
+
+  /// Description for IoU threshold
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage overlap with slots required to trigger status.'**
+  String get settingsIouThresholdDesc;
+
+  /// Dropdown label for frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Frame Skipping'**
+  String get settingsFrameSkip;
+
+  /// Description for frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce processing load by processing every Nth frame.'**
+  String get settingsFrameSkipDesc;
+
+  /// Dropdown option for no frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Process every frame (Max accuracy)'**
+  String get settingsFrameSkipEveryFrame;
+
+  /// Dropdown option for 1 frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Every 2nd frame (Balanced)'**
+  String get settingsFrameSkipEvery2nd;
+
+  /// Dropdown option for 2 frame skipping
+  ///
+  /// In en, this message translates to:
+  /// **'Every 3rd frame (Efficiency)'**
+  String get settingsFrameSkipEvery3rd;
+
+  /// Number field label for stability buffer
+  ///
+  /// In en, this message translates to:
+  /// **'Stability Buffer'**
+  String get settingsStabilityBuffer;
+
+  /// Description for stability buffer
+  ///
+  /// In en, this message translates to:
+  /// **'Consecutive frames required for a status change.'**
+  String get settingsStabilityBufferDesc;
+
+  /// Button text to save settings
+  ///
+  /// In en, this message translates to:
+  /// **'Save Settings'**
+  String get settingsSaveButton;
+
+  /// Success snackbar message
+  ///
+  /// In en, this message translates to:
+  /// **'Settings updated successfully'**
+  String get settingsSaveSuccess;
+
+  /// Error snackbar message
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update settings'**
+  String get settingsSaveError;
+
+  /// No description provided for @settingsSaving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving...'**
+  String get settingsSaving;
+
+  /// No description provided for @settingsSystemControl.
+  ///
+  /// In en, this message translates to:
+  /// **'System Control'**
+  String get settingsSystemControl;
+
+  /// No description provided for @settingsGlobalInference.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable Global Inference'**
+  String get settingsGlobalInference;
+
+  /// No description provided for @settingsGlobalInferenceDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable or disable AI inference globally for all available cameras.'**
+  String get settingsGlobalInferenceDesc;
+
+  /// No description provided for @settingsInferenceRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running'**
+  String get settingsInferenceRunning;
+
+  /// No description provided for @settingsInferenceStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped'**
+  String get settingsInferenceStopped;
+
+  /// Fallback text displayed when a parking lot name is missing or unknown
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown Parking Lot'**
+  String get unknownLot;
+
+  /// Generic loading indicator text
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// Label for live video feed status
+  ///
+  /// In en, this message translates to:
+  /// **'LIVE'**
+  String get liveBadge;
+
+  /// Tooltip for the edit camera button
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Camera'**
+  String get editCameraTooltip;
+
+  /// Tooltip for the delete camera button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Camera'**
+  String get deleteCameraTooltip;
+
+  /// Title for the edit camera dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Camera'**
+  String get editCameraDialogTitle;
+
+  /// Success message when a camera is updated
+  ///
+  /// In en, this message translates to:
+  /// **'Camera updated successfully'**
+  String get cameraUpdatedSuccess;
+
+  /// Success message when a camera is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Camera deleted successfully'**
+  String get cameraDeletedSuccess;
+
+  /// Title for the delete camera confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Camera?'**
+  String get deleteCameraConfirmTitle;
+
+  /// Message for the delete camera confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this camera? This action cannot be undone.'**
+  String get deleteCameraConfirmMessage;
+
+  /// Text for the save changes button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Changes'**
+  String get saveChangesButton;
+
+  /// Title for the parking slots management section
+  ///
+  /// In en, this message translates to:
+  /// **'Parking Slots'**
+  String get parkingSlotsTitle;
+
+  /// Tooltip for the add parking slot button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Slot'**
+  String get addSlotTooltip;
+
+  /// Tooltip for the cancel drawing button
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Drawing'**
+  String get cancelDrawingTooltip;
+
+  /// Instruction text for creating a new parking slot
+  ///
+  /// In en, this message translates to:
+  /// **'Tap 4 points on the video to define the parking slot corners.'**
+  String get tapPointsInstruction;
+
+  /// Label for the switch to show/hide AI detections
+  ///
+  /// In en, this message translates to:
+  /// **'Show AI Detections'**
+  String get showAiDetectionsLabel;
+
+  /// Message shown when no parking slots are defined for a camera
+  ///
+  /// In en, this message translates to:
+  /// **'No slots defined yet.'**
+  String get noSlotsDefinedMessage;
+
+  /// Loading message when saving a new parking slot
+  ///
+  /// In en, this message translates to:
+  /// **'Saving new slot...'**
+  String get savingNewSlotMessage;
+
+  /// Label indicating a parking slot is vacant
+  ///
+  /// In en, this message translates to:
+  /// **'Vacant'**
+  String get vacantStatus;
+
+  /// Label for the parking slot type selector
+  ///
+  /// In en, this message translates to:
+  /// **'Slot Type'**
+  String get slotTypeLabel;
+
+  /// Label for the general parking slot type
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get slotTypeGeneral;
+
+  /// Label for the disabled parking slot type
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get slotTypeDisabled;
+
+  /// Label for the electric vehicle charging parking slot type
+  ///
+  /// In en, this message translates to:
+  /// **'EV Charging'**
+  String get slotTypeEv;
+
+  /// Title for the new parking slot dialog
+  ///
+  /// In en, this message translates to:
+  /// **'New Parking Slot'**
+  String get newParkingSlotTitle;
+
+  /// Label for the slot identifier input field
+  ///
+  /// In en, this message translates to:
+  /// **'Slot Identifier'**
+  String get slotIdentifierLabel;
+
+  /// Hint text for the slot identifier input field
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. A-15'**
+  String get slotIdentifierHint;
+
+  /// Text for the save slot button
+  ///
+  /// In en, this message translates to:
+  /// **'Save Slot'**
+  String get saveSlotButton;
+
+  /// Success message when a parking slot is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Slot {name} saved'**
+  String slotSavedSuccess(String name);
+
+  /// Title for the delete parking slot confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Slot?'**
+  String get deleteSlotConfirmTitle;
+
+  /// Message for the delete parking slot confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {name}?'**
+  String deleteSlotConfirmMessage(String name);
+
+  /// No description provided for @slotTypePrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get slotTypePrefix;
+
+  /// Hint text for the parking lot selection dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Select Parking Lot'**
+  String get selectParkingLotHint;
+
+  /// Label for live streams in analytics
+  ///
+  /// In en, this message translates to:
+  /// **'live'**
+  String get analyticsLiveStatus;
+
+  /// Millisecond unit label
+  ///
+  /// In en, this message translates to:
+  /// **'ms'**
+  String get analyticsMsUnit;
+
+  /// Hint text for numeric input fields
+  ///
+  /// In en, this message translates to:
+  /// **'Enter value'**
+  String get enterValueHint;
 }
 
 class _AppLocalizationsDelegate

@@ -314,4 +314,287 @@ class AppLocalizationsSi extends AppLocalizations {
   @override
   String get userAlreadyExists =>
       'The user with this email already exists in the system.';
+
+  @override
+  String get analyticsTitle => 'Analytics';
+
+  @override
+  String get analyticsOverview => 'System Vitals';
+
+  @override
+  String get analyticsTotalCapacity => 'Total Capacity';
+
+  @override
+  String get analyticsOccupancy => 'Current Occupancy';
+
+  @override
+  String get analyticsStreamHealth => 'Stream Health';
+
+  @override
+  String get analyticsAvgDwell => 'Avg. Dwell Time';
+
+  @override
+  String get analyticsDwellUnit => 'min';
+
+  @override
+  String get analyticsOccupancyTrend => 'Occupancy Trends';
+
+  @override
+  String get analyticsPeriod24h => '24h';
+
+  @override
+  String get analyticsPeriod7d => '7d';
+
+  @override
+  String get analyticsPeriod30d => '30d';
+
+  @override
+  String get analyticsTodayLabel => 'Today';
+
+  @override
+  String get analyticsPriorLabel => 'Prior Period';
+
+  @override
+  String get analyticsTurnoverRate => 'Turnover Rate';
+
+  @override
+  String get analyticsTurnoverToday => 'Turnover Today';
+
+  @override
+  String get analyticsAiHealth => 'AI Engine Health';
+
+  @override
+  String get analyticsConfidenceMean => 'Detection Confidence';
+
+  @override
+  String get analyticsCpuLoad => 'CPU Load';
+
+  @override
+  String get analyticsInferenceLatency => 'Inference Latency';
+
+  @override
+  String get analyticsNoData => 'No data yet';
+
+  @override
+  String get analyticsRefresh => 'Refresh';
+
+  @override
+  String get analyticsSlots => 'slots';
+
+  @override
+  String get analyticsOccupied => 'occupied';
+
+  @override
+  String get analyticsVacant => 'vacant';
+
+  @override
+  String get analyticsCameras => 'cameras active';
+
+  @override
+  String get analyticsOccupancyTrendSubtitle =>
+      'Occupancy over time vs. prior period';
+
+  @override
+  String get analyticsSampleCount => 'samples';
+
+  @override
+  String get analyticsFinancials => 'Financials';
+
+  @override
+  String get analyticsRevenueToday => 'Revenue Today';
+
+  @override
+  String get analyticsRevenueMonth => 'Revenue Month';
+
+  @override
+  String get analyticsRevenueUnit => 'LKR';
+
+  @override
+  String get analyticsOperationalImpact => 'Operational Impact';
+
+  @override
+  String get analyticsRevenueTrend => 'Revenue Trend';
+
+  @override
+  String get settingsSubtitle => 'AI Inference & System Configuration';
+
+  @override
+  String get settingsPrecisionPanel => 'Inference Precision';
+
+  @override
+  String get settingsConfidenceThreshold => 'Confidence Threshold';
+
+  @override
+  String get settingsConfidenceThresholdDesc =>
+      'Lower values catch more objects but increase false positives.';
+
+  @override
+  String get settingsIouThreshold => 'IoU (Overlap) Threshold';
+
+  @override
+  String get settingsIouThresholdDesc =>
+      'Percentage overlap with slots required to trigger status.';
+
+  @override
+  String get settingsFrameSkip => 'Frame Skipping';
+
+  @override
+  String get settingsFrameSkipDesc =>
+      'Reduce processing load by processing every Nth frame.';
+
+  @override
+  String get settingsFrameSkipEveryFrame =>
+      'Process every frame (Max accuracy)';
+
+  @override
+  String get settingsFrameSkipEvery2nd => 'Every 2nd frame (Balanced)';
+
+  @override
+  String get settingsFrameSkipEvery3rd => 'Every 3rd frame (Efficiency)';
+
+  @override
+  String get settingsStabilityBuffer => 'Stability Buffer';
+
+  @override
+  String get settingsStabilityBufferDesc =>
+      'Consecutive frames required for a status change.';
+
+  @override
+  String get settingsSaveButton => 'Save Settings';
+
+  @override
+  String get settingsSaveSuccess => 'Settings updated successfully';
+
+  @override
+  String get settingsSaveError => 'Failed to update settings';
+
+  @override
+  String get settingsSaving => 'Saving...';
+
+  @override
+  String get settingsSystemControl => 'System Control';
+
+  @override
+  String get settingsGlobalInference => 'Enable Global Inference';
+
+  @override
+  String get settingsGlobalInferenceDesc =>
+      'Enable or disable AI inference globally for all available cameras.';
+
+  @override
+  String get settingsInferenceRunning => 'Running';
+
+  @override
+  String get settingsInferenceStopped => 'Stopped';
+
+  @override
+  String get unknownLot => 'Unknown Parking Lot';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get liveBadge => 'LIVE';
+
+  @override
+  String get editCameraTooltip => 'Edit Camera';
+
+  @override
+  String get deleteCameraTooltip => 'Delete Camera';
+
+  @override
+  String get editCameraDialogTitle => 'Edit Camera';
+
+  @override
+  String get cameraUpdatedSuccess => 'Camera updated successfully';
+
+  @override
+  String get cameraDeletedSuccess => 'Camera deleted successfully';
+
+  @override
+  String get deleteCameraConfirmTitle => 'Delete Camera?';
+
+  @override
+  String get deleteCameraConfirmMessage =>
+      'Are you sure you want to delete this camera? This action cannot be undone.';
+
+  @override
+  String get saveChangesButton => 'Save Changes';
+
+  @override
+  String get parkingSlotsTitle => 'Parking Slots';
+
+  @override
+  String get addSlotTooltip => 'Add Slot';
+
+  @override
+  String get cancelDrawingTooltip => 'Cancel Drawing';
+
+  @override
+  String get tapPointsInstruction =>
+      'Tap 4 points on the video to define the parking slot corners.';
+
+  @override
+  String get showAiDetectionsLabel => 'Show AI Detections';
+
+  @override
+  String get noSlotsDefinedMessage => 'No slots defined yet.';
+
+  @override
+  String get savingNewSlotMessage => 'Saving new slot...';
+
+  @override
+  String get vacantStatus => 'Vacant';
+
+  @override
+  String get slotTypeLabel => 'Slot Type';
+
+  @override
+  String get slotTypeGeneral => 'General';
+
+  @override
+  String get slotTypeDisabled => 'Disabled';
+
+  @override
+  String get slotTypeEv => 'EV Charging';
+
+  @override
+  String get newParkingSlotTitle => 'New Parking Slot';
+
+  @override
+  String get slotIdentifierLabel => 'Slot Identifier';
+
+  @override
+  String get slotIdentifierHint => 'e.g. A-15';
+
+  @override
+  String get saveSlotButton => 'Save Slot';
+
+  @override
+  String slotSavedSuccess(String name) {
+    return 'Slot $name saved';
+  }
+
+  @override
+  String get deleteSlotConfirmTitle => 'Delete Slot?';
+
+  @override
+  String deleteSlotConfirmMessage(String name) {
+    return 'Are you sure you want to delete $name?';
+  }
+
+  @override
+  String get slotTypePrefix => 'Type';
+
+  @override
+  String get selectParkingLotHint => 'Select Parking Lot';
+
+  @override
+  String get analyticsLiveStatus => 'live';
+
+  @override
+  String get analyticsMsUnit => 'ms';
+
+  @override
+  String get enterValueHint => 'Enter value';
 }

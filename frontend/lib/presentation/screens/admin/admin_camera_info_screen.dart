@@ -6,6 +6,11 @@ import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/presentation/notifiers/cameras/camera_info_notifier.dart';
 import 'package:parkflow/presentation/widgets/camera/spot_picker_canvas.dart';
 import 'package:parkflow/models/parking/parking_slot_model.dart';
+import 'package:parkflow/repositories/entities/parking/update_camera_request.dart';
+import 'package:go_router/go_router.dart';
+import 'package:parkflow/core/app_exception.dart';
+import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 class AdminCameraInfoScreen extends ConsumerStatefulWidget {
   final String cameraId;
@@ -50,6 +55,8 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
               normalizedCurrentPoints: state.currentDrawingPoints,
               slots: state.slots,
               showAiDetections: state.showAiDetections,
+              aiDetections: state.aiDetections,
+              aiSlotHits: state.aiSlotHits,
               onTap: (normalizedPoint) {
                 notifier.addDrawingPoint(normalizedPoint);
                 if (state.currentDrawingPoints.length == 3) {
@@ -135,7 +142,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${state.camera?.lotName ?? 'Unknown Lot'} > ${state.camera?.name ?? 'Loading...'}',
+                    '${state.camera?.lotName ?? context.l10n.unknownLot} > ${state.camera?.name ?? context.l10n.loading}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -152,17 +159,17 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 color: Colors.red.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.fiber_manual_record,
                     color: Colors.white,
                     size: 12,
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
-                    'LIVE',
-                    style: TextStyle(
+                    context.l10n.liveBadge,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
@@ -171,7 +178,18 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 ],
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 8),
+            IconButton(
+              icon: const Icon(Icons.edit_outlined, color: Colors.white),
+              tooltip: context.l10n.editCameraTooltip,
+              onPressed: () => _showEditCameraDialog(context, state, notifier),
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete_outline, color: Colors.white),
+              tooltip: context.l10n.deleteCameraTooltip,
+              onPressed: () => _confirmDeleteCamera(context, notifier),
+            ),
+            const SizedBox(width: 4),
             IconButton(
               icon: Icon(
                 state.isSidebarCollapsed ? Icons.menu_open : Icons.menu,
@@ -181,6 +199,145 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showEditCameraDialog(
+    BuildContext context,
+    CameraInfoState state,
+    CameraInfo notifier,
+  ) {
+    if (state.camera == null) return;
+
+    final form = fb.group({
+      'name': FormControl<String>(
+        value: state.camera!.name,
+        validators: [Validators.required],
+      ),
+      'rtspUrl': FormControl<String>(
+        value: state.camera!.rtspUrl,
+        validators: [Validators.required],
+      ),
+    });
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(context.l10n.editCameraDialogTitle),
+        content: ReactiveForm(
+          formGroup: form,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ReactiveTextField<String>(
+                formControlName: 'name',
+                decoration: InputDecoration(
+                  labelText: context.l10n.cameraNameLabel,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ReactiveTextField<String>(
+                formControlName: 'rtspUrl',
+                decoration: InputDecoration(
+                  labelText: context.l10n.rtspUrlLabel,
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text(context.l10n.cancelButton),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              if (form.valid) {
+                final request = UpdateCameraRequest(
+                  name: form.control('name').value as String,
+                  rtspUrl: form.control('rtspUrl').value as String,
+                );
+                try {
+                  await notifier.updateCamera(request);
+                  if (context.mounted) {
+                    context.pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(context.l10n.cameraUpdatedSuccess),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          AppException.getLocalizedErrorMessage(
+                            e,
+                            context.l10n,
+                          ),
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+            ),
+            child: Text(context.l10n.saveChangesButton),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmDeleteCamera(BuildContext context, CameraInfo notifier) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.deleteCameraConfirmTitle),
+        content: Text(context.l10n.deleteCameraConfirmMessage),
+        actions: [
+          TextButton(
+            onPressed: () => ctx.pop(),
+            child: Text(context.l10n.cancelButton),
+          ),
+          TextButton(
+            onPressed: () async {
+              try {
+                ctx.pop();
+                await notifier.deleteCamera();
+
+                if (context.mounted) {
+                  context.pop(); // Go back to cameras list
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(context.l10n.cameraDeletedSuccess)),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        AppException.getLocalizedErrorMessage(e, context.l10n),
+                      ),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: Text(context.l10n.deleteButton),
+          ),
+        ],
       ),
     );
   }
@@ -230,9 +387,9 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Parking Slots',
-                      style: TextStyle(
+                    Text(
+                      context.l10n.parkingSlotsTitle,
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
@@ -241,7 +398,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                         InteractionMode.inspection) ...[
                       IconButton(
                         icon: const Icon(Icons.add_box_outlined),
-                        tooltip: 'Add Slot',
+                        tooltip: context.l10n.addSlotTooltip,
                         onPressed: () => notifier.setInteractionMode(
                           InteractionMode.drawing,
                         ),
@@ -249,7 +406,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                     ] else
                       IconButton(
                         icon: const Icon(Icons.close),
-                        tooltip: 'Cancel Drawing',
+                        tooltip: context.l10n.cancelDrawingTooltip,
                         onPressed: () {
                           notifier.resetDrawing();
                           notifier.setInteractionMode(
@@ -262,12 +419,15 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
               ),
             ),
             if (state.interactionMode == InteractionMode.drawing)
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
-                    'Tap 4 points on the video to define the parking slot corners.',
-                    style: TextStyle(color: AppColors.primary, fontSize: 13),
+                    context.l10n.tapPointsInstruction,
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
               ),
@@ -275,9 +435,9 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
               child: Column(
                 children: [
                   SwitchListTile(
-                    title: const Text(
-                      'Show AI Detections',
-                      style: TextStyle(fontSize: 14),
+                    title: Text(
+                      context.l10n.showAiDetectionsLabel,
+                      style: const TextStyle(fontSize: 14),
                     ),
                     value: state.showAiDetections,
                     onChanged: (val) => notifier.toggleAiDetections(),
@@ -296,7 +456,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
               SliverFillRemaining(
                 child: Center(
                   child: Text(
-                    'No slots defined yet.',
+                    context.l10n.noSlotsDefinedMessage,
                     style: TextStyle(color: AppColors.textSecondary),
                   ),
                 ),
@@ -309,19 +469,19 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                 }, childCount: state.slots.length),
               ),
             if (state.isSavingSlot)
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         width: 16,
                         height: 16,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Text(
-                        'Saving new slot...',
+                        context.l10n.savingNewSlotMessage,
                         style: TextStyle(fontSize: 13),
                       ),
                     ],
@@ -349,14 +509,14 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            slot.isOccupied ? 'Occupied' : 'Vacant',
+            slot.isOccupied ? context.l10n.occupied : context.l10n.vacantStatus,
             style: TextStyle(
               color: slot.isOccupied ? Colors.red : Colors.green,
               fontSize: 12,
             ),
           ),
           Text(
-            'Type: ${slot.slotType?.toUpperCase() ?? 'GENERAL'}',
+            '${context.l10n.slotTypePrefix}: ${slot.slotType?.toUpperCase() ?? context.l10n.slotTypeGeneral.toUpperCase()}',
             style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
           ),
         ],
@@ -379,20 +539,20 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Slot'),
-        content: Text('Are you sure you want to delete ${slot.name}?'),
+        title: Text(context.l10n.deleteSlotConfirmTitle),
+        content: Text(context.l10n.deleteSlotConfirmMessage(slot.name)),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            onPressed: () => context.pop(),
+            child: Text(context.l10n.cancelButton),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              context.pop();
               notifier.deleteSlot(slot.id);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: Text(context.l10n.deleteButton),
           ),
         ],
       ),
@@ -410,36 +570,39 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: const Text('New Parking Slot'),
+              title: Text(context.l10n.newParkingSlotTitle),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
                     controller: controller,
-                    decoration: const InputDecoration(
-                      labelText: 'Slot Identifier',
-                      hintText: 'e.g. A-15',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: context.l10n.slotIdentifierLabel,
+                      hintText: context.l10n.slotIdentifierHint,
+                      border: const OutlineInputBorder(),
                     ),
                     autofocus: true,
                   ),
                   const SizedBox(height: 16),
                   DropdownButtonFormField<String>(
                     initialValue: tempType,
-                    decoration: const InputDecoration(
-                      labelText: 'Slot Type',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: context.l10n.slotTypeLabel,
+                      border: const OutlineInputBorder(),
                     ),
-                    items: const [
+                    items: [
                       DropdownMenuItem(
                         value: 'general',
-                        child: Text('General'),
+                        child: Text(context.l10n.slotTypeGeneral),
                       ),
                       DropdownMenuItem(
                         value: 'disabled',
-                        child: Text('Disabled'),
+                        child: Text(context.l10n.slotTypeDisabled),
                       ),
-                      DropdownMenuItem(value: 'ev', child: Text('EV Charging')),
+                      DropdownMenuItem(
+                        value: 'ev',
+                        child: Text(context.l10n.slotTypeEv),
+                      ),
                     ],
                     onChanged: (val) {
                       if (val != null) {
@@ -456,7 +619,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                     notifier.resetDrawing();
                     notifier.setInteractionMode(InteractionMode.inspection);
                   },
-                  child: const Text('Cancel'),
+                  child: Text(context.l10n.cancelButton),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -467,7 +630,9 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                       await notifier.saveSlot(name);
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Slot $name saved')),
+                          SnackBar(
+                            content: Text(context.l10n.slotSavedSuccess(name)),
+                          ),
                         );
                       }
                     }
@@ -476,7 +641,7 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text('Save Slot'),
+                  child: Text(context.l10n.saveSlotButton),
                 ),
               ],
             );

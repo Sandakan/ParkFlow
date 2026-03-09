@@ -6,6 +6,8 @@ services:
     volumes:
       - redis_data:/data
     restart: always
+    networks:
+      - parkflow-backend
 
   mediamtx:
     image: bluenviron/mediamtx:1.6.0
@@ -20,12 +22,14 @@ services:
     volumes:
       - ./mediamtx.yml:/mediamtx.yml
     restart: always
+    networks:
+      - parkflow-backend
 
   backend:
     container_name: parkflow-backend
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: .. # repo root — so Dockerfile can reach ai/models/
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
       - "5678:5678"
@@ -33,7 +37,7 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./app
+          path: ./app # relative to backend/ where compose is run
           target: /app/app
     env_file:
       - ./.env
@@ -44,6 +48,12 @@ services:
     depends_on:
       - redis
       - mediamtx
+    networks:
+      - parkflow-backend
+
+networks:
+  parkflow-backend:
+    name: parkflow-backend # stable explicit name — survives docker prune
 
 volumes:
   redis_data:

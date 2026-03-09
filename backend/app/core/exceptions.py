@@ -1,11 +1,8 @@
 from fastapi import status
 from app.schemas.response import ResponseCode
 
+
 class AppException(Exception):
-    """
-    Custom exception class for ParkFlow application that allows
-    sending standard ResponseCodes back to the client.
-    """
     def __init__(
         self,
         message: str,

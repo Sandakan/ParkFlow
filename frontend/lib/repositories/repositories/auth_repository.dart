@@ -15,7 +15,7 @@ class AuthRepository implements AuthRepositoryInterface {
   @override
   Future<UserModel> login(String email, String password) async {
     try {
-      final request = LoginRequestEntity(username: email, password: password);
+      final request = LoginRequestEntity(email: email, password: password);
       final response = await remote.login(request);
 
       await storage.setAccessToken(response.accessToken);

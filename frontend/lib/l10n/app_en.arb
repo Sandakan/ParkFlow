@@ -309,26 +309,89 @@
 		"description": "Validation message when a field is required"
 	},
 	"invalidNumber": "Invalid number",
+	"@invalidNumber": {
+		"description": "Error message when a number field has an invalid value"
+	},
 	"editLotTitle": "Edit Parking Lot",
+	"@editLotTitle": {
+		"description": "The title for the edit parking lot screen"
+	},
 	"updateButton": "Update",
+	"@updateButton": {
+		"description": "Button text to save changes to an existing item"
+	},
 	"lotUpdatedSuccess": "Parking lot updated successfully",
+	"@lotUpdatedSuccess": {
+		"description": "Success message shown after updating a parking lot"
+	},
 	"deleteLot": "Delete Lot",
+	"@deleteLot": {
+		"description": "Label for the delete lot action"
+	},
 	"deleteLotConfirmTitle": "Delete Parking Lot?",
+	"@deleteLotConfirmTitle": {
+		"description": "Title for the delete parking lot confirmation dialog"
+	},
 	"deleteLotConfirmMessage": "Are you sure you want to delete this parking lot? This action cannot be undone.",
+	"@deleteLotConfirmMessage": {
+		"description": "Message for the delete parking lot confirmation dialog"
+	},
 	"deleteButton": "Delete",
+	"@deleteButton": {
+		"description": "Button text to confirm deletion"
+	},
 	"cancelButton": "Cancel",
+	"@cancelButton": {
+		"description": "Button text to cancel an action"
+	},
 	"lotDeletedSuccess": "Parking lot deleted successfully",
+	"@lotDeletedSuccess": {
+		"description": "Success message shown after deleting a parking lot"
+	},
 	"camerasTabLabel": "Cameras",
+	"@camerasTabLabel": {
+		"description": "Label for the cameras tab in the navigation"
+	},
 	"searchCameraHint": "Search cameras...",
+	"@searchCameraHint": {
+		"description": "Hint text for the camera search field"
+	},
 	"createNewCamera": "Create Camera",
+	"@createNewCamera": {
+		"description": "Button label to open the create camera dialog"
+	},
 	"noCamerasFound": "No cameras found",
+	"@noCamerasFound": {
+		"description": "Message shown when no cameras match the search criteria"
+	},
 	"errorLoadingCameras": "Error loading cameras",
+	"@errorLoadingCameras": {
+		"description": "Message shown when there's an error fetching camera data"
+	},
 	"rtspHealth": "Health",
+	"@rtspHealth": {
+		"description": "Label for the RTSP stream health status"
+	},
 	"statusConnected": "Connected",
+	"@statusConnected": {
+		"description": "Label when a camera stream is connected"
+	},
 	"statusDisconnected": "Disconnected",
+	"@statusDisconnected": {
+		"description": "Label when a camera stream is disconnected"
+	},
 	"createCameraTitle": "Create New Camera",
+	"@createCameraTitle": {
+		"description": "Title for the create new camera screen"
+	},
 	"cameraNameLabel": "Camera Name",
+	"@cameraNameLabel": {
+		"description": "Label for the camera name input field"
+	},
 	"cameraNameHint": "Front Gate",
+	"@cameraNameHint": {
+		"description": "Hint text for the camera name input field"
+	},
 	"cameraCreatedSuccess": "Camera created successfully",
 	"@cameraCreatedSuccess": {
 		"description": "Success message when a camera is created"
@@ -336,5 +399,356 @@
 	"userAlreadyExists": "The user with this email already exists in the system.",
 	"@userAlreadyExists": {
 		"description": "Error message when a user tries to register with an existing email"
+	},
+	"analyticsTitle": "Analytics",
+	"@analyticsTitle": {
+		"description": "The title shown at the top of the analytics screen"
+	},
+	"analyticsOverview": "System Vitals",
+	"@analyticsOverview": {
+		"description": "Label for the section showing high-level system health metrics"
+	},
+	"analyticsTotalCapacity": "Total Capacity",
+	"@analyticsTotalCapacity": {
+		"description": "Label for the card showing total number of parking slots"
+	},
+	"analyticsOccupancy": "Current Occupancy",
+	"@analyticsOccupancy": {
+		"description": "Label for the card showing number of currently occupied slots"
+	},
+	"analyticsStreamHealth": "Stream Health",
+	"@analyticsStreamHealth": {
+		"description": "Label for the card showing percentage of active cameras"
+	},
+	"analyticsAvgDwell": "Avg. Dwell Time",
+	"@analyticsAvgDwell": {
+		"description": "Label for the card showing average time a vehicle stays in a slot"
+	},
+	"analyticsDwellUnit": "min",
+	"@analyticsDwellUnit": {
+		"description": "The unit for dwell time (minutes)"
+	},
+	"analyticsOccupancyTrend": "Occupancy Trends",
+	"@analyticsOccupancyTrend": {
+		"description": "Label for the chart section showing occupancy over time"
+	},
+	"analyticsPeriod24h": "24h",
+	"@analyticsPeriod24h": {
+		"description": "Label for the 24 hour time period filter"
+	},
+	"analyticsPeriod7d": "7d",
+	"@analyticsPeriod7d": {
+		"description": "Label for the 7 day time period filter"
+	},
+	"analyticsPeriod30d": "30d",
+	"@analyticsPeriod30d": {
+		"description": "Label for the 30 day time period filter"
+	},
+	"analyticsTodayLabel": "Today",
+	"@analyticsTodayLabel": {
+		"description": "Legend label for the current period data in charts"
+	},
+	"analyticsPriorLabel": "Prior Period",
+	"@analyticsPriorLabel": {
+		"description": "Legend label for the comparison period data in charts"
+	},
+	"analyticsTurnoverRate": "Turnover Rate",
+	"@analyticsTurnoverRate": {
+		"description": "Label for the turnover metric (vehicles per slot)"
+	},
+	"analyticsTurnoverToday": "Turnover Today",
+	"@analyticsTurnoverToday": {
+		"description": "Label for the turnover count for the current day"
+	},
+	"analyticsAiHealth": "AI Engine Health",
+	"@analyticsAiHealth": {
+		"description": "Label for the section showing AI model performance metrics"
+	},
+	"analyticsConfidenceMean": "Detection Confidence",
+	"@analyticsConfidenceMean": {
+		"description": "The average confidence score of the AI detection model"
+	},
+	"analyticsCpuLoad": "CPU Load",
+	"@analyticsCpuLoad": {
+		"description": "Current CPU usage percentage of the AI inference server"
+	},
+	"analyticsInferenceLatency": "Inference Latency",
+	"@analyticsInferenceLatency": {
+		"description": "The time taken for a single frame to be processed by the AI model"
+	},
+	"analyticsNoData": "No data yet",
+	"@analyticsNoData": {
+		"description": "Text shown when a chart has no data points to display"
+	},
+	"analyticsRefresh": "Refresh",
+	"@analyticsRefresh": {
+		"description": "Button text to manually reload the analytics data"
+	},
+	"analyticsSlots": "slots",
+	"@analyticsSlots": {
+		"description": "Noun suffix for slot counts"
+	},
+	"analyticsOccupied": "occupied",
+	"@analyticsOccupied": {
+		"description": "Status label for occupied slots"
+	},
+	"analyticsVacant": "vacant",
+	"@analyticsVacant": {
+		"description": "Status label for available slots"
+	},
+	"analyticsCameras": "cameras active",
+	"@analyticsCameras": {
+		"description": "Suffix for the number of active camera streams"
+	},
+	"analyticsOccupancyTrendSubtitle": "Occupancy over time vs. prior period",
+	"@analyticsOccupancyTrendSubtitle": {
+		"description": "Sub-label for the occupancy trend chart explaining the comparison"
+	},
+	"analyticsSampleCount": "samples",
+	"@analyticsSampleCount": {
+		"description": "Subtitle for detection confidence showing the number of logs analyzed"
+	},
+	"analyticsFinancials": "Financials",
+	"@analyticsFinancials": {
+		"description": "Label for the section containing revenue and pricing metrics"
+	},
+	"analyticsRevenueToday": "Revenue Today",
+	"@analyticsRevenueToday": {
+		"description": "Total earnings for the current day"
+	},
+	"analyticsRevenueMonth": "Revenue Month",
+	"@analyticsRevenueMonth": {
+		"description": "Total earnings for the current month"
+	},
+	"analyticsRevenueUnit": "LKR",
+	"@analyticsRevenueUnit": {
+		"description": "The currency unit used for revenue (Sri Lankan Rupee)"
+	},
+	"analyticsOperationalImpact": "Operational Impact",
+	"@analyticsOperationalImpact": {
+		"description": "Label for the section showing how parking operations impact efficiency"
+	},
+	"analyticsRevenueTrend": "Revenue Trend",
+	"@analyticsRevenueTrend": {
+		"description": "Label for the chart section showing revenue earnings over time"
+	},
+	"settingsSubtitle": "AI Inference & System Configuration",
+	"@settingsSubtitle": {
+		"description": "Subtitle for the settings screen"
+	},
+	"settingsPrecisionPanel": "Inference Precision",
+	"@settingsPrecisionPanel": {
+		"description": "Label for the AI inference configuration panel"
+	},
+	"settingsConfidenceThreshold": "Confidence Threshold",
+	"@settingsConfidenceThreshold": {
+		"description": "Slider label for detection confidence"
+	},
+	"settingsConfidenceThresholdDesc": "Lower values catch more objects but increase false positives.",
+	"@settingsConfidenceThresholdDesc": {
+		"description": "Description for confidence threshold"
+	},
+	"settingsIouThreshold": "IoU (Overlap) Threshold",
+	"@settingsIouThreshold": {
+		"description": "Slider label for IoU threshold"
+	},
+	"settingsIouThresholdDesc": "Percentage overlap with slots required to trigger status.",
+	"@settingsIouThresholdDesc": {
+		"description": "Description for IoU threshold"
+	},
+	"settingsFrameSkip": "Frame Skipping",
+	"@settingsFrameSkip": {
+		"description": "Dropdown label for frame skipping"
+	},
+	"settingsFrameSkipDesc": "Reduce processing load by processing every Nth frame.",
+	"@settingsFrameSkipDesc": {
+		"description": "Description for frame skipping"
+	},
+	"settingsFrameSkipEveryFrame": "Process every frame (Max accuracy)",
+	"@settingsFrameSkipEveryFrame": {
+		"description": "Dropdown option for no frame skipping"
+	},
+	"settingsFrameSkipEvery2nd": "Every 2nd frame (Balanced)",
+	"@settingsFrameSkipEvery2nd": {
+		"description": "Dropdown option for 1 frame skipping"
+	},
+	"settingsFrameSkipEvery3rd": "Every 3rd frame (Efficiency)",
+	"@settingsFrameSkipEvery3rd": {
+		"description": "Dropdown option for 2 frame skipping"
+	},
+	"settingsStabilityBuffer": "Stability Buffer",
+	"@settingsStabilityBuffer": {
+		"description": "Number field label for stability buffer"
+	},
+	"settingsStabilityBufferDesc": "Consecutive frames required for a status change.",
+	"@settingsStabilityBufferDesc": {
+		"description": "Description for stability buffer"
+	},
+	"settingsSaveButton": "Save Settings",
+	"@settingsSaveButton": {
+		"description": "Button text to save settings"
+	},
+	"settingsSaveSuccess": "Settings updated successfully",
+	"@settingsSaveSuccess": {
+		"description": "Success snackbar message"
+	},
+	"settingsSaveError": "Failed to update settings",
+	"@settingsSaveError": {
+		"description": "Error snackbar message"
+	},
+	"settingsSaving": "Saving...",
+	"settingsSystemControl": "System Control",
+	"settingsGlobalInference": "Enable Global Inference",
+	"settingsGlobalInferenceDesc": "Enable or disable AI inference globally for all available cameras.",
+	"settingsInferenceRunning": "Running",
+	"settingsInferenceStopped": "Stopped",
+	"unknownLot": "Unknown Parking Lot",
+	"@unknownLot": {
+		"description": "Fallback text displayed when a parking lot name is missing or unknown"
+	},
+	"loading": "Loading...",
+	"@loading": {
+		"description": "Generic loading indicator text"
+	},
+	"liveBadge": "LIVE",
+	"@liveBadge": {
+		"description": "Label for live video feed status"
+	},
+	"editCameraTooltip": "Edit Camera",
+	"@editCameraTooltip": {
+		"description": "Tooltip for the edit camera button"
+	},
+	"deleteCameraTooltip": "Delete Camera",
+	"@deleteCameraTooltip": {
+		"description": "Tooltip for the delete camera button"
+	},
+	"editCameraDialogTitle": "Edit Camera",
+	"@editCameraDialogTitle": {
+		"description": "Title for the edit camera dialog"
+	},
+	"cameraUpdatedSuccess": "Camera updated successfully",
+	"@cameraUpdatedSuccess": {
+		"description": "Success message when a camera is updated"
+	},
+	"cameraDeletedSuccess": "Camera deleted successfully",
+	"@cameraDeletedSuccess": {
+		"description": "Success message when a camera is deleted"
+	},
+	"deleteCameraConfirmTitle": "Delete Camera?",
+	"@deleteCameraConfirmTitle": {
+		"description": "Title for the delete camera confirmation dialog"
+	},
+	"deleteCameraConfirmMessage": "Are you sure you want to delete this camera? This action cannot be undone.",
+	"@deleteCameraConfirmMessage": {
+		"description": "Message for the delete camera confirmation dialog"
+	},
+	"saveChangesButton": "Save Changes",
+	"@saveChangesButton": {
+		"description": "Text for the save changes button"
+	},
+	"parkingSlotsTitle": "Parking Slots",
+	"@parkingSlotsTitle": {
+		"description": "Title for the parking slots management section"
+	},
+	"addSlotTooltip": "Add Slot",
+	"@addSlotTooltip": {
+		"description": "Tooltip for the add parking slot button"
+	},
+	"cancelDrawingTooltip": "Cancel Drawing",
+	"@cancelDrawingTooltip": {
+		"description": "Tooltip for the cancel drawing button"
+	},
+	"tapPointsInstruction": "Tap 4 points on the video to define the parking slot corners.",
+	"@tapPointsInstruction": {
+		"description": "Instruction text for creating a new parking slot"
+	},
+	"showAiDetectionsLabel": "Show AI Detections",
+	"@showAiDetectionsLabel": {
+		"description": "Label for the switch to show/hide AI detections"
+	},
+	"noSlotsDefinedMessage": "No slots defined yet.",
+	"@noSlotsDefinedMessage": {
+		"description": "Message shown when no parking slots are defined for a camera"
+	},
+	"savingNewSlotMessage": "Saving new slot...",
+	"@savingNewSlotMessage": {
+		"description": "Loading message when saving a new parking slot"
+	},
+	"vacantStatus": "Vacant",
+	"@vacantStatus": {
+		"description": "Label indicating a parking slot is vacant"
+	},
+	"slotTypeLabel": "Slot Type",
+	"@slotTypeLabel": {
+		"description": "Label for the parking slot type selector"
+	},
+	"slotTypeGeneral": "General",
+	"@slotTypeGeneral": {
+		"description": "Label for the general parking slot type"
+	},
+	"slotTypeDisabled": "Disabled",
+	"@slotTypeDisabled": {
+		"description": "Label for the disabled parking slot type"
+	},
+	"slotTypeEv": "EV Charging",
+	"@slotTypeEv": {
+		"description": "Label for the electric vehicle charging parking slot type"
+	},
+	"newParkingSlotTitle": "New Parking Slot",
+	"@newParkingSlotTitle": {
+		"description": "Title for the new parking slot dialog"
+	},
+	"slotIdentifierLabel": "Slot Identifier",
+	"@slotIdentifierLabel": {
+		"description": "Label for the slot identifier input field"
+	},
+	"slotIdentifierHint": "e.g. A-15",
+	"@slotIdentifierHint": {
+		"description": "Hint text for the slot identifier input field"
+	},
+	"saveSlotButton": "Save Slot",
+	"@saveSlotButton": {
+		"description": "Text for the save slot button"
+	},
+	"slotSavedSuccess": "Slot {name} saved",
+	"@slotSavedSuccess": {
+		"description": "Success message when a parking slot is saved",
+		"placeholders": {
+			"name": {
+				"type": "String",
+				"example": "A-15"
+			}
+		}
+	},
+	"deleteSlotConfirmTitle": "Delete Slot?",
+	"@deleteSlotConfirmTitle": {
+		"description": "Title for the delete parking slot confirmation dialog"
+	},
+	"deleteSlotConfirmMessage": "Are you sure you want to delete {name}?",
+	"@deleteSlotConfirmMessage": {
+		"description": "Message for the delete parking slot confirmation dialog",
+		"placeholders": {
+			"name": {
+				"type": "String",
+				"example": "A-15"
+			}
+		}
+	},
+	"slotTypePrefix": "Type",
+	"selectParkingLotHint": "Select Parking Lot",
+	"@selectParkingLotHint": {
+		"description": "Hint text for the parking lot selection dropdown"
+	},
+	"analyticsLiveStatus": "live",
+	"@analyticsLiveStatus": {
+		"description": "Label for live streams in analytics"
+	},
+	"analyticsMsUnit": "ms",
+	"@analyticsMsUnit": {
+		"description": "Millisecond unit label"
+	},
+	"enterValueHint": "Enter value",
+	"@enterValueHint": {
+		"description": "Hint text for numeric input fields"
 	}
 }

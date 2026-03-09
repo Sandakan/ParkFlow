@@ -6,7 +6,7 @@ T = TypeVar("T")
 
 
 class ResponseCode(str, Enum):
-    # General Codes
+    # General
     SUCCESS = "SUCCESS"
     ERROR = "ERROR"
     VALIDATION_ERROR = "VALIDATION_ERROR"
@@ -15,7 +15,7 @@ class ResponseCode(str, Enum):
     NOT_FOUND = "NOT_FOUND"
     INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
 
-    # User specific
+    # User
     USER_CREATED = "USER_CREATED"
     USER_FETCHED = "USER_FETCHED"
     USER_UPDATED = "USER_UPDATED"
@@ -24,11 +24,15 @@ class ResponseCode(str, Enum):
     USER_NOT_FOUND = "USER_NOT_FOUND"
     INVALID_CREDENTIALS = "INVALID_CREDENTIALS"
 
-    # Token specific
+    # Token
     LOGIN_SUCCESS = "LOGIN_SUCCESS"
     TOKEN_REFRESHED = "TOKEN_REFRESHED"
     INVALID_TOKEN = "INVALID_TOKEN"
     TOKEN_EXPIRED = "TOKEN_EXPIRED"
+
+    # Settings
+    SETTINGS_FETCHED = "SETTINGS_FETCHED"
+    SETTINGS_UPDATED = "SETTINGS_UPDATED"
 
 
 class APIResponse(BaseModel, Generic[T]):

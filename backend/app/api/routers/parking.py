@@ -129,6 +129,7 @@ async def create_parking_lot(
         "location": {"type": "Point", "coordinates": [request.longitude, request.latitude]},
         "total_slots": request.total_slots,
         "status": "open",
+        "price_per_hour": request.price_per_hour,
         "metrics": metrics,
         "created_at": now,
         "updated_at": now,
@@ -265,6 +266,8 @@ async def update_parking_lot(
             
     if request.total_slots is not None:
         update_data["total_slots"] = request.total_slots
+    if request.price_per_hour is not None:
+        update_data["price_per_hour"] = request.price_per_hour
 
     if not update_data:
         return APIResponse.success_response(message="No changes specify", data={})

@@ -10,6 +10,7 @@ abstract class CameraModel with _$CameraModel {
     required String name,
     required String rtspUrl,
     required String lotId,
+    @Default(true) bool isAlive,
     String? lotName,
     String? createdAt,
     String? updatedAt,

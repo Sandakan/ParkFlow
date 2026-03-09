@@ -35,6 +35,8 @@ class CamerasNotifier extends _$CamerasNotifier {
         filteredCameras: _filterCameras(cameras, state.searchQuery),
         isLoading: false,
       );
+
+      _fetchHealthStatuses();
     } on AppException catch (e) {
       state = state.copyWith(error: e.toString(), isLoading: false);
     } catch (e) {
@@ -45,8 +47,43 @@ class CamerasNotifier extends _$CamerasNotifier {
     }
   }
 
+  Future<void> _fetchHealthStatuses() async {
+    final cameras = state.cameras;
+    if (cameras.isEmpty) return;
+
+    final results = await Future.wait(
+      cameras.map(
+        (cam) => ref.read(cameraServiceProvider).checkCameraHealth(cam.id),
+      ),
+    );
+
+    final updatedCameras = [
+      for (int i = 0; i < cameras.length; i++)
+        cameras[i].copyWith(isAlive: results[i]),
+    ];
+
+    state = state.copyWith(
+      cameras: updatedCameras,
+      filteredCameras: _filterCameras(updatedCameras, state.searchQuery),
+    );
+  }
+
   Future<void> refresh() async {
     await _fetchCameras();
+  }
+
+  void updateCameraHealth(String cameraId, bool isAlive) {
+    final updatedCameras = state.cameras.map((cam) {
+      if (cam.id == cameraId) {
+        return cam.copyWith(isAlive: isAlive);
+      }
+      return cam;
+    }).toList();
+
+    state = state.copyWith(
+      cameras: updatedCameras,
+      filteredCameras: _filterCameras(updatedCameras, state.searchQuery),
+    );
   }
 
   void updateSearchQuery(String query) {

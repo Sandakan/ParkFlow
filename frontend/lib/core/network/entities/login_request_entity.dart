@@ -10,7 +10,7 @@ abstract class LoginRequestEntity with _$LoginRequestEntity {
 
   @JsonSerializable(fieldRename: FieldRename.snake)
   const factory LoginRequestEntity({
-    @JsonKey(name: "username") required String username,
+    @JsonKey(name: "email") required String email,
     @JsonKey(name: "password") required String password,
   }) = _LoginRequestEntity;
 

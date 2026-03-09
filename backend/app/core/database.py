@@ -30,3 +30,30 @@ async def close_mongo_connection():
 def get_database():
     """Dependency to yield the database client"""
     return db.client
+
+
+async def update_camera_status(camera_id: str, is_alive: bool):
+    from bson import ObjectId
+    from datetime import datetime, timezone
+
+    try:
+        await db.client["parkflow"].cameras.update_one(
+            {"_id": ObjectId(camera_id)},
+            {
+                "$set": {
+                    "is_alive": is_alive,
+                    "last_active": datetime.now(timezone.utc) if is_alive else None,
+                }
+            },
+        )
+    except Exception as e:
+        print(f"Failed to update camera status for {camera_id}: {e}")
+
+
+async def get_inference_settings():
+    from app.models.settings import InferenceSettingsInDB
+
+    settings_doc = await db.client["parkflow"].settings.find_one({"_id": "inference"})
+    if not settings_doc:
+        return InferenceSettingsInDB()
+    return InferenceSettingsInDB(**settings_doc)
