@@ -4,17 +4,22 @@ import 'package:parkflow/repositories/entities/parking/update_camera_request.dar
 import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
 import 'package:parkflow/repositories/providers/remote_repository_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 
 part 'camera_service.g.dart';
 
 class CameraService {
   final RemoteRepositoryInterface _remote;
+  final Ref _ref;
 
-  CameraService(this._remote);
+  CameraService(this._remote, this._ref);
+
+  Future<String?> _getToken() =>
+      _ref.read(authProvider.notifier).getValidAccessToken();
 
   Future<List<CameraModel>> fetchCameras() async {
     try {
-      final response = await _remote.getCameras();
+      final response = await _remote.getCameras(accessToken: await _getToken());
       return response.cameras;
     } catch (e) {
       rethrow;
@@ -23,7 +28,7 @@ class CameraService {
 
   Future<void> createCamera(CreateCameraRequest request) async {
     try {
-      await _remote.createCamera(request);
+      await _remote.createCamera(request, accessToken: await _getToken());
     } catch (e) {
       rethrow;
     }
@@ -34,7 +39,11 @@ class CameraService {
     UpdateCameraRequest request,
   ) async {
     try {
-      await _remote.updateCamera(cameraId, request);
+      await _remote.updateCamera(
+        cameraId,
+        request,
+        accessToken: await _getToken(),
+      );
     } catch (e) {
       rethrow;
     }
@@ -42,7 +51,7 @@ class CameraService {
 
   Future<void> deleteCamera(String cameraId) async {
     try {
-      await _remote.deleteCamera(cameraId);
+      await _remote.deleteCamera(cameraId, accessToken: await _getToken());
     } catch (e) {
       rethrow;
     }
@@ -50,14 +59,17 @@ class CameraService {
 
   Future<bool> checkCameraHealth(String cameraId) async {
     try {
-      return await _remote.checkCameraHealth(cameraId);
+      return await _remote.checkCameraHealth(
+        cameraId,
+        accessToken: await _getToken(),
+      );
     } catch (e) {
       return false;
     }
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 CameraService cameraService(Ref ref) {
-  return CameraService(ref.watch(remoteRepositoryProvider));
+  return CameraService(ref.watch(remoteRepositoryProvider), ref);
 }

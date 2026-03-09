@@ -29,7 +29,7 @@ class UserService:
             email=user_in.email,
             password_hash=get_password_hash(user_in.password),
             role=user_in.role,
-            vehicle_details=user_in.vehicle_details,
+            vehicles=user_in.vehicles,
         )
         created_user = await user_repository.create(user_db)
         return created_user
@@ -67,6 +67,11 @@ class UserService:
         if not verify_password(password, user.password_hash):
             return None
         return user
+
+    async def reset_password(self, user_id: str, new_password: str) -> Optional[UserInDB]:
+        hashed_password = get_password_hash(new_password)
+        updated_user = await user_repository.update(user_id, {"password_hash": hashed_password})
+        return updated_user
 
 
 user_service = UserService()

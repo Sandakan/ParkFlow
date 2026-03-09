@@ -7,11 +7,14 @@ class CreateParkingLotRequest(BaseModel):
     address: str = Field(..., description="Physical address of the parking lot")
     latitude: float = Field(..., description="Latitude of the location")
     longitude: float = Field(..., description="Longitude of the location")
-    total_slots: int = Field(
-        ..., description="Total number of parking slots available", ge=0
+    base_rate: float = Field(
+        default=0.0, description="Price per hour (base rate) for parking in this lot", ge=0
     )
-    price_per_hour: float = Field(
-        default=0.0, description="Price per hour for parking in this lot", ge=0
+    slot_width_meters: float = Field(
+        default=5.0, description="Average width of a parking slot in meters"
+    )
+    slot_length_meters: float = Field(
+        default=5.0, description="Average length of a parking slot in meters"
     )
 
 
@@ -22,12 +25,11 @@ class UpdateParkingLotRequest(BaseModel):
     )
     latitude: Optional[float] = Field(None, description="Latitude of the location")
     longitude: Optional[float] = Field(None, description="Longitude of the location")
-    total_slots: Optional[int] = Field(
-        None, description="Total number of parking slots available", ge=0
+    base_rate: Optional[float] = Field(
+        None, description="Price per hour (base rate) for parking in this lot", ge=0
     )
-    price_per_hour: Optional[float] = Field(
-        None, description="Price per hour for parking in this lot", ge=0
-    )
+    slot_width_meters: Optional[float] = None
+    slot_length_meters: Optional[float] = None
 
 
 class CreateCameraRequest(BaseModel):
@@ -38,7 +40,11 @@ class CreateCameraRequest(BaseModel):
 
 class UpdateCameraRequest(BaseModel):
     name: Optional[str] = Field(None, description="Name/Location of the camera")
-    rtsp_url: Optional[str] = Field(None, description="RTSP URL for the camera feed")
+    rtsp_url: Optional[str] = Field(
+        None, alias="rtspUrl", description="RTSP URL for the camera feed"
+    )
+
+    model_config = {"populate_by_name": True}
 
 
 class Point2D(BaseModel):
@@ -51,10 +57,18 @@ class CreateParkingSlotRequest(BaseModel):
     camera_id: str
     slot_number: str
     slot_type: str = "general"
+    logical_row: int = 0
+    logical_col: int = 0
     coordinates: list[Point2D]
 
 
 class UpdateParkingSlotRequest(BaseModel):
     slot_number: Optional[str] = None
     slot_type: Optional[str] = None
+    logical_row: Optional[int] = None
+    logical_col: Optional[int] = None
     coordinates: Optional[list[Point2D]] = None
+
+
+class RateRequest(BaseModel):
+    rating: float = Field(..., ge=1, le=5, description="Rating value between 1 and 5")

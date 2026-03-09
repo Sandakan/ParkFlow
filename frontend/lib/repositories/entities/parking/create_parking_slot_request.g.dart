@@ -13,6 +13,8 @@ _CreateParkingSlotRequest _$CreateParkingSlotRequestFromJson(
   cameraId: json['camera_id'] as String,
   slotNumber: json['slot_number'] as String,
   slotType: json['slot_type'] as String? ?? 'general',
+  logicalRow: (json['logical_row'] as num?)?.toInt() ?? 0,
+  logicalCol: (json['logical_col'] as num?)?.toInt() ?? 0,
   coordinates: (json['coordinates'] as List<dynamic>)
       .map((e) => Point2D.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -25,5 +27,7 @@ Map<String, dynamic> _$CreateParkingSlotRequestToJson(
   'camera_id': instance.cameraId,
   'slot_number': instance.slotNumber,
   'slot_type': instance.slotType,
+  'logical_row': instance.logicalRow,
+  'logical_col': instance.logicalCol,
   'coordinates': instance.coordinates,
 };

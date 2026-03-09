@@ -11,32 +11,19 @@ import 'package:go_router/go_router.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_text_field.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_dropdown_field.dart';
+import 'package:parkflow/presentation/widgets/admin/slot_grid_picker.dart';
 
-class AdminCameraInfoScreen extends ConsumerStatefulWidget {
+class AdminCameraInfoScreen extends ConsumerWidget {
   final String cameraId;
 
   const AdminCameraInfoScreen({required this.cameraId, super.key});
 
   @override
-  ConsumerState<AdminCameraInfoScreen> createState() =>
-      _AdminCameraInfoScreenState();
-}
-
-class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final state = ref.watch(cameraInfoProvider(widget.cameraId));
-    final notifier = ref.read(cameraInfoProvider(widget.cameraId).notifier);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(cameraInfoProvider(cameraId));
+    final notifier = ref.read(cameraInfoProvider(cameraId).notifier);
 
     final screenWidth = MediaQuery.of(context).size.width;
     final isWide = screenWidth > 800;
@@ -45,29 +32,35 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // 1. Background Video Layer
-          Positioned.fill(child: CameraWebrtcPlayer(cameraId: widget.cameraId)),
-
-          // 2. Interaction Layer
-          Positioned.fill(
-            child: SpotPickerCanvas(
-              mode: state.interactionMode,
-              normalizedCurrentPoints: state.currentDrawingPoints,
-              slots: state.slots,
-              showAiDetections: state.showAiDetections,
-              aiDetections: state.aiDetections,
-              aiSlotHits: state.aiSlotHits,
-              onTap: (normalizedPoint) {
-                notifier.addDrawingPoint(normalizedPoint);
-                if (state.currentDrawingPoints.length == 3) {
-                  // 4th point just added via onTap, prompt name
-                  _promptSlotName(notifier);
-                }
-              },
+          Center(
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: CameraWebrtcPlayer(cameraId: cameraId),
+                  ),
+                  Positioned.fill(
+                    child: SpotPickerCanvas(
+                      mode: state.interactionMode,
+                      normalizedCurrentPoints: state.currentDrawingPoints,
+                      slots: state.slots,
+                      showAiDetections: state.showAiDetections,
+                      aiDetections: state.aiDetections,
+                      aiSlotHits: state.aiSlotHits,
+                      onTap: (normalizedPoint) {
+                        notifier.addDrawingPoint(normalizedPoint);
+                        if (state.currentDrawingPoints.length == 3) {
+                          _promptSlotName(context, ref, notifier);
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
 
-          // 3. Header Layer
           Positioned(
             top: 0,
             left: 0,
@@ -75,7 +68,6 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
             child: _buildHeader(context, state, notifier),
           ),
 
-          // 4. Sidebar or Bottom Sheet Layer
           if (isWide)
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),
@@ -230,20 +222,23 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ReactiveTextField<String>(
+              LabeledReactiveTextField<String>(
                 formControlName: 'name',
-                decoration: InputDecoration(
-                  labelText: context.l10n.cameraNameLabel,
-                  border: const OutlineInputBorder(),
-                ),
+                label: context.l10n.cameraNameLabel,
+                isRequired: true,
+                validationMessages: {
+                  ValidationMessage.required: (error) =>
+                      'Camera name is required',
+                },
               ),
               const SizedBox(height: 16),
-              ReactiveTextField<String>(
+              LabeledReactiveTextField<String>(
                 formControlName: 'rtspUrl',
-                decoration: InputDecoration(
-                  labelText: context.l10n.rtspUrlLabel,
-                  border: const OutlineInputBorder(),
-                ),
+                label: context.l10n.rtspUrlLabel,
+                isRequired: true,
+                validationMessages: {
+                  ValidationMessage.required: (error) => 'RTSP URL is required',
+                },
               ),
             ],
           ),
@@ -519,15 +514,18 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
             '${context.l10n.slotTypePrefix}: ${slot.slotType?.toUpperCase() ?? context.l10n.slotTypeGeneral.toUpperCase()}',
             style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
           ),
+          if (slot.logicalRow > 0 || slot.logicalCol > 0)
+            Text(
+              'Row: ${slot.logicalRow}, Col: ${slot.logicalCol}',
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
+            ),
         ],
       ),
       trailing: IconButton(
         icon: const Icon(Icons.delete_outline, color: Colors.red),
         onPressed: () => _confirmDelete(context, slot, notifier),
       ),
-      onTap: () {
-        // Handle slot click (e.g. highlight it on the canvas)
-      },
+      onTap: () {},
     );
   }
 
@@ -559,37 +557,113 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
     );
   }
 
-  void _promptSlotName(CameraInfo notifier) {
-    final controller = TextEditingController();
-    String tempType = 'general';
+  void _promptSlotName(
+    BuildContext context,
+    WidgetRef ref,
+    CameraInfo notifier,
+  ) {
+    final existingSlots = ref.read(cameraInfoProvider(cameraId)).slots;
+
+    final form = fb.group({
+      'name': FormControl<String>(validators: [Validators.required]),
+      'type': FormControl<String>(
+        value: 'general',
+        validators: [Validators.required],
+      ),
+      'row': FormControl<int>(validators: [Validators.required]),
+      'col': FormControl<int>(validators: [Validators.required]),
+    });
 
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(context.l10n.newParkingSlotTitle),
-              content: Column(
+        return ReactiveForm(
+          formGroup: form,
+          child: AlertDialog(
+            title: Text(context.l10n.newParkingSlotTitle),
+            content: SingleChildScrollView(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextField(
-                    controller: controller,
-                    decoration: InputDecoration(
-                      labelText: context.l10n.slotIdentifierLabel,
-                      hintText: context.l10n.slotIdentifierHint,
-                      border: const OutlineInputBorder(),
-                    ),
+                  LabeledReactiveTextField<String>(
+                    formControlName: 'name',
+                    label: context.l10n.slotIdentifierLabel,
+                    hintText: context.l10n.slotIdentifierHint,
+                    isRequired: true,
                     autofocus: true,
+                    textInputAction: TextInputAction.next,
+                    validationMessages: {
+                      ValidationMessage.required: (error) =>
+                          'Slot name is required',
+                    },
                   ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    initialValue: tempType,
-                    decoration: InputDecoration(
-                      labelText: context.l10n.slotTypeLabel,
-                      border: const OutlineInputBorder(),
-                    ),
+                  const SizedBox(height: 24),
+
+                  // Visual grid picker
+                  ReactiveValueListenableBuilder<int>(
+                    formControlName: 'row',
+                    builder: (context, rowControl, child) {
+                      return ReactiveValueListenableBuilder<int>(
+                        formControlName: 'col',
+                        builder: (context, colControl, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SlotGridPicker(
+                                existingSlots: existingSlots,
+                                selectedRow: rowControl.value,
+                                selectedCol: colControl.value,
+                                onCellSelected: (pos) {
+                                  rowControl.value = pos.row;
+                                  colControl.value = pos.col;
+                                  // Mark as touched to show validation errors if any
+                                  rowControl.markAsTouched();
+                                  colControl.markAsTouched();
+                                },
+                              ),
+                              if ((rowControl.touched || colControl.touched) &&
+                                  (rowControl.invalid || colControl.invalid))
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    'Please select a grid position',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.error,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              if (rowControl.value != null &&
+                                  colControl.value != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(
+                                    'Selected: Row ${rowControl.value}, Col ${colControl.value}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 24),
+                  LabeledReactiveDropdownField<String>(
+                    formControlName: 'type',
+                    label: context.l10n.slotTypeLabel,
+                    isRequired: true,
                     items: [
                       DropdownMenuItem(
                         value: 'general',
@@ -603,49 +677,66 @@ class _AdminCameraInfoScreenState extends ConsumerState<AdminCameraInfoScreen> {
                         value: 'ev',
                         child: Text(context.l10n.slotTypeEv),
                       ),
+                      DropdownMenuItem(
+                        value: 'entrance',
+                        child: Text(context.l10n.slotTypeEntrance),
+                      ),
                     ],
-                    onChanged: (val) {
-                      if (val != null) {
-                        setDialogState(() => tempType = val);
-                      }
-                    },
                   ),
                 ],
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    notifier.resetDrawing();
-                    notifier.setInteractionMode(InteractionMode.inspection);
-                  },
-                  child: Text(context.l10n.cancelButton),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    final name = controller.text.trim();
-                    if (name.isNotEmpty) {
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  notifier.resetDrawing();
+                  notifier.setInteractionMode(InteractionMode.inspection);
+                },
+                child: Text(context.l10n.cancelButton),
+              ),
+              ReactiveFormConsumer(
+                builder: (context, form, child) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      if (form.invalid) {
+                        form.markAllAsTouched();
+                        return;
+                      }
+
+                      final nameStr = form.control('name').value as String;
+                      final type = form.control('type').value as String;
+                      final row = form.control('row').value as int;
+                      final col = form.control('col').value as int;
+
                       Navigator.of(context).pop();
-                      notifier.setSelectedSlotType(tempType);
-                      await notifier.saveSlot(name);
+                      notifier.setSelectedSlotType(type);
+                      await notifier.saveSlot(
+                        nameStr,
+                        logicalRow: row,
+                        logicalCol: col,
+                      );
+
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(context.l10n.slotSavedSuccess(name)),
+                            content: Text(
+                              context.l10n.slotSavedSuccess(nameStr),
+                            ),
                           ),
                         );
                       }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text(context.l10n.saveSlotButton),
-                ),
-              ],
-            );
-          },
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: Text(context.l10n.saveSlotButton),
+                  );
+                },
+              ),
+            ],
+          ),
         );
       },
     );

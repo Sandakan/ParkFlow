@@ -44,7 +44,7 @@ ParkFlow is a final-year implementation of a Smart Parking System integrating Co
    uvicorn app.main:app --reload
    ```
 
-_Docs available at: <http://localhost:8000/docs>_
+_Docs available at: <http://localhost:8200/docs>_
 
 #### 2. Start Frontend (Terminal B)
 
@@ -59,6 +59,15 @@ _Docs available at: <http://localhost:8000/docs>_
    ```powershell
    flutter run
    ```
+
+#### 3. API Key Configuration (Maps)
+
+Before running the frontend, ensure you have set up your Google Maps API key locally:
+
+- **Android**: Add `MAPS_API_KEY=your_key` to `frontend/android/local.properties`.
+- **iOS**: Create `frontend/ios/Flutter/Secrets.xcconfig` and add `MAPS_API_KEY=your_key`.
+
+For more details, see the [Frontend README](frontend/README.md).
 
 ### With Docker (Backend Only)
 
@@ -79,8 +88,8 @@ _Docs available at: <http://localhost:8000/docs>_
    ```
 
 4. **Access the Application**:
-   - Backend: <http://localhost:8000>
-   - Swagger Docs: <http://localhost:8000/docs>
+   - Backend: <http://localhost:8200>
+   - Swagger Docs: <http://localhost:8200/docs>
 
 #### 2. Run Frontend Connected to Docker
 

@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/core/network/entities/login_request_entity.dart';
 import 'package:parkflow/core/network/entities/login_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_user_response_entity.dart';
@@ -8,7 +7,6 @@ import 'package:parkflow/core/network/entities/get_parking_lots_response_entity.
 import 'package:parkflow/core/network/entities/register_request_entity.dart';
 import 'package:parkflow/core/network/entities/base_response_entity.dart';
 import 'package:parkflow/core/app_exception.dart';
-import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/repositories/interfaces/env_repository_interface.dart';
 import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
 import 'package:parkflow/repositories/interfaces/secure_storage_repository_interface.dart';
@@ -26,19 +24,26 @@ import 'package:parkflow/core/network/entities/get_occupancy_trend_response_enti
 import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dart';
 import 'package:parkflow/repositories/entities/settings/get_inference_settings_response_entity.dart';
 import 'package:parkflow/repositories/entities/settings/update_inference_settings_request.dart';
+import 'package:parkflow/core/network/entities/get_parking_suggestions_response_entity.dart';
+import 'package:parkflow/models/parking/reservation_model.dart';
+import 'package:parkflow/repositories/entities/reservation/create_reservation_request_entity.dart';
+import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
+import 'package:parkflow/core/network/entities/slot_availability_response_entity.dart';
+import 'package:parkflow/repositories/entities/auth/forgot_password_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/verify_otp_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/reset_password_request_entity.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/constants/enums/http_method.dart';
 import 'package:parkflow/utils/constants/enums/request_type.dart';
+import 'package:parkflow/utils/helpers/talker.dart';
 import 'package:parkflow/utils/http/http_api.dart';
 
 class RemoteRepository implements RemoteRepositoryInterface {
   final HttpApi httpAPI;
   final SecureStorageRepositoryInterface secureStorageRepository;
   final EnvRepositoryInterface envRepository;
-  final Ref ref;
 
   RemoteRepository({
-    required this.ref,
     required this.httpAPI,
     required this.secureStorageRepository,
     required this.envRepository,
@@ -80,9 +85,11 @@ class RemoteRepository implements RemoteRepositoryInterface {
     if (!allowNonSuccessResponses &&
         baseResponse.statusCode != 200 &&
         baseResponse.statusCode != 201) {
+      final code = AppStatusCode.fromString(baseResponse.code);
       throw AppException(
-        AppStatusCode.serverError,
-        cause: 'Server returned ${baseResponse.statusCode}',
+        code == AppStatusCode.unknownError ? AppStatusCode.serverError : code,
+        cause:
+            'Server returned ${baseResponse.statusCode}: ${baseResponse.message}',
       );
     }
 
@@ -96,10 +103,38 @@ class RemoteRepository implements RemoteRepositoryInterface {
     return baseResponse;
   }
 
-  /// Fetches a valid access token via [AuthNotifier.getValidAccessToken].
-  /// This handles expiry checks and refresh with a built-in lock.
-  Future<String?> _getToken() =>
-      ref.read(authProvider.notifier).getValidAccessToken();
+  @override
+  Future<void> forgotPassword(ForgotPasswordRequestEntity request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'auth/forgot-password',
+      data: request.toJson(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> verifyOtp(VerifyOtpRequestEntity request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'auth/verify-otp',
+      data: request.toJson(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> resetPassword(ResetPasswordRequestEntity request) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'auth/reset-password',
+      data: request.toJson(),
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
 
   @override
   Future<LoginResponseEntity> login(LoginRequestEntity request) async {
@@ -117,14 +152,12 @@ class RemoteRepository implements RemoteRepositoryInterface {
     );
 
     if (!validatedResponse.success) {
-      if (validatedResponse.code == 'INVALID_CREDENTIALS') {
-        throw AppException(
-          AppStatusCode.invalidCredentials,
-          cause: validatedResponse.message,
-        );
-      }
+      final code = AppStatusCode.fromString(validatedResponse.code);
+
       throw AppException(
-        AppStatusCode.invalidResponse,
+        code == AppStatusCode.unknownError
+            ? AppStatusCode.invalidResponse
+            : code,
         cause: validatedResponse.message,
       );
     }
@@ -166,6 +199,133 @@ class RemoteRepository implements RemoteRepositoryInterface {
       final data = GetUserResponseEntity.fromJson(validatedResponse.data);
       return data;
     } catch (e, stackTrace) {
+      talker.error('Get current user response parsing failed', e, stackTrace);
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        customMessage: 'Parsing failed: $e',
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> addVehicle(
+    Map<String, dynamic> request, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'users/me/vehicles',
+      data: request,
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      final data = GetUserResponseEntity.fromJson(validatedResponse.data);
+      return data;
+    } catch (e, stackTrace) {
+      talker.error('Add vehicle response parsing failed', e, stackTrace);
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        customMessage: 'Parsing failed: $e',
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> removeVehicle(
+    String plateNumber, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.delete,
+      'users/me/vehicles/$plateNumber',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetUserResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> addPaymentMethod(
+    Map<String, dynamic> request, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'users/me/payment-methods',
+      data: request,
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetUserResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> removePaymentMethod(
+    String methodId, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.delete,
+      'users/me/payment-methods/$methodId',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetUserResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<GetUserResponseEntity> setDefaultPaymentMethod(
+    String methodId, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.put,
+      'users/me/payment-methods/$methodId/default',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetUserResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
       throw AppException(
         AppStatusCode.invalidResponse,
         cause: e,
@@ -177,17 +337,22 @@ class RemoteRepository implements RemoteRepositoryInterface {
   @override
   Future<GetParkingSlotsResponseEntity> getParkingSlots({
     String? cameraId,
+    String? lotId,
+    String? accessToken,
   }) async {
     final Map<String, dynamic> queryParameters = {};
     if (cameraId != null) {
       queryParameters['camera_id'] = cameraId;
+    }
+    if (lotId != null) {
+      queryParameters['lot_id'] = lotId;
     }
 
     final response = await httpAPI.doRequest(
       HttpMethodEnum.get,
       'parking/slots',
       queryParameters: queryParameters,
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     final validatedResponse = validateResponse(response);
@@ -207,19 +372,26 @@ class RemoteRepository implements RemoteRepositoryInterface {
   }
 
   @override
-  Future<void> createParkingSlot(CreateParkingSlotRequest request) async {
+  Future<void> createParkingSlot(
+    CreateParkingSlotRequest request, {
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.post,
       'parking/slots',
       data: request.toJson(),
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     validateResponse(response, throwOnNullData: false);
   }
 
   @override
-  Future<void> deleteParkingSlot(String slotId, {String? cameraId}) async {
+  Future<void> deleteParkingSlot(
+    String slotId, {
+    String? cameraId,
+    String? accessToken,
+  }) async {
     final Map<String, dynamic> queryParameters = {};
     if (cameraId != null) {
       queryParameters['camera_id'] = cameraId;
@@ -229,24 +401,35 @@ class RemoteRepository implements RemoteRepositoryInterface {
       HttpMethodEnum.delete,
       'parking/slots/$slotId',
       queryParameters: queryParameters,
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     validateResponse(response, throwOnNullData: false);
   }
 
   @override
-  Future<GetParkingLotsResponseEntity> getParkingLots({String? search}) async {
+  Future<GetParkingLotsResponseEntity> getParkingLots({
+    String? search,
+    double? latitude,
+    double? longitude,
+    String? accessToken,
+  }) async {
     final Map<String, dynamic> queryParameters = {};
     if (search != null && search.isNotEmpty) {
       queryParameters['search'] = search;
+    }
+    if (latitude != null) {
+      queryParameters['latitude'] = latitude;
+    }
+    if (longitude != null) {
+      queryParameters['longitude'] = longitude;
     }
 
     final response = await httpAPI.doRequest(
       HttpMethodEnum.get,
       'parking/lots',
       queryParameters: queryParameters,
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     final validatedResponse = validateResponse(response);
@@ -279,8 +462,10 @@ class RemoteRepository implements RemoteRepositoryInterface {
       final data = GetUserResponseEntity.fromJson(validatedResponse.data);
       return data;
     } catch (e, stackTrace) {
+      talker.error('Test token response parsing failed', e, stackTrace);
       throw AppException(
         AppStatusCode.invalidResponse,
+        customMessage: 'Parsing failed: $e',
         cause: e,
         stackTrace: stackTrace,
       );
@@ -310,23 +495,29 @@ class RemoteRepository implements RemoteRepositoryInterface {
   }
 
   @override
-  Future<void> createParkingLot(CreateParkingLotRequest request) async {
+  Future<void> createParkingLot(
+    CreateParkingLotRequest request, {
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.post,
       'parking/lots',
       data: request.toJson(),
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     validateResponse(response, throwOnNullData: false);
   }
 
   @override
-  Future<GetParkingLotResponseEntity> getParkingLot(String lotId) async {
+  Future<GetParkingLotResponseEntity> getParkingLot(
+    String lotId, {
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.get,
       'parking/lots/$lotId',
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     final validatedResponse = validateResponse(response);
@@ -346,35 +537,36 @@ class RemoteRepository implements RemoteRepositoryInterface {
   @override
   Future<void> updateParkingLot(
     String lotId,
-    UpdateParkingLotRequest request,
-  ) async {
+    UpdateParkingLotRequest request, {
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.put,
       'parking/lots/$lotId',
       data: request.toJson(),
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     validateResponse(response, throwOnNullData: false);
   }
 
   @override
-  Future<void> deleteParkingLot(String lotId) async {
+  Future<void> deleteParkingLot(String lotId, {String? accessToken}) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.delete,
       'parking/lots/$lotId',
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     validateResponse(response, throwOnNullData: false);
   }
 
   @override
-  Future<GetCamerasResponseEntity> getCameras() async {
+  Future<GetCamerasResponseEntity> getCameras({String? accessToken}) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.get,
       'cameras/',
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     final validatedResponse = validateResponse(response);
@@ -392,12 +584,15 @@ class RemoteRepository implements RemoteRepositoryInterface {
   }
 
   @override
-  Future<void> createCamera(CreateCameraRequest request) async {
+  Future<void> createCamera(
+    CreateCameraRequest request, {
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.post,
       'cameras/',
       data: request.toJson(),
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     validateResponse(response, throwOnNullData: false);
@@ -406,24 +601,25 @@ class RemoteRepository implements RemoteRepositoryInterface {
   @override
   Future<void> updateCamera(
     String cameraId,
-    UpdateCameraRequest request,
-  ) async {
+    UpdateCameraRequest request, {
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.patch,
       'cameras/$cameraId',
       data: request.toJson(),
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     validateResponse(response, throwOnNullData: false);
   }
 
   @override
-  Future<void> deleteCamera(String cameraId) async {
+  Future<void> deleteCamera(String cameraId, {String? accessToken}) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.delete,
       'cameras/$cameraId',
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     validateResponse(response, throwOnNullData: false);
@@ -432,13 +628,14 @@ class RemoteRepository implements RemoteRepositoryInterface {
   @override
   Future<GetWebrtcOfferResponseEntity> sendWebrtcOffer(
     String cameraId,
-    CreateWebrtcOfferRequest request,
-  ) async {
+    CreateWebrtcOfferRequest request, {
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.post,
       'cameras/$cameraId/webrtc/offer',
       data: request.toJson(),
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     final validatedResponse = validateResponse(response);
@@ -458,11 +655,13 @@ class RemoteRepository implements RemoteRepositoryInterface {
   }
 
   @override
-  Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview() async {
+  Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview({
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.get,
       'analytics/overview',
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     final validatedResponse = validateResponse(response);
@@ -482,13 +681,14 @@ class RemoteRepository implements RemoteRepositoryInterface {
 
   @override
   Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(
-    String period,
-  ) async {
+    String period, {
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.get,
       'analytics/occupancy-trend',
       queryParameters: {'period': period},
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     final validatedResponse = validateResponse(response);
@@ -505,11 +705,11 @@ class RemoteRepository implements RemoteRepositoryInterface {
   }
 
   @override
-  Future<GetAiHealthResponseEntity> getAiHealth() async {
+  Future<GetAiHealthResponseEntity> getAiHealth({String? accessToken}) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.get,
       'analytics/ai-health',
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     final validatedResponse = validateResponse(response);
@@ -526,12 +726,12 @@ class RemoteRepository implements RemoteRepositoryInterface {
   }
 
   @override
-  Future<bool> checkCameraHealth(String cameraId) async {
+  Future<bool> checkCameraHealth(String cameraId, {String? accessToken}) async {
     try {
       final response = await httpAPI.doRequest(
         HttpMethodEnum.get,
         'cameras/$cameraId/health',
-        accessToken: await _getToken(),
+        accessToken: accessToken,
       );
 
       final validatedResponse = validateResponse(response);
@@ -544,11 +744,13 @@ class RemoteRepository implements RemoteRepositoryInterface {
   }
 
   @override
-  Future<GetInferenceSettingsResponseEntity> getInferenceSettings() async {
+  Future<GetInferenceSettingsResponseEntity> getInferenceSettings({
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.get,
       'settings/inference',
-      accessToken: await _getToken(),
+      accessToken: accessToken,
     );
 
     final validatedResponse = validateResponse(response);
@@ -568,13 +770,230 @@ class RemoteRepository implements RemoteRepositoryInterface {
 
   @override
   Future<void> updateInferenceSettings(
-    UpdateInferenceSettingsRequest request,
-  ) async {
+    UpdateInferenceSettingsRequest request, {
+    String? accessToken,
+  }) async {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.put,
       'settings/inference',
       data: request.toJson(),
-      accessToken: await _getToken(),
+      accessToken: accessToken,
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<GetParkingSuggestionsResponseEntity> getParkingSuggestions(
+    String lotId, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'parking/lots/$lotId/suggestions',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return GetParkingSuggestionsResponseEntity.fromJson(
+        validatedResponse.data,
+      );
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<List<ReservationModel>> getMyReservations({
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'reservations/me',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      final List<dynamic> data = validatedResponse.data;
+      return data.map((json) => ReservationModel.fromJson(json)).toList();
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<ReservationResponseEntity> createReservation(
+    CreateReservationRequestEntity request, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'reservations/',
+      data: request.toJson(),
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      final data = ReservationResponseEntity.fromJson(validatedResponse.data);
+      return data;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<SlotAvailabilityResponseEntity> checkSlotAvailability(
+    String slotId, {
+    required DateTime startTime,
+    required int durationMinutes,
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'reservations/slots/$slotId/availability',
+      queryParameters: {
+        'start_time': startTime.toUtc().toIso8601String(),
+        'duration_minutes': durationMinutes,
+      },
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return SlotAvailabilityResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<SlotAvailabilityResponseEntity> checkLotAvailability(
+    String lotId, {
+    required DateTime startTime,
+    required int durationMinutes,
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'reservations/lots/$lotId/availability',
+      queryParameters: {
+        'start_time': startTime.toUtc().toIso8601String(),
+        'duration_minutes': durationMinutes,
+      },
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return SlotAvailabilityResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<ReservationResponseEntity> scanReservationQr(
+    String token, {
+    bool confirm = false,
+    String? paymentMethod,
+    String? accessToken,
+  }) async {
+    final Map<String, dynamic> queryParameters = {
+      'confirm': confirm,
+    };
+    if (paymentMethod != null) {
+      queryParameters['payment_method'] = paymentMethod;
+    }
+
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'reservations/scan/$token',
+      queryParameters: queryParameters,
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return ReservationResponseEntity.fromJson(validatedResponse.data);
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<List<dynamic>> getNotifications({String? accessToken}) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.get,
+      'notifications/',
+      accessToken: accessToken,
+    );
+
+    final validatedResponse = validateResponse(response);
+
+    try {
+      return validatedResponse.data as List<dynamic>;
+    } catch (e, stackTrace) {
+      throw AppException(
+        AppStatusCode.invalidResponse,
+        cause: e,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  @override
+  Future<void> markNotificationAsRead(
+    String notificationId, {
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.patch,
+      'notifications/$notificationId/read',
+      accessToken: accessToken,
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> markAllNotificationsAsRead({String? accessToken}) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.patch,
+      'notifications/read-all',
+      accessToken: accessToken,
     );
 
     validateResponse(response, throwOnNullData: false);

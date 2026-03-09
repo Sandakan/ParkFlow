@@ -6,10 +6,11 @@ import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/gen/assets.gen.dart';
 import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
-import 'package:parkflow/presentation/widgets/forms/custom_reactive_text_field.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_text_field.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:parkflow/presentation/widgets/language_picker_button.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -19,29 +20,31 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final form = FormGroup({
-    'email': FormControl<String>(
-      validators: [Validators.required, Validators.email],
-    ),
-    'password': FormControl<String>(
-      validators: [Validators.required, Validators.minLength(6)],
-    ),
-  });
+  late final FormGroup form;
+
+  @override
+  void initState() {
+    super.initState();
+    form = FormGroup({
+      'email': FormControl<String>(
+        validators: [Validators.required, Validators.email],
+      ),
+      'password': FormControl<String>(
+        validators: [Validators.required, Validators.minLength(6)],
+      ),
+    });
+  }
+
+  @override
+  void dispose() {
+    form.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final theme = Theme.of(context);
-
-    final inputBorder = OutlineInputBorder(
-      borderSide: BorderSide(color: AppColors.inputBorder),
-      borderRadius: BorderRadius.circular(12.0),
-    );
-
-    final focusedBorder = OutlineInputBorder(
-      borderSide: BorderSide(color: theme.colorScheme.primary, width: 1.5),
-      borderRadius: BorderRadius.circular(12.0),
-    );
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -62,8 +65,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: [
                           SizedBox(height: 32.0),
 
-                          // Logo — left aligned
-                          Assets.images.logoWhite.image(height: 48.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Assets.images.logoWhite.image(height: 48.0),
+                              const LanguagePickerButton(),
+                            ],
+                          ),
 
                           SizedBox(height: 40.0),
 
@@ -90,30 +98,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                           SizedBox(height: 40.0),
 
-                          // Email label
-                          Text(
-                            context.l10n.emailLabel,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 8.0),
-
                           // Email field
-                          CustomReactiveTextField<String>(
+                          LabeledReactiveTextField<String>(
+                            label: context.l10n.emailLabel,
                             formControlName: 'email',
                             hintText: context.l10n.emailHint,
                             keyboardType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
-                            filled: true,
-                            fillColor: AppColors.inputFill,
-                            border: inputBorder,
-                            focusedBorder: focusedBorder,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
+                            isRequired: true,
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.emailRequired,
@@ -122,32 +114,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             },
                           ),
 
-                          SizedBox(height: 24.0),
-
-                          // Password label
-                          Text(
-                            context.l10n.passwordLabel,
-                            style: theme.textTheme.labelLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          SizedBox(height: 8.0),
+                          const SizedBox(height: 24.0),
 
                           // Password field
-                          CustomReactiveTextField<String>(
+                          LabeledReactiveTextField<String>(
+                            label: context.l10n.passwordLabel,
                             formControlName: 'password',
                             hintText: context.l10n.passwordHint,
                             obscureText: true,
-                            filled: true,
-                            fillColor: AppColors.inputFill,
-                            border: inputBorder,
-                            focusedBorder: focusedBorder,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 16.0,
-                            ),
-                            onSubmitted: (_) => _submit(),
+                            isRequired: true,
+                            onSubmitted: (_) => _submit(ref, form),
                             validationMessages: {
                               ValidationMessage.required: (error) =>
                                   context.l10n.passwordRequired,
@@ -161,7 +137,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             alignment: Alignment.centerRight,
                             child: TextButton(
                               onPressed: () {
-                                // TODO: Implement forgot password
+                                ref.read(authProvider.notifier).clearError();
+                                const ForgotPasswordRoute().push(context);
                               },
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.symmetric(
@@ -221,7 +198,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 width: double.infinity,
                                 height: 54.0,
                                 child: ElevatedButton(
-                                  onPressed: enabled ? _submit : null,
+                                  onPressed: enabled
+                                      ? () => _submit(ref, form)
+                                      : null,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: enabled
                                         ? theme.colorScheme.primary
@@ -299,10 +278,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
-  void _submit() {
+  void _submit(WidgetRef ref, FormGroup form) {
     if (form.valid) {
-      final email = form.control('email').value;
-      final password = form.control('password').value;
+      final email = form.control('email').value as String;
+      final password = form.control('password').value as String;
 
       ref.read(authProvider.notifier).login(email, password);
     } else {

@@ -77,7 +77,40 @@ class InferenceManager:
         return task is not None and not task.done()
 
     def running_camera_ids(self) -> list[str]:
-        return [cid for cid, t in self._tasks.items() if not t.done()]
+        return [cid for cid, task in self._tasks.items() if not task.done()]
+
+    async def restart_camera(self, camera_id: str) -> None:
+        """Restart inference for a specific camera."""
+        if camera_id in self._tasks:
+            task = self._tasks[camera_id]
+            if not task.done():
+                task.cancel()
+                try:
+                    await task
+                except asyncio.CancelledError:
+                    pass
+                logger.info("Cancelled existing inference task for camera_id={}", camera_id)
+            del self._tasks[camera_id]
+
+        # Check if camera still exists and has slot mappings before restarting
+        camera = await db.client["parkflow"].cameras.find_one(
+            {"_id": ObjectId(camera_id), "deleted_at": None}
+        )
+        if not camera:
+            return
+
+        count = await db.client["parkflow"].camera_slot_mappings.count_documents(
+            {"camera_id": camera_id, "deleted_at": None}
+        )
+        if count == 0:
+            return
+
+        task = asyncio.create_task(
+            self._run_inference(camera_id),
+            name=f"inference-{camera_id}",
+        )
+        self._tasks[camera_id] = task
+        logger.info("Restarted background inference for camera_id={}", camera_id)
 
     async def _run_inference(self, camera_id: str) -> None:
         try:

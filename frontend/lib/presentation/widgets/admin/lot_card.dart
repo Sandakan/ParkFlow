@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/models/parking/parking_lot_model.dart';
+import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
+import 'package:parkflow/presentation/widgets/parking/lot_details_sheet.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 
-class LotCard extends StatelessWidget {
+class LotCard extends ConsumerWidget {
   final ParkingLotModel lot;
   final VoidCallback? onTap;
 
   const LotCard({required this.lot, this.onTap, super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
     return Card(
@@ -22,7 +25,17 @@ class LotCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: onTap,
+        onTap:
+            onTap ??
+            () {
+              ref.read(parkingProvider.notifier).selectLot(lot);
+              showModalBottomSheet(
+                context: context,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                builder: (context) => const LotDetailsSheet(),
+              );
+            },
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(

@@ -2,9 +2,9 @@ part of '../router_provider.dart';
 
 @TypedStatefulShellRoute<AdminShellRoute>(
   branches: <TypedStatefulShellBranch<StatefulShellBranchData>>[
-    TypedStatefulShellBranch<AdminDashboardBranch>(
+    TypedStatefulShellBranch<AdminAnalyticsBranch>(
       routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<AdminDashboardRoute>(path: AdminDashboardRoute.path),
+        TypedGoRoute<AdminAnalyticsRoute>(path: AdminAnalyticsRoute.path),
       ],
     ),
     TypedStatefulShellBranch<AdminParkingLotsBranch>(
@@ -17,6 +17,9 @@ part of '../router_provider.dart';
             ),
             TypedGoRoute<AdminEditParkingLotRoute>(
               path: AdminEditParkingLotRoute.path,
+            ),
+            TypedGoRoute<AdminParkingLotDetailsRoute>(
+              path: AdminParkingLotDetailsRoute.path,
             ),
           ],
         ),
@@ -35,9 +38,14 @@ part of '../router_provider.dart';
         ),
       ],
     ),
-    TypedStatefulShellBranch<AdminAnalyticsBranch>(
+    TypedStatefulShellBranch<AdminReservationsBranch>(
       routes: <TypedRoute<RouteData>>[
-        TypedGoRoute<AdminAnalyticsRoute>(path: AdminAnalyticsRoute.path),
+        TypedGoRoute<AdminReservationsRoute>(path: AdminReservationsRoute.path),
+      ],
+    ),
+    TypedStatefulShellBranch<AdminNotificationsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<AdminNotificationsRoute>(path: AdminNotificationsRoute.path),
       ],
     ),
     TypedStatefulShellBranch<AdminSettingsBranch>(
@@ -60,10 +68,6 @@ class AdminShellRoute extends StatefulShellRouteData {
   }
 }
 
-class AdminDashboardBranch extends StatefulShellBranchData {
-  const AdminDashboardBranch();
-}
-
 class AdminParkingLotsBranch extends StatefulShellBranchData {
   const AdminParkingLotsBranch();
 }
@@ -72,8 +76,16 @@ class AdminCamerasBranch extends StatefulShellBranchData {
   const AdminCamerasBranch();
 }
 
+class AdminReservationsBranch extends StatefulShellBranchData {
+  const AdminReservationsBranch();
+}
+
 class AdminAnalyticsBranch extends StatefulShellBranchData {
   const AdminAnalyticsBranch();
+}
+
+class AdminNotificationsBranch extends StatefulShellBranchData {
+  const AdminNotificationsBranch();
 }
 
 class AdminSettingsBranch extends StatefulShellBranchData {
@@ -85,6 +97,16 @@ class AdminSettingsBranch extends StatefulShellBranchData {
     TypedStatefulShellBranch<HomeBranch>(
       routes: <TypedRoute<RouteData>>[
         TypedGoRoute<HomeRoute>(path: HomeRoute.path),
+      ],
+    ),
+    TypedStatefulShellBranch<BookingsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<BookingsRoute>(path: BookingsRoute.path),
+      ],
+    ),
+    TypedStatefulShellBranch<NotificationsBranch>(
+      routes: <TypedRoute<RouteData>>[
+        TypedGoRoute<NotificationsRoute>(path: NotificationsRoute.path),
       ],
     ),
     TypedStatefulShellBranch<ProfileBranch>(
@@ -111,9 +133,49 @@ class HomeBranch extends StatefulShellBranchData {
   const HomeBranch();
 }
 
+class BookingsBranch extends StatefulShellBranchData {
+  const BookingsBranch();
+}
+
+class NotificationsBranch extends StatefulShellBranchData {
+  const NotificationsBranch();
+}
+
+
 class ProfileBranch extends StatefulShellBranchData {
   const ProfileBranch();
 }
+
+class AdminNotificationsRoute extends GoRouteData with $AdminNotificationsRoute {
+  const AdminNotificationsRoute();
+  static const path = '/admin/notifications';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NotificationScreen();
+  }
+}
+
+class NotificationsRoute extends GoRouteData with $NotificationsRoute {
+  const NotificationsRoute();
+  static const path = '/notifications';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const NotificationScreen();
+  }
+}
+
+class BookingsRoute extends GoRouteData with $BookingsRoute {
+  const BookingsRoute();
+  static const path = '/bookings';
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const BookingsScreen();
+  }
+}
+
 
 class ProfileRoute extends GoRouteData with $ProfileRoute {
   const ProfileRoute();

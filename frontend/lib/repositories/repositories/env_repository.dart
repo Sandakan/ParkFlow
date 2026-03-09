@@ -8,13 +8,8 @@ class EnvRepository implements EnvRepositoryInterface {
   @override
   final AppLevelEnum level;
   final String baseUrl;
-  final String webSocketUrl;
 
-  EnvRepository._({
-    required this.level,
-    required this.baseUrl,
-    required this.webSocketUrl,
-  });
+  EnvRepository._({required this.level, required this.baseUrl});
 
   static Future<EnvRepository> create() async {
     final level = AppLevelEnum.fromString(
@@ -27,11 +22,7 @@ class EnvRepository implements EnvRepositoryInterface {
     return EnvRepository._(
       level: level,
       baseUrl: _optimizeUrl(
-        dotenv.get('BASE_URL', fallback: 'http://localhost:8000/api/v1'),
-      ),
-      webSocketUrl: _optimizeUrl(
-        dotenv.get('WEB_SOCKET_URL', fallback: 'http://localhost:8000'),
-        isWebSocket: true,
+        dotenv.get('BASE_URL', fallback: 'http://localhost:8200/api/v1'),
       ),
     );
   }
@@ -39,25 +30,13 @@ class EnvRepository implements EnvRepositoryInterface {
   @override
   String getBaseUrl() => baseUrl;
 
-  @override
-  String getWebSocketUrl() => webSocketUrl;
-
-  static String _optimizeUrl(String url, {bool isWebSocket = false}) {
+  static String _optimizeUrl(String url) {
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       url = url.replaceAll('localhost', '10.0.2.2');
     }
 
-    if (!isWebSocket) {
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://$url';
-      }
-    } else {
-      if (!url.startsWith('ws://') &&
-          !url.startsWith('wss://') &&
-          !url.startsWith('http://') &&
-          !url.startsWith('https://')) {
-        url = 'ws://$url';
-      }
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://$url';
     }
 
     if (url.endsWith('/')) {

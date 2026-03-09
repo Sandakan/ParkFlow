@@ -1,6 +1,7 @@
 import 'package:parkflow/core/network/entities/login_request_entity.dart';
 import 'package:parkflow/core/network/entities/login_response_entity.dart';
 import 'package:parkflow/core/network/entities/get_user_response_entity.dart';
+import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/core/network/entities/get_parking_lot_response_entity.dart';
 import 'package:parkflow/repositories/entities/parking/update_parking_lot_request.dart';
 import 'package:parkflow/core/network/entities/get_parking_slots_response_entity.dart';
@@ -18,37 +19,145 @@ import 'package:parkflow/core/network/entities/get_occupancy_trend_response_enti
 import 'package:parkflow/core/network/entities/get_ai_health_response_entity.dart';
 import 'package:parkflow/repositories/entities/settings/get_inference_settings_response_entity.dart';
 import 'package:parkflow/repositories/entities/settings/update_inference_settings_request.dart';
+import 'package:parkflow/core/network/entities/get_parking_suggestions_response_entity.dart';
+import 'package:parkflow/repositories/entities/reservation/create_reservation_request_entity.dart';
+import 'package:parkflow/core/network/entities/reservation_response_entity.dart';
+import 'package:parkflow/core/network/entities/slot_availability_response_entity.dart';
+import 'package:parkflow/repositories/entities/auth/forgot_password_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/verify_otp_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/reset_password_request_entity.dart';
 
 abstract class RemoteRepositoryInterface {
+  Future<void> forgotPassword(ForgotPasswordRequestEntity request);
+  Future<void> verifyOtp(VerifyOtpRequestEntity request);
+  Future<void> resetPassword(ResetPasswordRequestEntity request);
+
+  Future<List<ReservationModel>> getMyReservations({String? accessToken});
+  Future<ReservationResponseEntity> createReservation(
+    CreateReservationRequestEntity request, {
+    String? accessToken,
+  });
   Future<LoginResponseEntity> login(LoginRequestEntity request);
   Future<void> register(RegisterRequestEntity request);
   Future<GetUserResponseEntity> getCurrentUser(String token);
-  Future<GetParkingSlotsResponseEntity> getParkingSlots({String? cameraId});
-  Future<GetParkingLotsResponseEntity> getParkingLots({String? search});
-  Future<GetParkingLotResponseEntity> getParkingLot(String lotId);
+
+  Future<GetUserResponseEntity> addVehicle(
+    Map<String, dynamic> request, {
+    String? accessToken,
+  });
+  Future<GetUserResponseEntity> removeVehicle(
+    String plateNumber, {
+    String? accessToken,
+  });
+  Future<GetUserResponseEntity> addPaymentMethod(
+    Map<String, dynamic> request, {
+    String? accessToken,
+  });
+  Future<GetUserResponseEntity> removePaymentMethod(
+    String methodId, {
+    String? accessToken,
+  });
+  Future<GetUserResponseEntity> setDefaultPaymentMethod(
+    String methodId, {
+    String? accessToken,
+  });
+  Future<GetParkingSlotsResponseEntity> getParkingSlots({
+    String? cameraId,
+    String? lotId,
+    String? accessToken,
+  });
+  Future<GetParkingLotsResponseEntity> getParkingLots({
+    String? search,
+    double? latitude,
+    double? longitude,
+    String? accessToken,
+  });
+  Future<GetParkingLotResponseEntity> getParkingLot(
+    String lotId, {
+    String? accessToken,
+  });
   Future<GetUserResponseEntity> testToken(String token);
   Future<LoginResponseEntity> refreshToken(String refreshToken);
-  Future<void> createParkingLot(CreateParkingLotRequest request);
-  Future<void> updateParkingLot(String lotId, UpdateParkingLotRequest request);
-  Future<void> deleteParkingLot(String lotId);
+  Future<void> createParkingLot(
+    CreateParkingLotRequest request, {
+    String? accessToken,
+  });
+  Future<void> updateParkingLot(
+    String lotId,
+    UpdateParkingLotRequest request, {
+    String? accessToken,
+  });
+  Future<void> deleteParkingLot(String lotId, {String? accessToken});
 
-  Future<void> createParkingSlot(CreateParkingSlotRequest request);
-  Future<void> deleteParkingSlot(String slotId, {String? cameraId});
+  Future<void> createParkingSlot(
+    CreateParkingSlotRequest request, {
+    String? accessToken,
+  });
+  Future<void> deleteParkingSlot(
+    String slotId, {
+    String? cameraId,
+    String? accessToken,
+  });
 
-  Future<GetCamerasResponseEntity> getCameras();
-  Future<void> createCamera(CreateCameraRequest request);
-  Future<void> updateCamera(String cameraId, UpdateCameraRequest request);
-  Future<void> deleteCamera(String cameraId);
+  Future<GetCamerasResponseEntity> getCameras({String? accessToken});
+  Future<void> createCamera(CreateCameraRequest request, {String? accessToken});
+  Future<void> updateCamera(
+    String cameraId,
+    UpdateCameraRequest request, {
+    String? accessToken,
+  });
+  Future<void> deleteCamera(String cameraId, {String? accessToken});
   Future<GetWebrtcOfferResponseEntity> sendWebrtcOffer(
     String cameraId,
-    CreateWebrtcOfferRequest request,
-  );
+    CreateWebrtcOfferRequest request, {
+    String? accessToken,
+  });
 
-  Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview();
-  Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(String period);
-  Future<GetAiHealthResponseEntity> getAiHealth();
-  Future<bool> checkCameraHealth(String cameraId);
+  Future<GetAnalyticsOverviewResponseEntity> getAnalyticsOverview({
+    String? accessToken,
+  });
+  Future<GetOccupancyTrendResponseEntity> getOccupancyTrend(
+    String period, {
+    String? accessToken,
+  });
+  Future<GetAiHealthResponseEntity> getAiHealth({String? accessToken});
+  Future<bool> checkCameraHealth(String cameraId, {String? accessToken});
 
-  Future<GetInferenceSettingsResponseEntity> getInferenceSettings();
-  Future<void> updateInferenceSettings(UpdateInferenceSettingsRequest request);
+  Future<GetInferenceSettingsResponseEntity> getInferenceSettings({
+    String? accessToken,
+  });
+  Future<void> updateInferenceSettings(
+    UpdateInferenceSettingsRequest request, {
+    String? accessToken,
+  });
+
+  Future<GetParkingSuggestionsResponseEntity> getParkingSuggestions(
+    String lotId, {
+    String? accessToken,
+  });
+
+  Future<SlotAvailabilityResponseEntity> checkSlotAvailability(
+    String slotId, {
+    required DateTime startTime,
+    required int durationMinutes,
+    String? accessToken,
+  });
+
+  Future<SlotAvailabilityResponseEntity> checkLotAvailability(
+    String lotId, {
+    required DateTime startTime,
+    required int durationMinutes,
+    String? accessToken,
+  });
+
+  Future<ReservationResponseEntity> scanReservationQr(
+    String token, {
+    bool confirm = false,
+    String? paymentMethod,
+    String? accessToken,
+  });
+
+  Future<List<dynamic>> getNotifications({String? accessToken});
+  Future<void> markNotificationAsRead(String notificationId, {String? accessToken});
+  Future<void> markAllNotificationsAsRead({String? accessToken});
 }

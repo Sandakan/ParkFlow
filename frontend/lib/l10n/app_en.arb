@@ -4,6 +4,10 @@
 	"@appTitle": {
 		"description": "The title of the application"
 	},
+	"parkingLotsTitle": "Parking Lots",
+	"@parkingLotsTitle": {
+		"description": "The title for the parking lots management screen"
+	},
 	"loginTitle": "ParkFlow",
 	"@loginTitle": {
 		"description": "The title displayed on the login screen"
@@ -207,6 +211,10 @@
 	"cameras": "Cameras",
 	"@cameras": {
 		"description": "Label for the cameras navigation"
+	},
+	"reservations": "Reservations",
+	"@reservations": {
+		"description": "Label for the reservations navigation"
 	},
 	"analytics": "Analytics",
 	"@analytics": {
@@ -597,11 +605,29 @@
 		"description": "Error snackbar message"
 	},
 	"settingsSaving": "Saving...",
+	"@settingsSaving": {
+		"description": "Status text shown when settings are being saved"
+	},
 	"settingsSystemControl": "System Control",
+	"@settingsSystemControl": {
+		"description": "Title for the system control settings section"
+	},
 	"settingsGlobalInference": "Enable Global Inference",
+	"@settingsGlobalInference": {
+		"description": "Label for the global AI inference toggle"
+	},
 	"settingsGlobalInferenceDesc": "Enable or disable AI inference globally for all available cameras.",
+	"@settingsGlobalInferenceDesc": {
+		"description": "Description for the global AI inference toggle"
+	},
 	"settingsInferenceRunning": "Running",
+	"@settingsInferenceRunning": {
+		"description": "Status label when inference is active"
+	},
 	"settingsInferenceStopped": "Stopped",
+	"@settingsInferenceStopped": {
+		"description": "Status label when inference is inactive"
+	},
 	"unknownLot": "Unknown Parking Lot",
 	"@unknownLot": {
 		"description": "Fallback text displayed when a parking lot name is missing or unknown"
@@ -694,6 +720,10 @@
 	"@slotTypeEv": {
 		"description": "Label for the electric vehicle charging parking slot type"
 	},
+	"slotTypeEntrance": "Entrance",
+	"@slotTypeEntrance": {
+		"description": "Label for the parking lot entrance"
+	},
 	"newParkingSlotTitle": "New Parking Slot",
 	"@newParkingSlotTitle": {
 		"description": "Title for the new parking slot dialog"
@@ -735,6 +765,9 @@
 		}
 	},
 	"slotTypePrefix": "Type",
+	"@slotTypePrefix": {
+		"description": "Prefix used before a slot type label"
+	},
 	"selectParkingLotHint": "Select Parking Lot",
 	"@selectParkingLotHint": {
 		"description": "Hint text for the parking lot selection dropdown"
@@ -750,5 +783,735 @@
 	"enterValueHint": "Enter value",
 	"@enterValueHint": {
 		"description": "Hint text for numeric input fields"
+	},
+	"currentOccupancyLayout": "Current Occupancy Layout",
+	"@currentOccupancyLayout": {
+		"description": "Title for the current occupancy layout grid section"
+	},
+	"slotWidthLabel": "Slot Width (m)",
+	"@slotWidthLabel": {
+		"description": "Label for the parking slot width input"
+	},
+	"slotLengthLabel": "Slot Length (m)",
+	"@slotLengthLabel": {
+		"description": "Label for the parking slot length input"
+	},
+	"entranceCoordsLabel": "Entrance Coords",
+	"@entranceCoordsLabel": {
+		"description": "Label for the entrance logical coordinates section"
+	},
+	"rowLabel": "Row",
+	"@rowLabel": {
+		"description": "Label for logical row input"
+	},
+	"colLabel": "Column",
+	"@colLabel": {
+		"description": "Label for logical column input"
+	},
+	"explore": "Explore",
+	"@explore": {
+		"description": "Label for the explore navigation"
+	},
+	"bookings": "Bookings",
+	"@bookings": {
+		"description": "Label for the bookings navigation"
+	},
+	"checkIn": "Check-in",
+	"@checkIn": {
+		"description": "Label for the check-in action"
+	},
+	"myVehicle": "My Vehicle",
+	"@myVehicle": {
+		"description": "Label for the my vehicle navigation"
+	},
+	"nearbyLots": "Nearby Parking Lots",
+	"@nearbyLots": {
+		"description": "Title for the nearby parking lots section"
+	},
+	"metersAway": "{distance}m away",
+	"@metersAway": {
+		"description": "Text showing distance to a parking lot",
+		"placeholders": {
+			"distance": {
+				"type": "String",
+				"example": "150"
+			}
+		}
+	},
+	"kmAway": "{distance}km away",
+	"@kmAway": {
+		"description": "Text showing distance to a parking lot in kilometers",
+		"placeholders": {
+			"distance": {
+				"type": "String",
+				"example": "1.5"
+			}
+		}
+	},
+	"noLotsNearby": "No parking lots found nearby.",
+	"@noLotsNearby": {
+		"description": "Text shown when no parking lots are found nearby"
+	},
+	"topRecommended": "Top Recommended P-Spots",
+	"@topRecommended": {
+		"description": "Title for the top recommended parking lots section"
+	},
+	"seeAll": "See all",
+	"@seeAll": {
+		"description": "Text for the see all button"
+	},
+	"availableSlotsCount": "{count} available",
+	"@availableSlotsCount": {
+		"description": "Text showing the number of available parking slots",
+		"placeholders": {
+			"count": {
+				"type": "String",
+				"example": "15"
+			}
+		}
+	},
+	"vehicleAlreadyExists": "A vehicle with this license plate is already registered.",
+	"@vehicleAlreadyExists": {
+		"description": "Error message when a vehicle with the same plate already exists"
+	},
+	"vehicleNotFound": "Vehicle not found.",
+	"@vehicleNotFound": {
+		"description": "Error message when a vehicle is not found"
+	},
+	"paymentMethodNotFound": "Payment method not found.",
+	"@paymentMethodNotFound": {
+		"description": "Error message when a payment method is not found"
+	},
+	"reservationNoAvailableSlots": "No available slots in this parking lot.",
+	"@reservationNoAvailableSlots": {
+		"description": "Error message when no slots are available for reservation"
+	},
+	"reservationSlotOccupied": "This parking slot is already occupied.",
+	"@reservationSlotOccupied": {
+		"description": "Error message when a specific slot is already taken"
+	},
+	"reservationSlotNotFound": "Parking slot not found.",
+	"@reservationSlotNotFound": {
+		"description": "Error message when a reservation slot ID is invalid"
+	},
+	"reservationLotNotFound": "Parking lot not found.",
+	"@reservationLotNotFound": {
+		"description": "Error message when a reservation lot ID is invalid"
+	},
+	"reservationLotIdRequired": "Please select a parking lot for automatic slot selection.",
+	"@reservationLotIdRequired": {
+		"description": "Error message when lot_id is missing for auto reservation"
+	},
+	"cameraNotFound": "Camera not found.",
+	"@cameraNotFound": {
+		"description": "Error message when a camera is not found"
+	},
+	"cameraRtspNotConfigured": "Camera stream URL is not configured.",
+	"@cameraRtspNotConfigured": {
+		"description": "Error message when RTSP URL is missing"
+	},
+	"cameraWebrtcFailed": "Failed to establish camera stream connection.",
+	"@cameraWebrtcFailed": {
+		"description": "Error message when WebRTC negotiation fails"
+	},
+	"permissionDenied": "You don't have permission to perform this action.",
+	"@permissionDenied": {
+		"description": "Error message for 403 Forbidden scenarios"
+	},
+	"languageLabel": "Language",
+	"@languageLabel": {
+		"description": "Label for the language selection"
+	},
+	"languageEnglish": "English",
+	"@languageEnglish": {
+		"description": "English language name"
+	},
+	"languageSinhala": "සිංහල",
+	"@languageSinhala": {
+		"description": "Sinhala language name"
+	},
+	"languageTamil": "தமிழ்",
+	"@languageTamil": {
+		"description": "Tamil language name"
+	},
+	"languageSectionTitle": "Display Language",
+	"@languageSectionTitle": {
+		"description": "Title for the language settings section"
+	},
+	"languageSubtitle": "Choose your preferred language",
+	"@languageSubtitle": {
+		"description": "Subtitle for the language selection"
+	},
+	"profileParkingHistory": "Parking History",
+	"@profileParkingHistory": {
+		"description": "Label for the parking history menu item"
+	},
+	"profileViewPastBookings": "View your past bookings",
+	"@profileViewPastBookings": {
+		"description": "Subtitle for the parking history menu item"
+	},
+	"profilePaymentMethods": "Payment Methods",
+	"@profilePaymentMethods": {
+		"description": "Label for the payment methods menu item"
+	},
+	"profileManageCards": "Manage cards and cash",
+	"@profileManageCards": {
+		"description": "Subtitle for the payment methods menu item"
+	},
+	"profileNotifications": "Notifications",
+	"@profileNotifications": {
+		"description": "Label for the notifications menu item"
+	},
+	"profileAlertsUpdates": "Alerts and updates",
+	"@profileAlertsUpdates": {
+		"description": "Subtitle for the notifications menu item"
+	},
+	"settingsSignOutSubtitle": "Sign out and secure your data",
+	"@settingsSignOutSubtitle": {
+		"description": "Subtitle for the logout button"
+	},
+	"upcomingBookings": "Upcoming Bookings",
+	"@upcomingBookings": {
+		"description": "Title for the upcoming bookings section"
+	},
+	"previousBookings": "Previous Bookings",
+	"@previousBookings": {
+		"description": "Title for the previous bookings section"
+	},
+	"noBookingsFound": "No bookings found",
+	"@noBookingsFound": {
+		"description": "Message shown when no bookings are found"
+	},
+	"durationHours": "{hours}h {minutes}m",
+	"@durationHours": {
+		"description": "Format for duration in hours and minutes",
+		"placeholders": {
+			"hours": {
+				"type": "String"
+			},
+			"minutes": {
+				"type": "String"
+			}
+		}
+	},
+	"ticketId": "Ticket ID: {id}",
+	"@ticketId": {
+		"description": "Label for the ticket ID",
+		"placeholders": {
+			"id": {
+				"type": "String"
+			}
+		}
+	},
+	"lkrAmount": "LKR {amount}",
+	"@lkrAmount": {
+		"description": "Format for LKR amount",
+		"placeholders": {
+			"amount": {
+				"type": "String"
+			}
+		}
+	},
+	"statusActive": "Active",
+	"@statusActive": {
+		"description": "Label for active reservation status"
+	},
+	"statusCompleted": "Completed",
+	"@statusCompleted": {
+		"description": "Label for completed reservation status"
+	},
+	"statusCancelled": "Cancelled",
+	"@statusCancelled": {
+		"description": "Label for cancelled reservation status"
+	},
+	"ongoingBooking": "Current Ongoing Booking",
+	"@ongoingBooking": {
+		"description": "Header for the current active booking"
+	},
+	"timeLeft": "Time Left",
+	"@timeLeft": {
+		"description": "Label for remaining time"
+	},
+	"baseRateLabel": "Base Rate (LKR/hr)",
+	"@baseRateLabel": {
+		"description": "Label for the hourly base rate"
+	},
+	"baseRateHint": "e.g. 50.0",
+	"@baseRateHint": {
+		"description": "Hint for entering the base rate"
+	},
+	"originalPriceLabel": "Original Price",
+	"@originalPriceLabel": {
+		"description": "Label for the price before any discounts"
+	},
+	"finalPriceLabel": "Final Price",
+	"@finalPriceLabel": {
+		"description": "Label for the final calculated price"
+	},
+	"checkInLabel": "Check-in",
+	"@checkInLabel": {
+		"description": "Label for the check-in time or action"
+	},
+	"checkOutLabel": "Check-out",
+	"@checkOutLabel": {
+		"description": "Label for the check-out time or action"
+	},
+	"minsLeft": "{mins} mins left",
+	"@minsLeft": {
+		"description": "Text showing minutes remaining",
+		"placeholders": {
+			"mins": {
+				"type": "String"
+			}
+		}
+	},
+	"statusUpcoming": "Upcoming",
+	"@statusUpcoming": {
+		"description": "Status label for a booking that hasn't started yet"
+	},
+	"statusOngoing": "Ongoing",
+	"@statusOngoing": {
+		"description": "Status label for a booking that is currently in progress"
+	},
+	"statusOverstay": "Overstay",
+	"@statusOverstay": {
+		"description": "Status label for a booking that has exceeded its scheduled time"
+	},
+	"statusNoShow": "No Show",
+	"@statusNoShow": {
+		"description": "Status label for a booking where the vehicle did not arrive"
+	},
+	"statusExpired": "Expired",
+	"@statusExpired": {
+		"description": "Status label for a booking that has passed its scheduled end time"
+	},
+	"ticketStatusConfirmed": "Booking Confirmed!",
+	"@ticketStatusConfirmed": {
+		"description": "Success title for a confirmed digital ticket"
+	},
+	"ticketStatusOngoing": "Parking in Progress",
+	"@ticketStatusOngoing": {
+		"description": "Status title for an active digital ticket"
+	},
+	"ticketStatusExpired": "Booking Expired",
+	"@ticketStatusExpired": {
+		"description": "Status title for an expired digital ticket"
+	},
+	"ticketStatusOverstay": "Overstay Warning",
+	"@ticketStatusOverstay": {
+		"description": "Status title for an overstaying digital ticket"
+	},
+	"ticketStatusCompleted": "Parking Completed",
+	"@ticketStatusCompleted": {
+		"description": "Status title for a completed parking session"
+	},
+	"ticketStatusCancelled": "Booking Cancelled",
+	"@ticketStatusCancelled": {
+		"description": "Status title for a cancelled digital ticket"
+	},
+	"ticketSubtitleConfirmed": "Present this QR code at the entrance.",
+	"@ticketSubtitleConfirmed": {
+		"description": "Instruction subtitle for a confirmed ticket"
+	},
+	"ticketSubtitleOngoing": "You are currently parked in this lot.",
+	"@ticketSubtitleOngoing": {
+		"description": "Information subtitle for an ongoing parking session"
+	},
+	"ticketSubtitleExpired": "The reservation window has passed.",
+	"@ticketSubtitleExpired": {
+		"description": "Information subtitle for an expired ticket"
+	},
+	"ticketSubtitleOverstay": "You have exceeded your reserved time.",
+	"@ticketSubtitleOverstay": {
+		"description": "Warning subtitle for an overstaying vehicle"
+	},
+	"ticketSubtitleNoShow": "Please check in before the time expires.",
+	"@ticketSubtitleNoShow": {
+		"description": "Information subtitle for a no-show scenario"
+	},
+	"ticketSubtitleCompleted": "Your parking session has ended.",
+	"@ticketSubtitleCompleted": {
+		"description": "Information subtitle for a completed session"
+	},
+	"ticketSubtitleCancelled": "This booking is no longer valid.",
+	"@ticketSubtitleCancelled": {
+		"description": "Information subtitle for a cancelled ticket"
+	},
+	"notifications": "Notifications",
+	"@notifications": {
+		"description": "Label for the notifications navigation"
+	},
+	"noNotifications": "No notifications yet",
+	"@noNotifications": {
+		"description": "Message shown when there are no notifications"
+	},
+	"markAllAsRead": "Mark all as read",
+	"@markAllAsRead": {
+		"description": "Text for the mark all notifications as read button"
+	},
+	"forgotPasswordTitle": "Forgot Password",
+	"@forgotPasswordTitle": {
+		"description": "Title for the forgot password screen"
+	},
+	"forgotPasswordSubtitle": "Enter your email to receive a password reset OTP.",
+	"@forgotPasswordSubtitle": {
+		"description": "Subtitle for the forgot password screen"
+	},
+	"sendOtpButton": "Send OTP",
+	"@sendOtpButton": {
+		"description": "Button text to send an OTP"
+	},
+	"verifyOtpTitle": "Verify OTP",
+	"@verifyOtpTitle": {
+		"description": "Title for the OTP verification screen"
+	},
+	"verifyOtpSubtitle": "Enter the 6-digit code sent to your email.",
+	"@verifyOtpSubtitle": {
+		"description": "Subtitle for the OTP verification screen"
+	},
+	"verifyOtpButton": "Verify Code",
+	"@verifyOtpButton": {
+		"description": "Button text to verify the OTP"
+	},
+	"resetPasswordTitle": "Reset Password",
+	"@resetPasswordTitle": {
+		"description": "Title for the reset password screen"
+	},
+	"resetPasswordSubtitle": "Enter a new password for your account.",
+	"@resetPasswordSubtitle": {
+		"description": "Subtitle for the reset password screen"
+	},
+	"newPasswordLabel": "New Password",
+	"@newPasswordLabel": {
+		"description": "Label for the new password input field"
+	},
+	"newPasswordHint": "••••••••",
+	"@newPasswordHint": {
+		"description": "Hint for the new password input field"
+	},
+	"resetPasswordButton": "Reset Password",
+	"@resetPasswordButton": {
+		"description": "Button text to reset the password"
+	},
+	"passwordResetSuccess": "Password reset successfully",
+	"@passwordResetSuccess": {
+		"description": "Success message after a password reset"
+	},
+	"otpRequired": "OTP is required",
+	"@otpRequired": {
+		"description": "Validation message when OTP is empty"
+	},
+	"otpInvalid": "OTP must be 6 digits",
+	"@otpInvalid": {
+		"description": "Validation message when OTP format is invalid"
+	},
+	"slotNotAvailableMessage": "Slot is not available",
+	"@slotNotAvailableMessage": {
+		"description": "Message shown when a selected parking slot is already taken"
+	},
+	"noLotSelected": "No lot selected",
+	"@noLotSelected": {
+		"description": "Shown when no parking lot is selected in details or booking"
+	},
+	"navigateAction": "Navigate",
+	"@navigateAction": {
+		"description": "Button text for navigation to a lot"
+	},
+	"removeAction": "Remove",
+	"@removeAction": {
+		"description": "General remove action text"
+	},
+	"removePaymentMethodTitle": "Remove Payment Method",
+	"@removePaymentMethodTitle": {
+		"description": "Title for removing a payment method dialog"
+	},
+	"paymentMethodTypeCard": "Credit/Debit Card",
+	"@paymentMethodTypeCard": {
+		"description": "Label for credit/debit card payment method"
+	},
+	"paymentMethodNameHint": "e.g. Visa, MasterCard, Bank",
+	"@paymentMethodNameHint": {
+		"description": "Hint for payment method name"
+	},
+	"paymentMethodLastFourHint": "e.g. 1234",
+	"@paymentMethodLastFourHint": {
+		"description": "Hint for last four digits of card"
+	},
+	"addVehicleAction": "Add Vehicle",
+	"@addVehicleAction": {
+		"description": "Button text to add a vehicle"
+	},
+	"removeVehicleTitle": "Remove Vehicle",
+	"@removeVehicleTitle": {
+		"description": "Title for remove vehicle confirmation dialog"
+	},
+	"manageVehiclesSubtitle": "Manage your vehicles",
+	"@manageVehiclesSubtitle": {
+		"description": "Subtitle for vehicles management section"
+	},
+	"vehicleNumberHint": "e.g. ABC 1234",
+	"@vehicleNumberHint": {
+		"description": "Hint for vehicle license plate"
+	},
+	"vehicleTypeCar": "Car",
+	"@vehicleTypeCar": {
+		"description": "Label for car vehicle type"
+	},
+	"vehicleTypeMotorcycle": "Motorcycle/Bike",
+	"@vehicleTypeMotorcycle": {
+		"description": "Label for motorcycle vehicle type"
+	},
+	"vehicleTypeThreeWheeler": "Three-Wheeler",
+	"@vehicleTypeThreeWheeler": {
+		"description": "Label for three-wheeler vehicle type"
+	},
+	"vehicleTypeTruck": "Truck/Van",
+	"@vehicleTypeTruck": {
+		"description": "Label for truck/van vehicle type"
+	},
+	"bookAgainAction": "Book Again",
+	"@bookAgainAction": {
+		"description": "Button text to repeat a booking"
+	},
+	"bookASlotTitle": "Book a Slot",
+	"@bookASlotTitle": {
+		"description": "Title for slot booking screen"
+	},
+	"yourVehicleSection": "Your Vehicle",
+	"@yourVehicleSection": {
+		"description": "Label for vehicle selection section in booking"
+	},
+	"timeWindowSection": "Time Window",
+	"@timeWindowSection": {
+		"description": "Label for time selection section in booking"
+	},
+	"slotPreferenceSection": "Slot Preference",
+	"@slotPreferenceSection": {
+		"description": "Label for slot type selection section in booking"
+	},
+	"paymentMethodSection": "Payment Method",
+	"@paymentMethodSection": {
+		"description": "Label for payment method selection section in booking"
+	},
+	"processedSuccessfully": "Processed successfully!",
+	"@processedSuccessfully": {
+		"description": "Generic success message for completed actions"
+	},
+	"coordinateHint": "e.g. 5.0",
+	"@coordinateHint": {
+		"description": "Hint for coordinate input fields"
+	},
+	"otpHint": "123456",
+	"@otpHint": {
+		"description": "Hint for OTP input field"
+	},
+	"minutesDuration": "{mins} min",
+	"@minutesDuration": {
+		"description": "Format for duration in minutes",
+		"placeholders": {
+			"mins": {
+				"type": "String"
+			}
+		}
+	},
+	"addPaymentMethodAction": "Add Payment Method",
+	"@addPaymentMethodAction": {
+		"description": "Button text to add a new payment method"
+	},
+	"paymentMethodTypeCash": "Cash",
+	"@paymentMethodTypeCash": {
+		"description": "Label for cash payment method"
+	},
+	"noVehiclesFound": "No vehicles found",
+	"@noVehiclesFound": {
+		"description": "Message shown when no vehicles are available"
+	},
+	"arrivalDateLabel": "Arrival Date",
+	"@arrivalDateLabel": {
+		"description": "Label for arrival date selection"
+	},
+	"arrivalTimeLabel": "Arrival Time",
+	"@arrivalTimeLabel": {
+		"description": "Label for arrival time selection"
+	},
+	"durationLabel": "Duration",
+	"@durationLabel": {
+		"description": "Label for parking duration"
+	},
+	"minutesShort": "mins",
+	"@minutesShort": {
+		"description": "Short label for minutes"
+	},
+	"smartSuggestionLabel": "AI Suggestion",
+	"@smartSuggestionLabel": {
+		"description": "Label for AI-powered slot suggestion"
+	},
+	"manualSelectionLabel": "Manual Selection",
+	"@manualSelectionLabel": {
+		"description": "Label for manual slot selection"
+	},
+	"totalPriceLabel": "Total Price",
+	"@totalPriceLabel": {
+		"description": "Label for total price display"
+	},
+	"verifyingAvailability": "Verifying...",
+	"@verifyingAvailability": {
+		"description": "Label shown while checking slot availability"
+	},
+	"conflictCheckHint": "Checking for potential double bookings",
+	"@conflictCheckHint": {
+		"description": "Hint text explaining availability check"
+	},
+	"slotAvailableMessage": "Slot is available",
+	"@slotAvailableMessage": {
+		"description": "Message confirming slot availability"
+	},
+	"pastTimeWarning": "Parking time is in the past",
+	"@pastTimeWarning": {
+		"description": "Warning message when selected time is in the past"
+	},
+	"confirmBookingAction": "Confirm Booking",
+	"@confirmBookingAction": {
+		"description": "Button text to finalize booking"
+	},
+	"searchTryDifferent": "Try a different location or search term",
+	"@searchTryDifferent": {
+		"description": "Suggestion message when no parking lots are found"
+	},
+	"errorPrefix": "Error: {message}",
+	"@errorPrefix": {
+		"description": "Prefix for error messages",
+		"placeholders": {
+			"message": {
+				"type": "String"
+			}
+		}
+	},
+	"justNow": "Just now",
+	"@justNow": {
+		"description": "Timestamp for very recent notifications"
+	},
+	"minutesAgoShort": "{mins}m ago",
+	"@minutesAgoShort": {
+		"description": "Short format for minutes ago",
+		"placeholders": {
+			"mins": {
+				"type": "String"
+			}
+		}
+	},
+	"hoursAgoShort": "{hours}h ago",
+	"@hoursAgoShort": {
+		"description": "Short format for hours ago",
+		"placeholders": {
+			"hours": {
+				"type": "String"
+			}
+		}
+	},
+	"daysAgoShort": "{days}d ago",
+	"@daysAgoShort": {
+		"description": "Short format for days ago",
+		"placeholders": {
+			"days": {
+				"type": "String"
+			}
+		}
+	},
+	"scanQrTitle": "Scan Reservation QR Code",
+	"@scanQrTitle": {
+		"description": "Title for QR scanner on admin side"
+	},
+	"scanQrSubtitle": "Position the QR code within the frame to check-in or check-out.",
+	"@scanQrSubtitle": {
+		"description": "Instruction for QR scanner on admin side"
+	},
+	"checkInPreview": "Check-in Preview",
+	"@checkInPreview": {
+		"description": "Title for the check-in preview sheet"
+	},
+	"checkoutPreview": "Checkout Preview",
+	"@checkoutPreview": {
+		"description": "Title for the checkout preview sheet"
+	},
+	"statusPending": "PENDING",
+	"@statusPending": {
+		"description": "Uppercase status label for pending reservations"
+	},
+	"statusActiveCapital": "ACTIVE",
+	"@statusActiveCapital": {
+		"description": "Uppercase status label for active sessions"
+	},
+	"vehicleLabel": "Vehicle",
+	"@vehicleLabel": {
+		"description": "Label for the vehicle information"
+	},
+	"slotLabel": "Slot",
+	"@slotLabel": {
+		"description": "Label for the parking slot information"
+	},
+	"startTimeLabel": "Start Time",
+	"@startTimeLabel": {
+		"description": "Label for the reservation start time"
+	},
+	"endTimeLabel": "End Time",
+	"@endTimeLabel": {
+		"description": "Label for the reservation end time"
+	},
+	"checkedInAtLabel": "Checked-in At",
+	"@checkedInAtLabel": {
+		"description": "Label for when the vehicle was checked in"
+	},
+	"totalBilledAmount": "Total Billed Amount",
+	"@totalBilledAmount": {
+		"description": "Label for the total cost calculation"
+	},
+	"selectPaymentMethodLabel": "Select Payment Method",
+	"@selectPaymentMethodLabel": {
+		"description": "Instruction for choosing a payment option"
+	},
+	"paymentMethodWallet": "Wallet",
+	"@paymentMethodWallet": {
+		"description": "Label for the digital wallet payment method"
+	},
+	"confirmCheckIn": "Confirm Check-in",
+	"@confirmCheckIn": {
+		"description": "Button text to process a check-in"
+	},
+	"confirmCheckout": "Confirm Checkout",
+	"@confirmCheckout": {
+		"description": "Button text to process a checkout"
+	},
+	"scanningError": "Scanning Error",
+	"@scanningError": {
+		"description": "Title for QR scanning error dialog"
+	},
+	"tryAgain": "Try Again",
+	"@tryAgain": {
+		"description": "Button text to retry an action"
+	},
+	"licensePlateLabel": "License Plate Number",
+	"@licensePlateLabel": {
+		"description": "Label for the vehicle license plate number input"
+	},
+	"vehicleTypeLabel": "Vehicle Type",
+	"@vehicleTypeLabel": {
+		"description": "Label for the vehicle type selection"
+	},
+	"paymentProviderLabel": "Provider Name",
+	"@paymentProviderLabel": {
+		"description": "Label for the payment provider name input"
+	},
+	"paymentLastFourLabel": "Last 4 Digits",
+	"@paymentLastFourLabel": {
+		"description": "Label for the last four digits of a payment card"
+	},
+	"nearEntrance": "Near entrance",
+	"@nearEntrance": {
+		"description": "Text indicating a slot is near the entrance"
+	},
+	"digitalTicketTitle": "Digital Ticket",
+	"@digitalTicketTitle": {
+		"description": "Title for the digital ticket screen"
 	}
 }

@@ -41,7 +41,7 @@ final class ParkingNotifierProvider
   }
 }
 
-String _$parkingNotifierHash() => r'b70f470ccc058cbdb50e4917e2f1c4480f88084c';
+String _$parkingNotifierHash() => r'3628ae7511ce368526672e762d6790139bf776a3';
 
 abstract class _$ParkingNotifier extends $Notifier<ParkingState> {
   ParkingState build();

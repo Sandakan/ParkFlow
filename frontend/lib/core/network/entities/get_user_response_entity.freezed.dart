@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GetUserResponseEntity {
 
-@JsonKey(name: "id") String get id;@JsonKey(name: "email") String get email;@JsonKey(name: "name") String get name;@JsonKey(name: "role") String get role;
+@JsonKey(name: "id") String get id;@JsonKey(name: "email") String get email;@JsonKey(name: "name") String get name;@JsonKey(name: "role") String get role;@JsonKey(name: "vehicles") List<VehicleModel> get vehicles;@JsonKey(name: "payment_methods") List<PaymentMethodModel> get paymentMethods;
 /// Create a copy of GetUserResponseEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $GetUserResponseEntityCopyWith<GetUserResponseEntity> get copyWith => _$GetUserR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetUserResponseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetUserResponseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other.vehicles, vehicles)&&const DeepCollectionEquality().equals(other.paymentMethods, paymentMethods));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,email,name,role);
+int get hashCode => Object.hash(runtimeType,id,email,name,role,const DeepCollectionEquality().hash(vehicles),const DeepCollectionEquality().hash(paymentMethods));
 
 @override
 String toString() {
-  return 'GetUserResponseEntity(id: $id, email: $email, name: $name, role: $role)';
+  return 'GetUserResponseEntity(id: $id, email: $email, name: $name, role: $role, vehicles: $vehicles, paymentMethods: $paymentMethods)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $GetUserResponseEntityCopyWith<$Res>  {
   factory $GetUserResponseEntityCopyWith(GetUserResponseEntity value, $Res Function(GetUserResponseEntity) _then) = _$GetUserResponseEntityCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "id") String id,@JsonKey(name: "email") String email,@JsonKey(name: "name") String name,@JsonKey(name: "role") String role
+@JsonKey(name: "id") String id,@JsonKey(name: "email") String email,@JsonKey(name: "name") String name,@JsonKey(name: "role") String role,@JsonKey(name: "vehicles") List<VehicleModel> vehicles,@JsonKey(name: "payment_methods") List<PaymentMethodModel> paymentMethods
 });
 
 
@@ -65,13 +65,15 @@ class _$GetUserResponseEntityCopyWithImpl<$Res>
 
 /// Create a copy of GetUserResponseEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = null,Object? name = null,Object? role = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = null,Object? name = null,Object? role = null,Object? vehicles = null,Object? paymentMethods = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String,
+as String,vehicles: null == vehicles ? _self.vehicles : vehicles // ignore: cast_nullable_to_non_nullable
+as List<VehicleModel>,paymentMethods: null == paymentMethods ? _self.paymentMethods : paymentMethods // ignore: cast_nullable_to_non_nullable
+as List<PaymentMethodModel>,
   ));
 }
 
@@ -156,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String id, @JsonKey(name: "email")  String email, @JsonKey(name: "name")  String name, @JsonKey(name: "role")  String role)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String id, @JsonKey(name: "email")  String email, @JsonKey(name: "name")  String name, @JsonKey(name: "role")  String role, @JsonKey(name: "vehicles")  List<VehicleModel> vehicles, @JsonKey(name: "payment_methods")  List<PaymentMethodModel> paymentMethods)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GetUserResponseEntity() when $default != null:
-return $default(_that.id,_that.email,_that.name,_that.role);case _:
+return $default(_that.id,_that.email,_that.name,_that.role,_that.vehicles,_that.paymentMethods);case _:
   return orElse();
 
 }
@@ -177,10 +179,10 @@ return $default(_that.id,_that.email,_that.name,_that.role);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String id, @JsonKey(name: "email")  String email, @JsonKey(name: "name")  String name, @JsonKey(name: "role")  String role)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  String id, @JsonKey(name: "email")  String email, @JsonKey(name: "name")  String name, @JsonKey(name: "role")  String role, @JsonKey(name: "vehicles")  List<VehicleModel> vehicles, @JsonKey(name: "payment_methods")  List<PaymentMethodModel> paymentMethods)  $default,) {final _that = this;
 switch (_that) {
 case _GetUserResponseEntity():
-return $default(_that.id,_that.email,_that.name,_that.role);case _:
+return $default(_that.id,_that.email,_that.name,_that.role,_that.vehicles,_that.paymentMethods);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +199,10 @@ return $default(_that.id,_that.email,_that.name,_that.role);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String id, @JsonKey(name: "email")  String email, @JsonKey(name: "name")  String name, @JsonKey(name: "role")  String role)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  String id, @JsonKey(name: "email")  String email, @JsonKey(name: "name")  String name, @JsonKey(name: "role")  String role, @JsonKey(name: "vehicles")  List<VehicleModel> vehicles, @JsonKey(name: "payment_methods")  List<PaymentMethodModel> paymentMethods)?  $default,) {final _that = this;
 switch (_that) {
 case _GetUserResponseEntity() when $default != null:
-return $default(_that.id,_that.email,_that.name,_that.role);case _:
+return $default(_that.id,_that.email,_that.name,_that.role,_that.vehicles,_that.paymentMethods);case _:
   return null;
 
 }
@@ -212,13 +214,27 @@ return $default(_that.id,_that.email,_that.name,_that.role);case _:
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class _GetUserResponseEntity extends GetUserResponseEntity {
-  const _GetUserResponseEntity({@JsonKey(name: "id") required this.id, @JsonKey(name: "email") required this.email, @JsonKey(name: "name") required this.name, @JsonKey(name: "role") required this.role}): super._();
+  const _GetUserResponseEntity({@JsonKey(name: "id") required this.id, @JsonKey(name: "email") required this.email, @JsonKey(name: "name") required this.name, @JsonKey(name: "role") required this.role, @JsonKey(name: "vehicles") final  List<VehicleModel> vehicles = const [], @JsonKey(name: "payment_methods") final  List<PaymentMethodModel> paymentMethods = const []}): _vehicles = vehicles,_paymentMethods = paymentMethods,super._();
   factory _GetUserResponseEntity.fromJson(Map<String, dynamic> json) => _$GetUserResponseEntityFromJson(json);
 
 @override@JsonKey(name: "id") final  String id;
 @override@JsonKey(name: "email") final  String email;
 @override@JsonKey(name: "name") final  String name;
 @override@JsonKey(name: "role") final  String role;
+ final  List<VehicleModel> _vehicles;
+@override@JsonKey(name: "vehicles") List<VehicleModel> get vehicles {
+  if (_vehicles is EqualUnmodifiableListView) return _vehicles;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_vehicles);
+}
+
+ final  List<PaymentMethodModel> _paymentMethods;
+@override@JsonKey(name: "payment_methods") List<PaymentMethodModel> get paymentMethods {
+  if (_paymentMethods is EqualUnmodifiableListView) return _paymentMethods;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_paymentMethods);
+}
+
 
 /// Create a copy of GetUserResponseEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetUserResponseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetUserResponseEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.name, name) || other.name == name)&&(identical(other.role, role) || other.role == role)&&const DeepCollectionEquality().equals(other._vehicles, _vehicles)&&const DeepCollectionEquality().equals(other._paymentMethods, _paymentMethods));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,email,name,role);
+int get hashCode => Object.hash(runtimeType,id,email,name,role,const DeepCollectionEquality().hash(_vehicles),const DeepCollectionEquality().hash(_paymentMethods));
 
 @override
 String toString() {
-  return 'GetUserResponseEntity(id: $id, email: $email, name: $name, role: $role)';
+  return 'GetUserResponseEntity(id: $id, email: $email, name: $name, role: $role, vehicles: $vehicles, paymentMethods: $paymentMethods)';
 }
 
 
@@ -253,7 +269,7 @@ abstract mixin class _$GetUserResponseEntityCopyWith<$Res> implements $GetUserRe
   factory _$GetUserResponseEntityCopyWith(_GetUserResponseEntity value, $Res Function(_GetUserResponseEntity) _then) = __$GetUserResponseEntityCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "id") String id,@JsonKey(name: "email") String email,@JsonKey(name: "name") String name,@JsonKey(name: "role") String role
+@JsonKey(name: "id") String id,@JsonKey(name: "email") String email,@JsonKey(name: "name") String name,@JsonKey(name: "role") String role,@JsonKey(name: "vehicles") List<VehicleModel> vehicles,@JsonKey(name: "payment_methods") List<PaymentMethodModel> paymentMethods
 });
 
 
@@ -270,13 +286,15 @@ class __$GetUserResponseEntityCopyWithImpl<$Res>
 
 /// Create a copy of GetUserResponseEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = null,Object? name = null,Object? role = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = null,Object? name = null,Object? role = null,Object? vehicles = null,Object? paymentMethods = null,}) {
   return _then(_GetUserResponseEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String,
+as String,vehicles: null == vehicles ? _self._vehicles : vehicles // ignore: cast_nullable_to_non_nullable
+as List<VehicleModel>,paymentMethods: null == paymentMethods ? _self._paymentMethods : paymentMethods // ignore: cast_nullable_to_non_nullable
+as List<PaymentMethodModel>,
   ));
 }
 

@@ -5,11 +5,15 @@ import 'package:go_router/go_router.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/states/auth/auth_state.dart';
 import 'package:parkflow/presentation/screens/boot/boot_screen.dart';
-import 'package:parkflow/presentation/screens/dashboard/admin_dashboard_screen.dart';
 import 'package:parkflow/presentation/screens/home/home_screen.dart';
 import 'package:parkflow/presentation/screens/auth/login_screen.dart';
 import 'package:parkflow/presentation/screens/auth/register_screen.dart';
+import 'package:parkflow/presentation/screens/auth/forgot_password_screen.dart';
+import 'package:parkflow/presentation/screens/auth/verify_otp_screen.dart';
+import 'package:parkflow/presentation/screens/auth/reset_password_screen.dart';
 import 'package:parkflow/presentation/screens/home/profile_screen.dart';
+import 'package:parkflow/presentation/screens/home/bookings_screen.dart';
+import 'package:parkflow/presentation/screens/home/my_vehicle_screen.dart';
 import 'package:parkflow/presentation/screens/main/main_layout_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_parking_lots_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_create_parking_lot_screen.dart';
@@ -19,9 +23,16 @@ import 'package:parkflow/presentation/screens/admin/admin_camera_info_screen.dar
 import 'package:parkflow/presentation/screens/admin/admin_analytics_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_edit_parking_lot_screen.dart';
 import 'package:parkflow/presentation/screens/admin/admin_settings_screen.dart';
+import 'package:parkflow/presentation/screens/admin/admin_parking_lot_details_screen.dart';
+import 'package:parkflow/presentation/screens/admin/admin_reservations_screen.dart';
+import 'package:parkflow/presentation/screens/parking/booking_screen.dart';
+import 'package:parkflow/presentation/screens/parking/digital_ticket_screen.dart';
+import 'package:parkflow/presentation/screens/profile/payment_methods_screen.dart';
+import 'package:parkflow/presentation/screens/profile/add_vehicle_screen.dart';
+import 'package:parkflow/presentation/screens/profile/add_payment_method_screen.dart';
+import 'package:parkflow/presentation/screens/home/notification_screen.dart';
 
 part 'router_provider.g.dart';
-
 part 'parts/boot_routes.dart';
 part 'parts/auth_routes.dart';
 part 'parts/home_routes.dart';
@@ -56,14 +67,18 @@ GoRouter router(Ref ref) {
 
       final isGoingToLogin = state.matchedLocation == LoginRoute.path;
       final isGoingToRegister = state.matchedLocation == RegisterRoute.path;
+      final isGoingToForgotPassword = state.matchedLocation == ForgotPasswordRoute.path;
+      final isGoingToVerifyOtp = state.matchedLocation == VerifyOtpRoute.path;
+      final isGoingToResetPassword = state.matchedLocation == ResetPasswordRoute.path;
       final isBooting = state.matchedLocation == BootRoute.path;
+      final isAuthPage = isGoingToLogin || isGoingToRegister || isGoingToForgotPassword || isGoingToVerifyOtp || isGoingToResetPassword;
 
       final isAuth = authState.user != null;
       final isAdmin = authState.isAdmin;
 
       if (isBooting) {
         if (isAuth) {
-          if (isAdmin) return AdminDashboardRoute.path;
+          if (isAdmin) return AdminAnalyticsRoute.path;
           if (authState.isDriver) return HomeRoute.path;
           return HomeRoute.path;
         }
@@ -73,23 +88,23 @@ GoRouter router(Ref ref) {
         return null;
       }
 
-      if (!isAuth && !isGoingToLogin && !isGoingToRegister) {
+      if (!isAuth && !isAuthPage) {
         return LoginRoute.path;
       }
 
       if (isAuth) {
         if (isGoingToLogin || isGoingToRegister) {
-          if (isAdmin) return AdminDashboardRoute.path;
+          if (isAdmin) return AdminAnalyticsRoute.path;
           if (authState.isDriver) return HomeRoute.path;
           return HomeRoute.path;
         }
 
         final isGoingToAdmin =
-            state.matchedLocation == AdminDashboardRoute.path;
+            state.matchedLocation == AdminAnalyticsRoute.path;
         final isGoingToHome = state.matchedLocation == HomeRoute.path;
 
         if (isAdmin && isGoingToHome) {
-          return AdminDashboardRoute.path;
+          return AdminAnalyticsRoute.path;
         }
         if (!isAdmin && isGoingToAdmin) {
           return HomeRoute.path;

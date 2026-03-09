@@ -12,6 +12,8 @@ abstract class CreateParkingSlotRequest with _$CreateParkingSlotRequest {
     required String cameraId,
     required String slotNumber,
     @Default('general') String slotType,
+    @JsonKey(name: 'logical_row') @Default(0) int logicalRow,
+    @JsonKey(name: 'logical_col') @Default(0) int logicalCol,
     required List<Point2D> coordinates,
   }) = _CreateParkingSlotRequest;
 

@@ -13,7 +13,11 @@ abstract class UpdateParkingLotRequest with _$UpdateParkingLotRequest {
     String? address,
     double? latitude,
     double? longitude,
-    @JsonKey(name: 'total_slots') int? totalSlots,
+    @JsonKey(name: 'entrance_logical_locations')
+    List<List<int>>? entranceLogicalLocations,
+    @JsonKey(name: 'slot_width_meters') double? slotWidthMeters,
+    @JsonKey(name: 'slot_length_meters') double? slotLengthMeters,
+    @JsonKey(name: 'base_rate') double? baseRate,
   }) = _UpdateParkingLotRequest;
 
   factory UpdateParkingLotRequest.fromJson(Map<String, dynamic> json) =>

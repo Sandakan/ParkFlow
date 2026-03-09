@@ -226,18 +226,51 @@ async def update_camera(
         )
 
     update_data["updated_at"] = datetime.now(timezone.utc)
+    new_rtsp_url = update_data.get("rtsp_url")
+
+    old_camera = await db.client["parkflow"].cameras.find_one(
+        {"_id": ObjectId(camera_id), "deleted_at": None}
+    )
+    if not old_camera:
+        return APIResponse.error_response(
+            message="Camera not found",
+            code=ResponseCode.NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    old_rtsp_url = old_camera.get("rtsp_url")
 
     result = await db.client["parkflow"].cameras.update_one(
         {"_id": ObjectId(camera_id), "deleted_at": None},
         {"$set": update_data},
     )
 
-    if result.matched_count == 0:
-        return APIResponse.error_response(
-            message="Camera not found",
-            code=ResponseCode.NOT_FOUND,
-            status_code=status.HTTP_404_NOT_FOUND,
-        )
+    if new_rtsp_url and new_rtsp_url != old_rtsp_url:
+        from app.ai.inference_manager import inference_manager
+
+        asyncio.create_task(inference_manager.restart_camera(camera_id))
+
+        import os
+        import httpx
+
+        is_docker = os.path.exists("/.dockerenv")
+        mediamtx_host = "mediamtx" if is_docker else "localhost"
+        proxy_rtsp_url = get_internal_rtsp_url(new_rtsp_url)
+        api_url = f"http://{mediamtx_host}:9997/v3/config/paths/patch/{camera_id}"
+
+        try:
+
+            async def _update_mediamtx():
+                async with httpx.AsyncClient() as client:
+                    await client.patch(
+                        api_url,
+                        json={"source": proxy_rtsp_url, "sourceOnDemand": True},
+                        timeout=5.0,
+                    )
+
+            asyncio.create_task(_update_mediamtx())
+        except Exception as e:
+            logger.error(f"Failed to update MediaMTX path config: {e}")
 
     return APIResponse.success_response(
         message="Camera updated successfully",
@@ -315,7 +348,7 @@ async def webrtc_offer(
     if not isinstance(rtsp_url, str) or not rtsp_url:
         return APIResponse.error_response(
             message="Camera RTSP URL not configured",
-            code=ResponseCode.ERROR,
+            code=ResponseCode.CAMERA_RTSP_NOT_CONFIGURED,
             status_code=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -357,7 +390,7 @@ async def webrtc_offer(
         if resp.status_code not in (200, 201):
             return APIResponse.error_response(
                 message=f"RTSP Server WebRTC failed with {resp.status_code}: {resp.text}",
-                code=ResponseCode.ERROR,
+                code=ResponseCode.CAMERA_WEBRTC_FAILED,
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
 

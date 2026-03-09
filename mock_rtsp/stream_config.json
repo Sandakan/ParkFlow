@@ -1,12 +1,20 @@
 {
-  "streams": [
-    {
-      "name": "front_gate_camera",
-      "file": "vid1.mp4"
-    },
-    {
-      "name": "parking_lot_a",
-      "file": "test_image.png"
-    }
-  ]
+	"streams": [
+		{
+			"name": "front_gate_camera",
+			"file": "vid1.mp4"
+		},
+		{
+			"name": "top_camera",
+			"file": "vid2.mp4"
+		},
+		{
+			"name": "drone_camera",
+			"file": "vid3.mp4"
+		},
+		{
+			"name": "parking_lot_a",
+			"file": "test_image.png"
+		}
+	]
 }

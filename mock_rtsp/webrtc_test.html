@@ -101,7 +101,7 @@
 				statusDiv.innerText = 'Sending Offer to Backend...';
 
 				try {
-					const response = await fetch(`http://localhost:8000/api/v1/cameras/${cameraId}/webrtc/offer`, {
+					const response = await fetch(`http://localhost:8200/api/v1/cameras/${cameraId}/webrtc/offer`, {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',

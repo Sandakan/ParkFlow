@@ -13,12 +13,12 @@ services:
     image: bluenviron/mediamtx:1.6.0
     container_name: parkflow-mediamtx
     ports:
-      - "8554:8554" # RTSP
+      - "18554:8554" # RTSP
       - "1935:1935" # RTMP
       - "8888:8888" # HLS
       - "8889:8889" # WebRTC
       - "8189:8189/udp" # WebRTC UDP ICE
-      - "9997:9997" # MediaMTX HTTP API
+      - "19997:9997" # MediaMTX HTTP API
     volumes:
       - ./mediamtx.yml:/mediamtx.yml
     restart: always
@@ -31,7 +31,7 @@ services:
       context: .. # repo root — so Dockerfile can reach ai/models/
       dockerfile: backend/Dockerfile
     ports:
-      - "8000:8000"
+      - "8200:8000"
       - "5678:5678"
     command: python -m debugpy --listen 0.0.0.0:5678 -m uvicorn app.main:app --host 0.0.0.0 --reload
     develop:

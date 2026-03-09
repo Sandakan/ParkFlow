@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:parkflow/repositories/entities/camera/create_webrtc_offer_request.dart';
 import 'package:parkflow/repositories/providers/remote_repository_provider.dart';
+import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 
 class WebRTCService {
   final Ref ref;
@@ -85,6 +86,7 @@ class WebRTCService {
     final finalOffer = await pc.getLocalDescription();
 
     final remote = ref.read(remoteRepositoryProvider);
+    final token = await ref.read(authProvider.notifier).getValidAccessToken();
 
     try {
       final response = await remote.sendWebrtcOffer(
@@ -93,6 +95,7 @@ class WebRTCService {
           sdp: finalOffer?.sdp ?? offer.sdp ?? '',
           type: finalOffer?.type ?? offer.type ?? '',
         ),
+        accessToken: token,
       );
 
       final answer = RTCSessionDescription(response.sdp, response.type);

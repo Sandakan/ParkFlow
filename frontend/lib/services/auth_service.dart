@@ -1,22 +1,47 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parkflow/repositories/providers/auth_repository_provider.dart';
-import 'package:parkflow/repositories/interfaces/auth_repository_interface.dart';
+import 'package:parkflow/repositories/interfaces/remote_repository_interface.dart';
+import 'package:parkflow/repositories/interfaces/secure_storage_repository_interface.dart';
+import 'package:parkflow/repositories/providers/remote_repository_provider.dart';
+import 'package:parkflow/repositories/providers/secure_storage_repository_provider.dart';
 import 'package:parkflow/models/auth/user_model.dart';
 import 'package:parkflow/core/app_exception.dart';
+import 'package:parkflow/core/network/entities/login_request_entity.dart';
+import 'package:parkflow/core/network/entities/register_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/forgot_password_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/verify_otp_request_entity.dart';
+import 'package:parkflow/repositories/entities/auth/reset_password_request_entity.dart';
 import 'package:parkflow/utils/constants/enums/app_status_code.dart';
 import 'package:parkflow/utils/handlers/error_handler.dart';
 
 class AuthService {
-  final AuthRepositoryInterface _authRepo;
+  final RemoteRepositoryInterface _remote;
+  final SecureStorageRepositoryInterface _storage;
 
-  AuthService(this._authRepo);
+  AuthService(this._remote, this._storage);
 
   Future<UserModel> login(String email, String password) async {
     try {
       if (email.isEmpty || password.isEmpty) {
         throw const AppException(AppStatusCode.invalidResponse);
       }
-      return await _authRepo.login(email, password);
+
+      final request = LoginRequestEntity(email: email, password: password);
+      final response = await _remote.login(request);
+
+      await _storage.setAccessToken(response.accessToken);
+      await _storage.setRefreshToken(response.refreshToken);
+      await _storage.setAccessTokenExpiry(response.accessTokenExpiresAt);
+      await _storage.setRefreshTokenExpiry(response.refreshTokenExpiresAt);
+
+      final userResponse = await _remote.getCurrentUser(response.accessToken);
+      return UserModel(
+        id: userResponse.id,
+        email: userResponse.email,
+        name: userResponse.name,
+        role: userResponse.role,
+        vehicles: userResponse.vehicles,
+        paymentMethods: userResponse.paymentMethods,
+      );
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
@@ -27,22 +52,75 @@ class AuthService {
       if (name.isEmpty || email.isEmpty || password.isEmpty) {
         throw const AppException(AppStatusCode.invalidResponse);
       }
-      await _authRepo.register(name, email, password);
+
+      final request = RegisterRequestEntity(
+        name: name,
+        email: email,
+        password: password,
+      );
+      await _remote.register(request);
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
   }
 
   Future<void> logout() async {
-    await _authRepo.logout();
+    await _storage.clearAllAuthData();
+  }
+
+  Future<void> forgotPassword(String email) async {
+    try {
+      final request = ForgotPasswordRequestEntity(email: email);
+      await _remote.forgotPassword(request);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> verifyOtp(String email, String otp) async {
+    try {
+      final request = VerifyOtpRequestEntity(email: email, otp: otp);
+      await _remote.verifyOtp(request);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> resetPassword(String email, String otp, String password) async {
+    try {
+      final request = ResetPasswordRequestEntity(
+        email: email,
+        otp: otp,
+        password: password,
+      );
+      await _remote.resetPassword(request);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
   }
 
   Future<UserModel?> checkAuthState() async {
-    return await _authRepo.getCurrentUser();
+    try {
+      final token = await _storage.getAccessToken();
+      if (token == null) return null;
+
+      final userResponse = await _remote.getCurrentUser(token);
+      return UserModel(
+        id: userResponse.id,
+        email: userResponse.email,
+        name: userResponse.name,
+        role: userResponse.role,
+        vehicles: userResponse.vehicles,
+        paymentMethods: userResponse.paymentMethods,
+      );
+    } catch (e) {
+      return null;
+    }
   }
 }
 
 final authServiceProvider = Provider<AuthService>((ref) {
-  final repo = ref.watch(authRepositoryProvider);
-  return AuthService(repo);
+  final remote = ref.watch(remoteRepositoryProvider);
+  final storage = ref.watch(secureStorageRepositoryProvider);
+  return AuthService(remote, storage);
 });

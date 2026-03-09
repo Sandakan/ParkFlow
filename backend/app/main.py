@@ -23,7 +23,9 @@ from app.api.routers import (
     parking,
     cameras,
     analytics,
+    reservations,
     settings as settings_router,
+    notifications,
 )
 
 from app.schemas.response import APIResponse, ResponseCode
@@ -35,6 +37,14 @@ async def lifespan(app: FastAPI):
     await connect_to_mongo()
     await connect_to_redis()
     logger.info("ParkFlow API started successfully.")
+
+    host_port = os.getenv("HOST_PORT", "8200")
+    logger.info(
+        "\n"
+        f"Base URL  : http://localhost:{host_port} \n"
+        f"API Docs  : http://localhost:{host_port}/docs \n"
+        f"Health    : http://localhost:{host_port}/ \n"
+    )
 
     await inference_manager.start_all()
 
@@ -99,9 +109,7 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 app.add_middleware(
     CORSMiddleware,
-    # TODO: Remove this in production when webrtc_test.html testing is not needed
-    allow_origins=["null"],
-    allow_origin_regex=r"http://localhost:?\d*|http://127.0.0.1:?\d*",
+    allow_origin_regex=r"https?://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -113,7 +121,13 @@ app.include_router(inference.router, prefix="/api/v1/inference", tags=["AI Infer
 app.include_router(parking.router, prefix="/api/v1/parking", tags=["Parking"])
 app.include_router(cameras.router, prefix="/api/v1/cameras", tags=["Cameras"])
 app.include_router(analytics.router, prefix="/api/v1/analytics", tags=["Analytics"])
+app.include_router(
+    reservations.router, prefix="/api/v1/reservations", tags=["Reservations"]
+)
 app.include_router(settings_router.router, prefix="/api/v1/settings", tags=["Settings"])
+app.include_router(
+    notifications.router, prefix="/api/v1/notifications", tags=["Notifications"]
+)
 
 
 @app.get("/favicon.ico", include_in_schema=False)

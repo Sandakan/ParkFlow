@@ -156,6 +156,67 @@ class _SpotPainter extends CustomPainter {
         canvas,
         Offset(avgX - textPainter.width / 2, avgY - textPainter.height / 2),
       );
+
+      // Row/Col boxes
+      if (slot.logicalRow > 0 || slot.logicalCol > 0) {
+        final rowPainter = TextPainter(
+          text: TextSpan(
+            text: 'R${slot.logicalRow}',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 8,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        );
+        rowPainter.layout();
+
+        final colPainter = TextPainter(
+          text: TextSpan(
+            text: 'C${slot.logicalCol}',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 8,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        );
+        colPainter.layout();
+
+        final spacing = 4.0;
+        final totalWidth = rowPainter.width + colPainter.width + spacing + 8;
+        final startX = avgX - totalWidth / 2;
+        final yPos = avgY + textPainter.height / 2 + 4;
+
+        // Draw Row Box
+        final rowRect = Rect.fromLTWH(
+          startX,
+          yPos,
+          rowPainter.width + 4,
+          rowPainter.height + 2,
+        );
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(rowRect, const Radius.circular(2)),
+          Paint()..color = Colors.black.withValues(alpha: 0.6),
+        );
+        rowPainter.paint(canvas, Offset(startX + 2, yPos + 1));
+
+        // Draw Col Box
+        final colStartX = startX + rowPainter.width + 4 + spacing;
+        final colRect = Rect.fromLTWH(
+          colStartX,
+          yPos,
+          colPainter.width + 4,
+          colPainter.height + 2,
+        );
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(colRect, const Radius.circular(2)),
+          Paint()..color = Colors.black.withValues(alpha: 0.6),
+        );
+        colPainter.paint(canvas, Offset(colStartX + 2, yPos + 1));
+      }
     }
 
     // 2. Draw current polygon being created

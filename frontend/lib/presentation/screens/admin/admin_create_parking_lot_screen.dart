@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
-import 'package:parkflow/services/parking_service.dart';
-import 'package:parkflow/presentation/notifiers/parking_lots/parking_lots_notifier.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:parkflow/presentation/widgets/forms/labeled_reactive_text_field.dart';
+
+import 'package:parkflow/presentation/notifiers/admin/admin_create_parking_lot_provider.dart';
+
+import 'package:parkflow/repositories/entities/parking/create_parking_lot_request.dart';
 
 class AdminCreateParkingLotScreen extends ConsumerStatefulWidget {
   const AdminCreateParkingLotScreen({super.key});
@@ -19,82 +21,60 @@ class AdminCreateParkingLotScreen extends ConsumerStatefulWidget {
 
 class _AdminCreateParkingLotScreenState
     extends ConsumerState<AdminCreateParkingLotScreen> {
-  bool _isLoading = false;
+  late final FormGroup form;
 
-  late final FormGroup form = fb.group({
-    'name': FormControl<String>(validators: [Validators.required]),
-    'address': FormControl<String>(validators: [Validators.required]),
-    'latitude': FormControl<String>(
-      validators: [
-        Validators.required,
-        Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
-      ],
-    ),
-    'longitude': FormControl<String>(
-      validators: [
-        Validators.required,
-        Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
-      ],
-    ),
-    'totalSlots': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-  });
+  @override
+  void initState() {
+    super.initState();
+    form = FormGroup({
+      'name': FormControl<String>(validators: [Validators.required]),
+      'address': FormControl<String>(validators: [Validators.required]),
+      'latitude': FormControl<String>(
+        validators: [
+          Validators.required,
+          Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
+        ],
+      ),
+      'longitude': FormControl<String>(
+        validators: [
+          Validators.required,
+          Validators.pattern(r'^-?[0-9]\d*(\.\d+)?$'),
+        ],
+      ),
+      'slotWidth': FormControl<String>(
+        value: '5.0',
+        validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+      ),
+      'slotLength': FormControl<String>(
+        value: '5.0',
+        validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+      ),
+      'baseRate': FormControl<String>(
+        value: '100.0',
+        validators: [Validators.required, Validators.pattern(r'^\d*(\.\d+)?$')],
+      ),
+    });
+  }
 
-  Future<void> _submit() async {
-    if (form.invalid) {
-      form.markAllAsTouched();
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      final request = CreateParkingLotRequest(
-        name: form.control('name').value as String,
-        address: form.control('address').value as String,
-        latitude: double.parse(form.control('latitude').value as String),
-        longitude: double.parse(form.control('longitude').value as String),
-        totalSlots: int.parse(form.control('totalSlots').value as String),
-      );
-
-      await ref.read(parkingServiceProvider).createParkingLot(request);
-      await ref.read(parkingLotsProvider.notifier).fetchLots();
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.lotCreatedSuccess),
-            backgroundColor: Colors.green,
-          ),
-        );
-        context.pop();
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppException.getLocalizedErrorMessage(e, context.l10n),
-            ),
-            backgroundColor: AppColors.error,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
+  @override
+  void dispose() {
+    form.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(adminCreateParkingLotProvider);
+
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(context.l10n.createLotTitle),
+        title: Text(
+          context.l10n.createLotTitle,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: AppColors.white,
+        centerTitle: false,
         scrolledUnderElevation: 0,
       ),
       body: SafeArea(
@@ -108,28 +88,31 @@ class _AdminCreateParkingLotScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildTextField(
+                    LabeledReactiveTextField<String>(
                       formControlName: 'name',
                       label: context.l10n.lotNameLabel,
-                      hint: context.l10n.lotNameHint,
-                      icon: Icons.local_parking,
+                      hintText: context.l10n.lotNameHint,
+                      prefixIcon: Icons.local_parking,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
-                    _buildTextField(
+                    LabeledReactiveTextField<String>(
                       formControlName: 'address',
                       label: context.l10n.lotAddressLabel,
-                      hint: context.l10n.lotAddressHint,
-                      icon: Icons.location_on_outlined,
+                      hintText: context.l10n.lotAddressHint,
+                      prefixIcon: Icons.location_on_outlined,
+                      isRequired: true,
                     ),
                     const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
-                          child: _buildTextField(
+                          child: LabeledReactiveTextField<String>(
                             formControlName: 'latitude',
                             label: context.l10n.latitudeLabel,
-                            hint: context.l10n.latitudeHint,
-                            icon: Icons.explore_outlined,
+                            hintText: context.l10n.latitudeHint,
+                            prefixIcon: Icons.explore_outlined,
+                            isRequired: true,
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                               signed: true,
@@ -138,11 +121,12 @@ class _AdminCreateParkingLotScreenState
                         ),
                         const SizedBox(width: 16),
                         Expanded(
-                          child: _buildTextField(
+                          child: LabeledReactiveTextField<String>(
                             formControlName: 'longitude',
                             label: context.l10n.longitudeLabel,
-                            hint: context.l10n.longitudeHint,
-                            icon: Icons.explore_outlined,
+                            hintText: context.l10n.longitudeHint,
+                            prefixIcon: Icons.explore_outlined,
+                            isRequired: true,
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: true,
                               signed: true,
@@ -151,17 +135,107 @@ class _AdminCreateParkingLotScreenState
                         ),
                       ],
                     ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: LabeledReactiveTextField<String>(
+                            formControlName: 'slotWidth',
+                            label: context.l10n.slotWidthLabel,
+                            hintText: 'e.g. 5.0',
+                            prefixIcon: Icons.width_full_outlined,
+                            isRequired: true,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: LabeledReactiveTextField<String>(
+                            formControlName: 'slotLength',
+                            label: context.l10n.slotLengthLabel,
+                            hintText: 'e.g. 5.0',
+                            prefixIcon: Icons.height_outlined,
+                            isRequired: true,
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 16),
-                    _buildTextField(
-                      formControlName: 'totalSlots',
-                      label: context.l10n.totalSlotsLabel,
-                      hint: context.l10n.totalSlotsHint,
-                      icon: Icons.format_list_numbered,
-                      keyboardType: TextInputType.number,
+                    LabeledReactiveTextField<String>(
+                      formControlName: 'baseRate',
+                      label: context.l10n.baseRateLabel,
+                      hintText: context.l10n.baseRateHint,
+                      prefixIcon: Icons.monetization_on_outlined,
+                      isRequired: true,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                     ),
                     const SizedBox(height: 32),
                     ElevatedButton(
-                      onPressed: _isLoading ? null : _submit,
+                      onPressed: isLoading
+                          ? null
+                          : () async {
+                              final l10n = context.l10n;
+                              if (form.invalid) {
+                                form.markAllAsTouched();
+                                return;
+                              }
+                              try {
+                                final request = CreateParkingLotRequest(
+                                  name: form.control('name').value as String,
+                                  address:
+                                      form.control('address').value as String,
+                                  latitude: double.parse(
+                                    form.control('latitude').value as String,
+                                  ),
+                                  longitude: double.parse(
+                                    form.control('longitude').value as String,
+                                  ),
+                                  slotWidthMeters: double.parse(
+                                    form.control('slotWidth').value as String,
+                                  ),
+                                  slotLengthMeters: double.parse(
+                                    form.control('slotLength').value as String,
+                                  ),
+                                  baseRate: double.parse(
+                                    form.control('baseRate').value as String,
+                                  ),
+                                );
+                                await ref
+                                    .read(
+                                      adminCreateParkingLotProvider.notifier,
+                                    )
+                                    .submit(request);
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(l10n.lotCreatedSuccess),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                  context.pop();
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        AppException.getLocalizedErrorMessage(
+                                          e,
+                                          l10n,
+                                        ),
+                                      ),
+                                      backgroundColor: AppColors.error,
+                                    ),
+                                  );
+                                }
+                              }
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
                         foregroundColor: AppColors.white,
@@ -171,7 +245,7 @@ class _AdminCreateParkingLotScreenState
                         ),
                         elevation: 0,
                       ),
-                      child: _isLoading
+                      child: isLoading
                           ? const SizedBox(
                               height: 24,
                               width: 24,
@@ -195,60 +269,6 @@ class _AdminCreateParkingLotScreenState
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField({
-    required String formControlName,
-    required String label,
-    required String hint,
-    required IconData icon,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: AppColors.black87,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ReactiveTextField<String>(
-          formControlName: formControlName,
-          keyboardType: keyboardType,
-          validationMessages: {
-            ValidationMessage.required: (error) => context.l10n.fieldRequired,
-            ValidationMessage.pattern: (error) => context.l10n.invalidNumber,
-          },
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(color: AppColors.textSecondary),
-            prefixIcon: Icon(icon, color: AppColors.textSecondary),
-            filled: true,
-            fillColor: AppColors.surfaceVariant.withValues(alpha: 0.5),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide.none,
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: AppColors.error),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: const BorderSide(color: AppColors.error, width: 2),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -12,6 +12,9 @@ class AppLocalizationsSi extends AppLocalizations {
   String get appTitle => 'ParkFlow';
 
   @override
+  String get parkingLotsTitle => 'Parking Lots';
+
+  @override
   String get loginTitle => 'ParkFlow';
 
   @override
@@ -168,6 +171,9 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get cameras => 'Cameras';
+
+  @override
+  String get reservations => 'Reservations';
 
   @override
   String get analytics => 'Analytics';
@@ -559,6 +565,9 @@ class AppLocalizationsSi extends AppLocalizations {
   String get slotTypeEv => 'EV Charging';
 
   @override
+  String get slotTypeEntrance => 'Entrance';
+
+  @override
   String get newParkingSlotTitle => 'New Parking Slot';
 
   @override
@@ -597,4 +606,534 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get enterValueHint => 'Enter value';
+
+  @override
+  String get currentOccupancyLayout => 'Current Occupancy Layout';
+
+  @override
+  String get slotWidthLabel => 'Slot Width (m)';
+
+  @override
+  String get slotLengthLabel => 'Slot Length (m)';
+
+  @override
+  String get entranceCoordsLabel => 'Entrance Coords';
+
+  @override
+  String get rowLabel => 'Row';
+
+  @override
+  String get colLabel => 'Column';
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get bookings => 'Bookings';
+
+  @override
+  String get checkIn => 'Check-in';
+
+  @override
+  String get myVehicle => 'My Vehicle';
+
+  @override
+  String get nearbyLots => 'Nearby Parking Lots';
+
+  @override
+  String metersAway(String distance) {
+    return '${distance}m away';
+  }
+
+  @override
+  String kmAway(String distance) {
+    return '${distance}km away';
+  }
+
+  @override
+  String get noLotsNearby => 'No parking lots found nearby.';
+
+  @override
+  String get topRecommended => 'Top Recommended P-Spots';
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String availableSlotsCount(String count) {
+    return '$count available';
+  }
+
+  @override
+  String get vehicleAlreadyExists =>
+      'A vehicle with this license plate is already registered.';
+
+  @override
+  String get vehicleNotFound => 'Vehicle not found.';
+
+  @override
+  String get paymentMethodNotFound => 'Payment method not found.';
+
+  @override
+  String get reservationNoAvailableSlots =>
+      'No available slots in this parking lot.';
+
+  @override
+  String get reservationSlotOccupied =>
+      'This parking slot is already occupied.';
+
+  @override
+  String get reservationSlotNotFound => 'Parking slot not found.';
+
+  @override
+  String get reservationLotNotFound => 'Parking lot not found.';
+
+  @override
+  String get reservationLotIdRequired =>
+      'Please select a parking lot for automatic slot selection.';
+
+  @override
+  String get cameraNotFound => 'Camera not found.';
+
+  @override
+  String get cameraRtspNotConfigured => 'Camera stream URL is not configured.';
+
+  @override
+  String get cameraWebrtcFailed =>
+      'Failed to establish camera stream connection.';
+
+  @override
+  String get permissionDenied =>
+      'You don\'t have permission to perform this action.';
+
+  @override
+  String get languageLabel => 'භාෂාව';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageSinhala => 'සිංහල';
+
+  @override
+  String get languageTamil => 'தமிழ்';
+
+  @override
+  String get languageSectionTitle => 'භාෂාව තෝරන්න';
+
+  @override
+  String get languageSubtitle => 'ඔබේ කැමති භාෂාව තෝරන්න';
+
+  @override
+  String get profileParkingHistory => 'නැවැත්වීමේ ඉතිහාසය';
+
+  @override
+  String get profileViewPastBookings => 'පැරණි වෙන් කිරීම් බලන්න';
+
+  @override
+  String get profilePaymentMethods => 'ගෙවීම් ක්‍රම';
+
+  @override
+  String get profileManageCards => 'කාඩ්පත් සහ මුදල් කළමනාකරණය කරන්න';
+
+  @override
+  String get profileNotifications => 'දැනුම්දීම්';
+
+  @override
+  String get profileAlertsUpdates => 'ඇඟවීම් සහ යාවත්කාලීන කිරීම්';
+
+  @override
+  String get settingsSignOutSubtitle => 'පිටවී ඔබේ දත්ත සුරක්ෂිත කරන්න';
+
+  @override
+  String get upcomingBookings => 'ඉදිරි වෙන් කිරීම්';
+
+  @override
+  String get previousBookings => 'පෙර වෙන් කිරීම්';
+
+  @override
+  String get noBookingsFound => 'වෙන් කිරීම් කිසිවක් හමු නොවීය';
+
+  @override
+  String durationHours(String hours, String minutes) {
+    return '$hoursපැ $minutesමි';
+  }
+
+  @override
+  String ticketId(String id) {
+    return 'ටිකට්පත් අංකය: $id';
+  }
+
+  @override
+  String lkrAmount(String amount) {
+    return 'රු $amount';
+  }
+
+  @override
+  String get statusActive => 'සක්‍රීයයි';
+
+  @override
+  String get statusCompleted => 'සම්පූර්ණයි';
+
+  @override
+  String get statusCancelled => 'අවලංගුයි';
+
+  @override
+  String get ongoingBooking => 'දැනට පවතින වෙන් කිරීම';
+
+  @override
+  String get timeLeft => 'ඉතිරි කාලය';
+
+  @override
+  String get baseRateLabel => 'Base Rate (LKR/hr)';
+
+  @override
+  String get baseRateHint => 'e.g. 50.0';
+
+  @override
+  String get originalPriceLabel => 'Original Price';
+
+  @override
+  String get finalPriceLabel => 'Final Price';
+
+  @override
+  String get checkInLabel => 'Check-in';
+
+  @override
+  String get checkOutLabel => 'Check-out';
+
+  @override
+  String minsLeft(String mins) {
+    return 'මිනිත්තු $minsක් ඉතිරිව ඇත';
+  }
+
+  @override
+  String get statusUpcoming => 'Upcoming';
+
+  @override
+  String get statusOngoing => 'Ongoing';
+
+  @override
+  String get statusOverstay => 'Overstay';
+
+  @override
+  String get statusNoShow => 'No Show';
+
+  @override
+  String get statusExpired => 'Expired';
+
+  @override
+  String get ticketStatusConfirmed => 'Booking Confirmed!';
+
+  @override
+  String get ticketStatusOngoing => 'Parking in Progress';
+
+  @override
+  String get ticketStatusExpired => 'Booking Expired';
+
+  @override
+  String get ticketStatusOverstay => 'Overstay Warning';
+
+  @override
+  String get ticketStatusCompleted => 'Parking Completed';
+
+  @override
+  String get ticketStatusCancelled => 'Booking Cancelled';
+
+  @override
+  String get ticketSubtitleConfirmed => 'Present this QR code at the entrance.';
+
+  @override
+  String get ticketSubtitleOngoing => 'You are currently parked in this lot.';
+
+  @override
+  String get ticketSubtitleExpired => 'The reservation window has passed.';
+
+  @override
+  String get ticketSubtitleOverstay => 'You have exceeded your reserved time.';
+
+  @override
+  String get ticketSubtitleNoShow => 'Please check in before the time expires.';
+
+  @override
+  String get ticketSubtitleCompleted => 'Your parking session has ended.';
+
+  @override
+  String get ticketSubtitleCancelled => 'This booking is no longer valid.';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get noNotifications => 'No notifications yet';
+
+  @override
+  String get markAllAsRead => 'සියල්ල කියවූ ලෙස ලකුණු කරන්න';
+
+  @override
+  String get forgotPasswordTitle => 'මුරපදය අමතකද?';
+
+  @override
+  String get forgotPasswordSubtitle => 'ඔබේ විද්‍යුත් තැපෑල ඇතුළත් කරන්න.';
+
+  @override
+  String get sendOtpButton => 'OTP එවන්න';
+
+  @override
+  String get verifyOtpTitle => 'OTP සත්‍යාපනය';
+
+  @override
+  String get verifyOtpSubtitle =>
+      'ඔබේ විද්‍යුත් තැපෑලට ලැබුණු අංක 6 කේතය ඇතුළත් කරන්න.';
+
+  @override
+  String get verifyOtpButton => 'කේතය පරීක්ෂා කරන්න';
+
+  @override
+  String get resetPasswordTitle => 'මුරපදය නැවත සකසන්න';
+
+  @override
+  String get resetPasswordSubtitle => 'අලුත් මුරපදයක් ඇතුළත් කරන්න.';
+
+  @override
+  String get newPasswordLabel => 'අලුත් මුරපදය';
+
+  @override
+  String get newPasswordHint => '••••••••';
+
+  @override
+  String get resetPasswordButton => 'මුරපදය වෙනස් කරන්න';
+
+  @override
+  String get passwordResetSuccess => 'මුරපදය සාර්ථකව වෙනස් කරන ලදී';
+
+  @override
+  String get otpRequired => 'OTP කේතය අවශ්‍යයි';
+
+  @override
+  String get otpInvalid => 'OTP කේතය අංක 6ක් විය යුතුය';
+
+  @override
+  String get slotNotAvailableMessage => 'Slot is not available';
+
+  @override
+  String get noLotSelected => 'No lot selected';
+
+  @override
+  String get navigateAction => 'Navigate';
+
+  @override
+  String get removeAction => 'Remove';
+
+  @override
+  String get removePaymentMethodTitle => 'Remove Payment Method';
+
+  @override
+  String get paymentMethodTypeCard => 'Credit/Debit Card';
+
+  @override
+  String get paymentMethodNameHint => 'e.g. Visa, MasterCard, Bank';
+
+  @override
+  String get paymentMethodLastFourHint => 'e.g. 1234';
+
+  @override
+  String get addVehicleAction => 'Add Vehicle';
+
+  @override
+  String get removeVehicleTitle => 'Remove Vehicle';
+
+  @override
+  String get manageVehiclesSubtitle => 'Manage your vehicles';
+
+  @override
+  String get vehicleNumberHint => 'e.g. ABC 1234';
+
+  @override
+  String get vehicleTypeCar => 'Car';
+
+  @override
+  String get vehicleTypeMotorcycle => 'Motorcycle/Bike';
+
+  @override
+  String get vehicleTypeThreeWheeler => 'Three-Wheeler';
+
+  @override
+  String get vehicleTypeTruck => 'Truck/Van';
+
+  @override
+  String get bookAgainAction => 'Book Again';
+
+  @override
+  String get bookASlotTitle => 'Book a Slot';
+
+  @override
+  String get yourVehicleSection => 'Your Vehicle';
+
+  @override
+  String get timeWindowSection => 'Time Window';
+
+  @override
+  String get slotPreferenceSection => 'Slot Preference';
+
+  @override
+  String get paymentMethodSection => 'Payment Method';
+
+  @override
+  String get processedSuccessfully => 'Processed successfully!';
+
+  @override
+  String get coordinateHint => 'e.g. 5.0';
+
+  @override
+  String get otpHint => '123456';
+
+  @override
+  String minutesDuration(String mins) {
+    return '$mins min';
+  }
+
+  @override
+  String get addPaymentMethodAction => 'Add Payment Method';
+
+  @override
+  String get paymentMethodTypeCash => 'Cash';
+
+  @override
+  String get noVehiclesFound => 'No vehicles found';
+
+  @override
+  String get arrivalDateLabel => 'Arrival Date';
+
+  @override
+  String get arrivalTimeLabel => 'Arrival Time';
+
+  @override
+  String get durationLabel => 'Duration';
+
+  @override
+  String get minutesShort => 'mins';
+
+  @override
+  String get smartSuggestionLabel => 'AI Suggestion';
+
+  @override
+  String get manualSelectionLabel => 'Manual Selection';
+
+  @override
+  String get totalPriceLabel => 'Total Price';
+
+  @override
+  String get verifyingAvailability => 'Verifying...';
+
+  @override
+  String get conflictCheckHint => 'Checking for potential double bookings';
+
+  @override
+  String get slotAvailableMessage => 'Slot is available';
+
+  @override
+  String get pastTimeWarning => 'Parking time is in the past';
+
+  @override
+  String get confirmBookingAction => 'Confirm Booking';
+
+  @override
+  String get searchTryDifferent => 'Try a different location or search term';
+
+  @override
+  String errorPrefix(String message) {
+    return 'Error: $message';
+  }
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String minutesAgoShort(String mins) {
+    return '${mins}m ago';
+  }
+
+  @override
+  String hoursAgoShort(String hours) {
+    return '${hours}h ago';
+  }
+
+  @override
+  String daysAgoShort(String days) {
+    return '${days}d ago';
+  }
+
+  @override
+  String get scanQrTitle => 'Scan Reservation QR Code';
+
+  @override
+  String get scanQrSubtitle =>
+      'Position the QR code within the frame to check-in or check-out.';
+
+  @override
+  String get checkInPreview => 'Check-in Preview';
+
+  @override
+  String get checkoutPreview => 'Checkout Preview';
+
+  @override
+  String get statusPending => 'PENDING';
+
+  @override
+  String get statusActiveCapital => 'ACTIVE';
+
+  @override
+  String get vehicleLabel => 'Vehicle';
+
+  @override
+  String get slotLabel => 'Slot';
+
+  @override
+  String get startTimeLabel => 'Start Time';
+
+  @override
+  String get endTimeLabel => 'End Time';
+
+  @override
+  String get checkedInAtLabel => 'Checked-in At';
+
+  @override
+  String get totalBilledAmount => 'Total Billed Amount';
+
+  @override
+  String get selectPaymentMethodLabel => 'Select Payment Method';
+
+  @override
+  String get paymentMethodWallet => 'Wallet';
+
+  @override
+  String get confirmCheckIn => 'Confirm Check-in';
+
+  @override
+  String get confirmCheckout => 'Confirm Checkout';
+
+  @override
+  String get scanningError => 'Scanning Error';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get licensePlateLabel => 'License Plate Number';
+
+  @override
+  String get vehicleTypeLabel => 'Vehicle Type';
+
+  @override
+  String get paymentProviderLabel => 'Provider Name';
+
+  @override
+  String get paymentLastFourLabel => 'Last 4 Digits';
+
+  @override
+  String get nearEntrance => 'Near entrance';
+
+  @override
+  String get digitalTicketTitle => 'Digital Ticket';
 }

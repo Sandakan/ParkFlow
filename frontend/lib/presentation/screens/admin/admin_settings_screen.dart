@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/presentation/notifiers/settings/settings_notifier.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:parkflow/presentation/widgets/language_picker_button.dart';
 
 class AdminSettingsScreen extends ConsumerWidget {
   const AdminSettingsScreen({super.key});
@@ -69,6 +71,14 @@ class AdminSettingsScreen extends ConsumerWidget {
                                 notifier: notifier,
                               ),
                               const SizedBox(height: 32),
+                              _SectionLabel(l10n.languageLabel),
+                              const SizedBox(height: 12),
+                              _LanguageCard(),
+                              const SizedBox(height: 32),
+                              _SectionLabel(l10n.logout.toUpperCase()),
+                              const SizedBox(height: 12),
+                              _LogoutCard(),
+                              const SizedBox(height: 48),
                             ],
                           ),
                         ),
@@ -268,6 +278,66 @@ class _SystemControlCard extends StatelessWidget {
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageCard extends StatelessWidget {
+  const _LanguageCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    return Card(
+      elevation: 0,
+      color: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: AppColors.outlineVariant, width: 1),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: const Icon(
+                Icons.translate_rounded,
+                color: AppColors.primary,
+                size: 24,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.languageSectionTitle,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    l10n.languageSubtitle,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const LanguagePickerButton(),
           ],
         ),
       ),
@@ -538,10 +608,19 @@ class _SettingNumberFieldState extends State<_SettingNumberField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.label,
-          style: theme.textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
+        RichText(
+          text: TextSpan(
+            text: widget.label,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: AppColors.black87,
+            ),
+            children: const [
+              TextSpan(
+                text: ' *',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 4),
@@ -559,9 +638,10 @@ class _SettingNumberFieldState extends State<_SettingNumberField> {
             fillColor: AppColors.inputFill,
             filled: true,
             hintText: context.l10n.enterValueHint,
+            hintStyle: TextStyle(color: AppColors.textSecondary),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
-              vertical: 12,
+              vertical: 16,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -573,7 +653,10 @@ class _SettingNumberFieldState extends State<_SettingNumberField> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.primary),
+              borderSide: const BorderSide(
+                color: AppColors.primary,
+                width: 1.5,
+              ),
             ),
           ),
           onChanged: (val) {
@@ -582,6 +665,52 @@ class _SettingNumberFieldState extends State<_SettingNumberField> {
           },
         ),
       ],
+    );
+  }
+}
+
+class _LogoutCard extends ConsumerWidget {
+  const _LogoutCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.outlineVariant),
+      ),
+      child: ListTile(
+        onTap: () => ref.read(authProvider.notifier).logout(),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.error.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: const Icon(
+            Icons.logout_rounded,
+            color: AppColors.error,
+            size: 24,
+          ),
+        ),
+        title: Text(
+          l10n.logout,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+            color: AppColors.error,
+          ),
+        ),
+        subtitle: Text(
+          l10n.settingsSignOutSubtitle,
+          style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+        ),
+        trailing: const Icon(Icons.chevron_right, size: 20),
+      ),
     );
   }
 }

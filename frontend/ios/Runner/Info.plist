@@ -47,5 +47,20 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app needs access to location when open to show nearby parking lots.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>This app needs access to location to show nearby parking lots.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>This app needs camera access to scan reservation QR codes.</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>This app needs microphone access for voice features and streaming.</string>
+		<key>GoogleMapsApiKey</key>
+		<string>$(MAPS_API_KEY)</string>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>fetch</string>
+			<string>remote-notification</string>
+		</array>
 	</dict>
 </plist>
