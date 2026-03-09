@@ -12,6 +12,7 @@ router = APIRouter()
 @router.post(
     "/",
     response_model=APIResponse[dict],
+    status_code=status.HTTP_201_CREATED,
     description="Register a new user in the system with their vehicle details.",
 )
 async def create_user(

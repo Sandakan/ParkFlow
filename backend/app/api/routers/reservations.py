@@ -15,6 +15,7 @@ import json
 import asyncio
 from bson import ObjectId
 from app.services.notification_service import notification_service
+from app.services.reservation_service import reservation_service
 from loguru import logger
 
 router = APIRouter()
@@ -25,42 +26,8 @@ class SlotAvailabilityResponse(BaseModel):
     slot_id: str | None = None
 
 
-async def _has_overlapping_reservation(
-    slot_id: str, start_time: datetime, end_time: datetime
-) -> bool:
-    # Overlap condition: (start1 < end2) AND (end1 > start2)
-    count = await db.client["parkflow"].reservations.count_documents(
-        {
-            "slot_id": slot_id,
-            "status": "active",
-            "deleted_at": None,
-            "$and": [
-                {"start_time": {"$lt": end_time}},
-                {"end_time": {"$gt": start_time}},
-            ],
-        }
-    )
-    return count > 0
-
-
-async def _find_available_slot(
-    lot_id: str, start_time: datetime, end_time: datetime
-) -> Any:
-    """
-    Finds a slot in the given lot that has no overlapping reservations
-    for the requested time window.
-    """
-    slots_cursor = db.client["parkflow"].parking_slots.find(
-        {"lot_id": lot_id, "deleted_at": None}
-    )
-    slots = await slots_cursor.to_list(length=1000)
-
-    for slot in slots:
-        slot_id_str = str(slot["_id"])
-        if not await _has_overlapping_reservation(slot_id_str, start_time, end_time):
-            return slot
-
-    return None
+# Removed internal helpers _has_overlapping_reservation and _find_available_slot
+# as they are now in reservation_service
 
 
 @router.post("/", response_model=APIResponse[ReservationResponse])
@@ -72,154 +39,11 @@ async def create_reservation(
     """
     Create a new reservation for a parking slot.
     """
-    if request.slot_id == "auto":
-        if not request.lot_id:
-            return APIResponse.error_response(
-                message="lot_id is required for auto slot selection",
-                code=ResponseCode.RESERVATION_LOT_ID_REQUIRED,
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
-
-        end_time = request.start_time + timedelta(minutes=request.duration_minutes)
-        slot = await _find_available_slot(request.lot_id, request.start_time, end_time)
-
-        if not slot:
-            return APIResponse.error_response(
-                message="No available slots in this lot for the selected time window",
-                code=ResponseCode.RESERVATION_NO_AVAILABLE_SLOTS,
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
-        request.slot_id = str(slot["_id"])
-    else:
-        try:
-            slot = await db.client["parkflow"].parking_slots.find_one(
-                {"_id": ObjectId(request.slot_id), "deleted_at": None}
-            )
-        except Exception:
-            slot = None
-
-        if not slot:
-            return APIResponse.error_response(
-                message="Parking slot not found",
-                code=ResponseCode.RESERVATION_SLOT_NOT_FOUND,
-                status_code=status.HTTP_404_NOT_FOUND,
-            )
-
-        if slot.get("status") == "occupied":
-            return APIResponse.error_response(
-                message="Parking slot is already occupied",
-                code=ResponseCode.RESERVATION_SLOT_OCCUPIED,
-                status_code=status.HTTP_400_BAD_REQUEST,
-            )
-
-    end_time = request.start_time + timedelta(minutes=request.duration_minutes)
-    if await _has_overlapping_reservation(
-        request.slot_id, request.start_time, end_time
-    ):
-        return APIResponse.error_response(
-            message="This slot is already booked for the selected time window",
-            code=ResponseCode.RESERVATION_SLOT_TIME_CONFLICT,
-            status_code=status.HTTP_400_BAD_REQUEST,
-        )
-
-    lot = await db.client["parkflow"].parking_lots.find_one(
-        {"_id": ObjectId(slot["lot_id"])}
-    )
-    if not lot:
-        return APIResponse.error_response(
-            message="Parking lot not found",
-            code=ResponseCode.RESERVATION_LOT_NOT_FOUND,
-            status_code=status.HTTP_404_NOT_FOUND,
-        )
-
-    price_per_hour = lot.get("base_rate", 0.0)
-    total_price = (request.duration_minutes / 60.0) * price_per_hour
-
-    now = datetime.now(timezone.utc)
-    if request.start_time.tzinfo is None:
-        request.start_time = request.start_time.replace(tzinfo=timezone.utc)
-
-    start_time_utc = request.start_time
-
-    logger.debug(f"Creating Reservation - RAW start_time: {request.start_time}")
-    logger.debug(f"Creating Reservation - UTC start_time: {start_time_utc}")
-    logger.debug(f"Creating Reservation - NOW (UTC): {now}")
-
-    if start_time_utc < now - timedelta(minutes=5):
-        logger.debug("Reservation creation failed: past time")
-        return APIResponse.error_response(
-            message="Reservation start time cannot be in the past",
-            code=ResponseCode.RESERVATION_PAST_TIME,
-            status_code=status.HTTP_400_BAD_REQUEST,
-        )
-
-    qr_code = str(uuid.uuid4())
-    end_time = request.start_time + timedelta(minutes=request.duration_minutes)
-    if end_time.tzinfo is None:
-        end_time = end_time.replace(tzinfo=timezone.utc)
-
-    reservation_dict = {
-        "user_id": current_user.user_id,
-        "slot_id": request.slot_id,
-        "start_time": request.start_time,
-        "end_time": end_time,
-        "vehicle": request.vehicle.model_dump(),
-        "duration_minutes": request.duration_minutes,
-        "payment_method": request.payment_method,
-        "total_price": total_price,
-        "base_rate": price_per_hour,
-        "actual_end_time": end_time,
-        "total_billed_price": total_price,
-        "check_in_time": None,
-        "check_out_time": None,
-        "status": "active",
-        "qr_code_token": qr_code,
-        "created_at": now,
-        "updated_at": now,
-        "deleted_at": None,
-    }
-
-    result = await db.client["parkflow"].reservations.insert_one(reservation_dict)
-
-    try:
-        await redis_cache.client.publish(
-            "reservation_updates",
-            json.dumps({"user_id": current_user.user_id, "action": "created"}),
-        )
-    except Exception as e:
-        logger.error(f"Failed to publish reservation update: {e}")
-
-    await notification_service.send_notification(
-        title="Reservation Created",
-        message=f"Your booking for {lot.get('name')} has been confirmed.",
-        user_id=current_user.user_id,
-        notification_type="success",
-        payload={"reservation_id": str(result.inserted_id), "action": "created"},
+    reservation_data = await reservation_service.create_reservation(
+        request, current_user.user_id
     )
 
-    reservation_data = {
-        "id": str(result.inserted_id),
-        "user_id": current_user.user_id,
-        "slot_id": request.slot_id,
-        "start_time": request.start_time,
-        "end_time": end_time,
-        "vehicle": request.vehicle,
-        "duration_minutes": request.duration_minutes,
-        "payment_method": request.payment_method,
-        "total_price": total_price,
-        "base_rate": price_per_hour,
-        "actual_end_time": end_time,
-        "total_billed_price": total_price,
-        "status": "active",
-        "qr_code_token": qr_code,
-        "lot_name": lot.get("name", "Unknown Lot"),
-        "lot_address": lot.get("address", "No Address"),
-        "lot_latitude": lot.get("latitude", 0.0),
-        "lot_longitude": lot.get("longitude", 0.0),
-        "slot_name": slot.get("slot_number", "Unknown Slot"),
-        "created_at": now,
-        "updated_at": now,
-    }
+    reservation_data["id"] = str(reservation_data.pop("_id"))
 
     return APIResponse.success_response(
         message="Reservation created successfully",
@@ -453,6 +277,7 @@ async def scan_reservation_qr(
 
 
 @router.get("/me", response_model=APIResponse[List[ReservationResponse]])
+@router.get("/mine", response_model=APIResponse[List[ReservationResponse]])
 async def get_my_reservations(
     current_user: Any = Depends(get_current_user),
 ) -> Any:
@@ -601,7 +426,9 @@ async def check_slot_availability(
     Check if a specific slot is available for a given time window.
     """
     end_time = start_time + timedelta(minutes=duration_minutes)
-    is_overlapping = await _has_overlapping_reservation(slot_id, start_time, end_time)
+    is_overlapping = await reservation_service.has_overlapping_reservation(
+        slot_id, start_time, end_time
+    )
 
     return APIResponse.success_response(
         message="Availability checked",
@@ -627,7 +454,7 @@ async def check_lot_availability(
     Check if any slot is available in the given lot for a given time window.
     """
     end_time = start_time + timedelta(minutes=duration_minutes)
-    slot = await _find_available_slot(lot_id, start_time, end_time)
+    slot = await reservation_service.find_available_slot(lot_id, start_time, end_time)
 
     return APIResponse.success_response(
         message="Lot availability checked",
@@ -636,4 +463,20 @@ async def check_lot_availability(
             available=slot is not None,
             slot_id=str(slot["_id"]) if slot else None,
         ),
+    )
+
+
+@router.patch("/{reservation_id}/cancel", response_model=APIResponse[dict])
+async def cancel_reservation(
+    reservation_id: str,
+    current_user: Any = Depends(get_current_user),
+) -> Any:
+    """
+    Cancel an active reservation.
+    """
+    await reservation_service.cancel_reservation(reservation_id, current_user.user_id)
+    return APIResponse.success_response(
+        message="Reservation cancelled successfully",
+        code=ResponseCode.SUCCESS,
+        data={},
     )

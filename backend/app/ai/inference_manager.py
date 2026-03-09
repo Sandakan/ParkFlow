@@ -76,6 +76,9 @@ class InferenceManager:
         task = self._tasks.get(camera_id)
         return task is not None and not task.done()
 
+    def running_camera_ids(self) -> list[str]:
+        return [cid for cid, task in self._tasks.items() if not task.done()]
+
     async def restart_camera(self, camera_id: str) -> None:
         """Restart inference for a specific camera."""
         if camera_id in self._tasks:

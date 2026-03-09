@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, Any, Literal
 from datetime import datetime
 
@@ -17,5 +17,4 @@ class NotificationResponse(NotificationBase):
     created_at: datetime
     read_at: Optional[datetime] = None
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)
