@@ -372,16 +372,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       color: AppColors.textSecondary,
                     ),
                     const SizedBox(height: 12),
-                    const Text(
-                      'No parking lots found',
-                      style: TextStyle(
+                    Text(
+                      context.l10n.noLotsFound,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                         color: AppColors.black,
                       ),
                     ),
                     Text(
-                      'Try a different location or search term',
+                      context.l10n.searchTryDifferent,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: AppColors.textSecondary,

@@ -9,6 +9,7 @@ import 'package:parkflow/presentation/notifiers/profile/vehicle_notifier.dart';
 import 'package:parkflow/presentation/widgets/common/app_buttons.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/l10n/app_localizations.dart';
+import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
 class AddVehicleScreen extends ConsumerStatefulWidget {
   const AddVehicleScreen({super.key});
@@ -41,9 +42,9 @@ class _AddVehicleScreenState extends ConsumerState<AddVehicleScreen> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: const Text(
-          'Add New Vehicle',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          context.l10n.addVehicleAction,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.white,
         elevation: 0,
@@ -61,9 +62,9 @@ class _AddVehicleScreenState extends ConsumerState<AddVehicleScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   LabeledReactiveTextField<String>(
-                    label: 'License Plate Number',
+                    label: context.l10n.licensePlateLabel,
                     formControlName: 'plate_number',
-                    hintText: 'e.g. ABC 1234',
+                    hintText: context.l10n.vehicleNumberHint,
                     prefixIcon: Icons.badge_outlined,
                     textCapitalization: TextCapitalization.characters,
                     isRequired: true,
@@ -75,23 +76,23 @@ class _AddVehicleScreenState extends ConsumerState<AddVehicleScreen> {
                   ),
                   const SizedBox(height: 24),
                   LabeledReactiveDropdownField<String>(
-                    label: 'Vehicle Type',
+                    label: context.l10n.vehicleTypeLabel,
                     formControlName: 'type',
                     prefixIcon: Icons.category_outlined,
                     isRequired: true,
-                    items: const [
-                      DropdownMenuItem(value: 'car', child: Text('Car')),
+                    items: [
+                      DropdownMenuItem(value: 'car', child: Text(context.l10n.vehicleTypeCar)),
                       DropdownMenuItem(
                         value: 'bike',
-                        child: Text('Motorcycle/Bike'),
+                        child: Text(context.l10n.vehicleTypeMotorcycle),
                       ),
                       DropdownMenuItem(
                         value: 'three-wheeler',
-                        child: Text('Three-Wheeler'),
+                        child: Text(context.l10n.vehicleTypeThreeWheeler),
                       ),
                       DropdownMenuItem(
                         value: 'truck',
-                        child: Text('Truck/Van'),
+                        child: Text(context.l10n.vehicleTypeTruck),
                       ),
                     ],
                   ),
@@ -136,7 +137,7 @@ class _AddVehicleScreenState extends ConsumerState<AddVehicleScreen> {
                   ReactiveFormConsumer(
                     builder: (context, form, child) {
                       return AppPrimaryButton(
-                        label: 'Add Vehicle',
+                        label: context.l10n.addVehicleAction,
                         isLoading: vehicleState.isLoading,
                         onPressed: form.valid && !vehicleState.isLoading
                             ? () async {

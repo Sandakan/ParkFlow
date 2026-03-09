@@ -24,7 +24,7 @@ class LotDetailsSheet extends ConsumerWidget {
     if (lot == null) {
       return Container(
         padding: const EdgeInsets.all(24),
-        child: const Center(child: Text('No lot selected')),
+        child: Center(child: Text(context.l10n.noLotSelected)),
       );
     }
 
@@ -132,7 +132,7 @@ class LotDetailsSheet extends ConsumerWidget {
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
-                                          'Lot Layout',
+                                          context.l10n.parkingSlotsTitle,
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleSmall
@@ -148,24 +148,22 @@ class LotDetailsSheet extends ConsumerWidget {
                                             vertical: 4,
                                           ),
                                           decoration: BoxDecoration(
-                                            color: Colors.green.withValues(
-                                              alpha: 0.1,
-                                            ),
+                                            color: AppColors.error.withValues(alpha: 0.1),
                                             borderRadius: BorderRadius.circular(
                                               10,
                                             ),
                                           ),
-                                          child: const Row(
+                                          child: Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons.circle,
                                                 size: 8,
                                                 color: Colors.green,
                                               ),
-                                              SizedBox(width: 4),
+                                              const SizedBox(width: 4),
                                               Text(
-                                                'Live',
-                                                style: TextStyle(
+                                                context.l10n.liveBadge,
+                                                style: const TextStyle(
                                                   color: Colors.green,
                                                   fontSize: 10,
                                                   fontWeight: FontWeight.bold,
@@ -243,7 +241,7 @@ class LotDetailsSheet extends ConsumerWidget {
                 launchUrl(Uri.parse(url));
               },
               icon: const Icon(Icons.directions),
-              label: const Text('Navigate'),
+              label: Text(context.l10n.navigateAction),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 side: const BorderSide(color: AppColors.primary, width: 2),
@@ -267,9 +265,9 @@ class LotDetailsSheet extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              child: const Text(
-                'Book a Spot',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              child: Text(
+                context.l10n.bookASlotTitle,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -324,7 +322,7 @@ class LotDetailsSheet extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Available for drivers now',
+                      context.l10n.availableSlotsCount(liveAvailable.toString()),
                       style: TextStyle(
                         color: AppColors.textSecondary,
                         fontSize: 12,
@@ -419,9 +417,9 @@ class LotDetailsSheet extends ConsumerWidget {
                 size: 18,
               ),
               const SizedBox(width: 8),
-              const Text(
-                'Top Recommended Spots',
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+              Text(
+                context.l10n.topRecommended,
+                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
               ),
             ],
           ),
@@ -476,7 +474,7 @@ class LotDetailsSheet extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          'Near entrance',
+                          context.l10n.nearEntrance,
                           style: TextStyle(
                             color: AppColors.textSecondary,
                             fontSize: 11,

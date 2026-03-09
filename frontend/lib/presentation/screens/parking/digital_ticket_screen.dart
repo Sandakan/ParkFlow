@@ -25,9 +25,9 @@ class DigitalTicketScreen extends ConsumerWidget {
         backgroundColor: AppColors.transparent,
         elevation: 0,
         foregroundColor: AppColors.white,
-        title: const Text(
-          'Digital Ticket',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          context.l10n.digitalTicketTitle,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -38,10 +38,10 @@ class DigitalTicketScreen extends ConsumerWidget {
             orElse: () => null,
           );
           if (res == null) {
-            return const Center(
+            return Center(
               child: Text(
-                'Reservation not found',
-                style: TextStyle(color: Colors.white),
+                context.l10n.noBookingsFound,
+                style: const TextStyle(color: Colors.white),
               ),
             );
           }
@@ -95,7 +95,7 @@ class DigitalTicketScreen extends ConsumerWidget {
         ),
         error: (e, s) => Center(
           child: Text(
-            'Error: $e',
+            context.l10n.errorPrefix(e.toString()),
             style: const TextStyle(color: AppColors.white),
           ),
         ),
@@ -152,9 +152,9 @@ class DigitalTicketScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _TicketDetail(label: 'Slot', value: res.slotName),
+                    _TicketDetail(label: context.l10n.slotIdentifierLabel, value: res.slotName),
                     _TicketDetail(
-                      label: 'Vehicle',
+                      label: context.l10n.myVehicle,
                       value: res.vehicle.plateNumber,
                     ),
                   ],
@@ -200,7 +200,7 @@ class DigitalTicketScreen extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      'LKR ${res.totalPrice.toStringAsFixed(2)}',
+                      context.l10n.lkrAmount(res.totalPrice.toStringAsFixed(2)),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -220,7 +220,7 @@ class DigitalTicketScreen extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      'LKR ${res.totalBilledPrice.toStringAsFixed(2)}',
+                      context.l10n.lkrAmount(res.totalBilledPrice.toStringAsFixed(2)),
                       style: const TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 26,
@@ -259,7 +259,7 @@ class DigitalTicketScreen extends ConsumerWidget {
           child: OutlinedButton.icon(
             onPressed: () => const HomeRoute().go(context),
             icon: const Icon(Icons.arrow_back_ios_new_rounded),
-            label: const Text('Book Again'),
+            label: Text(context.l10n.bookAgainAction),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.white,
               side: const BorderSide(color: AppColors.white, width: 2),
@@ -279,7 +279,7 @@ class DigitalTicketScreen extends ConsumerWidget {
               launchUrl(Uri.parse(url));
             },
             icon: const Icon(Icons.directions_outlined),
-            label: const Text('Navigate'),
+            label: Text(context.l10n.navigateAction),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.white,
               side: const BorderSide(color: AppColors.white, width: 2),

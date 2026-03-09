@@ -153,7 +153,7 @@ class NotificationScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                _formatTime(notification.createdAt),
+                                _formatTime(context, notification.createdAt),
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: AppColors.textSecondary.withValues(alpha: 0.7),
                                   fontSize: 11,
@@ -202,14 +202,21 @@ class NotificationScreen extends ConsumerWidget {
     }
   }
 
-  String _formatTime(DateTime time) {
+  String _formatTime(BuildContext context, DateTime time) {
     final now = DateTime.now();
     final difference = now.difference(time);
+    final l10n = context.l10n;
     
-    if (difference.inMinutes < 1) return 'Just now';
-    if (difference.inMinutes < 60) return '${difference.inMinutes}m ago';
-    if (difference.inHours < 24) return '${difference.inHours}h ago';
-    if (difference.inDays < 7) return '${difference.inDays}d ago';
+    if (difference.inMinutes < 1) return l10n.justNow;
+    if (difference.inMinutes < 60) {
+      return l10n.minutesAgoShort(difference.inMinutes.toString());
+    }
+    if (difference.inHours < 24) {
+      return l10n.hoursAgoShort(difference.inHours.toString());
+    }
+    if (difference.inDays < 7) {
+      return l10n.daysAgoShort(difference.inDays.toString());
+    }
     
     return '${time.day}/${time.month}/${time.year}';
   }

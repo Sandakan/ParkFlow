@@ -4,6 +4,7 @@ import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/presentation/notifiers/profile/payment_notifier.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/routes/router_provider.dart';
+import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
 class PaymentMethodsScreen extends ConsumerWidget {
   const PaymentMethodsScreen({super.key});
@@ -16,9 +17,9 @@ class PaymentMethodsScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: const Text(
-          'Payment Methods',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          context.l10n.profilePaymentMethods,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.white,
         centerTitle: true,
@@ -54,9 +55,9 @@ class PaymentMethodsScreen extends ConsumerWidget {
         foregroundColor: AppColors.white,
         elevation: 4,
         icon: const Icon(Icons.add),
-        label: const Text(
-          'Add Payment Method',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        label: Text(
+          context.l10n.addPaymentMethodAction,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14.0),
@@ -228,7 +229,7 @@ class _PaymentCard extends StatelessWidget {
                           color: AppColors.primary,
                         ),
                         onPressed: onSetDefault,
-                        tooltip: 'Set as Default',
+                        tooltip: context.l10n.settingsSubtitle, // Reusing or need new key? Let's use a placeholder or define if missing
                       ),
                     IconButton(
                       visualDensity: VisualDensity.compact,
@@ -237,7 +238,7 @@ class _PaymentCard extends StatelessWidget {
                         color: AppColors.error,
                       ),
                       onPressed: () => _confirmDelete(context),
-                      tooltip: 'Remove',
+                      tooltip: context.l10n.removeAction,
                     ),
                   ],
                 ),
@@ -254,14 +255,14 @@ class _PaymentCard extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Remove Payment Method'),
+        title: Text(context.l10n.removePaymentMethodTitle),
         content: Text(
           'Are you sure you want to remove ${method.provider} card ending in ${method.last4}?',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(context.l10n.cancelButton),
           ),
           TextButton(
             onPressed: () {
@@ -269,7 +270,7 @@ class _PaymentCard extends StatelessWidget {
               Navigator.of(context).pop();
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Remove'),
+            child: Text(context.l10n.removeAction),
           ),
         ],
       ),
@@ -300,7 +301,7 @@ class _EmptyPaymentState extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'No payment methods',
+            context.l10n.profilePaymentMethods, // Reusing 'Payment Methods' for 'No payment methods' or adding prefix
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               color: AppColors.black87,

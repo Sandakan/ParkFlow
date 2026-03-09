@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:parkflow/utils/helpers/talker.dart';
+import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:parkflow/presentation/notifiers/parking/parking_notifier.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
@@ -16,6 +17,7 @@ import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/presentation/widgets/common/app_buttons.dart';
 import 'package:parkflow/services/reservation_service.dart';
 import 'package:parkflow/core/network/entities/slot_availability_response_entity.dart';
+import 'package:parkflow/l10n/app_localizations.dart';
 
 class BookingScreen extends ConsumerStatefulWidget {
   const BookingScreen({super.key});
@@ -184,8 +186,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
 
     if (lot == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Book a Slot')),
-        body: const Center(child: Text('No lot selected')),
+        appBar: AppBar(title: Text(context.l10n.bookASlotTitle)),
+        body: Center(child: Text(context.l10n.noLotSelected)),
       );
     }
 
@@ -224,14 +226,14 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _SectionHeader(
-                    title: 'Your Vehicle',
+                    title: context.l10n.yourVehicleSection,
                     icon: Icons.directions_car,
                     isRequired: true,
                     action: user?.vehicles.isEmpty ?? true
                         ? TextButton(
                             onPressed: () =>
                                 const AddVehicleRoute().push(context),
-                            child: const Text('Add Vehicle'),
+                            child: Text(context.l10n.addVehicleAction),
                           )
                         : null,
                   ),
@@ -239,7 +241,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   _buildVehiclePicker(user),
                   const SizedBox(height: 32),
                   _SectionHeader(
-                    title: 'Time Window',
+                    title: context.l10n.timeWindowSection,
                     icon: Icons.access_time,
                     isRequired: true,
                   ),
@@ -249,7 +251,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   _buildTimePickers(context),
                   const SizedBox(height: 32),
                   _SectionHeader(
-                    title: 'Slot Preference',
+                    title: context.l10n.slotPreferenceSection,
                     icon: Icons.map_outlined,
                     isRequired: true,
                   ),
@@ -257,7 +259,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   _buildSlotPreference(parkingState),
                   const SizedBox(height: 32),
                   _SectionHeader(
-                    title: 'Payment Method',
+                    title: context.l10n.paymentMethodSection,
                     icon: Icons.payment,
                     isRequired: true,
                   ),
@@ -320,9 +322,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               color: AppColors.outlineVariant,
             ),
             const SizedBox(height: 16),
-            const Text(
-              'No vehicles found',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              context.l10n.noVehiclesFound,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
@@ -434,7 +436,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         return SizedBox(
           width: double.infinity,
           child: _PickerTile(
-            label: 'Arrival Date',
+            label: context.l10n.arrivalDateLabel,
             isRequired: true,
             value: DateFormat(
               'EEEE, MMMM d, yyyy',
@@ -479,7 +481,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             formControlName: 'arrival_time',
             builder: (context, control, child) {
               return _PickerTile(
-                label: 'Arrival Time',
+                label: context.l10n.arrivalTimeLabel,
                 isRequired: true,
                 value: DateFormat(
                   'HH:mm',
@@ -516,9 +518,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             formControlName: 'duration',
             builder: (context, control, child) {
               return _PickerTile(
-                label: 'Duration',
+                label: context.l10n.durationLabel,
                 isRequired: true,
-                value: '${control.value} min',
+                value: '${control.value} ${context.l10n.minutesDuration}',
                 onTap: () {
                   _showDurationPicker(context, control as FormControl<int>);
                 },
@@ -542,9 +544,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Select Duration',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              Text(
+                context.l10n.durationLabel,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
               ),
               const SizedBox(height: 24),
               Wrap(
@@ -552,7 +554,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 runSpacing: 12,
                 children: [30, 60, 120, 180, 240, 480].map((d) {
                   return ChoiceChip(
-                    label: Text('$d min'),
+                    label: Text('$d ${context.l10n.minutesShort}'),
                     selected: control.value == d,
                     onSelected: (selected) {
                       if (selected) {
@@ -578,7 +580,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           children: [
             Expanded(
               child: _ChoiceTile(
-                label: 'Smart Suggestion',
+                label: context.l10n.smartSuggestionLabel,
                 isSelected: form.control('slot_selection_mode').value == 'auto',
                 onTap: () =>
                     form.control('slot_selection_mode').updateValue('auto'),
@@ -587,7 +589,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             const SizedBox(width: 16),
             Expanded(
               child: _ChoiceTile(
-                label: 'Manual Selection',
+                label: context.l10n.manualSelectionLabel,
                 isSelected:
                     form.control('slot_selection_mode').value == 'manual',
                 onTap: () =>
@@ -608,7 +610,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Suggested Slot: $_suggestedSlotId',
+                    '${context.l10n.smartSuggestionLabel}: $_suggestedSlotId',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AppColors.primary,
                           fontWeight: FontWeight.bold,
@@ -649,7 +651,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
       children: [
         Expanded(
           child: _ChoiceTile(
-            label: 'Card',
+            label: context.l10n.paymentMethodTypeCard,
             isSelected: form.control('payment_method').value == 'card',
             onTap: () => form.control('payment_method').updateValue('card'),
             icon: Icons.credit_card_outlined,
@@ -658,7 +660,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         const SizedBox(width: 16),
         Expanded(
           child: _ChoiceTile(
-            label: 'Cash',
+            label: context.l10n.paymentMethodTypeCash,
             isSelected: form.control('payment_method').value == 'cash',
             onTap: () => form.control('payment_method').updateValue('cash'),
             icon: Icons.money,
@@ -686,7 +688,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Base Rate',
+                  context.l10n.baseRateLabel,
                   style: TextStyle(color: AppColors.textSecondary),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -705,7 +707,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Duration',
+                  context.l10n.durationLabel,
                   style: TextStyle(color: AppColors.textSecondary),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -724,7 +726,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             children: [
               Expanded(
                 child: Text(
-                  'Total Price',
+                  context.l10n.totalPriceLabel,
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
@@ -763,8 +765,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           Expanded(
             child: Text(
               _isCheckingAvailability
-                  ? 'Verifying slot availability...'
-                  : 'Changing selections will automatically check for booking conflicts.',
+                  ? context.l10n.verifyingAvailability
+                  : context.l10n.conflictCheckHint,
               style: TextStyle(
                 color: AppColors.textSecondary,
                 fontSize: 11,
@@ -791,7 +793,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'This slot is available for the selected time window!',
+              context.l10n.slotAvailableMessage,
               style: TextStyle(
                 color: Colors.green,
                 fontSize: 13,
@@ -818,7 +820,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'This slot is already booked for the selected time window. Please choose another slot or time.',
+              context.l10n.slotNotAvailableMessage,
               style: TextStyle(
                 color: AppColors.error,
                 fontSize: 13,
@@ -859,6 +861,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   }
 
   Widget _buildPastTimeWarning() {
+    final AppLocalizations l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -870,9 +873,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         children: [
           Icon(Icons.history_toggle_off, color: AppColors.error, size: 20),
           const SizedBox(width: 12),
-          const Expanded(
+          Expanded(
             child: Text(
-              'Reservation time cannot be in the past. Please select a future time.',
+              l10n.pastTimeWarning,
               style: TextStyle(
                 color: AppColors.error,
                 fontSize: 13,
@@ -895,7 +898,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             _isSlotAvailable;
 
         return AppPrimaryButton(
-          label: 'Confirm Booking',
+          label: context.l10n.confirmBookingAction,
           onPressed: isFormValid ? _submitBooking : null,
           isLoading: isLoading,
           width: double.infinity,

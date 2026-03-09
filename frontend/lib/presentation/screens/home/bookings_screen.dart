@@ -42,7 +42,7 @@ class BookingsScreen extends ConsumerWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Text(
-                        'Error: $err',
+                        context.l10n.errorPrefix(err.toString()),
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: AppColors.error),
                       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
+import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 import 'package:parkflow/presentation/widgets/language_picker_button.dart';
 import 'package:parkflow/routes/router_provider.dart';
@@ -67,15 +67,9 @@ class ProfileScreen extends ConsumerWidget {
                 // Settings Section
                 _buildSection(context, [
                   _buildListTile(
-                    icon: Icons.history,
-                    title: l10n.profileParkingHistory,
-                    subtitle: l10n.profileViewPastBookings,
-                    onTap: () {},
-                  ),
-                  _buildListTile(
                     icon: Icons.directions_car,
                     title: l10n.myVehicle,
-                    subtitle: 'Manage your vehicles',
+                    subtitle: l10n.manageVehiclesSubtitle,
                     onTap: () {
                       const MyVehicleRoute().push(context);
                     },
@@ -87,12 +81,6 @@ class ProfileScreen extends ConsumerWidget {
                     onTap: () {
                       const PaymentMethodsRoute().push(context);
                     },
-                  ),
-                  _buildListTile(
-                    icon: Icons.notifications_none,
-                    title: l10n.profileNotifications,
-                    subtitle: l10n.profileAlertsUpdates,
-                    onTap: () {},
                   ),
                   _buildLanguageTile(context),
                 ]),

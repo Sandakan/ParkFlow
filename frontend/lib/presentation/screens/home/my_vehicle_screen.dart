@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:parkflow/l10n/app_localizations.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
-import 'package:parkflow/presentation/notifiers/profile/vehicle_notifier.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
+import 'package:parkflow/presentation/notifiers/profile/vehicle_notifier.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/routes/router_provider.dart';
 
@@ -58,9 +59,9 @@ class MyVehicleScreen extends ConsumerWidget {
         foregroundColor: AppColors.white,
         elevation: 4,
         icon: const Icon(Icons.add),
-        label: const Text(
-          'Add Vehicle',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        label: Text(
+          l10n.addVehicleAction,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14.0),
@@ -112,6 +113,7 @@ class _VehicleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -179,8 +181,8 @@ class _VehicleCard extends StatelessWidget {
                     Icons.delete_outline_rounded,
                     color: AppColors.error,
                   ),
-                  onPressed: () => _confirmDelete(context),
-                  tooltip: 'Remove',
+                  onPressed: () => _confirmDelete(context, l10n),
+                  tooltip: l10n.removeAction,
                 ),
               ],
             ),
@@ -207,19 +209,19 @@ class _VehicleCard extends StatelessWidget {
     return Icons.directions_bus_rounded;
   }
 
-  void _confirmDelete(BuildContext context) {
+  void _confirmDelete(BuildContext context, AppLocalizations l10n) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Remove Vehicle'),
+        title: Text(l10n.removeVehicleTitle),
         content: Text(
           'Are you sure you want to remove ${vehicle.plateNumber}?',
         ),
         actions: [
           TextButton(
             onPressed: () => context.pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancelButton),
           ),
           TextButton(
             onPressed: () {
@@ -227,7 +229,7 @@ class _VehicleCard extends StatelessWidget {
               context.pop();
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Remove'),
+            child: Text(l10n.removeAction),
           ),
         ],
       ),
@@ -265,7 +267,7 @@ class _EmptyVehiclesState extends ConsumerWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'No vehicles added yet',
+                  l10n.noVehiclesFound,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.black87,
@@ -275,7 +277,7 @@ class _EmptyVehiclesState extends ConsumerWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Text(
-                    'Add your vehicles to enjoy seamless parking bookings.',
+                    l10n.noVehiclesFound, // Reusing or need hint key
                     textAlign: TextAlign.center,
                     style:
                         TextStyle(color: AppColors.textSecondary, fontSize: 15),

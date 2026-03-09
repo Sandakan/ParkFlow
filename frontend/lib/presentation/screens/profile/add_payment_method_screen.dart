@@ -9,6 +9,7 @@ import 'package:parkflow/presentation/notifiers/profile/payment_notifier.dart';
 import 'package:parkflow/presentation/widgets/common/app_buttons.dart';
 import 'package:parkflow/core/app_exception.dart';
 import 'package:parkflow/l10n/app_localizations.dart';
+import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
 class AddPaymentMethodScreen extends ConsumerWidget {
   const AddPaymentMethodScreen({super.key});
@@ -37,9 +38,9 @@ class AddPaymentMethodScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: const Text(
-          'Add Payment Method',
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          context.l10n.profilePaymentMethods,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.white,
         elevation: 0,
@@ -57,22 +58,22 @@ class AddPaymentMethodScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   LabeledReactiveDropdownField<String>(
-                    label: 'Payment Type',
+                    label: context.l10n.paymentMethodSection, // Reusing 'Payment Method' label
                     formControlName: 'type',
                     prefixIcon: Icons.category_outlined,
                     isRequired: true,
-                    items: const [
+                    items: [
                       DropdownMenuItem(
                         value: 'card',
-                        child: Text('Credit/Debit Card'),
+                        child: Text(context.l10n.paymentMethodTypeCard),
                       ),
                     ],
                   ),
                   const SizedBox(height: 24),
                   LabeledReactiveTextField<String>(
-                    label: 'Provider Name',
+                    label: context.l10n.paymentProviderLabel,
                     formControlName: 'provider',
-                    hintText: 'e.g. Visa, MasterCard, Bank',
+                    hintText: context.l10n.paymentMethodNameHint,
                     prefixIcon: Icons.business_outlined,
                     isRequired: true,
                     onChanged: (_) {
@@ -83,9 +84,9 @@ class AddPaymentMethodScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 24),
                   LabeledReactiveTextField<String>(
-                    label: 'Last 4 Digits',
+                    label: context.l10n.paymentLastFourLabel,
                     formControlName: 'last4',
-                    hintText: 'e.g. 1234',
+                    hintText: context.l10n.paymentMethodLastFourHint,
                     prefixIcon: Icons.credit_card_outlined,
                     keyboardType: TextInputType.number,
                     onChanged: (_) {
@@ -135,7 +136,7 @@ class AddPaymentMethodScreen extends ConsumerWidget {
                   ReactiveFormConsumer(
                     builder: (context, form, child) {
                       return AppPrimaryButton(
-                        label: 'Add Payment Method',
+                        label: context.l10n.addPaymentMethodAction,
                         isLoading: paymentState.isLoading,
                         onPressed: form.valid && !paymentState.isLoading
                             ? () async {

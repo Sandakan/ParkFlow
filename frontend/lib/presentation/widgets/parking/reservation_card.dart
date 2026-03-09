@@ -82,7 +82,7 @@ class ReservationCard extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                '${reservation.vehicle.type} (${reservation.vehicle.plateNumber})',
+                '${_getVehicleTypeText(context, reservation.vehicle.type)} (${reservation.vehicle.plateNumber})',
                 style:
                     const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                 overflow: TextOverflow.ellipsis,
@@ -174,6 +174,22 @@ class ReservationCard extends StatelessWidget {
         return context.l10n.statusCompleted;
       case ReservationStatus.cancelled:
         return context.l10n.statusCancelled;
+    }
+  }
+
+  String _getVehicleTypeText(BuildContext context, String type) {
+    switch (type.toLowerCase()) {
+      case 'car':
+        return context.l10n.vehicleTypeCar;
+      case 'bike':
+      case 'motorcycle':
+        return context.l10n.vehicleTypeMotorcycle;
+      case 'three-wheeler':
+        return context.l10n.vehicleTypeThreeWheeler;
+      case 'truck':
+        return context.l10n.vehicleTypeTruck;
+      default:
+        return type;
     }
   }
 }

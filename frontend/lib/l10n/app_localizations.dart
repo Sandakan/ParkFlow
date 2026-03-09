@@ -1576,37 +1576,37 @@ abstract class AppLocalizations {
   /// **'Time Left'**
   String get timeLeft;
 
-  /// No description provided for @baseRateLabel.
+  /// Label for the hourly base rate
   ///
   /// In en, this message translates to:
   /// **'Base Rate (LKR/hr)'**
   String get baseRateLabel;
 
-  /// No description provided for @baseRateHint.
+  /// Hint for entering the base rate
   ///
   /// In en, this message translates to:
   /// **'e.g. 50.0'**
   String get baseRateHint;
 
-  /// No description provided for @originalPriceLabel.
+  /// Label for the price before any discounts
   ///
   /// In en, this message translates to:
   /// **'Original Price'**
   String get originalPriceLabel;
 
-  /// No description provided for @finalPriceLabel.
+  /// Label for the final calculated price
   ///
   /// In en, this message translates to:
   /// **'Final Price'**
   String get finalPriceLabel;
 
-  /// No description provided for @checkInLabel.
+  /// Label for the check-in time or action
   ///
   /// In en, this message translates to:
   /// **'Check-in'**
   String get checkInLabel;
 
-  /// No description provided for @checkOutLabel.
+  /// Label for the check-out time or action
   ///
   /// In en, this message translates to:
   /// **'Check-out'**
@@ -1618,109 +1618,109 @@ abstract class AppLocalizations {
   /// **'{mins} mins left'**
   String minsLeft(String mins);
 
-  /// No description provided for @statusUpcoming.
+  /// Status label for a booking that hasn't started yet
   ///
   /// In en, this message translates to:
   /// **'Upcoming'**
   String get statusUpcoming;
 
-  /// No description provided for @statusOngoing.
+  /// Status label for a booking that is currently in progress
   ///
   /// In en, this message translates to:
   /// **'Ongoing'**
   String get statusOngoing;
 
-  /// No description provided for @statusOverstay.
+  /// Status label for a booking that has exceeded its scheduled time
   ///
   /// In en, this message translates to:
   /// **'Overstay'**
   String get statusOverstay;
 
-  /// No description provided for @statusNoShow.
+  /// Status label for a booking where the vehicle did not arrive
   ///
   /// In en, this message translates to:
   /// **'No Show'**
   String get statusNoShow;
 
-  /// No description provided for @statusExpired.
+  /// Status label for a booking that has passed its scheduled end time
   ///
   /// In en, this message translates to:
   /// **'Expired'**
   String get statusExpired;
 
-  /// No description provided for @ticketStatusConfirmed.
+  /// Success title for a confirmed digital ticket
   ///
   /// In en, this message translates to:
   /// **'Booking Confirmed!'**
   String get ticketStatusConfirmed;
 
-  /// No description provided for @ticketStatusOngoing.
+  /// Status title for an active digital ticket
   ///
   /// In en, this message translates to:
   /// **'Parking in Progress'**
   String get ticketStatusOngoing;
 
-  /// No description provided for @ticketStatusExpired.
+  /// Status title for an expired digital ticket
   ///
   /// In en, this message translates to:
   /// **'Booking Expired'**
   String get ticketStatusExpired;
 
-  /// No description provided for @ticketStatusOverstay.
+  /// Status title for an overstaying digital ticket
   ///
   /// In en, this message translates to:
   /// **'Overstay Warning'**
   String get ticketStatusOverstay;
 
-  /// No description provided for @ticketStatusCompleted.
+  /// Status title for a completed parking session
   ///
   /// In en, this message translates to:
   /// **'Parking Completed'**
   String get ticketStatusCompleted;
 
-  /// No description provided for @ticketStatusCancelled.
+  /// Status title for a cancelled digital ticket
   ///
   /// In en, this message translates to:
   /// **'Booking Cancelled'**
   String get ticketStatusCancelled;
 
-  /// No description provided for @ticketSubtitleConfirmed.
+  /// Instruction subtitle for a confirmed ticket
   ///
   /// In en, this message translates to:
   /// **'Present this QR code at the entrance.'**
   String get ticketSubtitleConfirmed;
 
-  /// No description provided for @ticketSubtitleOngoing.
+  /// Information subtitle for an ongoing parking session
   ///
   /// In en, this message translates to:
   /// **'You are currently parked in this lot.'**
   String get ticketSubtitleOngoing;
 
-  /// No description provided for @ticketSubtitleExpired.
+  /// Information subtitle for an expired ticket
   ///
   /// In en, this message translates to:
   /// **'The reservation window has passed.'**
   String get ticketSubtitleExpired;
 
-  /// No description provided for @ticketSubtitleOverstay.
+  /// Warning subtitle for an overstaying vehicle
   ///
   /// In en, this message translates to:
   /// **'You have exceeded your reserved time.'**
   String get ticketSubtitleOverstay;
 
-  /// No description provided for @ticketSubtitleNoShow.
+  /// Information subtitle for a no-show scenario
   ///
   /// In en, this message translates to:
   /// **'Please check in before the time expires.'**
   String get ticketSubtitleNoShow;
 
-  /// No description provided for @ticketSubtitleCompleted.
+  /// Information subtitle for a completed session
   ///
   /// In en, this message translates to:
   /// **'Your parking session has ended.'**
   String get ticketSubtitleCompleted;
 
-  /// No description provided for @ticketSubtitleCancelled.
+  /// Information subtitle for a cancelled ticket
   ///
   /// In en, this message translates to:
   /// **'This booking is no longer valid.'**
@@ -1744,89 +1744,515 @@ abstract class AppLocalizations {
   /// **'Mark all as read'**
   String get markAllAsRead;
 
-  /// No description provided for @forgotPasswordTitle.
+  /// Title for the forgot password screen
   ///
   /// In en, this message translates to:
   /// **'Forgot Password'**
   String get forgotPasswordTitle;
 
-  /// No description provided for @forgotPasswordSubtitle.
+  /// Subtitle for the forgot password screen
   ///
   /// In en, this message translates to:
   /// **'Enter your email to receive a password reset OTP.'**
   String get forgotPasswordSubtitle;
 
-  /// No description provided for @sendOtpButton.
+  /// Button text to send an OTP
   ///
   /// In en, this message translates to:
   /// **'Send OTP'**
   String get sendOtpButton;
 
-  /// No description provided for @verifyOtpTitle.
+  /// Title for the OTP verification screen
   ///
   /// In en, this message translates to:
   /// **'Verify OTP'**
   String get verifyOtpTitle;
 
-  /// No description provided for @verifyOtpSubtitle.
+  /// Subtitle for the OTP verification screen
   ///
   /// In en, this message translates to:
   /// **'Enter the 6-digit code sent to your email.'**
   String get verifyOtpSubtitle;
 
-  /// No description provided for @verifyOtpButton.
+  /// Button text to verify the OTP
   ///
   /// In en, this message translates to:
   /// **'Verify Code'**
   String get verifyOtpButton;
 
-  /// No description provided for @resetPasswordTitle.
+  /// Title for the reset password screen
   ///
   /// In en, this message translates to:
   /// **'Reset Password'**
   String get resetPasswordTitle;
 
-  /// No description provided for @resetPasswordSubtitle.
+  /// Subtitle for the reset password screen
   ///
   /// In en, this message translates to:
   /// **'Enter a new password for your account.'**
   String get resetPasswordSubtitle;
 
-  /// No description provided for @newPasswordLabel.
+  /// Label for the new password input field
   ///
   /// In en, this message translates to:
   /// **'New Password'**
   String get newPasswordLabel;
 
-  /// No description provided for @newPasswordHint.
+  /// Hint for the new password input field
   ///
   /// In en, this message translates to:
   /// **'••••••••'**
   String get newPasswordHint;
 
-  /// No description provided for @resetPasswordButton.
+  /// Button text to reset the password
   ///
   /// In en, this message translates to:
   /// **'Reset Password'**
   String get resetPasswordButton;
 
-  /// No description provided for @passwordResetSuccess.
+  /// Success message after a password reset
   ///
   /// In en, this message translates to:
   /// **'Password reset successfully'**
   String get passwordResetSuccess;
 
-  /// No description provided for @otpRequired.
+  /// Validation message when OTP is empty
   ///
   /// In en, this message translates to:
   /// **'OTP is required'**
   String get otpRequired;
 
-  /// No description provided for @otpInvalid.
+  /// Validation message when OTP format is invalid
   ///
   /// In en, this message translates to:
   /// **'OTP must be 6 digits'**
   String get otpInvalid;
+
+  /// Message shown when a selected parking slot is already taken
+  ///
+  /// In en, this message translates to:
+  /// **'Slot is not available'**
+  String get slotNotAvailableMessage;
+
+  /// Shown when no parking lot is selected in details or booking
+  ///
+  /// In en, this message translates to:
+  /// **'No lot selected'**
+  String get noLotSelected;
+
+  /// Button text for navigation to a lot
+  ///
+  /// In en, this message translates to:
+  /// **'Navigate'**
+  String get navigateAction;
+
+  /// General remove action text
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeAction;
+
+  /// Title for removing a payment method dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Payment Method'**
+  String get removePaymentMethodTitle;
+
+  /// Label for credit/debit card payment method
+  ///
+  /// In en, this message translates to:
+  /// **'Credit/Debit Card'**
+  String get paymentMethodTypeCard;
+
+  /// Hint for payment method name
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Visa, MasterCard, Bank'**
+  String get paymentMethodNameHint;
+
+  /// Hint for last four digits of card
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 1234'**
+  String get paymentMethodLastFourHint;
+
+  /// Button text to add a vehicle
+  ///
+  /// In en, this message translates to:
+  /// **'Add Vehicle'**
+  String get addVehicleAction;
+
+  /// Title for remove vehicle confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Vehicle'**
+  String get removeVehicleTitle;
+
+  /// Subtitle for vehicles management section
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your vehicles'**
+  String get manageVehiclesSubtitle;
+
+  /// Hint for vehicle license plate
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. ABC 1234'**
+  String get vehicleNumberHint;
+
+  /// Label for car vehicle type
+  ///
+  /// In en, this message translates to:
+  /// **'Car'**
+  String get vehicleTypeCar;
+
+  /// Label for motorcycle vehicle type
+  ///
+  /// In en, this message translates to:
+  /// **'Motorcycle/Bike'**
+  String get vehicleTypeMotorcycle;
+
+  /// Label for three-wheeler vehicle type
+  ///
+  /// In en, this message translates to:
+  /// **'Three-Wheeler'**
+  String get vehicleTypeThreeWheeler;
+
+  /// Label for truck/van vehicle type
+  ///
+  /// In en, this message translates to:
+  /// **'Truck/Van'**
+  String get vehicleTypeTruck;
+
+  /// Button text to repeat a booking
+  ///
+  /// In en, this message translates to:
+  /// **'Book Again'**
+  String get bookAgainAction;
+
+  /// Title for slot booking screen
+  ///
+  /// In en, this message translates to:
+  /// **'Book a Slot'**
+  String get bookASlotTitle;
+
+  /// Label for vehicle selection section in booking
+  ///
+  /// In en, this message translates to:
+  /// **'Your Vehicle'**
+  String get yourVehicleSection;
+
+  /// Label for time selection section in booking
+  ///
+  /// In en, this message translates to:
+  /// **'Time Window'**
+  String get timeWindowSection;
+
+  /// Label for slot type selection section in booking
+  ///
+  /// In en, this message translates to:
+  /// **'Slot Preference'**
+  String get slotPreferenceSection;
+
+  /// Label for payment method selection section in booking
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get paymentMethodSection;
+
+  /// Generic success message for completed actions
+  ///
+  /// In en, this message translates to:
+  /// **'Processed successfully!'**
+  String get processedSuccessfully;
+
+  /// Hint for coordinate input fields
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 5.0'**
+  String get coordinateHint;
+
+  /// Hint for OTP input field
+  ///
+  /// In en, this message translates to:
+  /// **'123456'**
+  String get otpHint;
+
+  /// Format for duration in minutes
+  ///
+  /// In en, this message translates to:
+  /// **'{mins} min'**
+  String minutesDuration(String mins);
+
+  /// Button text to add a new payment method
+  ///
+  /// In en, this message translates to:
+  /// **'Add Payment Method'**
+  String get addPaymentMethodAction;
+
+  /// Label for cash payment method
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get paymentMethodTypeCash;
+
+  /// Message shown when no vehicles are available
+  ///
+  /// In en, this message translates to:
+  /// **'No vehicles found'**
+  String get noVehiclesFound;
+
+  /// Label for arrival date selection
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival Date'**
+  String get arrivalDateLabel;
+
+  /// Label for arrival time selection
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival Time'**
+  String get arrivalTimeLabel;
+
+  /// Label for parking duration
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get durationLabel;
+
+  /// Short label for minutes
+  ///
+  /// In en, this message translates to:
+  /// **'mins'**
+  String get minutesShort;
+
+  /// Label for AI-powered slot suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'AI Suggestion'**
+  String get smartSuggestionLabel;
+
+  /// Label for manual slot selection
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Selection'**
+  String get manualSelectionLabel;
+
+  /// Label for total price display
+  ///
+  /// In en, this message translates to:
+  /// **'Total Price'**
+  String get totalPriceLabel;
+
+  /// Label shown while checking slot availability
+  ///
+  /// In en, this message translates to:
+  /// **'Verifying...'**
+  String get verifyingAvailability;
+
+  /// Hint text explaining availability check
+  ///
+  /// In en, this message translates to:
+  /// **'Checking for potential double bookings'**
+  String get conflictCheckHint;
+
+  /// Message confirming slot availability
+  ///
+  /// In en, this message translates to:
+  /// **'Slot is available'**
+  String get slotAvailableMessage;
+
+  /// Warning message when selected time is in the past
+  ///
+  /// In en, this message translates to:
+  /// **'Parking time is in the past'**
+  String get pastTimeWarning;
+
+  /// Button text to finalize booking
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Booking'**
+  String get confirmBookingAction;
+
+  /// Suggestion message when no parking lots are found
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different location or search term'**
+  String get searchTryDifferent;
+
+  /// Prefix for error messages
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {message}'**
+  String errorPrefix(String message);
+
+  /// Timestamp for very recent notifications
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// Short format for minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'{mins}m ago'**
+  String minutesAgoShort(String mins);
+
+  /// Short format for hours ago
+  ///
+  /// In en, this message translates to:
+  /// **'{hours}h ago'**
+  String hoursAgoShort(String hours);
+
+  /// Short format for days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{days}d ago'**
+  String daysAgoShort(String days);
+
+  /// Title for QR scanner on admin side
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Reservation QR Code'**
+  String get scanQrTitle;
+
+  /// Instruction for QR scanner on admin side
+  ///
+  /// In en, this message translates to:
+  /// **'Position the QR code within the frame to check-in or check-out.'**
+  String get scanQrSubtitle;
+
+  /// Title for the check-in preview sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Check-in Preview'**
+  String get checkInPreview;
+
+  /// Title for the checkout preview sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout Preview'**
+  String get checkoutPreview;
+
+  /// Uppercase status label for pending reservations
+  ///
+  /// In en, this message translates to:
+  /// **'PENDING'**
+  String get statusPending;
+
+  /// Uppercase status label for active sessions
+  ///
+  /// In en, this message translates to:
+  /// **'ACTIVE'**
+  String get statusActiveCapital;
+
+  /// Label for the vehicle information
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle'**
+  String get vehicleLabel;
+
+  /// Label for the parking slot information
+  ///
+  /// In en, this message translates to:
+  /// **'Slot'**
+  String get slotLabel;
+
+  /// Label for the reservation start time
+  ///
+  /// In en, this message translates to:
+  /// **'Start Time'**
+  String get startTimeLabel;
+
+  /// Label for the reservation end time
+  ///
+  /// In en, this message translates to:
+  /// **'End Time'**
+  String get endTimeLabel;
+
+  /// Label for when the vehicle was checked in
+  ///
+  /// In en, this message translates to:
+  /// **'Checked-in At'**
+  String get checkedInAtLabel;
+
+  /// Label for the total cost calculation
+  ///
+  /// In en, this message translates to:
+  /// **'Total Billed Amount'**
+  String get totalBilledAmount;
+
+  /// Instruction for choosing a payment option
+  ///
+  /// In en, this message translates to:
+  /// **'Select Payment Method'**
+  String get selectPaymentMethodLabel;
+
+  /// Label for the digital wallet payment method
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get paymentMethodWallet;
+
+  /// Button text to process a check-in
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Check-in'**
+  String get confirmCheckIn;
+
+  /// Button text to process a checkout
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Checkout'**
+  String get confirmCheckout;
+
+  /// Title for QR scanning error dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Scanning Error'**
+  String get scanningError;
+
+  /// Button text to retry an action
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// Label for the vehicle license plate number input
+  ///
+  /// In en, this message translates to:
+  /// **'License Plate Number'**
+  String get licensePlateLabel;
+
+  /// Label for the vehicle type selection
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle Type'**
+  String get vehicleTypeLabel;
+
+  /// Label for the payment provider name input
+  ///
+  /// In en, this message translates to:
+  /// **'Provider Name'**
+  String get paymentProviderLabel;
+
+  /// Label for the last four digits of a payment card
+  ///
+  /// In en, this message translates to:
+  /// **'Last 4 Digits'**
+  String get paymentLastFourLabel;
+
+  /// Text indicating a slot is near the entrance
+  ///
+  /// In en, this message translates to:
+  /// **'Near entrance'**
+  String get nearEntrance;
+
+  /// Title for the digital ticket screen
+  ///
+  /// In en, this message translates to:
+  /// **'Digital Ticket'**
+  String get digitalTicketTitle;
 }
 
 class _AppLocalizationsDelegate

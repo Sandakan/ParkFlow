@@ -427,6 +427,11 @@ class _OccupancyTrendCard extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: periods.map((p) {
                       final isSelected = p == selectedPeriod;
+                      final label = p == '24h' 
+                          ? l10n.analyticsPeriod24h 
+                          : p == '7d' 
+                              ? l10n.analyticsPeriod7d 
+                              : l10n.analyticsPeriod30d;
                       return GestureDetector(
                         onTap: () => ref
                             .read(analyticsProvider.notifier)
@@ -444,7 +449,7 @@ class _OccupancyTrendCard extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            p,
+                            label,
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
@@ -694,6 +699,11 @@ class _RevenueTrendCard extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: periods.map((p) {
                       final isSelected = p == selectedPeriod;
+                      final label = p == '24h' 
+                          ? l10n.analyticsPeriod24h 
+                          : p == '7d' 
+                              ? l10n.analyticsPeriod7d 
+                              : l10n.analyticsPeriod30d;
                       return GestureDetector(
                         onTap: () => ref
                             .read(analyticsProvider.notifier)
@@ -711,7 +721,7 @@ class _RevenueTrendCard extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            p,
+                            label,
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
