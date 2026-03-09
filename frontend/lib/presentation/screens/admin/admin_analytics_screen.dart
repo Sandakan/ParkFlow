@@ -42,14 +42,12 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 24),
 
-                        // ── Vitals section ──────────────────────────────────
                         _SectionLabel(l10n.analyticsOverview),
                         const SizedBox(height: 12),
                         _VitalsGrid(state: state, isWide: isWide),
                         const SizedBox(height: 24),
 
                         if (isWide) ...[
-                          // Wide layout for trends
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -108,7 +106,6 @@ class AdminAnalyticsScreen extends ConsumerWidget {
                             ],
                           ),
                         ] else ...[
-                          // Narrow layout (original)
                           _SectionLabel(l10n.analyticsOccupancyTrend),
                           const SizedBox(height: 12),
                           _OccupancyTrendCard(state: state),
@@ -141,8 +138,6 @@ class AdminAnalyticsScreen extends ConsumerWidget {
     );
   }
 }
-
-// ─────────────────────────────── Page Header ─────────────────────────────────
 
 class _PageHeader extends StatelessWidget {
   final VoidCallback onRefresh;
@@ -192,8 +187,6 @@ class _PageHeader extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────── Section Label ───────────────────────────────
-
 class _SectionLabel extends StatelessWidget {
   final String label;
 
@@ -211,8 +204,6 @@ class _SectionLabel extends StatelessWidget {
     );
   }
 }
-
-// ──────────────────────────────── Vitals Grid ────────────────────────────────
 
 class _VitalsGrid extends StatelessWidget {
   final AnalyticsState state;
@@ -290,8 +281,6 @@ class _VitalsGrid extends StatelessWidget {
     return AppColors.error;
   }
 }
-
-// ─────────────────────────────── KPI Card ────────────────────────────────────
 
 class _KpiCard extends StatelessWidget {
   final IconData icon;
@@ -382,8 +371,6 @@ class _KpiCard extends StatelessWidget {
   );
 }
 
-// ───────────────────────────── Occupancy Trend Card ──────────────────────────
-
 class _OccupancyTrendCard extends ConsumerWidget {
   final AnalyticsState state;
 
@@ -427,11 +414,11 @@ class _OccupancyTrendCard extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: periods.map((p) {
                       final isSelected = p == selectedPeriod;
-                      final label = p == '24h' 
-                          ? l10n.analyticsPeriod24h 
-                          : p == '7d' 
-                              ? l10n.analyticsPeriod7d 
-                              : l10n.analyticsPeriod30d;
+                      final label = p == '24h'
+                          ? l10n.analyticsPeriod24h
+                          : p == '7d'
+                          ? l10n.analyticsPeriod7d
+                          : l10n.analyticsPeriod30d;
                       return GestureDetector(
                         onTap: () => ref
                             .read(analyticsProvider.notifier)
@@ -653,8 +640,6 @@ class _LineChart extends StatelessWidget {
   }
 }
 
-// ───────────────────────────────── Revenue Trend Card ────────────────────────
-
 class _RevenueTrendCard extends ConsumerWidget {
   final AnalyticsState state;
 
@@ -699,11 +684,11 @@ class _RevenueTrendCard extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: periods.map((p) {
                       final isSelected = p == selectedPeriod;
-                      final label = p == '24h' 
-                          ? l10n.analyticsPeriod24h 
-                          : p == '7d' 
-                              ? l10n.analyticsPeriod7d 
-                              : l10n.analyticsPeriod30d;
+                      final label = p == '24h'
+                          ? l10n.analyticsPeriod24h
+                          : p == '7d'
+                          ? l10n.analyticsPeriod7d
+                          : l10n.analyticsPeriod30d;
                       return GestureDetector(
                         onTap: () => ref
                             .read(analyticsProvider.notifier)
@@ -919,8 +904,6 @@ class _RevenueBarChart extends StatelessWidget {
   }
 }
 
-// ──────────────────────────── Operational Impact Row ────────────────────────
-
 class _OperationalImpactRow extends StatelessWidget {
   final AnalyticsState state;
 
@@ -1041,8 +1024,6 @@ class _ImpactMetricCard extends StatelessWidget {
     ),
   );
 }
-
-// ───────────────────────────────── AI Health Card ────────────────────────────
 
 class _AiHealthCard extends StatelessWidget {
   final AnalyticsState state;
