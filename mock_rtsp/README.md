@@ -1,14 +1,12 @@
 # Mock RTSP Server
 
-This is a lightweight Dockerized utility built on Alpine Linux that creates a simulation environment for live RTSP streams. It uses **MediaMTX** as the core RTSP server and **Python/FFmpeg** to continuously loop your input files (videos or images) and broadcast them across concurrent network paths.
+Official repository: [github.com/Sandakan/ParkFlow](https://github.com/Sandakan/ParkFlow)
 
 ## Key Features
 
-- **Smart Media Handling**: Supports `.mp4`, `.avi`, `.jpg`, `.png`, and `.webp`.
-- **Automatic Scaling**: Injects FFmpeg filters to handle odd-dimension media (e.g., 2121x1414) that typically crash standard H.264 encoders.
-- **Python Powered**: Robust process management with native JSON configuration parsing.
-- **Unbuffered Logs**: Immediate feedback in your terminal via `docker logs`.
-- **Zero-Config Fallback**: Scans the `/assets` folder and streams everything automatically if no config is provided.
+* **Smart Media Handling**: Supports `.mp4`, `.avi`, `.jpg`, `.png`, and `.webp`.
+* **Automatic Scaling**: Handles odd-dimension media that typically crash standard H.264 encoders.
+* **Low Latency**: Optimized for real-time AI inference testing.
 
 ---
 
@@ -27,34 +25,22 @@ docker build -t mock-rtsp .
 The easiest way to run the mock server is using Docker Compose.
 
 > [!IMPORTANT]
-> **The backend stack must be started first.** The mock RTSP server joins the `parkflow-backend` network that is created by the backend's `docker-compose.yml`. Always start the backend before starting `mock_rtsp`.
+> **The backend stack must be started first.** The mock RTSP server joins the `parkflow-backend` network created by the backend's `docker-compose.yml`.
 
 ### Start the Server & Watch for Changes
 
-Builds the image and starts the container. This command will keep the terminal open, showing live logs and automatically rebuilding/syncing when you change files:
+Builds the image and starts the container.
 
 ```bash
-docker compose up --build --watch
+docker compose up -d --build
 ```
 
-> [!NOTE]
-> The RTSP URLs for the streams will be printed in the terminal logs as soon as the container starts. Look for lines starting with `URL: rtsp://...`.
+### Accessing the Streams
 
-### Background Mode (No Watch)
+The RTSP URLs will be printed in the terminal logs. Look for lines starting with `URL: rtsp://...`.
 
-If you just want to run it in the background:
-
-```bash
-docker compose up -d
-```
-
-### Watch Logs
-
-To monitor the streams and see live FFmpeg logs:
-
-```bash
-docker compose logs -f
-```
+* **Localhost (for VLC/FFplay):** `rtsp://localhost:8554/front_gate`
+* **Container-to-Container (for Backend):** `rtsp://mock-rtsp:8554/front_gate` (using the container name or service name)
 
 ### Stop and Remove
 
@@ -62,25 +48,20 @@ docker compose logs -f
 docker compose down
 ```
 
-### After `docker prune` (network not found error)
+### Network Troubleshooting
 
-If you see `network parkflow-backend not found`, it means Docker's networks were pruned. Fix:
+If you see `network parkflow-backend not found`, ensure the backend stack is running first:
 
 ```bash
-# 1. Restart the backend stack first (it creates parkflow-net)
 cd ../backend
-docker compose up --build --watch
-
-# 2. Then start mock_rtsp in a separate terminal
-cd ../mock_rtsp
-docker compose up --watch
+docker compose up -d
 ```
 
 ---
 
 ## 3. Configuration (`stream_config.json`)
 
-Use the `stream_config.json` in the root of this folder to define your cameras. This allows you to map specific files in the `assets/` folder to unique RTSP URL paths.
+Use `stream_config.json` to define your cameras and map files in the `assets/` folder to RTSP paths.
 
 **Example `stream_config.json`:**
 
@@ -95,67 +76,7 @@ Use the `stream_config.json` in the root of this folder to define your cameras. 
 
 ---
 
-## 4. Manual Usage (Docker Run)
+## 4. Fallback Behavior
 
-To run the mock server manually (without Compose):
-
-```bash
-docker run -d --name mock-rtsp \
-  -v "./assets:/assets" \
-  -v "./stream_config.json:/stream_config.json" \
-  -p 8554:8554 \
-  mock-rtsp
-```
-
-### Accessing the Streams
-
-Once the container is running, the streams are available at the following URLs:
-
-- **Localhost (for VLC/FFplay):** `rtsp://localhost:8554/front_gate`
-- **Container-to-Container (for the Backend):** `rtsp://mock-rtsp:8554/front_gate`
-
----
-
-## 4. Management Commands
-
-Use these commands to manage the container lifecycle:
-
-### View Live Logs
-
-Keep track of stream status and RTMP/RTSP connections:
-
-```bash
-docker logs -f my-mock-rtsp
-```
-
-### Stop the Server
-
-```bash
-docker stop my-mock-rtsp
-```
-
-### Start the Server (if already created)
-
-```bash
-docker start my-mock-rtsp
-```
-
-### Remove the Container
-
-```bash
-docker rm -f my-mock-rtsp
-```
-
----
-
-## 5. Advanced Options
-
-### Environment Variables
-
-- `PYTHONUNBUFFERED=1`: (Enabled by default in Dockerfile) Ensures real-time logging in the console.
-- `CONFIG_FILE`: Path to the JSON configuration inside the container (Default: `/stream_config.json`).
-
-### Fallback Behavior
-
-- **Folder Scan**: If no `stream_config.json` is mounted or found, the server automatically scans `/assets/` and starts a stream for every file it finds (using the filename as the stream path).
-- **Test Pattern**: If the `/assets/` folder is empty, the server generates a default live color-bar test pattern at `rtsp://localhost:8554/test_pattern`.
+* **Folder Scan**: If no `stream_config.json` is found, the server scans `/assets/` and starts a stream for every file.
+* **Test Pattern**: If the `/assets/` folder is empty, the server generates a default color-bar test pattern at `rtsp://localhost:8554/test_pattern`.
