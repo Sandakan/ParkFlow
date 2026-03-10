@@ -1,3 +1,4 @@
+// ignore_for_file: invalid_use_of_visible_for_overriding_member
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +13,7 @@ void main() {
   setUp(() {
     mockLocaleNotifier = MockAppLocale();
     registerFallbackValue(const Locale('en'));
+    when(() => mockLocaleNotifier.build()).thenReturn(const Locale('en'));
     when(() => mockLocaleNotifier.setLocale(any())).thenAnswer((_) async => {});
   });
 
