@@ -63,5 +63,11 @@
 	"resetPasswordButton": "கடவுச்சொல்லை மாற்றவும்",
 	"passwordResetSuccess": "கடவுச்சொல் மாற்றப்பட்டது",
 	"otpRequired": "OTP தேவை",
-	"otpInvalid": "OTP 6 இலக்கங்களாக இருக்க வேண்டும்"
+	"otpInvalid": "OTP 6 இலக்கங்களாக இருக்க வேண்டும்",
+	"rateYourExperience": "உங்கள் அனுபவத்தை மதிப்பிடுங்கள்",
+	"ratingDescription": "{lotName} இல் உங்கள் பார்க்கிங் எப்படி இருந்தது?",
+	"commentLabel": "கருத்து (விருப்பமானது)",
+	"submitRating": "மதிப்பீட்டை சமர்ப்பிக்கவும்",
+	"thankYouForRating": "உங்கள் கருத்துக்கு நன்றி!",
+	"ratingRequired": "தயவுசெய்து ஒரு மதிப்பீட்டைத் தேர்ந்தெடுக்கவும்."
 }

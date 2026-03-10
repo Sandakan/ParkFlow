@@ -63,5 +63,11 @@
 	"resetPasswordButton": "මුරපදය වෙනස් කරන්න",
 	"passwordResetSuccess": "මුරපදය සාර්ථකව වෙනස් කරන ලදී",
 	"otpRequired": "OTP කේතය අවශ්‍යයි",
-	"otpInvalid": "OTP කේතය අංක 6ක් විය යුතුය"
+	"otpInvalid": "OTP කේතය අංක 6ක් විය යුතුය",
+	"rateYourExperience": "ඔබේ අත්දැකීම අගයන්න",
+	"ratingDescription": "{lotName} හි ඔබේ වාහන නැවැත්වීම කෙසේද?",
+	"commentLabel": "අදහස් (විකල්ප)",
+	"submitRating": "අගය කිරීම ඉදිරිපත් කරන්න",
+	"thankYouForRating": "ඔබේ ප්‍රතිචාරයට ස්තූතියි!",
+	"ratingRequired": "කරුණාකර අගයක් තෝරන්න."
 }

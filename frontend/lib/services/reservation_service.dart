@@ -141,8 +141,9 @@ class ReservationService {
             try {
               final jsonStr = line.substring(6);
               final List data = json.decode(jsonStr) as List;
-              final reservations =
-                  data.map((e) => ReservationModel.fromJson(e)).toList();
+              final reservations = data
+                  .map((e) => ReservationModel.fromJson(e))
+                  .toList();
               if (!controller.isClosed) {
                 controller.add(reservations);
               }
@@ -171,6 +172,19 @@ class ReservationService {
     };
 
     return controller.stream;
+  }
+
+  Future<void> rateReservation(
+    String reservationId,
+    double rating, {
+    String? comment,
+  }) async {
+    return _remoteRepository.rateReservation(
+      reservationId,
+      rating,
+      comment: comment,
+      accessToken: await _getToken(),
+    );
   }
 }
 

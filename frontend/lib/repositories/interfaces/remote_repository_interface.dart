@@ -157,7 +157,16 @@ abstract class RemoteRepositoryInterface {
     String? accessToken,
   });
 
+  Future<void> rateReservation(
+    String reservationId,
+    double rating, {
+    String? comment,
+    String? accessToken,
+  });
   Future<List<dynamic>> getNotifications({String? accessToken});
-  Future<void> markNotificationAsRead(String notificationId, {String? accessToken});
+  Future<void> markNotificationAsRead(
+    String notificationId, {
+    String? accessToken,
+  });
   Future<void> markAllNotificationsAsRead({String? accessToken});
 }

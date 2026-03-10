@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/presentation/notifiers/parking/reservation_notifier.dart';
 import 'package:parkflow/presentation/widgets/parking/ongoing_booking_card.dart';
 import 'package:parkflow/presentation/widgets/parking/reservation_card.dart';
+import 'package:parkflow/presentation/widgets/parking/rating_dialog.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
@@ -35,9 +36,7 @@ class BookingsScreen extends ConsumerWidget {
               error: (err, stack) => ListView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.3),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
@@ -51,6 +50,32 @@ class BookingsScreen extends ConsumerWidget {
                 ],
               ),
               data: (reservations) {
+                // Check if any reservation was just completed and needs rating
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  final justCompleted = reservations
+                      .where(
+                        (r) =>
+                            r.detailedStatus == ReservationStatus.completed &&
+                            !r.hasRating,
+                      )
+                      .toList();
+
+                  for (final res in justCompleted) {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => RatingDialog(
+                        reservationId: res.id,
+                        lotName: res.lotName,
+                      ),
+                    ).then((rated) {
+                      if (rated == true) {
+                        ref.invalidate(reservationNotifierProvider);
+                      }
+                    });
+                  }
+                });
+
                 if (reservations.isEmpty) {
                   return ListView(
                     physics: const AlwaysScrollableScrollPhysics(),

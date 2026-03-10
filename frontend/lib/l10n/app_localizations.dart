@@ -2253,6 +2253,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Digital Ticket'**
   String get digitalTicketTitle;
+
+  /// Title for the rating dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Rate your experience'**
+  String get rateYourExperience;
+
+  /// Description for the rating dialog
+  ///
+  /// In en, this message translates to:
+  /// **'How was your parking at {lotName}?'**
+  String ratingDescription(String lotName);
+
+  /// Label for the comment text field
+  ///
+  /// In en, this message translates to:
+  /// **'Comment (Optional)'**
+  String get commentLabel;
+
+  /// Text for the rating submission button
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Rating'**
+  String get submitRating;
+
+  /// Success message after rating
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for your feedback!'**
+  String get thankYouForRating;
+
+  /// Error message when rating is not selected
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a rating.'**
+  String get ratingRequired;
+
+  /// Success message after rating
+  ///
+  /// In en, this message translates to:
+  /// **'Rating submitted successfully!'**
+  String get ratingSubmitted;
 }
 
 class _AppLocalizationsDelegate

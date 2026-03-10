@@ -1513,5 +1513,38 @@
 	"digitalTicketTitle": "Digital Ticket",
 	"@digitalTicketTitle": {
 		"description": "Title for the digital ticket screen"
+	},
+	"rateYourExperience": "Rate your experience",
+	"@rateYourExperience": {
+		"description": "Title for the rating dialog"
+	},
+	"ratingDescription": "How was your parking at {lotName}?",
+	"@ratingDescription": {
+		"description": "Description for the rating dialog",
+		"placeholders": {
+			"lotName": {
+				"type": "String"
+			}
+		}
+	},
+	"commentLabel": "Comment (Optional)",
+	"@commentLabel": {
+		"description": "Label for the comment text field"
+	},
+	"submitRating": "Submit Rating",
+	"@submitRating": {
+		"description": "Text for the rating submission button"
+	},
+	"thankYouForRating": "Thank you for your feedback!",
+	"@thankYouForRating": {
+		"description": "Success message after rating"
+	},
+	"ratingRequired": "Please select a rating.",
+	"@ratingRequired": {
+		"description": "Error message when rating is not selected"
+	},
+	"ratingSubmitted": "Rating submitted successfully!",
+	"@ratingSubmitted": {
+		"description": "Success message after rating"
 	}
 }

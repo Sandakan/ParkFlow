@@ -1138,4 +1138,28 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get digitalTicketTitle => 'Digital Ticket';
+
+  @override
+  String get rateYourExperience => 'உங்கள் அனுபவத்தை மதிப்பிடுங்கள்';
+
+  @override
+  String ratingDescription(String lotName) {
+    return '$lotName இல் உங்கள் பார்க்கிங் எப்படி இருந்தது?';
+  }
+
+  @override
+  String get commentLabel => 'கருத்து (விருப்பமானது)';
+
+  @override
+  String get submitRating => 'மதிப்பீட்டை சமர்ப்பிக்கவும்';
+
+  @override
+  String get thankYouForRating => 'உங்கள் கருத்துக்கு நன்றி!';
+
+  @override
+  String get ratingRequired =>
+      'தயவுசெய்து ஒரு மதிப்பீட்டைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get ratingSubmitted => 'Rating submitted successfully!';
 }

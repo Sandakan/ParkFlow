@@ -17,10 +17,13 @@ class ReservationInDB(BaseModel):
     base_rate: float
     check_in_time: Optional[datetime] = None
     check_out_time: Optional[datetime] = None
-    actual_end_time: datetime  # Final time for billing. Charged even if the user didn't show up.
+    actual_end_time: (
+        datetime  # Final time for billing. Charged even if the user didn't show up.
+    )
     total_billed_price: float
     status: Literal["active", "completed", "cancelled"] = "active"
     qr_code_token: str
+    has_rating: bool = False
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     deleted_at: Optional[datetime] = None

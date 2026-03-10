@@ -926,9 +926,7 @@ class RemoteRepository implements RemoteRepositoryInterface {
     String? paymentMethod,
     String? accessToken,
   }) async {
-    final Map<String, dynamic> queryParameters = {
-      'confirm': confirm,
-    };
+    final Map<String, dynamic> queryParameters = {'confirm': confirm};
     if (paymentMethod != null) {
       queryParameters['payment_method'] = paymentMethod;
     }
@@ -982,6 +980,23 @@ class RemoteRepository implements RemoteRepositoryInterface {
     final response = await httpAPI.doRequest(
       HttpMethodEnum.patch,
       'notifications/$notificationId/read',
+      accessToken: accessToken,
+    );
+
+    validateResponse(response, throwOnNullData: false);
+  }
+
+  @override
+  Future<void> rateReservation(
+    String reservationId,
+    double rating, {
+    String? comment,
+    String? accessToken,
+  }) async {
+    final response = await httpAPI.doRequest(
+      HttpMethodEnum.post,
+      'reservations/$reservationId/rate',
+      data: {'rating': rating, 'comment': comment},
       accessToken: accessToken,
     );
 

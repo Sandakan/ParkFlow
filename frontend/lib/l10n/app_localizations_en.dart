@@ -1136,4 +1136,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get digitalTicketTitle => 'Digital Ticket';
+
+  @override
+  String get rateYourExperience => 'Rate your experience';
+
+  @override
+  String ratingDescription(String lotName) {
+    return 'How was your parking at $lotName?';
+  }
+
+  @override
+  String get commentLabel => 'Comment (Optional)';
+
+  @override
+  String get submitRating => 'Submit Rating';
+
+  @override
+  String get thankYouForRating => 'Thank you for your feedback!';
+
+  @override
+  String get ratingRequired => 'Please select a rating.';
+
+  @override
+  String get ratingSubmitted => 'Rating submitted successfully!';
 }

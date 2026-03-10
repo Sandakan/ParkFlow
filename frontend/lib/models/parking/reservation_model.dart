@@ -23,6 +23,7 @@ abstract class ReservationModel with _$ReservationModel {
     @JsonKey(name: 'total_billed_price') required double totalBilledPrice,
     required String status,
     @JsonKey(name: 'qr_code_token') required String qrCodeToken,
+    @JsonKey(name: 'has_rating') required bool hasRating,
     @JsonKey(name: 'lot_name') required String lotName,
     @JsonKey(name: 'lot_address') required String lotAddress,
     @JsonKey(name: 'lot_latitude') required double lotLatitude,

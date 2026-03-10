@@ -5,8 +5,10 @@ from sse_starlette.sse import EventSourceResponse
 from app.api.deps import get_current_user, get_current_admin
 from app.schemas.response import APIResponse, ResponseCode
 from app.schemas.reservation import CreateReservationRequest, ReservationResponse
+from app.schemas.rating import RatingCreate, RatingResponse
 from pydantic import BaseModel
 from app.models.reservation import ReservationInDB
+from app.models.rating import RatingInDB
 from app.core.database import db
 from app.core.redis import redis_cache
 from datetime import datetime, timedelta, timezone
@@ -479,4 +481,140 @@ async def cancel_reservation(
         message="Reservation cancelled successfully",
         code=ResponseCode.SUCCESS,
         data={},
+    )
+
+
+@router.post("/{reservation_id}/rate", response_model=APIResponse[RatingResponse])
+async def rate_reservation(
+    reservation_id: str,
+    request: RatingCreate,
+    current_user: Any = Depends(get_current_user),
+) -> Any:
+    """
+    Submit a rating for a completed reservation.
+    """
+    now = datetime.now(timezone.utc)
+
+    reservation = await db.client["parkflow"].reservations.find_one(
+        {"_id": ObjectId(reservation_id), "deleted_at": None}
+    )
+
+    if not reservation:
+        return APIResponse.error_response(
+            message="Reservation not found",
+            code=ResponseCode.NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    if reservation["user_id"] != current_user.user_id:
+        return APIResponse.error_response(
+            message="You are not authorized to rate this reservation",
+            code=ResponseCode.ERROR,
+            status_code=status.HTTP_403_FORBIDDEN,
+        )
+
+    if reservation.get("status") != "completed":
+        return APIResponse.error_response(
+            message="You can only rate completed reservations",
+            code=ResponseCode.ERROR,
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+    existing_rating = await db.client["parkflow"].ratings.find_one(
+        {"reservation_id": reservation_id}
+    )
+    if existing_rating:
+        return APIResponse.error_response(
+            message="You have already rated this reservation",
+            code=ResponseCode.ERROR,
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+
+    slot_id = reservation["slot_id"]
+
+    slot = await db.client["parkflow"].parking_slots.find_one(
+        {"_id": ObjectId(slot_id)}
+    )
+    if not slot:
+        return APIResponse.error_response(
+            message="Associated parking slot not found",
+            code=ResponseCode.NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+
+    lot_id = str(slot["lot_id"])
+
+    new_rating = {
+        "user_id": current_user.user_id,
+        "reservation_id": reservation_id,
+        "slot_id": slot_id,
+        "lot_id": lot_id,
+        "rating": request.rating,
+        "comment": request.comment,
+        "created_at": now,
+    }
+
+    rating_result = await db.client["parkflow"].ratings.insert_one(new_rating)
+    rating_id = str(rating_result.inserted_id)
+
+    await db.client["parkflow"].parking_slots.update_one(
+        {"_id": ObjectId(slot_id)},
+        {
+            "$inc": {
+                "total_rating_sum": request.rating,
+                "rating_count": 1,
+            },
+            "$set": {"updated_at": now},
+        },
+    )
+
+    updated_slot = await db.client["parkflow"].parking_slots.find_one(
+        {"_id": ObjectId(slot_id)}
+    )
+    if updated_slot:
+        new_avg = updated_slot["total_rating_sum"] / updated_slot["rating_count"]
+        await db.client["parkflow"].parking_slots.update_one(
+            {"_id": ObjectId(slot_id)}, {"$set": {"average_rating": new_avg}}
+        )
+
+    await db.client["parkflow"].parking_lots.update_one(
+        {"_id": ObjectId(lot_id)},
+        {
+            "$inc": {
+                "total_rating_sum": request.rating,
+                "rating_count": 1,
+            },
+            "$set": {"updated_at": now},
+        },
+    )
+
+    updated_lot = await db.client["parkflow"].parking_lots.find_one(
+        {"_id": ObjectId(lot_id)}
+    )
+    if updated_lot:
+        new_lot_avg = updated_lot["total_rating_sum"] / updated_lot["rating_count"]
+        await db.client["parkflow"].parking_lots.update_one(
+            {"_id": ObjectId(lot_id)}, {"$set": {"average_rating": new_lot_avg}}
+        )
+
+    await db.client["parkflow"].reservations.update_one(
+        {"_id": ObjectId(reservation_id)},
+        {"$set": {"has_rating": True, "updated_at": now}},
+    )
+
+    response_data = {
+        "id": rating_id,
+        "user_id": current_user.user_id,
+        "reservation_id": reservation_id,
+        "slot_id": slot_id,
+        "lot_id": lot_id,
+        "rating": request.rating,
+        "comment": request.comment,
+        "created_at": now,
+    }
+
+    return APIResponse.success_response(
+        message="Rating submitted successfully",
+        code=ResponseCode.SUCCESS,
+        data=RatingResponse(**response_data),
     )

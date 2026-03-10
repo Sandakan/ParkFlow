@@ -33,13 +33,15 @@ void main() {
       ],
     );
 
-    registerFallbackValue(CreateReservationRequestEntity(
-      slotId: '',
-      vehicle: const VehicleModel(plateNumber: '', type: ''),
-      startTime: '',
-      durationMinutes: 0,
-      paymentMethod: '',
-    ));
+    registerFallbackValue(
+      CreateReservationRequestEntity(
+        slotId: '',
+        vehicle: const VehicleModel(plateNumber: '', type: ''),
+        startTime: '',
+        durationMinutes: 0,
+        paymentMethod: '',
+      ),
+    );
   });
 
   tearDown(() {
@@ -47,27 +49,36 @@ void main() {
   });
 
   group('ReservationService', () {
-    test('getMyReservations should call remote repository with token', () async {
-      when(() => mockAuthNotifier.getValidAccessToken())
-          .thenAnswer((_) async => 'test_token');
-      when(() => mockRemoteRepository.getMyReservations(accessToken: 'test_token'))
-          .thenAnswer((_) async => []);
+    test(
+      'getMyReservations should call remote repository with token',
+      () async {
+        when(
+          () => mockAuthNotifier.getValidAccessToken(),
+        ).thenAnswer((_) async => 'test_token');
+        when(
+          () =>
+              mockRemoteRepository.getMyReservations(accessToken: 'test_token'),
+        ).thenAnswer((_) async => []);
 
-      final service = container.read(reservationServiceProvider);
-      final result = await service.getMyReservations();
+        final service = container.read(reservationServiceProvider);
+        final result = await service.getMyReservations();
 
-      expect(result, isEmpty);
-      verify(() => mockRemoteRepository.getMyReservations(accessToken: 'test_token'))
-          .called(1);
-    });
+        expect(result, isEmpty);
+        verify(
+          () =>
+              mockRemoteRepository.getMyReservations(accessToken: 'test_token'),
+        ).called(1);
+      },
+    );
 
     test('createReservation should call remote repository', () async {
-      when(() => mockAuthNotifier.getValidAccessToken())
-          .thenAnswer((_) async => 'test_token');
-      
+      when(
+        () => mockAuthNotifier.getValidAccessToken(),
+      ).thenAnswer((_) async => 'test_token');
+
       final startTime = DateTime(2023, 10, 10, 10, 0);
       const vehicle = VehicleModel(plateNumber: 'ABC-123', type: 'car');
-      
+
       final reservation = ReservationModel(
         id: 'res_1',
         userId: 'user_1',
@@ -83,6 +94,7 @@ void main() {
         totalBilledPrice: 10.0,
         status: 'pending',
         qrCodeToken: 'qr_1',
+        hasRating: false,
         lotName: 'Lot 1',
         lotAddress: 'Address 1',
         lotLatitude: 0.0,
@@ -91,13 +103,15 @@ void main() {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
-      
-      final response = ReservationResponseEntity(
-        reservation: reservation,
-      );
 
-      when(() => mockRemoteRepository.createReservation(any(), accessToken: 'test_token'))
-          .thenAnswer((_) async => response);
+      final response = ReservationResponseEntity(reservation: reservation);
+
+      when(
+        () => mockRemoteRepository.createReservation(
+          any(),
+          accessToken: 'test_token',
+        ),
+      ).thenAnswer((_) async => response);
 
       final service = container.read(reservationServiceProvider);
       final result = await service.createReservation(
@@ -109,28 +123,33 @@ void main() {
       );
 
       expect(result.reservation.id, 'res_1');
-      verify(() => mockRemoteRepository.createReservation(
-            any(that: isA<CreateReservationRequestEntity>()),
-            accessToken: 'test_token',
-          )).called(1);
+      verify(
+        () => mockRemoteRepository.createReservation(
+          any(that: isA<CreateReservationRequestEntity>()),
+          accessToken: 'test_token',
+        ),
+      ).called(1);
     });
 
     test('checkSlotAvailability should call remote repository', () async {
-      when(() => mockAuthNotifier.getValidAccessToken())
-          .thenAnswer((_) async => 'test_token');
-      
+      when(
+        () => mockAuthNotifier.getValidAccessToken(),
+      ).thenAnswer((_) async => 'test_token');
+
       final startTime = DateTime(2023, 10, 10, 10, 0);
       const response = SlotAvailabilityResponseEntity(
         available: true,
         slotId: 'slot_1',
       );
 
-      when(() => mockRemoteRepository.checkSlotAvailability(
-            any(),
-            startTime: any(named: 'startTime'),
-            durationMinutes: any(named: 'durationMinutes'),
-            accessToken: any(named: 'accessToken'),
-          )).thenAnswer((_) async => response);
+      when(
+        () => mockRemoteRepository.checkSlotAvailability(
+          any(),
+          startTime: any(named: 'startTime'),
+          durationMinutes: any(named: 'durationMinutes'),
+          accessToken: any(named: 'accessToken'),
+        ),
+      ).thenAnswer((_) async => response);
 
       final service = container.read(reservationServiceProvider);
       final result = await service.checkSlotAvailability(
@@ -140,12 +159,14 @@ void main() {
       );
 
       expect(result.available, isTrue);
-      verify(() => mockRemoteRepository.checkSlotAvailability(
-            'slot_1',
-            startTime: startTime,
-            durationMinutes: 30,
-            accessToken: 'test_token',
-          )).called(1);
+      verify(
+        () => mockRemoteRepository.checkSlotAvailability(
+          'slot_1',
+          startTime: startTime,
+          durationMinutes: 30,
+          accessToken: 'test_token',
+        ),
+      ).called(1);
     });
   });
 }
