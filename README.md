@@ -4,13 +4,13 @@
 
 ![ParkFlow Banner Image](other/banner.jpg)
 
-ParkFlow is a final-year implementation of a Smart Parking System integrating Computer Vision (YOLOv8) with a real-time mobile dashboard. Official repository: [github.com/Sandakan/ParkFlow](https://github.com/Sandakan/ParkFlow)
+ParkFlow is a final-year implementation of a Smart Parking System integrating Computer Vision (YOLOv26) with a real-time mobile dashboard. Official repository: [github.com/Sandakan/ParkFlow](https://github.com/Sandakan/ParkFlow)
 
 ## Architecture
 
 **Monorepo Structure:**
 
-* **backend/**: Python FastAPI + YOLOv8/Ultralytics (AI Inference & Business Logic)
+* **backend/**: Python FastAPI + YOLOv26/Ultralytics (AI Inference & Business Logic)
 * **frontend/**: Flutter Mobile Application (Driver & Admin Interfaces)
 * **mock_rtsp/**: Lightweight Dockerized MediaMTX server to simulate live RTSP streams
 * **Infrastructure**: MongoDB + Redis (via Docker)
@@ -22,6 +22,7 @@ Follow these steps to set up the entire ParkFlow ecosystem on your local machine
 ### 1. Prerequisites
 
 Ensure you have the following installed:
+
 * **Docker & Docker Desktop**: For infrastructure and mock streams.
 * **Flutter SDK (Stable)**: For the mobile application.
 * **Python 3.10+**: For local backend development/testing.
@@ -30,6 +31,7 @@ Ensure you have the following installed:
 ### 2. Initial Configuration
 
 1. **Clone the Repository**:
+
    ```bash
    git clone https://github.com/Sandakan/ParkFlow.git
    cd ParkFlow
@@ -37,6 +39,7 @@ Ensure you have the following installed:
 
 2. **Backend Environment**:
    Navigate to `backend/`, create a `.env` file:
+
    ```env
    MONGODB_URL=your_mongodb_atlas_connection_string
    REDIS_URL=redis://redis:6379
@@ -53,20 +56,25 @@ Ensure you have the following installed:
 Run these in separate terminals:
 
 **Terminal 1: Backend Infrastructure**
+
 ```bash
 cd backend
 docker compose up -d --build
 ```
+
 *Wait for containers to be healthy. Access docs at <http://localhost:8200/docs>.*
 
 **Terminal 2: Mock RTSP Streams**
+
 ```bash
 cd mock_rtsp
 docker compose up -d --build
 ```
+
 *This simulates live cameras using the assets in `mock_rtsp/assets`.*
 
 **Terminal 3: Frontend App**
+
 ```bash
 cd frontend
 flutter pub get
@@ -85,7 +93,7 @@ flutter run
 
 ## Tech Stack
 
-* **AI:** YOLOv8 (Ultralytics), OpenCV
+* **AI:** YOLOv26 (Ultralytics), OpenCV
 * **Backend:** FastAPI, Motor (Async MongoDB), Redis
 * **Frontend:** Flutter, Riverpod, Google Maps
 * **Database:** MongoDB
