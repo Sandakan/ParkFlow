@@ -27,6 +27,8 @@ enum AppStatusCode {
   authTokenExpired,
   @JsonValue('INVALID_CREDENTIALS')
   invalidCredentials,
+  @JsonValue('USER_NOT_FOUND')
+  userNotFound,
   @JsonValue('SESSION_EXPIRED')
   sessionExpired,
   @JsonValue('CURRENT_PASSWORD_INVALID')
@@ -105,6 +107,8 @@ enum AppStatusCode {
         return l10n.userAlreadyExists;
       case AppStatusCode.invalidCredentials:
         return l10n.invalidCredentials;
+      case AppStatusCode.userNotFound:
+        return l10n.userNotFound;
       case AppStatusCode.vehicleAlreadyExists:
         return l10n.vehicleAlreadyExists;
       case AppStatusCode.vehicleNotFound:

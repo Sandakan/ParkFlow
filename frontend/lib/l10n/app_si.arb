@@ -32,6 +32,7 @@
 	"logoutTooltip": "පිටවන්න",
 	"checkInternetConnection": "කරුණාකර ඔබේ අන්තර්ජාල සම්බන්ධතාවය පරීක්ෂා කර නැවත උත්සාහ කරන්න.",
 	"somethingWrongDescription": "යමක් වැරදී ඇත. කරුණාකර පසුව නැවත උත්සාහ කරන්න.",
+	"userNotFound": "මෙම විද්‍යුත් තැපෑල සහිත පරිශීලකයෙකු හමු නොවීය.",
 	"authTokenExpiredError": "ඔබේ සැසිය කල් ඉකුත් වී ඇත. කරුණාකර නැවත පුරන්න.",
 	"sessionExpired": "සැසිය කල් ඉකුත් වී ඇත",
 	"invalidPageNumber": "අවලංගු පිටු අංකය",

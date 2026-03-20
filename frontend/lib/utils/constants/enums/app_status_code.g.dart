@@ -17,6 +17,7 @@ const _$AppStatusCodeEnumMap = {
   AppStatusCode.userAlreadyExists: 'USER_ALREADY_EXISTS',
   AppStatusCode.authTokenExpired: 'AUTH_TOKEN_EXPIRED',
   AppStatusCode.invalidCredentials: 'INVALID_CREDENTIALS',
+  AppStatusCode.userNotFound: 'USER_NOT_FOUND',
   AppStatusCode.sessionExpired: 'SESSION_EXPIRED',
   AppStatusCode.currentPasswordInvalid: 'CURRENT_PASSWORD_INVALID',
   AppStatusCode.changePasswordFailed: 'CHANGE_PASSWORD_FAILED',

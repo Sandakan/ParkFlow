@@ -136,26 +136,31 @@ class _SlotWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isReserved = slot.status == 'reserved';
+    final bool isReservedOccupied = slot.status == 'reserved_occupied';
 
     final bgColor = isSelected
         ? AppColors.primary
-        : slot.isOccupied
-            ? AppColors.occupiedBackground
-            : isReserved
-                ? AppColors.reservedBackground
-                : isSuggestion
-                    ? AppColors.primary.withValues(alpha: 0.08)
-                    : AppColors.availableBackground;
+        : isReservedOccupied
+            ? AppColors.reservedOccupiedBackground
+            : slot.isOccupied
+                ? AppColors.occupiedBackground
+                : isReserved
+                    ? AppColors.reservedBackground
+                    : isSuggestion
+                        ? AppColors.primary.withValues(alpha: 0.08)
+                        : AppColors.availableBackground;
 
     final borderColor = isSelected
         ? AppColors.primary
-        : slot.isOccupied
-            ? AppColors.occupiedBorder
-            : isReserved
-                ? AppColors.reservedBorder
-                : isSuggestion
-                    ? AppColors.primary
-                    : AppColors.availableBorder;
+        : isReservedOccupied
+            ? AppColors.reservedOccupiedBorder
+            : slot.isOccupied
+                ? AppColors.occupiedBorder
+                : isReserved
+                    ? AppColors.reservedBorder
+                    : isSuggestion
+                        ? AppColors.primary
+                        : AppColors.availableBorder;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
@@ -176,19 +181,21 @@ class _SlotWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            slot.isOccupied
+            slot.isOccupied || isReservedOccupied
                 ? Icons.directions_car
                 : (isReserved ? Icons.event_seat : Icons.local_parking),
             size: 32,
             color: isSelected
                 ? AppColors.white
-                : slot.isOccupied
-                    ? AppColors.occupiedText
-                    : isReserved
-                        ? AppColors.reservedText
-                        : isSuggestion
-                            ? AppColors.primary
-                            : AppColors.availableText,
+                : isReservedOccupied
+                    ? AppColors.reservedOccupiedText
+                    : slot.isOccupied
+                        ? AppColors.occupiedText
+                        : isReserved
+                            ? AppColors.reservedText
+                            : isSuggestion
+                                ? AppColors.primary
+                                : AppColors.availableText,
           ),
           const SizedBox(height: 8),
           Text(

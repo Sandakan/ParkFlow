@@ -77,5 +77,16 @@ class UserRepository:
         except Exception:
             return False
 
+    async def get_admins(self) -> List[UserInDB]:
+        if self.collection is None:
+            return []
+        cursor = self.collection.find({"role": "admin", "deleted_at": None})
+        documents = await cursor.to_list(length=100)
+        admins = []
+        for doc in documents:
+            doc["_id"] = str(doc["_id"])
+            admins.append(UserInDB(**doc))
+        return admins
+
 
 user_repository = UserRepository()

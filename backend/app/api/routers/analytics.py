@@ -1,5 +1,6 @@
 from datetime import datetime, timezone, timedelta
 from typing import Any, List
+from bson import ObjectId
 
 from fastapi import APIRouter, Depends, Query
 
@@ -42,10 +43,24 @@ async def get_analytics_overview(
 
     for cam in cameras:
         cam_id = str(cam["_id"])
-        mapping = await db.client["parkflow"].camera_slot_mappings.find_one(
+        # Find all active mappings for this camera
+        cursor = db.client["parkflow"].camera_slot_mappings.find(
             {"camera_id": cam_id, "deleted_at": None}
         )
-        if mapping:
+        mappings = await cursor.to_list(length=100)
+
+        # Check if at least one mapping points to a non-deleted slot
+        is_active = False
+        for m in mappings:
+            slot = await db.client["parkflow"].parking_slots.find_one(
+                {"_id": ObjectId(m["slot_id"]), "deleted_at": None}
+            )
+            if slot:
+                is_active = True
+                mapping = m
+                break
+
+        if is_active:
             updated_at = mapping.get("updated_at")
             if updated_at:
                 age = datetime.now(timezone.utc) - updated_at.replace(
@@ -69,22 +84,22 @@ async def get_analytics_overview(
         {"event_type": "check-out", "created_at": {"$gte": today_start}}
     )
     checkouts = await checkout_cursor.to_list(length=5000)
-    
+
     dwell_times: List[float] = []
     for co in checkouts:
         slot_id = co.get("slot_id")
         co_time = co["created_at"].replace(tzinfo=timezone.utc)
-        
+
         # Find the most recent check-in before this check-out
         last_ci = await db.client["parkflow"].occupancy_logs.find_one(
             {
                 "slot_id": slot_id,
                 "event_type": "check-in",
-                "created_at": {"$lt": co["created_at"]}
+                "created_at": {"$lt": co["created_at"]},
             },
-            sort=[("created_at", -1)]
+            sort=[("created_at", -1)],
         )
-        
+
         if last_ci:
             ci_time = last_ci["created_at"].replace(tzinfo=timezone.utc)
             dwell_minutes = (co_time - ci_time).total_seconds() / 60.0
@@ -101,7 +116,6 @@ async def get_analytics_overview(
     checkins_today_count = await db.client["parkflow"].occupancy_logs.count_documents(
         {"event_type": "check-in", "created_at": {"$gte": today_start}}
     )
-
 
     async def calculate_revenue(start_date: datetime) -> float:
         """Sum total_billed_price from reservations completed since start_date."""
@@ -215,7 +229,6 @@ async def get_occupancy_trend(
             {"event_type": "check-out", "created_at": {"$lt": start}}
         )
         initial_occupied = max(0, cis_before - cos_before)
-
 
         # Fetch completed reservations for financial bucket revenue
         res_cursor = db.client["parkflow"].reservations.find(

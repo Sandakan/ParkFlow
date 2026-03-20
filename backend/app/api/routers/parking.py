@@ -44,11 +44,10 @@ async def _update_logical_slot_status(slot_id: str):
     # 3. Update logical slot status
     new_status = "occupied" if is_any_occupied else "vacant"
 
-    # Fetch current logical slot to check if change is needed (and respect "reserved")
     slot = await db.client["parkflow"].parking_slots.find_one(
         {"_id": ObjectId(slot_id)}
     )
-    if slot and slot.get("status") != "reserved":
+    if slot:
         if slot.get("status") != new_status:
             await db.client["parkflow"].parking_slots.update_one(
                 {"_id": ObjectId(slot_id)},
@@ -102,30 +101,35 @@ async def get_parking_slots(
             from bson import ObjectId
 
             slot = await db.client["parkflow"].parking_slots.find_one(
-                {"_id": ObjectId(m["slot_id"])}
+                {"_id": ObjectId(m["slot_id"]), "deleted_at": None}
             )
             if slot:
                 slot_id_str = str(slot["_id"])
-                status_val = slot.get("status", "vacant")
+                is_physically_occupied = slot.get("status") == "occupied"
 
-                if status_val == "vacant":
-                    active_res = await db.client["parkflow"].reservations.find_one(
-                        {
-                            "slot_id": slot_id_str,
-                            "status": "active",
-                            "deleted_at": None,
-                            "start_time": {"$lte": now + timedelta(minutes=15)},
-                            "end_time": {"$gt": now},
-                        }
-                    )
-                    if active_res:
-                        status_val = "reserved"
+                active_res = await db.client["parkflow"].reservations.find_one(
+                    {
+                        "slot_id": slot_id_str,
+                        "status": "active",
+                        "deleted_at": None,
+                        "start_time": {"$lte": now + timedelta(minutes=15)},
+                        "end_time": {"$gt": now},
+                    }
+                )
+                is_reserved = active_res is not None
+
+                if is_reserved:
+                    status_val = "reserved_occupied"
+                elif is_physically_occupied:
+                    status_val = "occupied"
+                else:
+                    status_val = "vacant"
 
                 serialized_slots.append(
                     {
                         "id": slot_id_str,
                         "name": slot.get("slot_number", "Unnamed"),
-                        "isOccupied": status_val == "occupied",
+                        "isOccupied": is_physically_occupied,
                         "status": status_val,
                         "camera_id": camera_id,
                         "coordinates": m.get("coordinates", []),
@@ -153,26 +157,31 @@ async def get_parking_slots(
         now = datetime.now(timezone.utc)
         for slot in slots:
             slot_id_str = str(slot.get("_id") or slot.get("parking_slot_id"))
-            status_val = slot.get("status", "vacant")
+            is_physically_occupied = slot.get("status") == "occupied"
 
-            if status_val == "vacant":
-                active_res = await db.client["parkflow"].reservations.find_one(
-                    {
-                        "slot_id": slot_id_str,
-                        "status": "active",
-                        "deleted_at": None,
-                        "start_time": {"$lte": now + timedelta(minutes=15)},
-                        "end_time": {"$gt": now},
-                    }
-                )
-                if active_res:
-                    status_val = "reserved"
+            active_res = await db.client["parkflow"].reservations.find_one(
+                {
+                    "slot_id": slot_id_str,
+                    "status": "active",
+                    "deleted_at": None,
+                    "start_time": {"$lte": now + timedelta(minutes=15)},
+                    "end_time": {"$gt": now},
+                }
+            )
+            is_reserved = active_res is not None
+
+            if is_reserved:
+                status_val = "reserved_occupied"
+            elif is_physically_occupied:
+                status_val = "occupied"
+            else:
+                status_val = "vacant"
 
             serialized_slots.append(
                 {
                     "id": slot_id_str,
                     "name": slot.get("slot_number", "Unnamed"),
-                    "isOccupied": status_val == "occupied",
+                    "isOccupied": is_physically_occupied,
                     "status": status_val,
                     "logical_row": slot.get("logical_row", 0),
                     "logical_col": slot.get("logical_col", 0),
@@ -347,8 +356,27 @@ async def get_parking_lots(
         cameras_count = await db.client["parkflow"].cameras.count_documents(
             {"lot_id": lot_id_str, "deleted_at": None}
         )
-        occupancy = metrics.get("occupancy", random.uniform(0.1, 0.95))
-        revenue_today = metrics.get("revenue_today", random.randint(100, 10000))
+        occupied_count = await db.client["parkflow"].parking_slots.count_documents(
+            {"lot_id": lot_id_str, "status": {"$in": ["occupied", "reserved_occupied"]}, "deleted_at": None}
+        )
+        occupancy = occupied_count / total_slots if total_slots > 0 else 0.0
+
+        # Calculate real revenue today
+        today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        pipeline = [
+            {
+                "$match": {
+                    "lot_id": lot_id_str,
+                    "status": "completed",
+                    "check_out_time": {"$gte": today_start},
+                    "deleted_at": None,
+                }
+            },
+            {"$group": {"_id": None, "total": {"$sum": "$total_billed_price"}}},
+        ]
+        rev_cursor = db.client["parkflow"].reservations.aggregate(pipeline)
+        rev_result = await rev_cursor.to_list(length=1)
+        revenue_today = rev_result[0]["total"] if rev_result else 0.0
         address = lot.get("address", "Unknown Address")
 
         distance_meters = None

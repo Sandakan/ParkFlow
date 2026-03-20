@@ -108,6 +108,9 @@ class AppLocalizationsTa extends AppLocalizations {
       'ஏதோ தவறு நிகழ்ந்துவிட்டது. பின்னர் மீண்டும் முயற்சிக்கவும்.';
 
   @override
+  String get userNotFound => 'இந்த மின்னஞ்சல் முகவரியுடன் பயனர் எவரும் இல்லை.';
+
+  @override
   String get authTokenExpiredError =>
       'உங்கள் அமர்வு முடிந்துவிட்டது. மீண்டும் உள்நுழையவும்.';
 

@@ -83,13 +83,19 @@ class ParkingLotLayoutGrid extends StatelessWidget {
 
                 final isHighlighted = highlightedSlotIds.contains(slot.id);
                 final isEntrance = slot.slotType == 'entrance';
+                final isReserved = slot.status == 'reserved';
+                final isReservedOccupied = slot.status == 'reserved_occupied';
 
                 return Container(
                   decoration: BoxDecoration(
                     color: isEntrance
                         ? AppColors.entranceBackground
+                        : isReservedOccupied
+                        ? AppColors.reservedOccupiedBackground
                         : slot.isOccupied
                         ? AppColors.occupiedBackground
+                        : isReserved
+                        ? AppColors.reservedBackground
                         : isHighlighted
                         ? AppColors.primary.withValues(alpha: 0.2)
                         : AppColors.availableBackground,
@@ -97,8 +103,12 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                     border: Border.all(
                       color: isEntrance
                           ? AppColors.entranceBorder
+                          : isReservedOccupied
+                          ? AppColors.reservedOccupiedBorder
                           : slot.isOccupied
                           ? AppColors.occupiedBorder
+                          : isReserved
+                          ? AppColors.reservedBorder
                           : isHighlighted
                           ? AppColors.primary
                           : AppColors.availableBorder,
@@ -114,14 +124,18 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                           Icon(
                             isEntrance
                                 ? Icons.door_front_door
-                                : slot.isOccupied
+                                : (slot.isOccupied || isReservedOccupied)
                                 ? Icons.directions_car
-                                : Icons.local_parking,
+                                : (isReserved ? Icons.event_seat : Icons.local_parking),
                             size: 16.0,
                             color: isEntrance
                                 ? AppColors.entranceText
+                                : isReservedOccupied
+                                ? AppColors.reservedOccupiedText
                                 : slot.isOccupied
                                 ? AppColors.occupiedText
+                                : isReserved
+                                ? AppColors.reservedText
                                 : isHighlighted
                                 ? AppColors.primary
                                 : AppColors.availableText,
@@ -134,8 +148,12 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               color: isEntrance
                                   ? AppColors.entranceTextDark
+                                  : isReservedOccupied
+                                  ? AppColors.reservedOccupiedText
                                   : slot.isOccupied
                                   ? AppColors.occupiedTextDark
+                                  : isReserved
+                                  ? AppColors.reservedTextDark
                                   : AppColors.availableTextDark,
                             ),
                             maxLines: 1,
@@ -147,10 +165,14 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                               fontSize: 7,
                               color:
                                   (isEntrance
-                                          ? AppColors.entranceTextDark
-                                          : slot.isOccupied
-                                          ? AppColors.occupiedTextDark
-                                          : AppColors.availableTextDark)
+                                           ? AppColors.entranceTextDark
+                                           : isReservedOccupied
+                                           ? AppColors.reservedOccupiedText
+                                           : slot.isOccupied
+                                           ? AppColors.occupiedTextDark
+                                           : isReserved
+                                           ? AppColors.reservedTextDark
+                                           : AppColors.availableTextDark)
                                       .withValues(alpha: 0.7),
                             ),
                           ),

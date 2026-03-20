@@ -18,6 +18,7 @@ from app.schemas.auth import (
 )
 from app.services.email_service import email_service
 from app.core.redis import redis_cache
+from loguru import logger
 import secrets
 
 router = APIRouter()
@@ -147,17 +148,22 @@ async def test_token(current_user: UserInDB = Depends(get_current_user)) -> Any:
 async def forgot_password(
     request: ForgotPasswordRequest,
 ) -> Any:
+    logger.info(f"Forgot password requested for email: {request.email}")
     user = await user_service.get_user_by_email(request.email)
     if not user:
-        return APIResponse.success_response(
-            message="If an account exists with this email, an OTP has been sent.",
-            code=ResponseCode.OTP_SENT,
+        logger.warning(f"Forgot password requested for non-existent email: {request.email}")
+        return APIResponse.error_response(
+            message="User with this email not found.",
+            code=ResponseCode.USER_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
         )
 
+    logger.info(f"User found for email reset: {user.email}")
     otp = "".join([str(secrets.randbelow(10)) for _ in range(6)])
 
     # Store OTP in Redis for 5 minutes
     await redis_cache.client.setex(f"otp:{request.email}", 300, otp)
+    logger.info(f"OTP generated and stored in Redis for {request.email}")
 
     await email_service.send_templated_email(
         subject="ParkFlow Password Reset OTP",

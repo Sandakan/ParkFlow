@@ -209,6 +209,13 @@ async def scan_reservation_qr(
             payload={"reservation_id": str(res_id), "action": "check_in"},
         )
 
+        await notification_service.notify_admins(
+            title="User Checked In",
+            message=f"User has checked in at {res_data['lot_name']}.",
+            notification_type="info",
+            payload={"reservation_id": str(res_id), "action": "check_in"},
+        )
+
     elif reservation.get("check_out_time") is None:
         check_in_time = reservation["check_in_time"].replace(tzinfo=timezone.utc)
         update_data["check_out_time"] = now

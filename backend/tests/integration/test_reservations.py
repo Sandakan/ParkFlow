@@ -47,6 +47,7 @@ async def test_create_reservation_api_success(client, override_get_current_user)
         "lot_latitude": 0.0,
         "lot_longitude": 0.0,
         "slot_name": "Slot A1",
+        "has_rating": False,
         "created_at": datetime.now(timezone.utc),
         "updated_at": datetime.now(timezone.utc),
     }

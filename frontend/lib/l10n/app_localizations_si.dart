@@ -108,6 +108,9 @@ class AppLocalizationsSi extends AppLocalizations {
       'යමක් වැරදී ඇත. කරුණාකර පසුව නැවත උත්සාහ කරන්න.';
 
   @override
+  String get userNotFound => 'මෙම විද්‍යුත් තැපෑල සහිත පරිශීලකයෙකු හමු නොවීය.';
+
+  @override
   String get authTokenExpiredError =>
       'ඔබේ සැසිය කල් ඉකුත් වී ඇත. කරුණාකර නැවත පුරන්න.';
 

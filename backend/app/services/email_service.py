@@ -17,6 +17,7 @@ class EmailService:
             USE_CREDENTIALS=True,
             VALIDATE_CERTS=True,
         )
+        logger.info(f"EmailService initialized with config: SERVER={settings.MAIL_SERVER}, PORT={settings.MAIL_PORT}, FROM={settings.MAIL_FROM}")
         self.fastmail = FastMail(self.conf)
 
     async def send_email(

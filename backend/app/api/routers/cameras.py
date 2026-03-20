@@ -65,6 +65,15 @@ async def check_camera_health(
 
     await update_camera_status(camera_id, is_alive)
 
+    if not is_alive:
+        from app.services.notification_service import notification_service
+        await notification_service.notify_admins(
+            title="Camera Offline",
+            message=f"Camera '{camera.get('name')}' in lot '{camera.get('lot_id')}' is offline.",
+            notification_type="error",
+            payload={"camera_id": camera_id, "status": "offline"},
+        )
+
     return APIResponse.success_response(
         message="Camera health checked",
         code=ResponseCode.SUCCESS,

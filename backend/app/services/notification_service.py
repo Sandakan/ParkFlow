@@ -10,8 +10,32 @@ from app.services.email_service import email_service
 
 
 class NotificationService:
-    @staticmethod
+    async def notify_admins(
+        self,
+        title: str,
+        message: str,
+        notification_type: Literal["info", "success", "warning", "error"] = "info",
+        payload: Optional[dict[str, Any]] = None,
+    ):
+        """
+        Send a notification to all administrators.
+        """
+        try:
+            admins = await user_repository.get_admins()
+            logger.info(f"Notifying {len(admins)} admins: {title}")
+            for admin in admins:
+                await self.send_notification(
+                    title=title,
+                    message=message,
+                    user_id=admin.user_id,
+                    notification_type=notification_type,
+                    payload=payload,
+                )
+        except Exception as e:
+            logger.error(f"Failed to notify admins: {e}")
+
     async def send_notification(
+        self,
         title: str,
         message: str,
         user_id: Optional[str] = None,

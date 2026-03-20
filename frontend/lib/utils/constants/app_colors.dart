@@ -46,4 +46,8 @@ abstract final class AppColors {
   static final Color reservedBorder = Colors.amber.shade300;
   static final Color reservedText = Colors.amber.shade700;
   static final Color reservedTextDark = Colors.amber.shade900;
+
+  static final Color reservedOccupiedBackground = Colors.yellow.shade100;
+  static final Color reservedOccupiedBorder = Colors.yellow.shade600;
+  static final Color reservedOccupiedText = Colors.yellow.shade900;
 }

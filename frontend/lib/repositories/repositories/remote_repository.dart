@@ -88,6 +88,7 @@ class RemoteRepository implements RemoteRepositoryInterface {
       final code = AppStatusCode.fromString(baseResponse.code);
       throw AppException(
         code == AppStatusCode.unknownError ? AppStatusCode.serverError : code,
+        customMessage: baseResponse.message,
         cause:
             'Server returned ${baseResponse.statusCode}: ${baseResponse.message}',
       );
@@ -158,6 +159,7 @@ class RemoteRepository implements RemoteRepositoryInterface {
         code == AppStatusCode.unknownError
             ? AppStatusCode.invalidResponse
             : code,
+        customMessage: validatedResponse.message,
         cause: validatedResponse.message,
       );
     }

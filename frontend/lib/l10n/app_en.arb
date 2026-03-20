@@ -128,6 +128,10 @@
 	"@somethingWrongDescription": {
 		"description": "Generic error message for unknown errors"
 	},
+	"userNotFound": "User with this email not found.",
+	"@userNotFound": {
+		"description": "Error message when a user is not found by email"
+	},
 	"authTokenExpiredError": "Your session has expired. Please log in again.",
 	"@authTokenExpiredError": {
 		"description": "Error message when the authentication token has expired"

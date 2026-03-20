@@ -39,7 +39,7 @@ Secure your Web API key using **HTTP Referrer Restrictions** in the Google Cloud
 
 ```bash
 flutter pub get
-flutter run
+flutter run -d chrome --dart-define=BASE_URL=http://localhost:8200/api/v1
 ```
 
 ## Architecture (Layered Architecture)
@@ -54,7 +54,8 @@ The project follows a clean, layered architecture for maintainability and scalab
 * **lib/l10n/**: Localization files (`.arb`).
 
 ## Key Technologies
+
 - **State Management:** Riverpod
-- **Networking:** Dio
-- **Maps:** Google Maps Flutter
-- **Serialization:** Freezed & JSON Serializable
+* **Networking:** Dio
+* **Maps:** Google Maps Flutter
+* **Serialization:** Freezed & JSON Serializable

@@ -107,6 +107,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Something went wrong. Please try again later.';
 
   @override
+  String get userNotFound => 'User with this email not found.';
+
+  @override
   String get authTokenExpiredError =>
       'Your session has expired. Please log in again.';
 

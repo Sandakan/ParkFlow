@@ -292,6 +292,12 @@ abstract class AppLocalizations {
   /// **'Something went wrong. Please try again later.'**
   String get somethingWrongDescription;
 
+  /// Error message when a user is not found by email
+  ///
+  /// In en, this message translates to:
+  /// **'User with this email not found.'**
+  String get userNotFound;
+
   /// Error message when the authentication token has expired
   ///
   /// In en, this message translates to:

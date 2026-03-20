@@ -85,12 +85,16 @@ class ReservationService:
                     status_code=404,
                 )
 
+            now = datetime.now(timezone.utc)
             if slot.get("status") == "occupied":
-                raise AppException(
-                    message="Parking slot is already occupied",
-                    code=ResponseCode.RESERVATION_SLOT_OCCUPIED,
-                    status_code=400,
-                )
+                # Only block if the reservation starts now or in the very near future
+                # where the user would expect to find the slot vacant.
+                if request.start_time <= now + timedelta(minutes=1):
+                    raise AppException(
+                        message="Parking slot is already occupied",
+                        code=ResponseCode.RESERVATION_SLOT_OCCUPIED,
+                        status_code=400,
+                    )
 
         end_time = request.start_time + timedelta(minutes=request.duration_minutes)
         if await self.has_overlapping_reservation(
@@ -175,6 +179,13 @@ class ReservationService:
             payload={"reservation_id": str(result.inserted_id), "action": "created"},
         )
 
+        await notification_service.notify_admins(
+            title="New Reservation",
+            message=f"A new booking has been made for {lot.get('name')}.",
+            notification_type="info",
+            payload={"reservation_id": str(result.inserted_id), "action": "created"},
+        )
+
         reservation_dict["lot_name"] = lot.get("name", "Unknown Lot")
         reservation_dict["lot_address"] = lot.get("address", "No Address")
         reservation_dict["lot_latitude"] = lot.get("latitude", 0.0)
@@ -211,6 +222,13 @@ class ReservationService:
             message="Your booking has been successfully cancelled.",
             user_id=user_id,
             notification_type="info",
+            payload={"reservation_id": reservation_id, "action": "cancelled"},
+        )
+
+        await notification_service.notify_admins(
+            title="Reservation Cancelled",
+            message=f"A booking for {reservation.get('lot_name', 'a parking lot')} has been cancelled.",
+            notification_type="warning",
             payload={"reservation_id": reservation_id, "action": "cancelled"},
         )
 

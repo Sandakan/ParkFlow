@@ -123,21 +123,21 @@ class ParkingLotLayoutSheet extends ConsumerWidget {
               ),
               const SizedBox(width: 16),
               _LegendItem(
+                color: AppColors.reservedOccupiedBackground,
+                borderColor: AppColors.reservedOccupiedBorder,
+                label: 'Booked / Ongoing',
+              ),
+              const SizedBox(width: 16),
+              _LegendItem(
                 color: AppColors.occupiedBackground,
                 borderColor: AppColors.occupiedBorder,
                 label: context.l10n.occupied,
               ),
               const SizedBox(width: 16),
               _LegendItem(
-                color: AppColors.primary.withValues(alpha: 0.1),
-                borderColor: AppColors.primary,
-                label: 'Optimal',
-              ),
-              const SizedBox(width: 16),
-              _LegendItem(
                 color: AppColors.entranceBackground,
                 borderColor: AppColors.entranceBorder,
-                label: context.l10n.slotTypeEntrance,
+                label: 'Entrance',
               ),
             ],
           ),
