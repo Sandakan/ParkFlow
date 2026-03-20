@@ -4,6 +4,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import pymongo
 import sys
 import os
+from datetime import datetime, timezone
 
 # Add the project root to the sys.path to run the file independently
 sys.path.append(
@@ -11,6 +12,7 @@ sys.path.append(
 )
 
 from app.core.config import settings
+from app.core.security import get_password_hash
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -56,6 +58,50 @@ async def init_db():
         await db.occupancy_logs.create_index(
             [("slot_id", pymongo.ASCENDING), ("timestamp", pymongo.DESCENDING)]
         )
+
+        logger.info("Setting up 'notifications' collection...")
+        await db.notifications.create_index("user_id")
+        await db.notifications.create_index(
+            "created_at", expireAfterSeconds=60 * 60 * 24 * 7
+        )  # 7 days TTL
+
+        logger.info("Setting up 'cameras' collection...")
+        await db.cameras.create_index("lot_id")
+
+        logger.info("Setting up 'camera_slot_mappings' collection...")
+        await db.camera_slot_mappings.create_index("camera_id")
+        await db.camera_slot_mappings.create_index("slot_id")
+        await db.camera_slot_mappings.create_index(
+            [("camera_id", pymongo.ASCENDING), ("slot_id", pymongo.ASCENDING)],
+            unique=True,
+        )
+
+        logger.info("Setting up 'ratings' collection...")
+        await db.ratings.create_index("reservation_id", unique=True)
+        await db.ratings.create_index("user_id")
+        await db.ratings.create_index("lot_id")
+
+        # Create default admin user
+        admin_email = os.getenv("ADMIN_EMAIL", "admin@gmail.com")
+        admin_password = os.getenv("ADMIN_PASSWORD", "Admin@123")
+
+        admin_user = await db.users.find_one({"email": admin_email})
+        if not admin_user:
+            logger.info(f"Creating default admin user: {admin_email}")
+            await db.users.insert_one(
+                {
+                    "name": "System Admin",
+                    "email": admin_email,
+                    "password_hash": get_password_hash(admin_password),
+                    "role": "admin",
+                    "vehicles": [],
+                    "payment_methods": [],
+                    "created_at": datetime.now(timezone.utc),
+                    "updated_at": datetime.now(timezone.utc),
+                }
+            )
+        else:
+            logger.info("Admin user already exists.")
 
         logger.info("Database initialization completed successfully.")
     except Exception as e:
