@@ -101,24 +101,29 @@ class _RatingDialogState extends ConsumerState<RatingDialog> {
               style: TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (index) {
-                return IconButton(
-                  onPressed: _isSubmitting
-                      ? null
-                      : () {
-                          setState(() {
-                            _rating = index + 1.0;
-                          });
-                        },
-                  icon: Icon(
-                    index < _rating ? Icons.star : Icons.star_border,
-                    color: index < _rating ? Colors.amber : Colors.grey,
-                    size: 40,
-                  ),
-                );
-              }),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return IconButton(
+                    onPressed: _isSubmitting
+                        ? null
+                        : () {
+                            setState(() {
+                              _rating = index + 1.0;
+                            });
+                          },
+                    icon: Icon(
+                      index < _rating ? Icons.star : Icons.star_border,
+                      color: index < _rating ? Colors.amber : Colors.grey,
+                      size: 36,
+                    ),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  );
+                }),
+              ),
             ),
             const SizedBox(height: 24),
             TextField(

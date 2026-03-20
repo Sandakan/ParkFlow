@@ -12,13 +12,14 @@ class AppLocalizationsSi extends AppLocalizations {
   String get appTitle => 'ParkFlow';
 
   @override
-  String get parkingLotsTitle => 'Parking Lots';
+  String get parkingLotsTitle => 'නැවැත්වීමේ ස්ථාන';
 
   @override
   String get loginTitle => 'ParkFlow';
 
   @override
-  String get welcomeBackSubtitle => 'Welcome back! Sign in to your account.';
+  String get welcomeBackSubtitle =>
+      'නැවතත් සාදරයෙන් පිළිගනිමු! කරුණාකර ඔබගේ ගිණුමට පුරන්න.';
 
   @override
   String get signInToContinue => 'ඉදිරියට යාමට පුරන්න';
@@ -36,55 +37,55 @@ class AppLocalizationsSi extends AppLocalizations {
   String get passwordHint => '••••••••';
 
   @override
-  String get forgotPassword => 'Forgot Password?';
+  String get forgotPassword => 'මුරපදය අමතකද?';
 
   @override
   String get loginButton => 'පුරන්න';
 
   @override
-  String get signInButton => 'Sign In';
+  String get signInButton => 'පුරන්න';
 
   @override
-  String get dontHaveAccount => 'Don\'t have an account? ';
+  String get dontHaveAccount => 'ගිණුමක් නැද්ද? ';
 
   @override
-  String get signUp => 'Sign up';
+  String get signUp => 'ලියාපදිංචි වන්න';
 
   @override
-  String get createAccountTitle => 'Create Account';
+  String get createAccountTitle => 'ගිණුමක් සාදන්න';
 
   @override
-  String get signUpSubtitle => 'Sign up to get started!';
+  String get signUpSubtitle => 'ආරම්භ කිරීමට ලියාපදිංචි වන්න!';
 
   @override
-  String get fullNameLabel => 'Full Name';
+  String get fullNameLabel => 'සම්පූර්ණ නම';
 
   @override
   String get fullNameHint => 'John Doe';
 
   @override
-  String get nameRequired => 'Name is required';
+  String get nameRequired => 'නම අවශ්‍යයි';
 
   @override
-  String get confirmPasswordLabel => 'Confirm Password';
+  String get confirmPasswordLabel => 'මුරපදය තහවුරු කරන්න';
 
   @override
-  String get confirmPasswordRequired => 'Confirm Password is required';
+  String get confirmPasswordRequired => 'මුරපදය තහවුරු කිරීම අවශ්‍යයි';
 
   @override
-  String get passwordsMustMatch => 'Passwords must match';
+  String get passwordsMustMatch => 'මුරපද සමාන විය යුතුය';
 
   @override
-  String get signUpButton => 'Sign Up';
+  String get signUpButton => 'ලියාපදිංචි වන්න';
 
   @override
-  String get alreadyHaveAccount => 'Already have an account? ';
+  String get alreadyHaveAccount => 'දැනටමත් ගිණුමක් තිබේද? ';
 
   @override
-  String get signIn => 'Sign in';
+  String get signIn => 'පුරන්න';
 
   @override
-  String get liveDashboard => 'ParkFlow සජීවී ඩෑෂ්බෝර්ඩ්';
+  String get liveDashboard => 'ParkFlow සජීවී පාලක පුවරුව';
 
   @override
   String get liveFeed => 'සජීවී දර්ශනය';
@@ -96,7 +97,7 @@ class AppLocalizationsSi extends AppLocalizations {
   String get available => 'හිස්ව ඇත';
 
   @override
-  String get logoutTooltip => 'Logout';
+  String get logoutTooltip => 'පිටවන්න';
 
   @override
   String get checkInternetConnection =>
@@ -114,23 +115,22 @@ class AppLocalizationsSi extends AppLocalizations {
   String get sessionExpired => 'සැසිය කල් ඉකුත් වී ඇත';
 
   @override
-  String get invalidPageNumber => 'අවලංගු පිටු අංකයක්';
+  String get invalidPageNumber => 'අවලංගු පිටු අංකය';
 
   @override
-  String get currentPasswordInvalid => 'වත්මන් මුරපදය වලංගු නැත';
+  String get currentPasswordInvalid => 'වත්මන් මුරපදය වැරදිය';
 
   @override
   String get changePasswordFailed => 'මුරපදය වෙනස් කිරීම අසාර්ථක විය';
 
   @override
-  String get emailRequired => 'විද්‍යුත් තැපෑල හිස් නොවිය යුතුය';
+  String get emailRequired => 'විද්‍යුත් තැපෑල ඇතුළත් කිරීම අනිවාර්යයි';
 
   @override
-  String get emailInvalid =>
-      'විද්‍යුත් තැපෑල වලංගු විද්‍යුත් තැපෑලක් විය යුතුය';
+  String get emailInvalid => 'කරුණාකර වලංගු විද්‍යුත් තැපෑලක් ඇතුළත් කරන්න';
 
   @override
-  String get passwordRequired => 'මුරපදය හිස් නොවිය යුතුය';
+  String get passwordRequired => 'මුරපදය ඇතුළත් කිරීම අනිවාර්යයි';
 
   @override
   String get passwordMinLength => 'මුරපදය අවම වශයෙන් අක්ෂර 6ක් දිග විය යුතුය';
@@ -140,100 +140,100 @@ class AppLocalizationsSi extends AppLocalizations {
       'ඔබ ඇතුළත් කළ විද්‍යුත් තැපෑල හෝ මුරපදය වැරදියි';
 
   @override
-  String get adminDashboard => 'පරිපාලක උපකරණ පුවරුව';
+  String get adminDashboard => 'ප්‍රධාන පිටුව';
 
   @override
   String get adminWelcome => 'සාදරයෙන් පිළිගනිමු, පරිපාලක';
 
   @override
-  String get home => 'Home';
+  String get home => 'ප්‍රධාන පිටුව';
 
   @override
-  String get profile => 'Profile';
+  String get profile => 'පුවරු විස්තරය';
 
   @override
-  String get guest => 'Guest';
+  String get guest => 'අමුත්තා';
 
   @override
-  String get logout => 'Logout';
+  String get logout => 'පිටවන්න';
 
   @override
-  String get adminConsoleSubtitle => 'ParkFlow Administration Console';
+  String get adminConsoleSubtitle => 'ParkFlow පරිපාලක ඒකකය';
 
   @override
-  String get manageSlots => 'Manage Parking Slots';
+  String get manageSlots => 'නැවැත්වීමේ ස්ථාන කළමනාකරණය';
 
   @override
-  String get featureComingSoon => 'Manage Slots feature coming soon!';
+  String get featureComingSoon => 'මෙම පහසුකම ළඟදීම බලාපොරොත්තු වන්න!';
 
   @override
-  String get parkingLots => 'Lots';
+  String get parkingLots => 'ස්ථාන';
 
   @override
-  String get cameras => 'Cameras';
+  String get cameras => 'කැමරා';
 
   @override
-  String get reservations => 'Reservations';
+  String get reservations => 'වෙන් කිරීම්';
 
   @override
-  String get analytics => 'Analytics';
+  String get analytics => 'විශ්ලේෂණ';
 
   @override
-  String get settings => 'Settings';
+  String get settings => 'සැකසුම්';
 
   @override
-  String get searchLotHint => 'Search parking lots...';
+  String get searchLotHint => 'ස්ථාන සොයන්න...';
 
   @override
-  String get createNewLot => 'Create Parking Lot';
+  String get createNewLot => 'නව නැවැත්වීමේ ස්ථානයක් සාදන්න';
 
   @override
-  String get statusOpen => 'Open';
+  String get statusOpen => 'විවෘතයි';
 
   @override
-  String get statusClosed => 'Closed';
+  String get statusClosed => 'වසා ඇත';
 
   @override
-  String get totalSlotsLabel => 'Total Slots';
+  String get totalSlotsLabel => 'මුළු ධාරිතාව';
 
   @override
-  String get revenueToday => 'Revenue Today';
+  String get revenueToday => 'අද ආදායම';
 
   @override
-  String get noLotsFound => 'No parking lots found';
+  String get noLotsFound => 'නැවැත්වීමේ ස්ථාන කිසිවක් හමු නොවීය';
 
   @override
-  String get errorLoadingLots => 'Error loading lots';
+  String get errorLoadingLots => 'දත්ත ලබා ගැනීමේ දෝෂයකි';
 
   @override
-  String get createLotTitle => 'Create New Parking Lot';
+  String get createLotTitle => 'නව නැවැත්වීමේ ස්ථානයක් සාදන්න';
 
   @override
-  String get lotNameLabel => 'Lot Name';
+  String get lotNameLabel => 'ස්ථානයේ නම';
 
   @override
-  String get lotNameHint => 'Downtown Parking';
+  String get lotNameHint => 'නගරයේ නැවැත්වීමේ ස්ථානය';
 
   @override
-  String get lotAddressLabel => 'Lot Address';
+  String get lotAddressLabel => 'ස්ථානයේ ලිපිනය';
 
   @override
-  String get lotAddressHint => '123 Main St';
+  String get lotAddressHint => '123 ප්‍රධාන පාර';
 
   @override
-  String get latitudeLabel => 'Latitude';
+  String get latitudeLabel => 'අක්ෂාංශ';
 
   @override
   String get latitudeHint => '0.000';
 
   @override
-  String get longitudeLabel => 'Longitude';
+  String get longitudeLabel => 'දේශාංශ';
 
   @override
   String get longitudeHint => '0.000';
 
   @override
-  String get totalSlotsHint => 'Number of slots';
+  String get totalSlotsHint => 'ස්ථාන ගණන';
 
   @override
   String get rtspUrlLabel => 'RTSP URL';
@@ -242,469 +242,465 @@ class AppLocalizationsSi extends AppLocalizations {
   String get rtspUrlHint => 'rtsp://...';
 
   @override
-  String get createButton => 'Create';
+  String get createButton => 'සාදන්න';
 
   @override
-  String get lotCreatedSuccess => 'Parking lot created successfully';
+  String get lotCreatedSuccess => 'නැවැත්වීමේ ස්ථානය සාර්ථකව සාදන ලදී';
 
   @override
-  String get fieldRequired => 'This field is required';
+  String get fieldRequired => 'මෙම ක්ෂේත්‍රය අත්‍යවශ්‍යයි';
 
   @override
-  String get invalidNumber => 'Invalid number';
+  String get invalidNumber => 'අවලංගු අංකයක්';
 
   @override
-  String get editLotTitle => 'Edit Parking Lot';
+  String get editLotTitle => 'ස්ථානය සංස්කරණය කරන්න';
 
   @override
-  String get updateButton => 'Update';
+  String get updateButton => 'යාවත්කාලීන කරන්න';
 
   @override
-  String get lotUpdatedSuccess => 'Parking lot updated successfully';
+  String get lotUpdatedSuccess =>
+      'නැවැත්වීමේ ස්ථානය සාර්ථකව යාවත්කාලීන කරන ලදී';
 
   @override
-  String get deleteLot => 'Delete Lot';
+  String get deleteLot => 'ස්ථානය මකා දමන්න';
 
   @override
-  String get deleteLotConfirmTitle => 'Delete Parking Lot?';
+  String get deleteLotConfirmTitle => 'නැවැත්වීමේ ස්ථානය මකා දමන්නද?';
 
   @override
   String get deleteLotConfirmMessage =>
-      'Are you sure you want to delete this parking lot? This action cannot be undone.';
+      'ඔබට විශ්වාසද මෙම නැවැත්වීමේ ස්ථානය මකා දැමීමට අවශ්‍ය බව? මෙය නැවත අවලංගු කළ නොහැක.';
 
   @override
-  String get deleteButton => 'Delete';
+  String get deleteButton => 'මකන්න';
 
   @override
-  String get cancelButton => 'Cancel';
+  String get cancelButton => 'අවලංගු කරන්න';
 
   @override
-  String get lotDeletedSuccess => 'Parking lot deleted successfully';
+  String get lotDeletedSuccess => 'නැවැත්වීමේ ස්ථානය සාර්ථකව මකා දමන ලදී';
 
   @override
-  String get camerasTabLabel => 'Cameras';
+  String get camerasTabLabel => 'කැමරා';
 
   @override
-  String get searchCameraHint => 'Search cameras...';
+  String get searchCameraHint => 'කැමරා සොයන්න...';
 
   @override
-  String get createNewCamera => 'Create Camera';
+  String get createNewCamera => 'නව කැමරාවක් සාදන්න';
 
   @override
-  String get noCamerasFound => 'No cameras found';
+  String get noCamerasFound => 'කැමරා කිසිවක් හමු නොවීය';
 
   @override
-  String get errorLoadingCameras => 'Error loading cameras';
+  String get errorLoadingCameras => 'කැමරා දත්ත ලබා ගැනීමේ දෝෂයකි';
 
   @override
-  String get rtspHealth => 'Health';
+  String get rtspHealth => 'තත්වය';
 
   @override
-  String get statusConnected => 'Connected';
+  String get statusConnected => 'සම්බන්ධයි';
 
   @override
-  String get statusDisconnected => 'Disconnected';
+  String get statusDisconnected => 'විසන්ධි වී ඇත';
 
   @override
-  String get createCameraTitle => 'Create New Camera';
+  String get createCameraTitle => 'නව කැමරාවක් සාදන්න';
 
   @override
-  String get cameraNameLabel => 'Camera Name';
+  String get cameraNameLabel => 'කැමරාවේ නම';
 
   @override
-  String get cameraNameHint => 'Front Gate';
+  String get cameraNameHint => 'ප්‍රධාන දොරටුව';
 
   @override
-  String get cameraCreatedSuccess => 'Camera created successfully';
+  String get cameraCreatedSuccess => 'කැමරාව සාර්ථකව සාදන ලදී';
 
   @override
   String get userAlreadyExists =>
-      'The user with this email already exists in the system.';
+      'මෙම විද්‍යුත් තැපෑල සහිත පරිශීලකයෙකු දැනටමත් පද්ධතියේ සිටී.';
 
   @override
-  String get analyticsTitle => 'Analytics';
+  String get analyticsTitle => 'විශ්ලේෂණ';
 
   @override
-  String get analyticsOverview => 'System Vitals';
+  String get analyticsOverview => 'පද්ධති තත්වය';
 
   @override
-  String get analyticsTotalCapacity => 'Total Capacity';
+  String get analyticsTotalCapacity => 'මුළු ධාරිතාව';
 
   @override
-  String get analyticsOccupancy => 'Current Occupancy';
+  String get analyticsOccupancy => 'දැනට පිරී ඇති ප්‍රමාණය';
 
   @override
-  String get analyticsStreamHealth => 'Stream Health';
+  String get analyticsStreamHealth => 'සජීවී දර්ශන තත්වය';
 
   @override
-  String get analyticsAvgDwell => 'Avg. Dwell Time';
+  String get analyticsAvgDwell => 'සාමාන්‍ය නැවතී සිටින කාලය';
 
   @override
-  String get analyticsDwellUnit => 'min';
+  String get analyticsDwellUnit => 'මි.';
 
   @override
-  String get analyticsOccupancyTrend => 'Occupancy Trends';
+  String get analyticsOccupancyTrend => 'පිරී යාමේ ප්‍රවණතා';
 
   @override
-  String get analyticsPeriod24h => '24h';
+  String get analyticsPeriod24h => 'පැය 24';
 
   @override
-  String get analyticsPeriod7d => '7d';
+  String get analyticsPeriod7d => 'දින 7';
 
   @override
-  String get analyticsPeriod30d => '30d';
+  String get analyticsPeriod30d => 'දින 30';
 
   @override
-  String get analyticsTodayLabel => 'Today';
+  String get analyticsTodayLabel => 'අද';
 
   @override
-  String get analyticsPriorLabel => 'Prior Period';
+  String get analyticsPriorLabel => 'පෙර කාලසීමාව';
 
   @override
-  String get analyticsTurnoverRate => 'Turnover Rate';
+  String get analyticsTurnoverRate => 'මාරුවීමේ අනුපාතය';
 
   @override
-  String get analyticsTurnoverToday => 'Turnover Today';
+  String get analyticsTurnoverToday => 'අද මාරුවීම් ගණන';
 
   @override
-  String get analyticsAiHealth => 'AI Engine Health';
+  String get analyticsAiHealth => 'AI එන්ජිමේ තත්වය';
 
   @override
-  String get analyticsConfidenceMean => 'Detection Confidence';
+  String get analyticsConfidenceMean => 'හඳුනාගැනීමේ විශ්වාසය';
 
   @override
-  String get analyticsCpuLoad => 'CPU Load';
+  String get analyticsCpuLoad => 'CPU භාවිතය';
 
   @override
-  String get analyticsInferenceLatency => 'Inference Latency';
+  String get analyticsInferenceLatency => 'AI සැකසුම් කාලය';
 
   @override
-  String get analyticsNoData => 'No data yet';
+  String get analyticsNoData => 'තවමත් දත්ත නොමැත';
 
   @override
-  String get analyticsRefresh => 'Refresh';
+  String get analyticsRefresh => 'අලුත් කරන්න';
 
   @override
-  String get analyticsSlots => 'slots';
+  String get analyticsSlots => 'ස්ථාන';
 
   @override
-  String get analyticsOccupied => 'occupied';
+  String get analyticsOccupied => 'පිරී ඇත';
 
   @override
-  String get analyticsVacant => 'vacant';
+  String get analyticsVacant => 'හිස්ව ඇත';
 
   @override
-  String get analyticsCameras => 'cameras active';
+  String get analyticsCameras => 'සක්‍රීය කැමරා';
 
   @override
   String get analyticsOccupancyTrendSubtitle =>
-      'Occupancy over time vs. prior period';
+      'පෙර කාලසීමාවට සාපේක්ෂව පිරී යාම';
 
   @override
-  String get analyticsSampleCount => 'samples';
+  String get analyticsSampleCount => 'සාම්පල';
 
   @override
-  String get analyticsFinancials => 'Financials';
+  String get analyticsFinancials => 'මූල්‍ය විස්තර';
 
   @override
-  String get analyticsRevenueToday => 'Revenue Today';
+  String get analyticsRevenueToday => 'අද ආදායම';
 
   @override
-  String get analyticsRevenueMonth => 'Revenue Month';
+  String get analyticsRevenueMonth => 'මෙම මාසයේ ආදායම';
 
   @override
-  String get analyticsRevenueUnit => 'LKR';
+  String get analyticsRevenueUnit => 'රු.';
 
   @override
-  String get analyticsOperationalImpact => 'Operational Impact';
+  String get analyticsOperationalImpact => 'මෙහෙයුම් බලපෑම';
 
   @override
-  String get analyticsRevenueTrend => 'Revenue Trend';
+  String get analyticsRevenueTrend => 'ආදායම් ප්‍රවණතාව';
 
   @override
-  String get settingsSubtitle => 'AI Inference & System Configuration';
+  String get settingsSubtitle => 'AI සහ පද්ධති සැකසුම්';
 
   @override
-  String get settingsPrecisionPanel => 'Inference Precision';
+  String get settingsPrecisionPanel => 'හඳුනාගැනීමේ නිරවද්‍යතාවය';
 
   @override
-  String get settingsConfidenceThreshold => 'Confidence Threshold';
+  String get settingsConfidenceThreshold => 'විශ්වාසනීය මට්ටම';
 
   @override
   String get settingsConfidenceThresholdDesc =>
-      'Lower values catch more objects but increase false positives.';
+      'අඩු අගයන් වැඩි වස්තූන් හඳුනා ගනී නමුත් වැරදි හඳුනාගැනීම් වැඩි විය හැක.';
 
   @override
-  String get settingsIouThreshold => 'IoU (Overlap) Threshold';
+  String get settingsIouThreshold => 'IoU (අතිච්ඡාදන) මට්ටම';
 
   @override
   String get settingsIouThresholdDesc =>
-      'Percentage overlap with slots required to trigger status.';
+      'තත්වය වෙනස් කිරීමට අවශ්‍ය අතිච්ඡාදන ප්‍රතිශතය.';
 
   @override
-  String get settingsFrameSkip => 'Frame Skipping';
+  String get settingsFrameSkip => 'රාමු මඟ හැරීම';
 
   @override
   String get settingsFrameSkipDesc =>
-      'Reduce processing load by processing every Nth frame.';
+      'සැකසුම් බර අඩු කිරීමට රාමු මඟ හැරීම සිදු කරයි.';
 
   @override
   String get settingsFrameSkipEveryFrame =>
-      'Process every frame (Max accuracy)';
+      'සෑම රාමුවක්ම සකසන්න (උපරිම නිරවද්‍යතාවය)';
 
   @override
-  String get settingsFrameSkipEvery2nd => 'Every 2nd frame (Balanced)';
+  String get settingsFrameSkipEvery2nd => 'සෑම 2 වන රාමුවක්ම (සමබර)';
 
   @override
-  String get settingsFrameSkipEvery3rd => 'Every 3rd frame (Efficiency)';
+  String get settingsFrameSkipEvery3rd => 'සෑම 3 වන රාමුවක්ම (කාර්යක්ෂම)';
 
   @override
-  String get settingsStabilityBuffer => 'Stability Buffer';
+  String get settingsStabilityBuffer => 'ස්ථාවරත්ව බෆරය';
 
   @override
   String get settingsStabilityBufferDesc =>
-      'Consecutive frames required for a status change.';
+      'තත්වය වෙනස් කිරීමට අවශ්‍ය අඛණ්ඩ රාමු ගණන.';
 
   @override
-  String get settingsSaveButton => 'Save Settings';
+  String get settingsSaveButton => 'සැකසුම් සුරකින්';
 
   @override
-  String get settingsSaveSuccess => 'Settings updated successfully';
+  String get settingsSaveSuccess => 'සැකසුම් සාර්ථකව යාවත්කාලීන කරන ලදී';
 
   @override
-  String get settingsSaveError => 'Failed to update settings';
+  String get settingsSaveError => 'සැකසුම් යාවත්කාලීන කිරීම අසාර්ථක විය';
 
   @override
-  String get settingsSaving => 'Saving...';
+  String get settingsSaving => 'සුරකිමින්...';
 
   @override
-  String get settingsSystemControl => 'System Control';
+  String get settingsSystemControl => 'පද්ධති පාලනය';
 
   @override
-  String get settingsGlobalInference => 'Enable Global Inference';
+  String get settingsGlobalInference => 'ගෝලීය AI සක්‍රීය කරන්න';
 
   @override
   String get settingsGlobalInferenceDesc =>
-      'Enable or disable AI inference globally for all available cameras.';
+      'සියලුම කැමරා සඳහා AI හඳුනාගැනීම සක්‍රීය හෝ අක්‍රීය කරන්න.';
 
   @override
-  String get settingsInferenceRunning => 'Running';
+  String get settingsInferenceRunning => 'ක්‍රියාත්මකයි';
 
   @override
-  String get settingsInferenceStopped => 'Stopped';
+  String get settingsInferenceStopped => 'නවත්වා ඇත';
 
   @override
-  String get unknownLot => 'Unknown Parking Lot';
+  String get unknownLot => 'නොදන්නා නැවැත්වීමේ ස්ථානයකි';
 
   @override
-  String get loading => 'Loading...';
+  String get loading => 'පූරණය වෙමින්...';
 
   @override
-  String get liveBadge => 'LIVE';
+  String get liveBadge => 'සජීවී';
 
   @override
-  String get editCameraTooltip => 'Edit Camera';
+  String get editCameraTooltip => 'කැමරාව සංස්කරණය කරන්න';
 
   @override
-  String get deleteCameraTooltip => 'Delete Camera';
+  String get deleteCameraTooltip => 'කැමරාව මකා දමන්න';
 
   @override
-  String get editCameraDialogTitle => 'Edit Camera';
+  String get editCameraDialogTitle => 'කැමරාව සංස්කරණය කරන්න';
 
   @override
-  String get cameraUpdatedSuccess => 'Camera updated successfully';
+  String get cameraUpdatedSuccess => 'කැමරාව සාර්ථකව යාවත්කාලීන කරන ලදී';
 
   @override
-  String get cameraDeletedSuccess => 'Camera deleted successfully';
+  String get cameraDeletedSuccess => 'කැමරාව සාර්ථකව මකා දමන ලදී';
 
   @override
-  String get deleteCameraConfirmTitle => 'Delete Camera?';
+  String get deleteCameraConfirmTitle => 'කැමරාව මකා දමන්නද?';
 
   @override
   String get deleteCameraConfirmMessage =>
-      'Are you sure you want to delete this camera? This action cannot be undone.';
+      'ඔබට විශ්වාසද මෙම කැමරාව මකා දැමීමට අවශ්‍ය බව? මෙය නැවත අවලංගු කළ නොහැක.';
 
   @override
-  String get saveChangesButton => 'Save Changes';
+  String get saveChangesButton => 'වෙනස්කම් සුරකින්';
 
   @override
-  String get parkingSlotsTitle => 'Parking Slots';
+  String get parkingSlotsTitle => 'නැවැත්වීමේ ස්ථාන';
 
   @override
-  String get addSlotTooltip => 'Add Slot';
+  String get addSlotTooltip => 'ස්ථානයක් එක් කරන්න';
 
   @override
-  String get cancelDrawingTooltip => 'Cancel Drawing';
+  String get cancelDrawingTooltip => 'අවලංගු කරන්න';
 
   @override
   String get tapPointsInstruction =>
-      'Tap 4 points on the video to define the parking slot corners.';
+      'නැවැත්වීමේ ස්ථානයේ කොන් හඳුනා ගැනීමට වීඩියෝවේ ස්ථාන 4ක් ස්පර්ශ කරන්න.';
 
   @override
-  String get showAiDetectionsLabel => 'Show AI Detections';
+  String get showAiDetectionsLabel => 'AI හඳුනාගැනීම් පෙන්වන්න';
 
   @override
-  String get noSlotsDefinedMessage => 'No slots defined yet.';
+  String get noSlotsDefinedMessage => 'තවමත් ස්ථාන කිසිවක් හඳුනාගෙන නොමැත.';
 
   @override
-  String get savingNewSlotMessage => 'Saving new slot...';
+  String get savingNewSlotMessage => 'නව ස්ථානය සුරකිමින්...';
 
   @override
-  String get vacantStatus => 'Vacant';
+  String get vacantStatus => 'හිස්ව ඇත';
 
   @override
-  String get slotTypeLabel => 'Slot Type';
+  String get slotTypeLabel => 'ස්ථාන වර්ගය';
 
   @override
-  String get slotTypeGeneral => 'General';
+  String get slotTypeGeneral => 'සාමාන්‍ය';
 
   @override
-  String get slotTypeDisabled => 'Disabled';
+  String get slotTypeDisabled => 'ආබාධිත';
 
   @override
-  String get slotTypeEv => 'EV Charging';
+  String get slotTypeEv => 'විදුලි වාහන ආරෝපණය';
 
   @override
-  String get slotTypeEntrance => 'Entrance';
+  String get slotTypeEntrance => 'ප්‍රවේශය';
 
   @override
-  String get newParkingSlotTitle => 'New Parking Slot';
+  String get newParkingSlotTitle => 'නව නැවැත්වීමේ ස්ථානය';
 
   @override
-  String get slotIdentifierLabel => 'Slot Identifier';
+  String get slotIdentifierLabel => 'ස්ථාන අංකය';
 
   @override
-  String get slotIdentifierHint => 'e.g. A-15';
+  String get slotIdentifierHint => 'උදා: A-15';
 
   @override
-  String get saveSlotButton => 'Save Slot';
+  String get saveSlotButton => 'ස්ථානය සුරකින්';
 
   @override
   String slotSavedSuccess(String name) {
-    return 'Slot $name saved';
+    return '$name ස්ථානය සුරකින ලදී';
   }
 
   @override
-  String get deleteSlotConfirmTitle => 'Delete Slot?';
+  String get deleteSlotConfirmTitle => 'ස්ථානය මකා දමන්නද?';
 
   @override
   String deleteSlotConfirmMessage(String name) {
-    return 'Are you sure you want to delete $name?';
+    return 'ඔබට $name ස්ථානය මකා දැමීමට අවශ්‍ය බව සහතිකද?';
   }
 
   @override
-  String get slotTypePrefix => 'Type';
+  String get slotTypePrefix => 'වර්ගය';
 
   @override
-  String get selectParkingLotHint => 'Select Parking Lot';
+  String get selectParkingLotHint => 'නැවැත්වීමේ ස්ථානය තෝරන්න';
 
   @override
-  String get analyticsLiveStatus => 'live';
+  String get analyticsLiveStatus => 'සජීවී';
 
   @override
-  String get analyticsMsUnit => 'ms';
+  String get analyticsMsUnit => 'මි.තත්.';
 
   @override
-  String get enterValueHint => 'Enter value';
+  String get enterValueHint => 'අගය ඇතුළත් කරන්න';
 
   @override
-  String get currentOccupancyLayout => 'Current Occupancy Layout';
+  String get currentOccupancyLayout => 'දැනට පවතින සැලැස්ම';
 
   @override
-  String get slotWidthLabel => 'Slot Width (m)';
+  String get slotWidthLabel => 'ස්ථානයේ පළල (මීටර්)';
 
   @override
-  String get slotLengthLabel => 'Slot Length (m)';
+  String get slotLengthLabel => 'ස්ථානයේ දිග (මීටර්)';
 
   @override
-  String get entranceCoordsLabel => 'Entrance Coords';
+  String get entranceCoordsLabel => 'ප්‍රවේශ ඛණ්ඩාංක';
 
   @override
-  String get rowLabel => 'Row';
+  String get rowLabel => 'පේළිය';
 
   @override
-  String get colLabel => 'Column';
+  String get colLabel => 'තීරුව';
 
   @override
-  String get explore => 'Explore';
+  String get explore => 'සොයා බලන්න';
 
   @override
-  String get bookings => 'Bookings';
+  String get bookings => 'වෙන් කිරීම්';
 
   @override
-  String get checkIn => 'Check-in';
+  String get checkIn => 'පැමිණීම ලකුණු කරන්න';
 
   @override
-  String get myVehicle => 'My Vehicle';
+  String get myVehicle => 'මගේ වාහනය';
 
   @override
-  String get nearbyLots => 'Nearby Parking Lots';
+  String get nearbyLots => 'ආසන්නයේ ඇති ස්ථාන';
 
   @override
   String metersAway(String distance) {
-    return '${distance}m away';
+    return 'මීටර් $distanceක් දුරින්';
   }
 
   @override
   String kmAway(String distance) {
-    return '${distance}km away';
+    return 'කි.මී. $distanceක් දුරින්';
   }
 
   @override
-  String get noLotsNearby => 'No parking lots found nearby.';
+  String get noLotsNearby => 'ආසන්නයේ නැවැත්වීමේ ස්ථාන කිසිවක් හමු නොවීය.';
 
   @override
-  String get topRecommended => 'Top Recommended P-Spots';
+  String get topRecommended => 'ප්‍රමුඛතම ස්ථාන';
 
   @override
-  String get seeAll => 'See all';
+  String get seeAll => 'සියල්ල බලන්න';
 
   @override
   String availableSlotsCount(String count) {
-    return '$count available';
+    return 'හිස් ස්ථාන $countක් ඇත';
   }
 
   @override
   String get vehicleAlreadyExists =>
-      'A vehicle with this license plate is already registered.';
+      'මෙම අංකය සහිත වාහනයක් දැනටමත් ලියාපදිංචි කර ඇත.';
 
   @override
-  String get vehicleNotFound => 'Vehicle not found.';
+  String get vehicleNotFound => 'වාහනය හමු නොවීය.';
 
   @override
-  String get paymentMethodNotFound => 'Payment method not found.';
+  String get paymentMethodNotFound => 'ගෙවීම් ක්‍රමය හමු නොවීය.';
 
   @override
-  String get reservationNoAvailableSlots =>
-      'No available slots in this parking lot.';
+  String get reservationNoAvailableSlots => 'මෙම ස්ථානයේ හිස් ඉඩකඩ නොමැත.';
 
   @override
-  String get reservationSlotOccupied =>
-      'This parking slot is already occupied.';
+  String get reservationSlotOccupied => 'මෙම ස්ථානය දැනටමත් පිරී ඇත.';
 
   @override
-  String get reservationSlotNotFound => 'Parking slot not found.';
+  String get reservationSlotNotFound => 'නැවැත්වීමේ ස්ථානය හමු නොවීය.';
 
   @override
-  String get reservationLotNotFound => 'Parking lot not found.';
+  String get reservationLotNotFound => 'ස්ථානය හමු නොවීය.';
 
   @override
-  String get reservationLotIdRequired =>
-      'Please select a parking lot for automatic slot selection.';
+  String get reservationLotIdRequired => 'කරුණාකර නැවැත්වීමේ ස්ථානයක් තෝරන්න.';
 
   @override
-  String get cameraNotFound => 'Camera not found.';
+  String get cameraNotFound => 'කැමරාව හමු නොවීය.';
 
   @override
-  String get cameraRtspNotConfigured => 'Camera stream URL is not configured.';
+  String get cameraRtspNotConfigured => 'කැමරා දර්ශන URL එක සකසා නොමැත.';
 
   @override
-  String get cameraWebrtcFailed =>
-      'Failed to establish camera stream connection.';
+  String get cameraWebrtcFailed => 'කැමරා සම්බන්ධතාවය ඇති කිරීමට නොහැකි විය.';
 
   @override
-  String get permissionDenied =>
-      'You don\'t have permission to perform this action.';
+  String get permissionDenied => 'මෙම ක්‍රියාව සිදු කිරීමට ඔබට අවසර නොමැත.';
 
   @override
   String get languageLabel => 'භාෂාව';
@@ -722,13 +718,13 @@ class AppLocalizationsSi extends AppLocalizations {
   String get languageSectionTitle => 'භාෂාව තෝරන්න';
 
   @override
-  String get languageSubtitle => 'ඔබේ කැමති භාෂාව තෝරන්න';
+  String get languageSubtitle => 'ඔබේ ප්‍රියතම භාෂාව තෝරන්න';
 
   @override
   String get profileParkingHistory => 'නැවැත්වීමේ ඉතිහාසය';
 
   @override
-  String get profileViewPastBookings => 'පැරණි වෙන් කිරීම් බලන්න';
+  String get profileViewPastBookings => 'ඔබගේ පැරණි වෙන් කිරීම් බලන්න';
 
   @override
   String get profilePaymentMethods => 'ගෙවීම් ක්‍රම';
@@ -743,7 +739,8 @@ class AppLocalizationsSi extends AppLocalizations {
   String get profileAlertsUpdates => 'ඇඟවීම් සහ යාවත්කාලීන කිරීම්';
 
   @override
-  String get settingsSignOutSubtitle => 'පිටවී ඔබේ දත්ත සුරක්ෂිත කරන්න';
+  String get settingsSignOutSubtitle =>
+      'පද්ධතියෙන් ඉවත් වී දත්ත සුරක්ෂිත කරන්න';
 
   @override
   String get upcomingBookings => 'ඉදිරි වෙන් කිරීම්';
@@ -756,7 +753,7 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String durationHours(String hours, String minutes) {
-    return '$hoursපැ $minutesමි';
+    return 'පැය $hours මිනිත්තු $minutes';
   }
 
   @override
@@ -766,7 +763,7 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String lkrAmount(String amount) {
-    return 'රු $amount';
+    return 'රු. $amount';
   }
 
   @override
@@ -785,22 +782,22 @@ class AppLocalizationsSi extends AppLocalizations {
   String get timeLeft => 'ඉතිරි කාලය';
 
   @override
-  String get baseRateLabel => 'Base Rate (LKR/hr)';
+  String get baseRateLabel => 'මූලික ගාස්තුව (රු/පැය)';
 
   @override
-  String get baseRateHint => 'e.g. 50.0';
+  String get baseRateHint => 'උදා: 50.0';
 
   @override
-  String get originalPriceLabel => 'Original Price';
+  String get originalPriceLabel => 'මුල් මිල';
 
   @override
-  String get finalPriceLabel => 'Final Price';
+  String get finalPriceLabel => 'අවසාන මිල';
 
   @override
-  String get checkInLabel => 'Check-in';
+  String get checkInLabel => 'පැමිණීමේ වේලාව';
 
   @override
-  String get checkOutLabel => 'Check-out';
+  String get checkOutLabel => 'පිටවීමේ වේලාව';
 
   @override
   String minsLeft(String mins) {
@@ -808,64 +805,65 @@ class AppLocalizationsSi extends AppLocalizations {
   }
 
   @override
-  String get statusUpcoming => 'Upcoming';
+  String get statusUpcoming => 'ඉදිරියට';
 
   @override
-  String get statusOngoing => 'Ongoing';
+  String get statusOngoing => 'ක්‍රියාත්මකයි';
 
   @override
-  String get statusOverstay => 'Overstay';
+  String get statusOverstay => 'කාලය ඉක්මවා ඇත';
 
   @override
-  String get statusNoShow => 'No Show';
+  String get statusNoShow => 'පැමිණ නැත';
 
   @override
-  String get statusExpired => 'Expired';
+  String get statusExpired => 'කල් ඉකුත් වී ඇත';
 
   @override
-  String get ticketStatusConfirmed => 'Booking Confirmed!';
+  String get ticketStatusConfirmed => 'වෙන් කිරීම තහවුරුයි!';
 
   @override
-  String get ticketStatusOngoing => 'Parking in Progress';
+  String get ticketStatusOngoing => 'වාහනය නවත්වා ඇත';
 
   @override
-  String get ticketStatusExpired => 'Booking Expired';
+  String get ticketStatusExpired => 'වෙන් කිරීම කල් ඉකුත් විය';
 
   @override
-  String get ticketStatusOverstay => 'Overstay Warning';
+  String get ticketStatusOverstay => 'කාලය ඉක්මවීමේ නිවේදනය';
 
   @override
-  String get ticketStatusCompleted => 'Parking Completed';
+  String get ticketStatusCompleted => 'නැවැත්වීම අවසන්';
 
   @override
-  String get ticketStatusCancelled => 'Booking Cancelled';
+  String get ticketStatusCancelled => 'වෙන් කිරීම අවලංගුයි';
 
   @override
-  String get ticketSubtitleConfirmed => 'Present this QR code at the entrance.';
+  String get ticketSubtitleConfirmed => 'මෙම QR කේතය ඇතුල්වීමේදී පෙන්වන්න.';
 
   @override
-  String get ticketSubtitleOngoing => 'You are currently parked in this lot.';
+  String get ticketSubtitleOngoing => 'ඔබ දැනට මෙම ස්ථානයේ වාහනය නවත්වා ඇත.';
 
   @override
-  String get ticketSubtitleExpired => 'The reservation window has passed.';
+  String get ticketSubtitleExpired => 'වෙන් කළ කාලසීමාව ඉක්මවා ඇත.';
 
   @override
-  String get ticketSubtitleOverstay => 'You have exceeded your reserved time.';
+  String get ticketSubtitleOverstay => 'වෙන් කළ කාලය ඉක්මවා වාහනය නවත්වා ඇත.';
 
   @override
-  String get ticketSubtitleNoShow => 'Please check in before the time expires.';
+  String get ticketSubtitleNoShow =>
+      'කරුණාකර කාලය අවසන් වීමට පෙර පැමිණීම සටහන් කරන්න.';
 
   @override
-  String get ticketSubtitleCompleted => 'Your parking session has ended.';
+  String get ticketSubtitleCompleted => 'ඔබේ නැවැත්වීමේ සැසිය අවසන් විය.';
 
   @override
-  String get ticketSubtitleCancelled => 'This booking is no longer valid.';
+  String get ticketSubtitleCancelled => 'මෙම වෙන් කිරීම තවදුරටත් වලංගු නොවේ.';
 
   @override
-  String get notifications => 'Notifications';
+  String get notifications => 'දැනුම්දීම්';
 
   @override
-  String get noNotifications => 'No notifications yet';
+  String get noNotifications => 'තවමත් දැනුම්දීම් නොමැත';
 
   @override
   String get markAllAsRead => 'සියල්ල කියවූ ලෙස ලකුණු කරන්න';
@@ -874,7 +872,8 @@ class AppLocalizationsSi extends AppLocalizations {
   String get forgotPasswordTitle => 'මුරපදය අමතකද?';
 
   @override
-  String get forgotPasswordSubtitle => 'ඔබේ විද්‍යුත් තැපෑල ඇතුළත් කරන්න.';
+  String get forgotPasswordSubtitle =>
+      'මුරපදය නැවත සැකසීමේ OTP කේතය ලබා ගැනීමට ඔබේ විද්‍යුත් තැපෑල ඇතුළත් කරන්න.';
 
   @override
   String get sendOtpButton => 'OTP එවන්න';
@@ -884,7 +883,7 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get verifyOtpSubtitle =>
-      'ඔබේ විද්‍යුත් තැපෑලට ලැබුණු අංක 6 කේතය ඇතුළත් කරන්න.';
+      'ඔබේ විද්‍යුත් තැපෑලට එවූ අංක 6 කේතය ඇතුළත් කරන්න.';
 
   @override
   String get verifyOtpButton => 'කේතය පරීක්ෂා කරන්න';
@@ -893,249 +892,250 @@ class AppLocalizationsSi extends AppLocalizations {
   String get resetPasswordTitle => 'මුරපදය නැවත සකසන්න';
 
   @override
-  String get resetPasswordSubtitle => 'අලුත් මුරපදයක් ඇතුළත් කරන්න.';
+  String get resetPasswordSubtitle =>
+      'ඔබේ ගිණුම සඳහා නව මුරපදයක් ඇතුළත් කරන්න.';
 
   @override
-  String get newPasswordLabel => 'අලුත් මුරපදය';
+  String get newPasswordLabel => 'නව මුරපදය';
 
   @override
   String get newPasswordHint => '••••••••';
 
   @override
-  String get resetPasswordButton => 'මුරපදය වෙනස් කරන්න';
+  String get resetPasswordButton => 'මුරපදය නැවත සකසන්න';
 
   @override
-  String get passwordResetSuccess => 'මුරපදය සාර්ථකව වෙනස් කරන ලදී';
+  String get passwordResetSuccess => 'මුරපදය සාර්ථකව නැවත සකසන ලදී';
 
   @override
   String get otpRequired => 'OTP කේතය අවශ්‍යයි';
 
   @override
-  String get otpInvalid => 'OTP කේතය අංක 6ක් විය යුතුය';
+  String get otpInvalid => 'OTP කේතය අංක 6කින් යුක්ත විය යුතුය';
 
   @override
-  String get slotNotAvailableMessage => 'Slot is not available';
+  String get slotNotAvailableMessage => 'ස්ථානය ලබා ගත නොහැක';
 
   @override
-  String get noLotSelected => 'No lot selected';
+  String get noLotSelected => 'ස්ථානයක් තෝරා නොමැත';
 
   @override
-  String get navigateAction => 'Navigate';
+  String get navigateAction => 'මාර්ගය පෙන්වන්න';
 
   @override
-  String get removeAction => 'Remove';
+  String get removeAction => 'ඉවත් කරන්න';
 
   @override
-  String get removePaymentMethodTitle => 'Remove Payment Method';
+  String get removePaymentMethodTitle => 'ගෙවීම් ක්‍රමය ඉවත් කරන්න';
 
   @override
-  String get paymentMethodTypeCard => 'Credit/Debit Card';
+  String get paymentMethodTypeCard => 'ණය/හර පත (Card)';
 
   @override
-  String get paymentMethodNameHint => 'e.g. Visa, MasterCard, Bank';
+  String get paymentMethodNameHint => 'උදා: Visa, MasterCard';
 
   @override
-  String get paymentMethodLastFourHint => 'e.g. 1234';
+  String get paymentMethodLastFourHint => 'උදා: 1234';
 
   @override
-  String get addVehicleAction => 'Add Vehicle';
+  String get addVehicleAction => 'වාහනයක් එක් කරන්න';
 
   @override
-  String get removeVehicleTitle => 'Remove Vehicle';
+  String get removeVehicleTitle => 'වාහනය ඉවත් කරන්න';
 
   @override
-  String get manageVehiclesSubtitle => 'Manage your vehicles';
+  String get manageVehiclesSubtitle => 'ඔබගේ වාහන කළමනාකරණය කරන්න';
 
   @override
-  String get vehicleNumberHint => 'e.g. ABC 1234';
+  String get vehicleNumberHint => 'උදා: ABC 1234';
 
   @override
-  String get vehicleTypeCar => 'Car';
+  String get vehicleTypeCar => 'මෝටර් රථය';
 
   @override
-  String get vehicleTypeMotorcycle => 'Motorcycle/Bike';
+  String get vehicleTypeMotorcycle => 'මෝටර් සයිකලය';
 
   @override
-  String get vehicleTypeThreeWheeler => 'Three-Wheeler';
+  String get vehicleTypeThreeWheeler => 'ත්‍රිරෝද රථය';
 
   @override
-  String get vehicleTypeTruck => 'Truck/Van';
+  String get vehicleTypeTruck => 'ට්‍රක්/වෑන් රථය';
 
   @override
-  String get bookAgainAction => 'Book Again';
+  String get bookAgainAction => 'නැවත වෙන් කරන්න';
 
   @override
-  String get bookASlotTitle => 'Book a Slot';
+  String get bookASlotTitle => 'ස්ථානයක් වෙන් කරන්න';
 
   @override
-  String get yourVehicleSection => 'Your Vehicle';
+  String get yourVehicleSection => 'ඔබේ වාහනය';
 
   @override
-  String get timeWindowSection => 'Time Window';
+  String get timeWindowSection => 'කාලසීමාව';
 
   @override
-  String get slotPreferenceSection => 'Slot Preference';
+  String get slotPreferenceSection => 'කැමති ස්ථාන වර්ගය';
 
   @override
-  String get paymentMethodSection => 'Payment Method';
+  String get paymentMethodSection => 'ගෙවීම් ක්‍රමය';
 
   @override
-  String get processedSuccessfully => 'Processed successfully!';
+  String get processedSuccessfully => 'සාර්ථකව අවසන් කරන ලදී!';
 
   @override
-  String get coordinateHint => 'e.g. 5.0';
+  String get coordinateHint => 'උදා: 5.0';
 
   @override
   String get otpHint => '123456';
 
   @override
   String minutesDuration(String mins) {
-    return '$mins min';
+    return 'මිනිත්තු $mins';
   }
 
   @override
-  String get addPaymentMethodAction => 'Add Payment Method';
+  String get addPaymentMethodAction => 'ගෙවීම් ක්‍රමයක් එක් කරන්න';
 
   @override
-  String get paymentMethodTypeCash => 'Cash';
+  String get paymentMethodTypeCash => 'මුදල්';
 
   @override
-  String get noVehiclesFound => 'No vehicles found';
+  String get noVehiclesFound => 'වාහන කිසිවක් හමු නොවීය';
 
   @override
-  String get arrivalDateLabel => 'Arrival Date';
+  String get arrivalDateLabel => 'පැමිණෙන දිනය';
 
   @override
-  String get arrivalTimeLabel => 'Arrival Time';
+  String get arrivalTimeLabel => 'පැමිණෙන වේලාව';
 
   @override
-  String get durationLabel => 'Duration';
+  String get durationLabel => 'කාලසීමාව';
 
   @override
-  String get minutesShort => 'mins';
+  String get minutesShort => 'මිනිත්තු';
 
   @override
-  String get smartSuggestionLabel => 'AI Suggestion';
+  String get smartSuggestionLabel => 'AI නිර්දේශය';
 
   @override
-  String get manualSelectionLabel => 'Manual Selection';
+  String get manualSelectionLabel => 'අවශ්‍ය පරිදි තෝරා ගැනීම';
 
   @override
-  String get totalPriceLabel => 'Total Price';
+  String get totalPriceLabel => 'මුළු මිල';
 
   @override
-  String get verifyingAvailability => 'Verifying...';
+  String get verifyingAvailability => 'පරීක්ෂා කරමින්...';
 
   @override
-  String get conflictCheckHint => 'Checking for potential double bookings';
+  String get conflictCheckHint => 'වෙනත් වෙන් කිරීම් සමඟ පරීක්ෂා කරයි';
 
   @override
-  String get slotAvailableMessage => 'Slot is available';
+  String get slotAvailableMessage => 'ස්ථානය ලබා ගත හැක';
 
   @override
-  String get pastTimeWarning => 'Parking time is in the past';
+  String get pastTimeWarning => 'තෝරාගත් වේලාව අතීතයට අයත් වේ';
 
   @override
-  String get confirmBookingAction => 'Confirm Booking';
+  String get confirmBookingAction => 'වෙන් කිරීම තහවුරු කරන්න';
 
   @override
-  String get searchTryDifferent => 'Try a different location or search term';
+  String get searchTryDifferent => 'වෙනත් ස්ථානයක් හෝ නමක් භාවිතා කර සොයන්න';
 
   @override
   String errorPrefix(String message) {
-    return 'Error: $message';
+    return 'දෝෂයකි: $message';
   }
 
   @override
-  String get justNow => 'Just now';
+  String get justNow => 'දැන්';
 
   @override
   String minutesAgoShort(String mins) {
-    return '${mins}m ago';
+    return 'මිනිත්තු $minsකට පෙර';
   }
 
   @override
   String hoursAgoShort(String hours) {
-    return '${hours}h ago';
+    return 'පැය $hoursකට පෙර';
   }
 
   @override
   String daysAgoShort(String days) {
-    return '${days}d ago';
+    return 'දින $daysකට පෙර';
   }
 
   @override
-  String get scanQrTitle => 'Scan Reservation QR Code';
+  String get scanQrTitle => 'වෙන් කිරීමේ QR කේතය පරීක්ෂා කරන්න';
 
   @override
   String get scanQrSubtitle =>
-      'Position the QR code within the frame to check-in or check-out.';
+      'පැමිණීම හෝ පිටවීම සටහන් කිරීමට QR කේතය රාමුව තුලට යොමු කරන්න.';
 
   @override
-  String get checkInPreview => 'Check-in Preview';
+  String get checkInPreview => 'පැමිණීම පිළිබඳ විස්තර';
 
   @override
-  String get checkoutPreview => 'Checkout Preview';
+  String get checkoutPreview => 'පිටවීම පිළිබඳ විස්තර';
 
   @override
-  String get statusPending => 'PENDING';
+  String get statusPending => 'පොරොත්තු';
 
   @override
-  String get statusActiveCapital => 'ACTIVE';
+  String get statusActiveCapital => 'සක්‍රීයයි';
 
   @override
-  String get vehicleLabel => 'Vehicle';
+  String get vehicleLabel => 'වාහනය';
 
   @override
-  String get slotLabel => 'Slot';
+  String get slotLabel => 'ස්ථානය';
 
   @override
-  String get startTimeLabel => 'Start Time';
+  String get startTimeLabel => 'ආරම්භක වේලාව';
 
   @override
-  String get endTimeLabel => 'End Time';
+  String get endTimeLabel => 'අවසාන වේලාව';
 
   @override
-  String get checkedInAtLabel => 'Checked-in At';
+  String get checkedInAtLabel => 'පැමිණි වේලාව';
 
   @override
-  String get totalBilledAmount => 'Total Billed Amount';
+  String get totalBilledAmount => 'මුළු ගාස්තුව';
 
   @override
-  String get selectPaymentMethodLabel => 'Select Payment Method';
+  String get selectPaymentMethodLabel => 'ගෙවීම් ක්‍රමය තෝරන්න';
 
   @override
-  String get paymentMethodWallet => 'Wallet';
+  String get paymentMethodWallet => 'පසුම්බිය (Wallet)';
 
   @override
-  String get confirmCheckIn => 'Confirm Check-in';
+  String get confirmCheckIn => 'පැමිණීම තහවුරු කරන්න';
 
   @override
-  String get confirmCheckout => 'Confirm Checkout';
+  String get confirmCheckout => 'පිටවීම තහවුරු කරන්න';
 
   @override
-  String get scanningError => 'Scanning Error';
+  String get scanningError => 'පරීක්ෂා කිරීමේ දෝෂයකි';
 
   @override
-  String get tryAgain => 'Try Again';
+  String get tryAgain => 'නැවත උත්සාහ කරන්න';
 
   @override
-  String get licensePlateLabel => 'License Plate Number';
+  String get licensePlateLabel => 'වාහන අංකය';
 
   @override
-  String get vehicleTypeLabel => 'Vehicle Type';
+  String get vehicleTypeLabel => 'වාහන වර්ගය';
 
   @override
-  String get paymentProviderLabel => 'Provider Name';
+  String get paymentProviderLabel => 'බැංකුවේ නම';
 
   @override
-  String get paymentLastFourLabel => 'Last 4 Digits';
+  String get paymentLastFourLabel => 'අවසාන අංක 4';
 
   @override
-  String get nearEntrance => 'Near entrance';
+  String get nearEntrance => 'දොරටුව අසල';
 
   @override
-  String get digitalTicketTitle => 'Digital Ticket';
+  String get digitalTicketTitle => 'ඩිජිටල් ටිකට්පත';
 
   @override
   String get rateYourExperience => 'ඔබේ අත්දැකීම අගයන්න';

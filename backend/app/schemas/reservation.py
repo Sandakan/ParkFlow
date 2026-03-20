@@ -36,5 +36,6 @@ class ReservationResponse(BaseModel):
     lot_latitude: float
     lot_longitude: float
     slot_name: str
+    has_rating: bool
     created_at: datetime
     updated_at: datetime

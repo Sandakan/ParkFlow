@@ -115,6 +115,7 @@ async def scan_reservation_qr(
             "total_billed_price", reservation["total_price"]
         ),
         "status": reservation.get("status", "active"),
+        "has_rating": reservation.get("has_rating", False),
         "qr_code_token": reservation["qr_code_token"],
         "lot_name": "Unknown Lot",
         "lot_address": "No Address",
@@ -312,6 +313,7 @@ async def get_my_reservations(
             "actual_end_time": res.get("actual_end_time", res["end_time"]),
             "total_billed_price": res.get("total_billed_price", res["total_price"]),
             "status": res.get("status", "active"),
+            "has_rating": res.get("has_rating", False),
             "qr_code_token": res["qr_code_token"],
             "lot_name": "Unknown Lot",
             "lot_address": "No Address",

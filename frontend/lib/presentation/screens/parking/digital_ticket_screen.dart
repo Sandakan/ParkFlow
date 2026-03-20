@@ -10,13 +10,22 @@ import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
-class DigitalTicketScreen extends ConsumerWidget {
+import 'package:parkflow/presentation/notifiers/parking/rating_session_notifier.dart';
+import 'package:parkflow/presentation/widgets/parking/rating_dialog.dart';
+
+class DigitalTicketScreen extends ConsumerStatefulWidget {
   final String reservationId;
 
   const DigitalTicketScreen({super.key, required this.reservationId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DigitalTicketScreen> createState() =>
+      _DigitalTicketScreenState();
+}
+
+class _DigitalTicketScreenState extends ConsumerState<DigitalTicketScreen> {
+  @override
+  Widget build(BuildContext context) {
     final reservationsAsync = ref.watch(reservationNotifierProvider);
 
     return Scaffold(
@@ -34,7 +43,7 @@ class DigitalTicketScreen extends ConsumerWidget {
       body: reservationsAsync.when(
         data: (reservations) {
           final res = reservations.cast<ReservationModel?>().firstWhere(
-            (r) => r?.id == reservationId,
+            (r) => r?.id == widget.reservationId,
             orElse: () => null,
           );
           if (res == null) {
@@ -44,6 +53,32 @@ class DigitalTicketScreen extends ConsumerWidget {
                 style: const TextStyle(color: Colors.white),
               ),
             );
+          }
+
+          // Check if it needs rating and hasn't been shown in this session
+          if (res.detailedStatus == ReservationStatus.completed &&
+              !res.hasRating) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+
+              final sessionNotifier = ref.read(ratingSessionProvider.notifier);
+              final shownIds = ref.read(ratingSessionProvider);
+
+              if (!shownIds.contains(res.id)) {
+                sessionNotifier.markAsShown(res.id);
+
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) =>
+                      RatingDialog(reservationId: res.id, lotName: res.lotName),
+                ).then((rated) {
+                  if (rated == true) {
+                    ref.invalidate(reservationNotifierProvider);
+                  }
+                });
+              }
+            });
           }
 
           final status = res.detailedStatus;
@@ -103,10 +138,7 @@ class DigitalTicketScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTicketCard(
-    BuildContext context,
-    ReservationModel res,
-  ) {
+  Widget _buildTicketCard(BuildContext context, ReservationModel res) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -152,7 +184,10 @@ class DigitalTicketScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _TicketDetail(label: context.l10n.slotIdentifierLabel, value: res.slotName),
+                    _TicketDetail(
+                      label: context.l10n.slotIdentifierLabel,
+                      value: res.slotName,
+                    ),
                     _TicketDetail(
                       label: context.l10n.myVehicle,
                       value: res.vehicle.plateNumber,
@@ -220,7 +255,9 @@ class DigitalTicketScreen extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      context.l10n.lkrAmount(res.totalBilledPrice.toStringAsFixed(2)),
+                      context.l10n.lkrAmount(
+                        res.totalBilledPrice.toStringAsFixed(2),
+                      ),
                       style: const TextStyle(
                         fontWeight: FontWeight.w900,
                         fontSize: 26,

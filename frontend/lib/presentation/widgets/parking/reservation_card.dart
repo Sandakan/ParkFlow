@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:parkflow/presentation/notifiers/parking/reservation_notifier.dart';
+import 'package:parkflow/presentation/widgets/parking/rating_dialog.dart';
 import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/routes/router_provider.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
@@ -113,6 +116,41 @@ class ReservationCard extends StatelessWidget {
             ),
           ],
         ),
+        if (reservation.detailedStatus == ReservationStatus.completed &&
+            !reservation.hasRating) ...[
+          const SizedBox(height: 12),
+          Consumer(
+            builder: (context, ref, child) {
+              return SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) => RatingDialog(
+                        reservationId: reservation.id,
+                        lotName: reservation.lotName,
+                      ),
+                    ).then((rated) {
+                      if (rated == true) {
+                        ref.invalidate(reservationNotifierProvider);
+                      }
+                    });
+                  },
+                  icon: const Icon(Icons.star_outline, size: 18),
+                  label: Text(context.l10n.submitRating),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ],
     );
 

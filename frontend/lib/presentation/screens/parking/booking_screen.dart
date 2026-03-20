@@ -34,26 +34,30 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     super.initState();
     debugPrint('BookingScreen: initState - Setting up form listeners');
 
-    form = FormGroup({
-      'vehicle': FormControl<int>(validators: [Validators.required]),
-      'arrival_date': FormControl<DateTime>(
-        value: DateTime.now(),
-        validators: [Validators.required],
-      ),
-      'arrival_time': FormControl<DateTime>(
-        value: DateTime.now().add(const Duration(minutes: 15)),
-        validators: [Validators.required],
-      ),
-      'duration': FormControl<int>(value: 60, validators: [Validators.required]),
-      'slot_selection_mode': FormControl<String>(value: 'auto'),
-      'selected_slot_id': FormControl<String>(),
-      'payment_method': FormControl<String>(
-        value: 'card',
-        validators: [Validators.required],
-      ),
-    }, validators: [
-      Validators.delegate(_futureDateTimeValidator),
-    ]);
+    form = FormGroup(
+      {
+        'vehicle': FormControl<int>(validators: [Validators.required]),
+        'arrival_date': FormControl<DateTime>(
+          value: DateTime.now(),
+          validators: [Validators.required],
+        ),
+        'arrival_time': FormControl<DateTime>(
+          value: DateTime.now().add(const Duration(minutes: 15)),
+          validators: [Validators.required],
+        ),
+        'duration': FormControl<int>(
+          value: 60,
+          validators: [Validators.required],
+        ),
+        'slot_selection_mode': FormControl<String>(value: 'auto'),
+        'selected_slot_id': FormControl<String>(),
+        'payment_method': FormControl<String>(
+          value: 'card',
+          validators: [Validators.required],
+        ),
+      },
+      validators: [Validators.delegate(_futureDateTimeValidator)],
+    );
 
     form.valueChanges.listen((value) {
       debugPrint('BookingScreen: form.valueChanges emitted: $value');
@@ -520,7 +524,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               return _PickerTile(
                 label: context.l10n.durationLabel,
                 isRequired: true,
-                value: '${control.value} ${context.l10n.minutesDuration}',
+                value: context.l10n.minutesDuration('${control.value ?? 60}'),
                 onTap: () {
                   _showDurationPicker(context, control as FormControl<int>);
                 },
@@ -546,7 +550,10 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             children: [
               Text(
                 context.l10n.durationLabel,
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
               const SizedBox(height: 24),
               Wrap(
@@ -612,9 +619,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   child: Text(
                     '${context.l10n.smartSuggestionLabel}: $_suggestedSlotId',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                    ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
@@ -738,9 +745,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               Text(
                 'LKR ${totalPrice.toStringAsFixed(2)}',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.primary,
-                    ),
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.primary,
+                ),
               ),
             ],
           ),
@@ -987,7 +994,9 @@ class _SectionHeader extends StatelessWidget {
                 if (isRequired)
                   TextSpan(
                     text: ' *',
-                    style: TextStyle(color: Theme.of(context).colorScheme.error),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
               ],
             ),
@@ -1102,9 +1111,9 @@ class _ChoiceTile extends StatelessWidget {
               child: Text(
                 label,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isSelected ? AppColors.white : AppColors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  color: isSelected ? AppColors.white : AppColors.black,
+                  fontWeight: FontWeight.bold,
+                ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),

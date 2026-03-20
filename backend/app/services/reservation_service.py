@@ -148,6 +148,7 @@ class ReservationService:
             "check_in_time": None,
             "check_out_time": None,
             "status": "active",
+            "has_rating": False,
             "qr_code_token": qr_code,
             "created_at": now,
             "updated_at": now,

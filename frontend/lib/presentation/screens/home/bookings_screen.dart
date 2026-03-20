@@ -8,11 +8,18 @@ import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/models/parking/reservation_model.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
 
-class BookingsScreen extends ConsumerWidget {
+import 'package:parkflow/presentation/notifiers/parking/rating_session_notifier.dart';
+
+class BookingsScreen extends ConsumerStatefulWidget {
   const BookingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<BookingsScreen> createState() => _BookingsScreenState();
+}
+
+class _BookingsScreenState extends ConsumerState<BookingsScreen> {
+  @override
+  Widget build(BuildContext context) {
     final reservationsState = ref.watch(reservationNotifierProvider);
 
     return Scaffold(
@@ -52,15 +59,27 @@ class BookingsScreen extends ConsumerWidget {
               data: (reservations) {
                 // Check if any reservation was just completed and needs rating
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  final justCompleted = reservations
+                  if (!mounted) return;
+
+                  final sessionNotifier = ref.read(
+                    ratingSessionProvider.notifier,
+                  );
+                  final shownIds = ref.read(ratingSessionProvider);
+
+                  final unratedCompleted = reservations
                       .where(
                         (r) =>
                             r.detailedStatus == ReservationStatus.completed &&
-                            !r.hasRating,
+                            !r.hasRating &&
+                            !shownIds.contains(r.id),
                       )
                       .toList();
 
-                  for (final res in justCompleted) {
+                  // Only show one at a time, preferably the most recent one
+                  if (unratedCompleted.isNotEmpty) {
+                    final res = unratedCompleted.first;
+                    sessionNotifier.markAsShown(res.id);
+
                     showDialog(
                       context: context,
                       barrierDismissible: false,
