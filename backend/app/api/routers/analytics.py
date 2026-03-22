@@ -515,12 +515,20 @@ async def generate_analytics_report(
         ti = f"{ci.strftime('%m/%d %H:%M')}" if ci else "—"
         to = f"{co.strftime('%m/%d %H:%M')}" if co else "—"
 
+        slot_val = str(r.get("slot_name") or r.get("slot_id") or "—").upper()
+        if len(slot_val) > 12:
+            slot_val = f"{slot_val[:6]}..{slot_val[-4:]}"
+
+        user_val = str(r.get("user_id") or "Guest").upper()
+        if "-" in user_val:
+            user_val = user_val.split("-")[-1]
+        if len(user_val) > 12:
+            user_val = user_val[-8:]
+
         table_data.append(
             [
-                str(r.get("slot_name") or r.get("slot_id") or "—").upper(),
-                str(r.get("user_id") or "Guest")
-                .split("-")[-1]
-                .upper(),  # Show short ID
+                slot_val,
+                user_val,
                 ti,
                 to,
                 f"LKR {r.get('total_billed_price', 0.0):.0f}",

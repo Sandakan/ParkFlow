@@ -105,9 +105,7 @@ class ParkingLotLayoutSheet extends ConsumerWidget {
               child: SingleChildScrollView(
                 child: ParkingLotLayoutGrid(
                   slots: layoutState.slots,
-                  highlightedSlotIds: layoutState.suggestions
-                      .map((s) => s.slotId)
-                      .toList(),
+                  highlightedSlotIds: const [], // Admins don't need suggestions
                 ),
               ),
             ),

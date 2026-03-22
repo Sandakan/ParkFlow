@@ -96,8 +96,6 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                         ? AppColors.occupiedBackground
                         : isReserved
                         ? AppColors.reservedBackground
-                        : isHighlighted
-                        ? AppColors.primary.withValues(alpha: 0.2)
                         : AppColors.availableBackground,
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
@@ -109,76 +107,103 @@ class ParkingLotLayoutGrid extends StatelessWidget {
                           ? AppColors.occupiedBorder
                           : isReserved
                           ? AppColors.reservedBorder
-                          : isHighlighted
-                          ? AppColors.primary
                           : AppColors.availableBorder,
-                      width: isHighlighted ? 2.0 : 1.0,
+                      width: 1.0,
                     ),
                   ),
-                  child: Center(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            isEntrance
-                                ? Icons.door_front_door
-                                : (slot.isOccupied || isReservedOccupied)
-                                ? Icons.directions_car
-                                : (isReserved ? Icons.event_seat : Icons.local_parking),
-                            size: 16.0,
-                            color: isEntrance
-                                ? AppColors.entranceText
-                                : isReservedOccupied
-                                ? AppColors.reservedOccupiedText
-                                : slot.isOccupied
-                                ? AppColors.occupiedText
-                                : isReserved
-                                ? AppColors.reservedText
-                                : isHighlighted
-                                ? AppColors.primary
-                                : AppColors.availableText,
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            slot.name,
-                            style: TextStyle(
-                              fontSize: 8,
-                              fontWeight: FontWeight.bold,
-                              color: isEntrance
-                                  ? AppColors.entranceTextDark
-                                  : isReservedOccupied
-                                  ? AppColors.reservedOccupiedText
-                                  : slot.isOccupied
-                                  ? AppColors.occupiedTextDark
-                                  : isReserved
-                                  ? AppColors.reservedTextDark
-                                  : AppColors.availableTextDark,
+                  child: Stack(
+                    children: [
+                      if (isHighlighted)
+                        Positioned(
+                          top: 2,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                                vertical: 1,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text(
+                                'SUGGESTED',
+                                style: TextStyle(
+                                  fontSize: 4,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            'R${slot.logicalRow} C${slot.logicalCol}',
-                            style: TextStyle(
-                              fontSize: 7,
-                              color:
-                                  (isEntrance
-                                           ? AppColors.entranceTextDark
-                                           : isReservedOccupied
-                                           ? AppColors.reservedOccupiedText
-                                           : slot.isOccupied
-                                           ? AppColors.occupiedTextDark
-                                           : isReserved
-                                           ? AppColors.reservedTextDark
-                                           : AppColors.availableTextDark)
+                        ),
+                      Center(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                isEntrance
+                                    ? Icons.door_front_door
+                                    : (slot.isOccupied || isReservedOccupied)
+                                    ? Icons.directions_car
+                                    : (isReserved
+                                        ? Icons.event_seat
+                                        : Icons.local_parking),
+                                size: 16.0,
+                                color: isEntrance
+                                    ? AppColors.entranceText
+                                    : isReservedOccupied
+                                    ? AppColors.reservedOccupiedText
+                                    : slot.isOccupied
+                                    ? AppColors.occupiedText
+                                    : isReserved
+                                    ? AppColors.reservedText
+                                    : AppColors.availableText,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                slot.name,
+                                style: TextStyle(
+                                  fontSize: 8,
+                                  fontWeight: FontWeight.bold,
+                                  color: isEntrance
+                                      ? AppColors.entranceTextDark
+                                      : isReservedOccupied
+                                      ? AppColors.reservedOccupiedText
+                                      : slot.isOccupied
+                                      ? AppColors.occupiedTextDark
+                                      : isReserved
+                                      ? AppColors.reservedTextDark
+                                      : AppColors.availableTextDark,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'R${slot.logicalRow} C${slot.logicalCol}',
+                                style: TextStyle(
+                                  fontSize: 7,
+                                  color: (isEntrance
+                                          ? AppColors.entranceTextDark
+                                          : isReservedOccupied
+                                          ? AppColors.reservedOccupiedText
+                                          : slot.isOccupied
+                                          ? AppColors.occupiedTextDark
+                                          : isReserved
+                                          ? AppColors.reservedTextDark
+                                          : AppColors.availableTextDark)
                                       .withValues(alpha: 0.7),
-                            ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 );
               },

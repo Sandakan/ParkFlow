@@ -141,41 +141,29 @@ class _SlotWidget extends StatelessWidget {
     final bgColor = isSelected
         ? AppColors.primary
         : isReservedOccupied
-            ? AppColors.reservedOccupiedBackground
-            : slot.isOccupied
-                ? AppColors.occupiedBackground
-                : isReserved
-                    ? AppColors.reservedBackground
-                    : isSuggestion
-                        ? AppColors.primary.withValues(alpha: 0.08)
-                        : AppColors.availableBackground;
+        ? AppColors.reservedOccupiedBackground
+        : slot.isOccupied
+        ? AppColors.occupiedBackground
+        : isReserved
+        ? AppColors.reservedBackground
+        : AppColors.availableBackground;
 
     final borderColor = isSelected
         ? AppColors.primary
         : isReservedOccupied
-            ? AppColors.reservedOccupiedBorder
-            : slot.isOccupied
-                ? AppColors.occupiedBorder
-                : isReserved
-                    ? AppColors.reservedBorder
-                    : isSuggestion
-                        ? AppColors.primary
-                        : AppColors.availableBorder;
+        ? AppColors.reservedOccupiedBorder
+        : slot.isOccupied
+        ? AppColors.occupiedBorder
+        : isReserved
+        ? AppColors.reservedBorder
+        : AppColors.availableBorder;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 500),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor, width: isSuggestion ? 2.5 : 1.5),
-        boxShadow: isSuggestion
-            ? [
-                BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.2),
-                  blurRadius: 10,
-                ),
-              ]
-            : [],
+        border: Border.all(color: borderColor, width: 1.5),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -188,14 +176,12 @@ class _SlotWidget extends StatelessWidget {
             color: isSelected
                 ? AppColors.white
                 : isReservedOccupied
-                    ? AppColors.reservedOccupiedText
-                    : slot.isOccupied
-                        ? AppColors.occupiedText
-                        : isReserved
-                            ? AppColors.reservedText
-                            : isSuggestion
-                                ? AppColors.primary
-                                : AppColors.availableText,
+                ? AppColors.reservedOccupiedText
+                : slot.isOccupied
+                ? AppColors.occupiedText
+                : isReserved
+                ? AppColors.reservedText
+                : AppColors.availableText,
           ),
           const SizedBox(height: 8),
           Text(
