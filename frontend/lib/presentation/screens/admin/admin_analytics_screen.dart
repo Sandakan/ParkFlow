@@ -4,8 +4,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:parkflow/presentation/notifiers/analytics/analytics_notifier.dart';
+import 'package:parkflow/services/analytics_service.dart';
 import 'package:parkflow/utils/constants/app_colors.dart';
 import 'package:parkflow/utils/extensions/app_localizations_extension.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AdminAnalyticsScreen extends ConsumerWidget {
   const AdminAnalyticsScreen({super.key});
@@ -139,14 +141,16 @@ class AdminAnalyticsScreen extends ConsumerWidget {
   }
 }
 
-class _PageHeader extends StatelessWidget {
+class _PageHeader extends ConsumerWidget {
   final VoidCallback onRefresh;
 
   const _PageHeader({required this.onRefresh});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final state = ref.watch(analyticsProvider);
+
     return Row(
       children: [
         Expanded(
@@ -170,6 +174,36 @@ class _PageHeader extends StatelessWidget {
             ],
           ),
         ),
+        IconButton(
+          onPressed: () async {
+            try {
+              final url = await ref
+                  .read(analyticsServiceProvider)
+                  .getReportUrl(state.selectedPeriod);
+
+              final uri = Uri.parse(url);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            } catch (e) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to download report: $e')),
+                );
+              }
+            }
+          },
+          icon: const Icon(Icons.download_rounded),
+          tooltip: context.l10n.analyticsDownloadReport,
+          style: IconButton.styleFrom(
+            backgroundColor: AppColors.surfaceVariant,
+            foregroundColor: AppColors.primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
         IconButton(
           onPressed: onRefresh,
           icon: const Icon(Icons.refresh_rounded),

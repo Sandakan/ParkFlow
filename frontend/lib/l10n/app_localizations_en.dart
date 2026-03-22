@@ -391,6 +391,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get analyticsSlots => 'slots';
 
   @override
+  String get analyticsDownloadReport => 'Download PDF Report';
+
+  @override
   String get analyticsOccupied => 'occupied';
 
   @override

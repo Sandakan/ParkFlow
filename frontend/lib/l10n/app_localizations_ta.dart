@@ -392,6 +392,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get analyticsSlots => 'இடங்கள்';
 
   @override
+  String get analyticsDownloadReport => 'PDF அறிக்கையை பதிவிறக்கவும்';
+
+  @override
   String get analyticsOccupied => 'நிரம்பியுள்ளது';
 
   @override

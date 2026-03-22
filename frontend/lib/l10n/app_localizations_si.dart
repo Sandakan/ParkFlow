@@ -392,6 +392,9 @@ class AppLocalizationsSi extends AppLocalizations {
   String get analyticsSlots => 'ස්ථාන';
 
   @override
+  String get analyticsDownloadReport => 'PDF වාර්තාව බාගන්න';
+
+  @override
   String get analyticsOccupied => 'පිරී ඇත';
 
   @override

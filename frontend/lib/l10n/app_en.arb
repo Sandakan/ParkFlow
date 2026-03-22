@@ -500,6 +500,10 @@
 	"@analyticsSlots": {
 		"description": "Noun suffix for slot counts"
 	},
+	"analyticsDownloadReport": "Download PDF Report",
+	"@analyticsDownloadReport": {
+		"description": "Tooltip text for the analytics report download button"
+	},
 	"analyticsOccupied": "occupied",
 	"@analyticsOccupied": {
 		"description": "Status label for occupied slots"

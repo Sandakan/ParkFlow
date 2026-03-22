@@ -24,3 +24,4 @@ pytest-env>=1.0.0
 mongomock-motor>=0.0.21
 fakeredis>=2.20.0
 pytest-cov>=4.1.0
+reportlab>=4.1.0

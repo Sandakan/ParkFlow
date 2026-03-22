@@ -125,6 +125,10 @@
 	"analyticsNoData": "தகவல்கள் எதுவும் இல்லை",
 	"analyticsRefresh": "புதுப்பி",
 	"analyticsSlots": "இடங்கள்",
+	"analyticsDownloadReport": "PDF அறிக்கையை பதிவிறக்கவும்",
+	"@analyticsDownloadReport": {
+		"description": "Tooltip text for the analytics report download button"
+	},
 	"analyticsOccupied": "நிரம்பியுள்ளது",
 	"analyticsVacant": "காலியாக உள்ளது",
 	"analyticsCameras": "செயலில் உள்ள காமிராக்கள்",

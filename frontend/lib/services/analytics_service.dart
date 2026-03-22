@@ -6,6 +6,7 @@ import 'package:parkflow/repositories/providers/remote_repository_provider.dart'
 import 'package:parkflow/utils/handlers/error_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:parkflow/presentation/notifiers/auth/auth_notifier.dart';
+import 'package:parkflow/repositories/providers/env_repository_provider.dart';
 
 part 'analytics_service.g.dart';
 
@@ -45,6 +46,14 @@ class AnalyticsService {
     } catch (e) {
       throw ErrorHandler.handle(e);
     }
+  }
+
+  Future<String> getReportUrl(String period) async {
+    final baseUrl = _ref.read(envRepositoryProvider).getBaseUrl();
+    final token = await _getToken();
+    final url =
+        '${baseUrl.endsWith('/') ? baseUrl : '$baseUrl/'}analytics/report?period=$period&token=$token';
+    return url;
   }
 }
 

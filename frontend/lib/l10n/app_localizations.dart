@@ -850,6 +850,12 @@ abstract class AppLocalizations {
   /// **'slots'**
   String get analyticsSlots;
 
+  /// Tooltip text for the analytics report download button
+  ///
+  /// In en, this message translates to:
+  /// **'Download PDF Report'**
+  String get analyticsDownloadReport;
+
   /// Status label for occupied slots
   ///
   /// In en, this message translates to:
