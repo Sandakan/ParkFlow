@@ -45,6 +45,13 @@ services:
       # REDIS_URL points to the local redis container
       - REDIS_URL=redis://redis:6379
       # MONGODB_URL is expected to be in the .env file (Atlas connection string)
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     depends_on:
       - redis
       - mediamtx

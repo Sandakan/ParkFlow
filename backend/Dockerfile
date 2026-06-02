@@ -21,6 +21,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Copy the requirements file and install dependencies
 COPY backend/requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && \
+    pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128 && \
     pip install -r requirements.txt
 
 # Pre-download YOLO model to bake it into the image layer

@@ -61,6 +61,15 @@ SECRET_KEY=your-super-secret-key
 
    > **Windows Note — Port 8200**: The host-facing port is **8200** because Windows reserves the port 8000 range. The container still listens internally on **8000**.
 
+#### 🚀 GPU Acceleration (CUDA) inside Docker
+If you have an NVIDIA GPU (e.g., RTX 50-series Blackwell card) and want to accelerate inference with CUDA inside the container:
+1. Ensure the **NVIDIA Container Toolkit** is installed on your Windows host / WSL2 backend.
+2. In Docker Desktop, make sure **"Use the WSL 2 based engine"** is enabled under settings.
+3. The `backend` container is configured to request GPU resources automatically via `deploy.resources` in `docker-compose.yml`.
+4. The Dockerfile upgrades `pip` and installs `torch` and `torchvision` compiled with **CUDA 12.8** to natively support newer card architectures (e.g., compute capability `sm_120`).
+5. Upon container startup, verify GPU detection in the backend logs:
+   `CUDA Availability: True | Detected GPU: NVIDIA GeForce RTX 5070`
+
 ## AI Logic
 
 The system uses **YOLOv26** (via the `ultralytics` library) for vehicle detection. Models are loaded dynamically per session to optimize memory usage.

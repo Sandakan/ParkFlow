@@ -36,6 +36,12 @@ async def lifespan(app: FastAPI):
     logger.info("Starting ParkFlow API...")
     await connect_to_mongo()
     await connect_to_redis()
+    
+    import torch
+    cuda_avail = torch.cuda.is_available()
+    device_name = torch.cuda.get_device_name(0) if cuda_avail else "N/A"
+    logger.info("CUDA Availability: {} | Detected GPU: {}", cuda_avail, device_name)
+    
     logger.info("ParkFlow API started successfully.")
 
     host_port = os.getenv("HOST_PORT", "8200")

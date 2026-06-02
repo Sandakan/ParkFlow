@@ -27,6 +27,23 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+#### NVIDIA GPU Acceleration (CUDA)
+If you have an NVIDIA GPU (e.g. RTX 50-series Blackwell card) and want to run local inference with CUDA acceleration:
+1. Ensure you have **Python 3.12** installed (since PyTorch may not support CUDA wheels for newer Python versions like 3.14 yet).
+2. Set up the virtual environment with Python 3.12:
+   ```powershell
+   py -3.12 -m venv .venv --clear
+   .\.venv\Scripts\activate
+   ```
+3. Install PyTorch with CUDA 12.8 support:
+   ```powershell
+   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+   ```
+4. Install the remaining requirements:
+   ```powershell
+   pip install -r requirements.txt
+   ```
+
 ### 2. Testing the Model
 
 You can run a live test of the model against a mock video stream:
